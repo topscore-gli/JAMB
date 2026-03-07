@@ -247,7 +247,7 @@
         </div>
 
         <p class="footer-note">
-            Built with ❤️ using pure Neumorphism • HTML + CSS + JS
+            Built by ❤️ © ⭐ Top Score ⭐ for 100% JAMB SUCCESS.
         </p>
     </div>
 
@@ -280,20 +280,23 @@
         const successDiv = document.getElementById('success');
 
         // 🔥 REPLACE WITH YOUR OWN FIREBASE CONFIG (from Firebase Console → Project Settings)
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY_HERE",
-            authDomain: "YOUR_PROJECT.firebaseapp.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT.appspot.com",
-            messagingSenderId: "YOUR_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
-
+        
+  const firebaseConfig = {
+    apiKey: "AIzaSyA3WD52stfzLzO5895D4HsspaV5tKcCt7o",
+    authDomain: "jamb-b6a95.firebaseapp.com",
+    databaseURL: "https://jamb-b6a95-default-rtdb.firebaseio.com",
+    projectId: "jamb-b6a95",
+    storageBucket: "jamb-b6a95.firebasestorage.app",
+    messagingSenderId: "794234514415",
+    appId: "1:794234514415:web:4d1e36ff7f392f8e39241a",
+    measurementId: "G-ZP65BGBGHB"
+  };
+  
         let db = null;
 
         // Initialize Firebase only if config is provided
         function initFirebase() {
-            if (firebaseConfig.apiKey === "YOUR_API_KEY_HERE") {
+            if (firebaseConfig.apiKey === "AIzaSyA3WD52stfzLzO5895D4HsspaV5tKcCt7o") {
                 console.log('%cFirebase not configured yet. Form will still work in demo mode.', 'color:#f39c12; font-weight:600');
                 return false;
             }
