@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Biology - Support and Movement</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Biology</h1>
+      <p>Support and Movement<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Support and Movement</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 60:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration
+const CONFIG={TIME:3600,PASS:60}; // 60 minutes for 60 questions
+
+// Section mapping - variable section sizes (20,15,15,10)
+const SECTIONS={
+  0:"A: Plant Movements",
+  20:"B: Plant Supporting Tissues",
+  35:"C: Animal Support Systems",
+  50:"D: Vertebrae and Special Structures"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 60 JAMB Biology Support and Movement Questions
+const QUIZ_DATA=[
+  // Section A: Plant Movements (Questions 1-20)
+  {q:"The movement of plant roots towards water is known as",o:["Phototropism","Hydrotropism","Geotropism","Thigmotropism"],a:1,e:"Hydrotropism is growth toward water."},
+  {q:"Which of the following plant movements is NOT dependent on growth?",o:["Phototropism","Geotropism","Thigmonasty","Hydrotropism"],a:2,e:"Thigmonasty is a nastic movement caused by turgor changes, not growth."},
+  {q:"The folding of Mimosa pudica leaves when touched is an example of",o:["Tropic movement","Nastic movement","Tactic movement","Growth movement"],a:1,e:"This is thigmonasty, a nastic movement (non-directional, turgor-based)."},
+  {q:"In phototropism, auxin accumulates on the shaded side of the stem and causes",o:["Cell division","Cell elongation","Cell differentiation","Cell death"],a:1,e:"Auxin promotes cell elongation on the shaded side, bending the stem toward light."},
+  {q:"Which plant hormone is responsible for tropic movements?",o:["Gibberellin","Cytokinin","Auxin","Abscisic acid"],a:2,e:"Auxin (IAA) is the hormone that mediates tropic responses."},
+  {q:"The response of roots growing downward into the soil is",o:["Negative geotropism","Positive geotropism","Negative phototropism","Positive phototropism"],a:1,e:"Roots show positive geotropism (growth toward gravity)."},
+  {q:"A plant tendril coiling around a support demonstrates",o:["Phototropism","Thigmotropism","Hydrotropism","Chemotropism"],a:1,e:"Thigmotropism is response to touch/contact."},
+  {q:"Which characteristic distinguishes tropic from nastic movements?",o:["Speed of response","Reversibility","Directional nature","All of the above"],a:3,e:"Tropic movements are directional, irreversible, and slow; nastic are non-directional, reversible, and fast."},
+  {q:"Sleep movements in legumes are controlled by",o:["Auxin distribution","Turgor pressure changes","Circadian rhythms","Both B and C"],a:3,e:"Nyctinasty involves turgor changes regulated by the biological clock."},
+  {q:"The growth of pollen tubes toward ovules is an example of",o:["Phototropism","Chemotropism","Hydrotropism","Thigmotropism"],a:1,e:"Response to chemical gradients from the ovule."},
+  {q:"In roots, auxin inhibits cell elongation causing",o:["Positive phototropism","Negative geotropism","Positive geotropism","Negative thigmotropism"],a:2,e:"In roots, more auxin = less growth on lower side = bending downward (positive geotropism)."},
+  {q:"Which region of the root is responsible for most cell elongation?",o:["Root cap","Zone of maturation","Zone of elongation","Meristematic zone"],a:2,e:"The zone of elongation is where cells lengthen significantly."},
+  {q:"Tactic movements are commonly observed in",o:["Flowering plants","Mosses","Motile organisms like Euglena","Fungi"],a:2,e:"Taxis involves whole organism locomotion (e.g., Euglena toward light)."},
+  {q:"The pulvinus is responsible for",o:["Phototropism in stems","Nastic movements in leaves","Geotropism in roots","Secondary growth in stems"],a:1,e:"Pulvini are swollen leaf bases containing motor cells that control nastic movements."},
+  {q:"Which stimulus does NOT produce a tropic response in plants?",o:["Light","Gravity","Touch","Temperature"],a:3,e:"Temperature typically produces nastic responses (thermonasty), not tropic."},
+  {q:"The direction of a tropic response is determined by",o:["The intensity of the stimulus","The direction of the stimulus","The duration of the stimulus","The type of plant"],a:1,e:"Tropic movements are directional; the response direction matches stimulus direction."},
+  {q:"Photonasty differs from phototropism because photonasty",o:["Is faster","Is non-directional","Involves auxin","Is irreversible"],a:1,e:"Photonasty is non-directional (flowers open/close regardless of light direction)."},
+  {q:"The closing of stomata during drought is an example of",o:["Phototropism","Hydronasty","Thigmotropism","Chemotropism"],a:1,e:"Response to water availability (hydro-)."},
+  {q:"Which of the following continues even in constant darkness?",o:["Phototropism","Phototaxis","Sleep movements","Geotropism"],a:2,e:"Sleep movements (nyctinasty) are circadian rhythm-based and persist temporarily without light cues."},
+  {q:"The primary advantage of nastic movements over tropic movements is",o:["They are permanent","They are reversible","They involve growth","They are slower"],a:1,e:"Nastic movements are reversible (turgor changes), allowing repeated responses."},
+  
+  // Section B: Plant Supporting Tissues (Questions 21-35)
+  {q:"Which plant tissue provides flexible support in growing regions?",o:["Sclerenchyma","Collenchyma","Xylem","Phloem"],a:1,e:"Collenchyma provides flexible support in young, growing organs."},
+  {q:"Sclerenchyma cells are characterized by",o:["Thin primary walls","Thick lignified secondary walls","Living protoplasm at maturity","Presence in growing tips"],a:1,e:"Sclerenchyma has thick, lignified secondary walls providing rigid support."},
+  {q:"Collenchyma tissue is commonly found",o:["In the center of stems","Beneath the epidermis of young stems","In the root cap","In mature woody tissues"],a:1,e:"Collenchyma is located beneath the epidermis in young stems and petioles."},
+  {q:"Which supporting tissue is dead at functional maturity?",o:["Collenchyma","Parenchyma","Sclerenchyma","Meristem"],a:2,e:"Sclerenchyma cells die after depositing secondary walls, leaving only cell walls for support."},
+  {q:"Xylem fibers contribute to plant support through",o:["Lignification of their walls","Photosynthetic activity","Storage of starch","Production of auxin"],a:0,e:"Lignified xylem fibers provide structural support alongside water transport."},
+  {q:"The tissue responsible for both transport and support in plants is",o:["Phloem only","Xylem only","Both xylem and phloem","Cambium"],a:1,e:"Xylem is the primary tissue for both water transport and mechanical support (especially in wood)."},
+  {q:"Which feature distinguishes collenchyma from sclerenchyma?",o:["Cell wall composition","Presence of lignin","Cell viability at maturity","All of the above"],a:3,e:"Collenchyma lacks lignin, has primary walls only, and remains living; sclerenchyma has lignin, secondary walls, and is dead."},
+  {q:"Sclereids are",o:["Long, slender sclerenchyma cells","Short, irregular sclerenchyma cells","Living support cells","Found only in roots"],a:1,e:"Sclereids (stone cells) are short and irregular; fibers are long and slender."},
+  {q:"In a dicot stem, vascular bundles are arranged",o:["Scattered throughout","In a ring","Only in the center","Only in the cortex"],a:1,e:"Dicots have eustele arrangement (ring); monocots have scattered (atactostele)."},
+  {q:"Phloem fibers provide",o:["Rigid support like xylem","Tensile strength","Water transport","Photosynthesis"],a:1,e:"Phloem fibers provide tensile strength (resistance to stretching), less rigid than xylem."},
+  {q:"Collenchyma cells are typically located",o:["At corners of stem ridges","In the pith","In the xylem","In the root cap"],a:0,e:"Collenchyma often occurs in strands or continuous layers beneath the epidermis, especially at corners."},
+  {q:"The hardness of sclerenchyma is due to",o:["Cellulose","Pectin","Lignin","Suberin"],a:2,e:"Lignin deposition provides rigidity and hardness."},
+  {q:"Which tissue is NOT a supporting tissue?",o:["Collenchyma","Sclerenchyma","Parenchyma","Xylem fibers"],a:2,e:"Parenchyma is primarily for storage and metabolism, not support (though turgid parenchyma provides some support)."},
+  {q:"In leaves, sclerenchyma is found",o:["In the mesophyll","In bundle sheath cells around veins","On the upper epidermis","In stomata"],a:1,e:"Sclerenchyma forms bundle sheaths strengthening the vascular tissue."},
+  {q:"The primary function of collenchyma is to provide",o:["Permanent rigid support","Flexible support during growth","Water conduction","Food storage"],a:1,e:"Collenchyma provides flexible, extensible support in actively growing regions."},
+  
+  // Section C: Animal Support Systems (Questions 36-50)
+  {q:"An exoskeleton is composed primarily of",o:["Calcium phosphate","Chitin","Collagen","Cartilage"],a:1,e:"Arthropod exoskeletons are made of chitin (polysaccharide)."},
+  {q:"Which is a disadvantage of the exoskeleton?",o:["It provides protection","It restricts growth","It prevents water loss","It allows muscle attachment"],a:1,e:"Exoskeletons must be shed (molted) for growth, leaving the animal vulnerable."},
+  {q:"The endoskeleton is described as",o:["Acellular and dead","Cellular and living","External and rigid","Non-growing"],a:1,e:"Endoskeleton contains living cells (osteocytes, chondrocytes) and grows with the animal."},
+  {q:"Chitin is found in the",o:["Bones of mammals","Exoskeleton of insects","Cartilage of sharks","Endoskeleton of birds"],a:1,e:"Chitin is the structural polysaccharide in arthropod exoskeletons and fungal cell walls."},
+  {q:"Cartilage differs from bone in that cartilage",o:["Contains calcium phosphate","Is avascular","Is harder than bone","Contains no living cells"],a:1,e:"Cartilage lacks blood vessels (avascular), making healing slow."},
+  {q:"The mineral stored in bone matrix includes",o:["Sodium and potassium","Calcium and phosphorus","Iron and magnesium","Zinc and copper"],a:1,e:"Bone stores calcium and phosphorus as hydroxyapatite crystals."},
+  {q:"Which organism possesses an endoskeleton?",o:["Crab","Grasshopper","Earthworm","Fish"],a:3,e:"Fish (vertebrates) have endoskeletons; crabs and grasshoppers have exoskeletons."},
+  {q:"The axial skeleton consists of",o:["Limbs and girdles","Skull, vertebral column, and rib cage","Only the skull","Bones of the hands and feet"],a:1,e:"Axial skeleton = central axis (80 bones); appendicular = limbs (126 bones)."},
+  {q:"Hematopoiesis occurs in the",o:["Compact bone","Bone marrow","Cartilage","Periosteum"],a:1,e:"Blood cell formation occurs in red bone marrow."},
+  {q:"The pectoral girdle consists of",o:["Hip bones","Clavicle and scapula","Sternum and ribs","Humerus and radius"],a:1,e:"Pectoral (shoulder) girdle = clavicle + scapula; pelvic girdle = hip bones."},
+  {q:"Which joint allows movement in all planes?",o:["Hinge joint","Pivot joint","Ball and socket joint","Saddle joint"],a:2,e:"Ball and socket joints (shoulder, hip) are multiaxial."},
+  {q:"The elbow is an example of a",o:["Pivot joint","Hinge joint","Ball and socket joint","Gliding joint"],a:1,e:"Elbow allows only flexion and extension (hinge)."},
+  {q:"The atlanto-axial joint is a",o:["Hinge joint","Pivot joint","Saddle joint","Condyloid joint"],a:1,e:"C1 (Atlas) rotates around the dens of C2 (Axis) - pivot joint."},
+  {q:"Which function is NOT associated with the skeleton?",o:["Protection of vital organs","Production of hormones","Mineral storage","Blood cell formation"],a:1,e:"The skeleton does not produce hormones (endocrine system does)."},
+  {q:"The appendicular skeleton includes",o:["The skull and vertebral column","The ribs and sternum","The limbs and their girdles","The facial bones"],a:2,e:"Appendicular = limbs (arms, legs) + pectoral and pelvic girdles."},
+  
+  // Section D: Vertebrae and Special Structures (Questions 51-60)
+  {q:"The Atlas vertebra is distinguished by",o:["Having a large spinous process","Lacking a body and spinous process","Having the largest body","Articulating with the ribs"],a:1,e:"C1 (Atlas) is unique - no body, no true spinous process, ring-shaped."},
+  {q:"The odontoid process (dens) is found on the",o:["Atlas (C1)","Axis (C2)","Third cervical vertebra","Seventh cervical vertebra"],a:1,e:"The dens projects superiorly from the body of C2 (Axis)."},
+  {q:"The joint between the Atlas and Axis allows",o:["Flexion and extension only","Rotation of the head","Abduction and adduction","Circumduction"],a:1,e:"Atlanto-axial joint is a pivot joint for rotation ('No' movement)."},
+  {q:"Which vertebrae contain transverse foramina?",o:["Thoracic only","Lumbar only","Cervical only","All vertebrae"],a:2,e:"Transverse foramina (for vertebral artery) are unique to cervical vertebrae."},
+  {q:"The 'Yes' nodding movement occurs at the",o:["Atlanto-axial joint","Atlanto-occipital joint","Cervicothoracic junction","Between C2 and C3"],a:1,e:"Flexion/extension (nodding) occurs between Atlas and occipital condyles."},
+  {q:"Thoracic vertebrae are distinguished by",o:["Transverse foramina","Articular facets for ribs","Bifid spinous processes","Absence of spinous processes"],a:1,e:"Thoracic vertebrae have costal facets on bodies and transverse processes for rib articulation."},
+  {q:"The largest vertebral bodies are found in the",o:["Cervical region","Thoracic region","Lumbar region","Sacral region"],a:2,e:"Lumbar vertebrae bear the most weight, hence largest bodies."},
+  {q:"The Axis is named for its function as",o:["The vertebra that supports the skull","The pivot for head rotation","The main weight-bearing vertebra","The attachment for neck muscles"],a:1,e:"Axis provides the pivot (dens) for rotational movement."},
+  {q:"Which statement about cervical vertebrae is correct?",o:["They have the longest spinous processes","They articulate with ribs","They have transverse foramina","They have the largest bodies"],a:2,e:"Transverse foramina are characteristic of all cervical vertebrae."},
+  {q:"The articulation between the dens and the anterior arch of the Atlas is stabilized by",o:["Ligaments","Muscles only","Cartilage pads","Synovial fluid alone"],a:0,e:"The transverse ligament of the Atlas holds the dens against the anterior arch."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('support_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('support_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/60`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('support_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=45?'Ready for JAMB!':pct>=38?'Good, review weak areas':pct>=30?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections - using actual section boundaries
+  const sectionStarts=[0,20,35,50,60];
+  const sectionNames=["A: Plant Movements","B: Plant Supporting Tissues","C: Animal Support Systems","D: Vertebrae and Special Structures"];
+  
+  for(let s=0;s<4;s++){
+    const start=sectionStarts[s];
+    const end=sectionStarts[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('support_quiz_auth');
+  sessionStorage.removeItem('support_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('support_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('support_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

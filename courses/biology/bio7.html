@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Biology - Respiration</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    :root { --background: #1e1e2f; --shadow-in: #171723; --shadow-out: #25253b; --text-primary: #f0f0ff; --text-secondary: #c0c0e0; --accent: #1db954; --accent-secondary: #ff6b6b; --accent-tertiary: #4ecdc4; --card-bg: #2a2a3f; }
+    body.light { --background: #e0e0e0; --shadow-in: #bebebe; --shadow-out: #ffffff; --text-primary: #1a1a1a; --text-secondary: #444; --card-bg: #f8f8f8; }
+    body { background: var(--background); color: var(--text-primary); display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow-x: hidden; }
+    .container { width: 100%; max-width: 420px; background: var(--background); border-radius: 20px; box-shadow: 10px 10px 20px var(--shadow-in), -10px -10px 20px var(--shadow-out); overflow: hidden; position: relative; height: 750px; overflow-y: auto; padding-top: 70px; padding-bottom: 80px; }
+    .neumorphic { background: var(--background); box-shadow: 5px 5px 10px var(--shadow-in), -5px -5px 10px var(--shadow-out); border-radius: 15px; }
+    .neumorphic-btn { background: var(--background); border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); cursor: pointer; color: var(--text-primary); font-size: 18px; transition: all 0.3s ease; }
+    .neumorphic-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.95); }
+    .top-bar { position: fixed; top: 0; width: 100%; max-width: 420px; background: var(--background); padding: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 5px 10px var(--shadow-in); z-index: 20; }
+    .top-bar .header { font-size: 18px; font-weight: bold; color: var(--accent); }
+    .top-bar .right-icons { display: flex; gap: 10px; }
+    .content { padding: 20px 16px; line-height: 1.7; }
+    .main-header { text-align: center; margin-bottom: 28px; padding: 20px; border-radius: 20px; background: rgba(29, 185, 84, 0.1); }
+    .main-header h1 { font-size: 26px; margin-bottom: 8px; color: var(--accent); font-weight: 800; }
+    .main-header p.subtitle { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
+    .section-card { background: var(--card-bg); padding: 24px 18px; border-radius: 20px; box-shadow: inset 4px 4px 10px var(--shadow-in), inset -4px -4px 10px var(--shadow-out); margin-bottom: 24px; border-left: 4px solid var(--accent); }
+    .section-card h2 { font-size: 20px; margin-bottom: 16px; color: var(--accent); font-weight: bold; display: flex; align-items: center; gap: 8px; }
+    .section-card h3 { font-size: 17px; margin: 20px 0 12px; color: var(--accent-tertiary); font-weight: 600; padding-left: 12px; border-left: 3px solid var(--accent-tertiary); }
+    .section-card h4 { font-size: 15px; margin: 16px 0 10px; color: var(--accent-secondary); font-weight: 600; }
+    .section-card p { margin-bottom: 14px; font-size: 14px; color: var(--text-primary); text-align: justify; }
+    .section-card ul, .section-card ol { padding-left: 20px; margin: 12px 0; }
+    .section-card li { margin-bottom: 8px; font-size: 14px; color: var(--text-primary); line-height: 1.6; }
+    .table-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 16px 0; border-radius: 12px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); }
+    .table-container::-webkit-scrollbar { height: 6px; }
+    .table-container::-webkit-scrollbar-track { background: var(--shadow-in); border-radius: 3px; }
+    .table-container::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+    .summary-table { width: 100%; min-width: 500px; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+    .summary-table th { background: var(--accent); color: #000; padding: 12px 10px; text-align: left; font-weight: 600; white-space: nowrap; }
+    .summary-table td { padding: 10px; border-bottom: 1px solid var(--shadow-in); background: var(--card-bg); white-space: nowrap; }
+    .summary-table tr:last-child td { border-bottom: none; }
+    .summary-table tr:nth-child(even) td { background: rgba(255,255,255,0.03); }
+    .summary-table.wide { min-width: 600px; }
+    .table-scroll-hint { font-size: 11px; color: var(--text-secondary); text-align: center; margin-top: 4px; font-style: italic; }
+    .quick-facts { background: linear-gradient(135deg, rgba(29,185,84,0.1), rgba(78,205,196,0.1)); padding: 16px; border-radius: 15px; margin: 16px 0; border: 1px solid rgba(29,185,84,0.3); }
+    .quick-facts h4 { color: var(--accent); margin-bottom: 10px; font-size: 15px; }
+    .quick-facts ul { margin: 0; padding-left: 18px; }
+    .quick-facts li { margin-bottom: 6px; font-size: 13px; }
+    .memory-tip { background: rgba(255,107,107,0.1); padding: 14px 16px; border-radius: 12px; margin: 16px 0; border-left: 4px solid var(--accent-secondary); }
+    .memory-tip strong { color: var(--accent-secondary); display: block; margin-bottom: 6px; font-size: 14px; }
+    .memory-tip p { margin: 0; font-size: 13px; font-style: italic; }
+    .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+    .comparison-card { background: var(--background); padding: 14px; border-radius: 12px; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); }
+    .comparison-card h5 { color: var(--accent); font-size: 14px; margin-bottom: 8px; text-align: center; }
+    .comparison-card ul { margin: 0; padding-left: 16px; font-size: 12px; }
+    .comparison-card li { margin-bottom: 4px; font-size: 12px; }
+    .diagram-img { width: 100%; max-height: 280px; object-fit: contain; border-radius: 12px; margin: 14px 0 10px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); background: #fff; padding: 8px; }
+    .nav-bar { position: fixed; bottom: 0; width: 100%; max-width: 420px; background: var(--background); padding: 10px; display: flex; justify-content: space-around; box-shadow: 0 -5px 10px var(--shadow-in); z-index: 20; }
+    .nav-bar .nav-item { text-align: center; position: relative; }
+    .nav-bar .nav-item button { width: 40px; height: 40px; font-size: 18px; color: var(--text-primary); }
+    .nav-bar .nav-item.center button { width: 50px; height: 50px; font-size: 24px; background: var(--accent); box-shadow: 0 0 15px var(--accent), 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); color: #000; }
+    .nav-bar .nav-item p { display: none; font-size: 11px; margin-top: 4px; color: var(--text-primary); }
+    .nav-bar .nav-item.active p { display: block; }
+    .progress-container { position: fixed; top: 70px; left: 0; width: 100%; max-width: 420px; height: 4px; background: var(--shadow-in); z-index: 15; }
+    .progress-bar { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
+    .explore-btn { background: var(--accent); border: none; padding: 14px 28px; border-radius: 25px; color: #000; cursor: pointer; box-shadow: 4px 4px 8px var(--shadow-in), -4px -4px 8px var(--shadow-out); font-size: 16px; margin: 24px auto; display: block; text-align: center; font-weight: bold; transition: all 0.3s ease; }
+    .explore-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.98); }
+    .jamb-alert { background: linear-gradient(135deg, rgba(255,193,7,0.15), rgba(255,152,0,0.1)); border: 1px solid rgba(255,193,7,0.4); border-radius: 12px; padding: 16px; margin: 20px 0; }
+    .jamb-alert h4 { color: #ffc107; margin-bottom: 10px; font-size: 15px; }
+    .jamb-alert ul { margin: 0; padding-left: 18px; }
+    .jamb-alert li { font-size: 13px; margin-bottom: 6px; }
+    .highlight-box { background: rgba(78,205,196,0.1); padding: 12px 16px; border-radius: 10px; margin: 12px 0; border-left: 3px solid var(--accent-tertiary); }
+    .type-badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; margin-right: 6px; }
+    .badge-structural { background: rgba(29,185,84,0.2); color: var(--accent); }
+    .badge-behavioural { background: rgba(255,107,107,0.2); color: var(--accent-secondary); }
+    .badge-functional { background: rgba(78,205,196,0.2); color: var(--accent-tertiary); }
+    .image-caption { text-align: center; font-size: 12px; color: var(--text-secondary); font-style: italic; margin-top: -8px; margin-bottom: 12px; }
+    .formula-box { background: rgba(29,185,84,0.1); padding: 10px; border-radius: 8px; font-family: monospace; text-align: center; margin: 10px 0; font-size: 13px; border: 1px solid rgba(29,185,84,0.3); }
+  </style>
+</head>
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">BIOLOGY</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📖 Bookmarked for later study!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>🫁 Respiration</h1>
+        <p class="subtitle">JAMB Chapter 7: Energy Release & Gas Exchange</p>
+      </div>
+
+      <!-- SECTION A: SIGNIFICANCE -->
+      <div class="section-card">
+        <h2>📚 A. Significance of Respiration</h2>
+
+        <p><strong>Definition:</strong> Respiration is the biochemical process by which living organisms break down glucose (food substances) to release <strong>energy</strong> in the form of <strong>ATP (Adenosine Triphosphate)</strong>.</p>
+
+        <div class="highlight-box">
+          <strong>Key Distinction:</strong> Respiration ≠ Breathing. Breathing is just the mechanical movement of air; respiration is the chemical breakdown of food to release energy.
+        </div>
+
+        <div class="quick-facts">
+          <h4>🔍 Why Respiration is Essential</h4>
+          <ul>
+            <li>Provides <strong>ATP</strong> for all life activities (movement, growth, reproduction)</li>
+            <li>Maintains body temperature (heat energy released)</li>
+            <li>Produces intermediate compounds for other metabolic processes</li>
+            <li>Occurs in <strong>all living cells</strong> (plants and animals)</li>
+          </ul>
+        </div>
+
+        <div class="formula-box">
+          C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O + Energy (ATP) + Heat
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY AID:</strong>
+          <p>"Respiration = Energy Liberation" - Think of it as the power plant of the cell!</p>
+        </div>
+      </div>
+
+      <!-- SECTION B: RESPIRATORY ORGANS -->
+      <div class="section-card">
+        <h2>🫁 B. Respiratory Organs & Surfaces</h2>
+
+        <h3>Characteristics of Good Respiratory Surfaces</h3>
+        <div class="quick-facts">
+          <ul>
+            <li><strong>Thin</strong> (one cell thick) - for easy diffusion</li>
+            <li><strong>Moist</strong> - gases dissolve in moisture</li>
+            <li><strong>Large surface area</strong> - for efficient gas exchange</li>
+            <li><strong>Rich blood supply</strong> - to transport gases</li>
+            <li><strong>Concentration gradient</strong> maintained</li>
+          </ul>
+        </div>
+
+        <h3>Types of Respiratory Surfaces</h3>
+
+        <div class="table-container">
+          <table class="summary-table wide">
+            <tr>
+              <th>Organism</th>
+              <th>Surface</th>
+              <th>Key Features</th>
+            </tr>
+            <tr>
+              <td><strong>Amoeba, Paramecium</strong></td>
+              <td>Body surface</td>
+              <td>Direct diffusion through cell membrane</td>
+            </tr>
+            <tr>
+              <td><strong>Earthworm</strong></td>
+              <td>Skin (cuticle)</td>
+              <td>Moist, vascularized; lives in damp soil</td>
+            </tr>
+            <tr>
+              <td><strong>Fish</strong></td>
+              <td>Gills</td>
+              <td>Filaments with lamellae; counter-current flow</td>
+            </tr>
+            <tr>
+              <td><strong>Insects</strong></td>
+              <td>Tracheal system</td>
+              <td>Spiracles → Tracheae → Tracheoles; no blood needed</td>
+            </tr>
+            <tr>
+              <td><strong>Mammals/Birds</strong></td>
+              <td>Lungs</td>
+              <td>Alveoli (air sacs); millions provide large surface</td>
+            </tr>
+            <tr>
+              <td><strong>Plants</strong></td>
+              <td>Stomata & Lenticels</td>
+              <td>Stomata (leaves), Lenticels (stems/roots)</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY AID:</strong>
+          <p>"Fish have Gills, Insects have Tubes, Mammals have Lungs, Worms use Skin!"</p>
+        </div>
+      </div>
+
+      <!-- SECTION C: GASEOUS EXCHANGE MECHANISMS -->
+      <div class="section-card">
+        <h2>🔄 C. Mechanisms of Gaseous Exchange</h2>
+
+        <h3>C(i). In Plants</h3>
+
+        <h4>Stomata Structure & Function</h4>
+        <div class="quick-facts">
+          <ul>
+            <li><strong>Guard cells:</strong> Kidney-shaped, contain chloroplasts</li>
+            <li><strong>Stomatal pore:</strong> Opening between guard cells</li>
+            <li><strong>Function:</strong> Allow CO₂ in and O₂/water vapor out</li>
+          </ul>
+        </div>
+
+        <h4>Mechanism of Opening and Closing</h4>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Condition</th>
+              <th>Process</th>
+              <th>Result</th>
+            </tr>
+            <tr>
+              <td><strong>DAY/LIGHT</strong></td>
+              <td>Photosynthesis → Glucose produced → Water enters guard cells → Turgid</td>
+              <td>STOMA OPENS (CO₂ enters, O₂ exits)</td>
+            </tr>
+            <tr>
+              <td><strong>NIGHT/DARK</strong></td>
+              <td>No photosynthesis → Glucose used up → Water leaves guard cells → Flaccid</td>
+              <td>STOMA CLOSES (prevents water loss)</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY TRICK:</strong>
+          <p>"Light = Open (like a shop), Dark = Close" or "Sunshine = Open for business!"</p>
+        </div>
+
+        <h4>Other Plant Structures</h4>
+        <div class="quick-facts">
+          <ul>
+            <li><strong>Lenticels:</strong> Porous tissues on woody stems for gas exchange</li>
+            <li><strong>Root hairs:</strong> For soil gas exchange (oxygen intake)</li>
+          </ul>
+        </div>
+
+        <h3>C(ii). In Animals</h3>
+
+        <h4>1. Gills (Fish)</h4>
+        <div class="quick-facts">
+          <ul>
+            <li><strong>Structure:</strong> Gill arch → Gill filaments → Lamellae (thin plates)</li>
+            <li><strong>Mechanism:</strong> Water enters mouth → passes over gills → exits through operculum</li>
+            <li><strong>Counter-current exchange:</strong> Blood flows opposite to water flow → maintains concentration gradient → maximum O₂ extraction</li>
+          </ul>
+        </div>
+
+        <h4>2. Tracheal System (Insects)</h4>
+        <div class="quick-facts">
+          <ul>
+            <li><strong>Path:</strong> Spiracles (openings) → Trachea (tubes) → Tracheoles (end in tissues)</li>
+            <li><strong>Unique feature:</strong> Direct diffusion to cells (no blood needed!)</li>
+            <li><strong>Spiracles:</strong> Can open/close to reduce water loss</li>
+          </ul>
+        </div>
+
+        <h4>3. Lungs (Mammals)</h4>
+        <div class="quick-facts">
+          <ul>
+            <li><strong>Structure:</strong> Bronchus → Bronchioles → Alveoli (air sacs)</li>
+            <li><strong>Alveoli features:</strong> 300-500 million, one cell thick, covered with capillaries, moist surface</li>
+          </ul>
+        </div>
+
+        <h4>Breathing Mechanism</h4>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Phase</th>
+              <th>Rib Cage</th>
+              <th>Diaphragm</th>
+              <th>Volume</th>
+              <th>Pressure</th>
+            </tr>
+            <tr>
+              <td><strong>Inhalation</strong></td>
+              <td>Rises/Expands</td>
+              <td>Contracts (flattens)</td>
+              <td>Increases</td>
+              <td>Decreases</td>
+            </tr>
+            <tr>
+              <td><strong>Exhalation</strong></td>
+              <td>Falls/Contracts</td>
+              <td>Relaxes (domes up)</td>
+              <td>Decreases</td>
+              <td>Increases</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY AID:</strong>
+          <p>"Inhale = Expand (rib cage up, diaphragm down)" | "Exhale = Contract (rib cage down, diaphragm up)"</p>
+        </div>
+      </div>
+
+      <!-- SECTION D: AEROBIC RESPIRATION -->
+      <div class="section-card">
+        <h2>⚡ D. Aerobic Respiration</h2>
+
+        <p><strong>Definition:</strong> Respiration that requires <strong>oxygen</strong> to break down glucose completely.</p>
+
+        <div class="formula-box">
+          C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O + 38 ATP (Energy)
+        </div>
+
+        <h3>Two Main Stages</h3>
+
+        <h4>Stage 1: Glycolysis</h4>
+        <div class="quick-facts">
+          <ul>
+            <li><strong>Location:</strong> Cytoplasm</li>
+            <li><strong>Process:</strong> Glucose (6C) → 2 Pyruvic acid (3C)</li>
+            <li><strong>Oxygen needed?</strong> No (anaerobic stage)</li>
+            <li><strong>ATP produced:</strong> 2 ATP (net gain)</li>
+          </ul>
+        </div>
+
+        <h4>Stage 2: Krebs Cycle (Citric Acid Cycle)</h4>
+        <div class="quick-facts">
+          <ul>
+            <li><strong>Location:</strong> Mitochondria</li>
+            <li><strong>Process:</strong> Pyruvic acid → CO₂ + H₂O</li>
+            <li><strong>Oxygen needed?</strong> Yes (aerobic stage)</li>
+            <li><strong>ATP produced:</strong> 36 ATP</li>
+            <li><strong>Key point:</strong> Oxygen is the final hydrogen acceptor forming water</li>
+          </ul>
+        </div>
+
+        <h3>Total ATP Yield</h3>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Stage</th>
+              <th>ATP Produced</th>
+            </tr>
+            <tr>
+              <td>Glycolysis</td>
+              <td>2 ATP</td>
+            </tr>
+            <tr>
+              <td>Krebs Cycle</td>
+              <td>36 ATP</td>
+            </tr>
+            <tr>
+              <td><strong>TOTAL</strong></td>
+              <td><strong>38 ATP</strong></td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY AID:</strong>
+          <p>"38 is Great!" - Total ATP in aerobic respiration. "Glycolysis gives 2, Krebs gives plenty!"</p>
+        </div>
+      </div>
+
+      <!-- SECTION E: ANAEROBIC RESPIRATION -->
+      <div class="section-card">
+        <h2>🦠 E. Anaerobic Respiration</h2>
+
+        <p><strong>Definition:</strong> Respiration that occurs <strong>without oxygen</strong> (incomplete breakdown of glucose).</p>
+
+        <div class="comparison-grid">
+          <div class="comparison-card">
+            <h5>🐄 In Animals</h5>
+            <ul>
+              <li>Glucose → Lactic acid + 2 ATP</li>
+              <li>Occurs in muscle cells during vigorous exercise</li>
+              <li>Product: Lactic acid (causes fatigue/cramps)</li>
+              <li>Oxygen debt must be repaid</li>
+            </ul>
+          </div>
+          <div class="comparison-card">
+            <h5>🍞 In Yeast</h5>
+            <ul>
+              <li>Glucose → Ethanol + CO₂ + 2 ATP</li>
+              <li>Process called fermentation</li>
+              <li>Used in brewing and baking</li>
+              <li>CO₂ makes bread rise</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>Oxygen Debt Explained</h3>
+        <div class="quick-facts">
+          <ul>
+            <li><strong>When?</strong> During vigorous exercise when oxygen supply is insufficient</li>
+            <li><strong>What happens?</strong> Muscles respire anaerobically, producing lactic acid</li>
+            <li><strong>Repayment:</strong> Heavy breathing after exercise pays back the oxygen debt</li>
+            <li><strong>Result:</strong> Lactic acid converted back to glucose/oxidized to CO₂ and water</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY AID:</strong>
+          <p>"Run too fast → Lactic acid last → Panting hard → Oxygen debt passed!"</p>
+        </div>
+
+        <h3>Fermentation Experiment</h3>
+        <div class="quick-facts">
+          <h4>🔍 Setup</h4>
+          <ul>
+            <li>Conical flask with glucose + yeast solution</li>
+            <li>Delivery tube into lime water</li>
+            <li>Warm water bath (optimum temperature)</li>
+          </ul>
+        </div>
+        <div class="highlight-box">
+          <strong>Observation:</strong> Lime water turns milky (proves CO₂ production)<br>
+          <strong>Conclusion:</strong> Yeast produces CO₂ during anaerobic respiration
+        </div>
+
+        <h3>Economic Importance of Yeast</h3>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Industry</th>
+              <th>Use</th>
+              <th>Process</th>
+            </tr>
+            <tr>
+              <td><strong>Brewing/Winemaking</strong></td>
+              <td>Alcohol production</td>
+              <td>Fermentation of sugars</td>
+            </tr>
+            <tr>
+              <td><strong>Baking</strong></td>
+              <td>Bread rising</td>
+              <td>CO₂ makes dough rise</td>
+            </tr>
+            <tr>
+              <td><strong>Biofuel</strong></td>
+              <td>Ethanol production</td>
+              <td>Renewable energy source</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+      </div>
+
+      <!-- SECTION F: EXPERIMENTS -->
+      <div class="section-card">
+        <h2>🧪 F. Experimental Demonstrations</h2>
+
+        <h3>Experiment 1: To Show Heat Production</h3>
+        <div class="quick-facts">
+          <ul>
+            <li><strong>Setup:</strong> Germinating seeds in vacuum flask with thermometer</li>
+            <li><strong>Control:</strong> Boiled (dead) seeds in another flask</li>
+            <li><strong>Result:</strong> Temperature rises in flask with living seeds</li>
+            <li><strong>Conclusion:</strong> Respiration produces heat</li>
+          </ul>
+        </div>
+
+        <h3>Experiment 2: To Show CO₂ Production</h3>
+        <div class="quick-facts">
+          <ul>
+            <li><strong>Setup:</strong> Limewater + germinating seeds in airtight container</li>
+            <li><strong>Result:</strong> Limewater turns milky/cloudy</li>
+            <li><strong>Conclusion:</strong> CO₂ is produced during respiration</li>
+          </ul>
+        </div>
+
+        <h3>Experiment 3: To Show O₂ Uptake</h3>
+        <div class="quick-facts">
+          <ul>
+            <li><strong>Setup:</strong> Seeds in tube with hydrogencarbonate indicator (red)</li>
+            <li><strong>Result:</strong> Indicator changes from red to yellow (acidic)</li>
+            <li><strong>Conclusion:</strong> O₂ used up, CO₂ released (increases acidity)</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY AID:</strong>
+          <p>"Heat = Thermometer rises" | "CO₂ = Lime water milky" | "O₂ used = Indicator yellow"</p>
+        </div>
+      </div>
+
+      <!-- EXAM TIPS -->
+      <div class="jamb-alert">
+        <h4>⚠️ CRITICAL JAMB EXAM TIPS</h4>
+        <ul>
+          <li><strong>Aerobic vs Anaerobic:</strong> Aerobic = 38 ATP, needs O₂; Anaerobic = 2 ATP, no O₂</li>
+          <li><strong>Glycolysis:</strong> Always occurs in cytoplasm, produces 2 ATP, doesn't need oxygen</li>
+          <li><strong>Krebs Cycle:</strong> Occurs in mitochondria, needs oxygen, produces 36 ATP</li>
+          <li><strong>Stomata:</strong> Turgid guard cells = open; Flaccid = closed</li>
+          <li><strong>Oxygen Debt:</strong> Caused by anaerobic respiration in muscles, repaid by heavy breathing</li>
+          <li><strong>Fermentation:</strong> Yeast produces ethanol + CO₂; Animals produce lactic acid</li>
+          <li><strong>Respiratory Surfaces:</strong> Must be thin, moist, large surface area, good blood supply</li>
+          <li><strong>Counter-current:</strong> Fish gills use this for maximum oxygen extraction</li>
+          <li><strong>Tracheal System:</strong> Insects don't use blood for gas transport (direct to cells)</li>
+          <li><strong>Yeast Uses:</strong> Brewing (alcohol), Baking (CO₂ rises bread), Biofuel (ethanol)</li>
+        </ul>
+      </div>
+
+      <!-- QUICK REVISION -->
+      <div class="section-card">
+        <h2>📋 Quick Revision Checklist</h2>
+
+        <h3>Must-Know Concepts:</h3>
+        <div class="quick-facts">
+          <ul>
+            <li>✅ Respiration releases energy (ATP) for life activities</li>
+            <li>✅ Glycolysis: cytoplasm, 2 ATP, no O₂ needed</li>
+            <li>✅ Krebs Cycle: mitochondria, 36 ATP, needs O₂</li>
+            <li>✅ Total aerobic yield: 38 ATP; Anaerobic: 2 ATP</li>
+            <li>✅ Stomata: Light = Open (turgid), Dark = Close (flaccid)</li>
+            <li>✅ Animals anaerobic: Lactic acid + oxygen debt</li>
+            <li>✅ Yeast anaerobic: Ethanol + CO₂ (fermentation)</li>
+            <li>✅ Gills: Counter-current flow for efficiency</li>
+            <li>✅ Lungs: Alveoli provide large surface area</li>
+            <li>✅ Insects: Tracheal system (no blood needed)</li>
+            <li>✅ Experiments: Heat (thermometer), CO₂ (limewater), O₂ (indicator)</li>
+            <li>✅ Yeast economic importance: Brewing, baking, biofuel</li>
+          </ul>
+        </div>
+
+        <h3>Comparison Summary:</h3>
+        <div class="comparison-grid">
+          <div class="comparison-card">
+            <h5>🫁 Aerobic</h5>
+            <ul>
+              <li>Needs oxygen</li>
+              <li>38 ATP produced</li>
+              <li>Complete breakdown</li>
+              <li>CO₂ + H₂O produced</li>
+              <li>Most organisms</li>
+            </ul>
+          </div>
+          <div class="comparison-card">
+            <h5>🦠 Anaerobic</h5>
+            <ul>
+              <li>No oxygen needed</li>
+              <li>2 ATP produced</li>
+              <li>Incomplete breakdown</li>
+              <li>Lactic acid/Ethanol</li>
+              <li>Yeast + muscles</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- MNEMONICS -->
+      <div class="section-card">
+        <h2>🧩 Mnemonics Summary</h2>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Topic</th>
+              <th>Mnemonic</th>
+            </tr>
+            <tr>
+              <td>ATP Yield</td>
+              <td>"38 is Great" (aerobic) | "2 is Too Few" (anaerobic)</td>
+            </tr>
+            <tr>
+              <td>Stomata</td>
+              <td>"Light = Open for business" | "Dark = Closed shop"</td>
+            </tr>
+            <tr>
+              <td>Glycolysis</td>
+              <td>"Glyco = Glucose breaking" | "Lysis = Splitting" (cytoplasm)</td>
+            </tr>
+            <tr>
+              <td>Krebs Cycle</td>
+              <td>"Krebs = Keep Running (needs oxygen)"</td>
+            </tr>
+            <tr>
+              <td>Anaerobic Products</td>
+              <td>"Animals = Lactic acid" | "Yeast = Alcohol (party!)"</td>
+            </tr>
+            <tr>
+              <td>Oxygen Debt</td>
+              <td>"Run fast → Pant last → Debt repaid"</td>
+            </tr>
+            <tr>
+              <td>Respiratory Surfaces</td>
+              <td>"Thin, Moist, Large, Blood" (characteristics)</td>
+            </tr>
+            <tr>
+              <td>Yeast Uses</td>
+              <td>"Brew, Bake, Biofuel" (3 B's)</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+      </div>
+
+      <!-- LIKELY QUESTIONS -->
+      <div class="section-card">
+        <h2>🎯 Likely JAMB Questions & Answers</h2>
+
+        <div class="quick-facts">
+          <h4>Q1: Where does glycolysis occur and how many ATP are produced?</h4>
+          <p style="margin-top: 8px; font-weight: bold; color: var(--accent);">A: Cytoplasm; 2 ATP (net gain)</p>
+        </div>
+
+        <div class="quick-facts">
+          <h4>Q2: What is the role of oxygen in aerobic respiration?</h4>
+          <p style="margin-top: 8px; font-weight: bold; color: var(--accent);">A: Final hydrogen acceptor forming water; allows Krebs cycle to run</p>
+        </div>
+
+        <div class="quick-facts">
+          <h4>Q3: Why do we breathe heavily after vigorous exercise?</h4>
+          <p style="margin-top: 8px; font-weight: bold; color: var(--accent);">A: To repay oxygen debt (convert lactic acid to glucose/CO₂ + water)</p>
+        </div>
+
+        <div class="quick-facts">
+          <h4>Q4: What causes bread to rise when yeast is added?</h4>
+          <p style="margin-top: 8px; font-weight: bold; color: var(--accent);">A: CO₂ produced during anaerobic respiration (fermentation)</p>
+        </div>
+
+        <div class="quick-facts">
+          <h4>Q5: How do guard cells open the stomata?</h4>
+          <p style="margin-top: 8px; font-weight: bold; color: var(--accent);">A: Become turgid (water enters) → bow outward → pore opens</p>
+        </div>
+
+        <div class="quick-facts">
+          <h4>Q6: What is the advantage of counter-current flow in fish gills?</h4>
+          <p style="margin-top: 8px; font-weight: bold; color: var(--accent);">A: Maintains concentration gradient → maximum oxygen extraction</p>
+        </div>
+      </div>
+
+      <p style="text-align: center; font-size: 16px; margin: 32px 0; font-weight: bold; color: var(--accent);">
+        🌟 Master Respiration, Ace Your JAMB! 🌟
+      </p>
+
+      <button class="explore-btn" onclick="alert('Practice JAMB past questions on Respiration!')">Practice JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item">
+      <button class="neumorphic-btn">🔍</button>
+      <p>Search</p>
+    </div>
+    <div class="nav-item center">
+      <button class="neumorphic-btn">⭐</button>
+      <p>Favorite</p>
+    </div>
+    <div class="nav-item">
+      <button class="neumorphic-btn">📚</button>
+      <p>Library</p>
+    </div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme) {
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const newTheme = body.classList.contains('light') ? 'dark' : 'light';
+      setTheme(newTheme);
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      const scrolled = (scrollTop / scrollHeight) * 100;
+      progressBar.style.width = scrolled + '%';
+    });
+  </script>
+</body>
+</html>

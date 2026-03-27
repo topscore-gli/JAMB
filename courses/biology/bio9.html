@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Biology - Support & Movement</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    :root { --background: #1e1e2f; --shadow-in: #171723; --shadow-out: #25253b; --text-primary: #f0f0ff; --text-secondary: #c0c0e0; --accent: #1db954; --accent-secondary: #ff6b6b; --accent-tertiary: #4ecdc4; --card-bg: #2a2a3f; }
+    body.light { --background: #e0e0e0; --shadow-in: #bebebe; --shadow-out: #ffffff; --text-primary: #1a1a1a; --text-secondary: #444; --card-bg: #f8f8f8; }
+    body { background: var(--background); color: var(--text-primary); display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow-x: hidden; }
+    .container { width: 100%; max-width: 420px; background: var(--background); border-radius: 20px; box-shadow: 10px 10px 20px var(--shadow-in), -10px -10px 20px var(--shadow-out); overflow: hidden; position: relative; height: 750px; overflow-y: auto; padding-top: 70px; padding-bottom: 80px; }
+    .neumorphic { background: var(--background); box-shadow: 5px 5px 10px var(--shadow-in), -5px -5px 10px var(--shadow-out); border-radius: 15px; }
+    .neumorphic-btn { background: var(--background); border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); cursor: pointer; color: var(--text-primary); font-size: 18px; transition: all 0.3s ease; }
+    .neumorphic-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.95); }
+    .top-bar { position: fixed; top: 0; width: 100%; max-width: 420px; background: var(--background); padding: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 5px 10px var(--shadow-in); z-index: 20; }
+    .top-bar .header { font-size: 18px; font-weight: bold; color: var(--accent); }
+    .top-bar .right-icons { display: flex; gap: 10px; }
+    .content { padding: 20px 16px; line-height: 1.7; }
+    .main-header { text-align: center; margin-bottom: 28px; padding: 20px; border-radius: 20px; background: rgba(29, 185, 84, 0.1); }
+    .main-header h1 { font-size: 26px; margin-bottom: 8px; color: var(--accent); font-weight: 800; }
+    .main-header p.subtitle { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
+    .section-card { background: var(--card-bg); padding: 24px 18px; border-radius: 20px; box-shadow: inset 4px 4px 10px var(--shadow-in), inset -4px -4px 10px var(--shadow-out); margin-bottom: 24px; border-left: 4px solid var(--accent); }
+    .section-card h2 { font-size: 20px; margin-bottom: 16px; color: var(--accent); font-weight: bold; display: flex; align-items: center; gap: 8px; }
+    .section-card h3 { font-size: 17px; margin: 20px 0 12px; color: var(--accent-tertiary); font-weight: 600; padding-left: 12px; border-left: 3px solid var(--accent-tertiary); }
+    .section-card h4 { font-size: 15px; margin: 16px 0 10px; color: var(--accent-secondary); font-weight: 600; }
+    .section-card p { margin-bottom: 14px; font-size: 14px; color: var(--text-primary); text-align: justify; }
+    .section-card ul, .section-card ol { padding-left: 20px; margin: 12px 0; }
+    .section-card li { margin-bottom: 8px; font-size: 14px; color: var(--text-primary); line-height: 1.6; }
+    .table-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 16px 0; border-radius: 12px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); }
+    .table-container::-webkit-scrollbar { height: 6px; }
+    .table-container::-webkit-scrollbar-track { background: var(--shadow-in); border-radius: 3px; }
+    .table-container::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+    .summary-table { width: 100%; min-width: 500px; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+    .summary-table th { background: var(--accent); color: #000; padding: 12px 10px; text-align: left; font-weight: 600; white-space: nowrap; }
+    .summary-table td { padding: 10px; border-bottom: 1px solid var(--shadow-in); background: var(--card-bg); white-space: nowrap; }
+    .summary-table tr:last-child td { border-bottom: none; }
+    .summary-table tr:nth-child(even) td { background: rgba(255,255,255,0.03); }
+    .summary-table.wide { min-width: 600px; }
+    .table-scroll-hint { font-size: 11px; color: var(--text-secondary); text-align: center; margin-top: 4px; font-style: italic; }
+    .quick-facts { background: linear-gradient(135deg, rgba(29,185,84,0.1), rgba(78,205,196,0.1)); padding: 16px; border-radius: 15px; margin: 16px 0; border: 1px solid rgba(29,185,84,0.3); }
+    .quick-facts h4 { color: var(--accent); margin-bottom: 10px; font-size: 15px; }
+    .quick-facts ul { margin: 0; padding-left: 18px; }
+    .quick-facts li { margin-bottom: 6px; font-size: 13px; }
+    .memory-tip { background: rgba(255,107,107,0.1); padding: 14px 16px; border-radius: 12px; margin: 16px 0; border-left: 4px solid var(--accent-secondary); }
+    .memory-tip strong { color: var(--accent-secondary); display: block; margin-bottom: 6px; font-size: 14px; }
+    .memory-tip p { margin: 0; font-size: 13px; font-style: italic; }
+    .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+    .comparison-card { background: var(--background); padding: 14px; border-radius: 12px; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); }
+    .comparison-card h5 { color: var(--accent); font-size: 14px; margin-bottom: 8px; text-align: center; }
+    .comparison-card ul { margin: 0; padding-left: 16px; font-size: 12px; }
+    .comparison-card li { margin-bottom: 4px; font-size: 12px; }
+    .diagram-img { width: 100%; max-height: 280px; object-fit: contain; border-radius: 12px; margin: 14px 0 10px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); background: #fff; padding: 8px; }
+    .nav-bar { position: fixed; bottom: 0; width: 100%; max-width: 420px; background: var(--background); padding: 10px; display: flex; justify-content: space-around; box-shadow: 0 -5px 10px var(--shadow-in); z-index: 20; }
+    .nav-bar .nav-item { text-align: center; position: relative; }
+    .nav-bar .nav-item button { width: 40px; height: 40px; font-size: 18px; color: var(--text-primary); }
+    .nav-bar .nav-item.center button { width: 50px; height: 50px; font-size: 24px; background: var(--accent); box-shadow: 0 0 15px var(--accent), 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); color: #000; }
+    .nav-bar .nav-item p { display: none; font-size: 11px; margin-top: 4px; color: var(--text-primary); }
+    .nav-bar .nav-item.active p { display: block; }
+    .progress-container { position: fixed; top: 70px; left: 0; width: 100%; max-width: 420px; height: 4px; background: var(--shadow-in); z-index: 15; }
+    .progress-bar { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
+    .explore-btn { background: var(--accent); border: none; padding: 14px 28px; border-radius: 25px; color: #000; cursor: pointer; box-shadow: 4px 4px 8px var(--shadow-in), -4px -4px 8px var(--shadow-out); font-size: 16px; margin: 24px auto; display: block; text-align: center; font-weight: bold; transition: all 0.3s ease; }
+    .explore-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.98); }
+    .jamb-alert { background: linear-gradient(135deg, rgba(255,193,7,0.15), rgba(255,152,0,0.1)); border: 1px solid rgba(255,193,7,0.4); border-radius: 12px; padding: 16px; margin: 20px 0; }
+    .jamb-alert h4 { color: #ffc107; margin-bottom: 10px; font-size: 15px; }
+    .jamb-alert ul { margin: 0; padding-left: 18px; }
+    .jamb-alert li { font-size: 13px; margin-bottom: 6px; }
+    .highlight-box { background: rgba(78,205,196,0.1); padding: 12px 16px; border-radius: 10px; margin: 12px 0; border-left: 3px solid var(--accent-tertiary); }
+    .type-badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; margin-right: 6px; }
+    .badge-structural { background: rgba(29,185,84,0.2); color: var(--accent); }
+    .badge-behavioural { background: rgba(255,107,107,0.2); color: var(--accent-secondary); }
+    .badge-functional { background: rgba(78,205,196,0.2); color: var(--accent-tertiary); }
+    .image-caption { text-align: center; font-size: 12px; color: var(--text-secondary); font-style: italic; margin-top: -8px; margin-bottom: 12px; }
+    .emoji-header { font-size: 24px; margin-right: 8px; }
+    .atlas-highlight { background: linear-gradient(135deg, rgba(255,193,7,0.1), rgba(255,152,0,0.05)); border: 1px solid rgba(255,193,7,0.3); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .atlas-highlight h4 { color: #ffc107; margin-bottom: 10px; font-size: 15px; }
+  </style>
+</head>
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">BIOLOGY</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📖 Bookmarked for later study!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>🦴 Support & Movement</h1>
+        <p class="subtitle">JAMB Chapter 9: Plants & Animals</p>
+      </div>
+
+      <!-- PART 1: PLANT SUPPORT -->
+      <div class="section-card">
+        <h2><span class="emoji-header">🌱</span>Part 1: Plant Support & Movement</h2>
+
+        <h3>Need for Support</h3>
+        <div class="quick-facts">
+          <ul>
+            <li>Maintain upright position against gravity</li>
+            <li>Exposure to sunlight for photosynthesis</li>
+            <li>Transport of water and nutrients</li>
+            <li>Position reproductive structures for pollination</li>
+          </ul>
+        </div>
+
+        <h3>A. Tropic Movements (Tropisms) <span class="type-badge badge-structural">DIRECTIONAL</span></h3>
+        
+        <img src="https://kimi-web-img.moonshot.cn/img/biologyreader.com/e8e64ee5dcf6c2a9472f6faad43a5bfd58cb0d54.jpg" alt="Phototropism auxin mechanism" class="diagram-img">
+        <p class="image-caption">Phototropism: Auxin accumulates on shaded side causing cell elongation</p>
+
+        <div class="table-container">
+          <table class="summary-table wide">
+            <tr>
+              <th>Type</th>
+              <th>Stimulus</th>
+              <th>Response</th>
+              <th>Example</th>
+            </tr>
+            <tr>
+              <td>Phototropism</td>
+              <td>Light</td>
+              <td>Shoots toward (+), roots away (-)</td>
+              <td>Sunflower tracking sun</td>
+            </tr>
+            <tr>
+              <td>Geotropism</td>
+              <td>Gravity</td>
+              <td>Roots down (+), shoots up (-)</td>
+              <td>Root penetration into soil</td>
+            </tr>
+            <tr>
+              <td>Hydrotropism</td>
+              <td>Water</td>
+              <td>Roots toward water</td>
+              <td>Roots growing toward moist soil</td>
+            </tr>
+            <tr>
+              <td>Thigmotropism</td>
+              <td>Touch</td>
+              <td>Tendrils coil around supports</td>
+              <td>Grapevine climbing</td>
+            </tr>
+            <tr>
+              <td>Chemotropism</td>
+              <td>Chemicals</td>
+              <td>Growth toward chemicals</td>
+              <td>Pollen tube toward ovule</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <div class="highlight-box">
+          <p><strong>Auxin Mechanism:</strong></p>
+          <ul>
+            <li>Produced in shoot tips and young leaves</li>
+            <li>Moves away from light source</li>
+            <li>In stems: promotes cell elongation → bending toward light</li>
+            <li>In roots: inhibits cell elongation → bending downward</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY TRICK:</strong>
+          <p>"Shoots go to Light, Roots go to Water and Down" — Remember: Shoots (+) phototropism, Roots (+) geotropism & hydrotropism</p>
+        </div>
+
+        <h3>B. Nastic Movements (Nasties) <span class="type-badge badge-behavioural">NON-DIRECTIONAL</span></h3>
+        
+        <img src="https://kimi-web-img.moonshot.cn/img/cdn.britannica.com/3aa3bf6a2003c9f668e0748179d06e6b77e9b7b3.jpg" alt="Mimosa pudica sensitive plant" class="diagram-img">
+        <p class="image-caption">Mimosa pudica: Thigmonasty (touch-induced folding)</p>
+
+        <img src="https://kimi-web-img.moonshot.cn/img/i0.wp.com/744a5fbe18829312916a8f988dd444bb0b20bda2.jpg" alt="Tropic vs Nastic comparison" class="diagram-img">
+        <p class="image-caption">Tropic vs Nastic: Directional growth vs Turgor changes</p>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Type</th>
+              <th>Stimulus</th>
+              <th>Example</th>
+              <th>Mechanism</th>
+            </tr>
+            <tr>
+              <td>Thigmonasty</td>
+              <td>Touch/Shock</td>
+              <td>Mimosa pudica leaf folding</td>
+              <td>Turgor pressure changes</td>
+            </tr>
+            <tr>
+              <td>Photonasty</td>
+              <td>Light intensity</td>
+              <td>Flowers opening/closing</td>
+              <td>Turgor changes</td>
+            </tr>
+            <tr>
+              <td>Thermonasty</td>
+              <td>Temperature</td>
+              <td>Tulip flowers in warmth</td>
+              <td>Turgor changes</td>
+            </tr>
+            <tr>
+              <td>Nyctinasty</td>
+              <td>Day-night cycle</td>
+              <td>Legume leaves folding at night</td>
+              <td>Circadian rhythm</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <div class="highlight-box">
+          <p><strong>Mechanism:</strong> Motor cells in pulvini pump K⁺ ions out → Water exits by osmosis → Cells lose turgor → Organ moves. Reversible when cells rehydrate!</p>
+        </div>
+
+        <h3>Tropic vs Nastic Comparison</h3>
+        <div class="comparison-grid">
+          <div class="comparison-card">
+            <h5>🌿 Tropic</h5>
+            <ul>
+              <li>Directional</li>
+              <li>Slow (hours-days)</li>
+              <li>Cell growth</li>
+              <li>Irreversible</li>
+              <li>Auxin involved</li>
+            </ul>
+          </div>
+          <div class="comparison-card">
+            <h5>⚡ Nastic</h5>
+            <ul>
+              <li>Non-directional</li>
+              <li>Fast (seconds)</li>
+              <li>Turgor pressure</li>
+              <li>Reversible</li>
+              <li>No auxin</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- PLANT SUPPORTING TISSUES -->
+      <div class="section-card">
+        <h2><span class="emoji-header">🌿</span>Supporting Tissues in Plants</h2>
+
+        <img src="https://kimi-web-img.moonshot.cn/img/organismalbio.biosci.gatech.edu/0443b083904295cec116685df31cc60ec59ae5d0.png" alt="Plant cell types comparison" class="diagram-img">
+        <p class="image-caption">Plant tissues: Collenchyma, Sclerenchyma, Xylem, Phloem</p>
+
+        <h3>A. Collenchyma <span class="type-badge badge-functional">FLEXIBLE</span></h3>
+        
+        <img src="https://kimi-web-img.moonshot.cn/img/www.shutterstock.com/c8fc733547f21bbfcda02c7f2d8133747a7c2cd1.jpg" alt="Collenchyma cells" class="diagram-img">
+        <p class="image-caption">Collenchyma: Unevenly thickened primary walls at corners</p>
+
+        <div class="quick-facts">
+          <h4>🔍 Key Features</h4>
+          <ul>
+            <li><strong>Cell wall:</strong> Primary walls unevenly thickened with cellulose/pectin at corners</li>
+            <li><strong>Lignin:</strong> ABSENT</li>
+            <li><strong>Living cells:</strong> YES</li>
+            <li><strong>Location:</strong> Beneath epidermis in young stems, petioles, leaf veins</li>
+            <li><strong>Function:</strong> Flexible support for growing organs; allows elongation</li>
+          </ul>
+        </div>
+
+        <h3>B. Sclerenchyma <span class="type-badge badge-structural">RIGID</span></h3>
+        
+        <img src="https://kimi-web-img.moonshot.cn/img/www.carolina.com/4c7e1cd8678801265a3764fab8b7993586522d22.jpg" alt="Sclerenchyma tissue" class="diagram-img">
+        <p class="image-caption">Sclerenchyma: Thick, lignified secondary walls</p>
+
+        <img src="https://kimi-web-img.moonshot.cn/img/cdn.britannica.com/4c19743bbca89d969fd80b7bb963cf9479baa64c.jpg" alt="Sclerenchyma cross section" class="diagram-img">
+        <p class="image-caption">Sclerenchyma fibers and sclereids (stone cells)</p>
+
+        <div class="quick-facts">
+          <h4>🔍 Key Features</h4>
+          <ul>
+            <li><strong>Cell wall:</strong> Thick, heavily lignified secondary walls</li>
+            <li><strong>Lignin:</strong> PRESENT</li>
+            <li><strong>Living cells:</strong> NO (dead at maturity)</li>
+            <li><strong>Types:</strong> Fibers (long) and Sclereids (short/stone cells)</li>
+            <li><strong>Location:</strong> Mature stems, roots, leaf veins, seed coats</li>
+            <li><strong>Function:</strong> Rigid support and protection</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY TRICK:</strong>
+          <p>"Coll-enchyma = Collecting (growing)" — Found in growing regions, flexible</p>
+          <p>"Scler-enchyma = Scary (hard)" — Hard, dead, lignified, permanent support</p>
+        </div>
+
+        <h3>C. Xylem & Phloem</h3>
+        
+        <img src="https://kimi-web-img.moonshot.cn/img/organismalbio.biosci.gatech.edu/ad965783dbade72012f49475e32fcd8be8014d83.jpg" alt="Dicot vs Monocot stem" class="diagram-img">
+        <p class="image-caption">Dicot stem (ring arrangement) vs Monocot stem (scattered bundles)</p>
+
+        <div class="table-container">
+          <table class="summary-table wide">
+            <tr>
+              <th>Feature</th>
+              <th>Xylem</th>
+              <th>Phloem</th>
+            </tr>
+            <tr>
+              <td>Components</td>
+              <td>Tracheids, vessels, fibers, parenchyma</td>
+              <td>Sieve tubes, companion cells, fibers, parenchyma</td>
+            </tr>
+            <tr>
+              <td>Cell walls</td>
+              <td>Lignified secondary walls</td>
+              <td>Primary walls; fibers may be lignified</td>
+            </tr>
+            <tr>
+              <td>Living cells</td>
+              <td>Mostly dead at maturity</td>
+              <td>Yes (except fibers)</td>
+            </tr>
+            <tr>
+              <td>Primary function</td>
+              <td>Water and mineral transport</td>
+              <td>Organic nutrient transport</td>
+            </tr>
+            <tr>
+              <td>Secondary function</td>
+              <td>Mechanical support</td>
+              <td>Support (via fibers)</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <div class="highlight-box">
+          <p><strong>Key Point:</strong> Wood IS xylem! Provides both transport AND support.</p>
+        </div>
+      </div>
+
+      <!-- PART 2: ANIMAL SUPPORT -->
+      <div class="section-card">
+        <h2><span class="emoji-header">🦴</span>Part 2: Animal Support & Movement</h2>
+
+        <h3>Need for Support</h3>
+        <div class="quick-facts">
+          <ul>
+            <li>Maintain body shape against gravity</li>
+            <li>Support body weight (terrestrial)</li>
+            <li>Protection of soft internal organs</li>
+            <li>Locomotion — movement from place to place</li>
+            <li>Respiratory function — breathing muscle attachment</li>
+          </ul>
+        </div>
+
+        <h3>A. Exoskeleton <span class="type-badge badge-structural">EXTERNAL</span></h3>
+        
+        <img src="https://kimi-web-img.moonshot.cn/img/thumbs.dreamstime.com/89382ef92d98008c09c90a9e5ae2aafa60c013f5.jpg" alt="Insect exoskeleton structure" class="diagram-img">
+        <p class="image-caption">Chitin exoskeleton: Epicucicle, Exocuticle, Procuticle layers</p>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Feature</th>
+              <th>Description</th>
+            </tr>
+            <tr>
+              <td>Location</td>
+              <td>External</td>
+            </tr>
+            <tr>
+              <td>Composition</td>
+              <td>Chitin (polysaccharide); CaCO₃ in crustaceans</td>
+            </tr>
+            <tr>
+              <td>Secreted by</td>
+              <td>Epidermal cells</td>
+            </tr>
+            <tr>
+              <td>Growth</td>
+              <td>Does NOT grow → requires molting (ecdysis)</td>
+            </tr>
+            <tr>
+              <td>Living tissue</td>
+              <td>Acellular (non-living)</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <div class="quick-facts">
+          <h4>Functions</h4>
+          <ul>
+            <li>Protection against predators</li>
+            <li>Support — maintains body shape</li>
+            <li>Prevents desiccation (water loss)</li>
+            <li>Muscle attachment</li>
+            <li>Sensory function</li>
+          </ul>
+        </div>
+
+        <div class="highlight-box">
+          <p><strong>Disadvantages:</strong> Restricts growth; must molt; limits body size; heavy</p>
+        </div>
+
+        <h3>B. Endoskeleton <span class="type-badge badge-functional">INTERNAL</span></h3>
+        
+        <img src="https://kimi-web-img.moonshot.cn/img/uen.pressbooks.pub/4ae8979ad388652bb26fa4a6eabf82f91767aaf0.png" alt="Bone structure" class="diagram-img">
+        <p class="image-caption">Bone structure: Compact and spongy bone tissue</p>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Feature</th>
+              <th>Description</th>
+            </tr>
+            <tr>
+              <td>Location</td>
+              <td>Internal</td>
+            </tr>
+            <tr>
+              <td>Composition</td>
+              <td>Bone (calcium phosphate + collagen) and Cartilage</td>
+            </tr>
+            <tr>
+              <td>Growth</td>
+              <td>Grows with animal</td>
+            </tr>
+            <tr>
+              <td>Living tissue</td>
+              <td>Cellular (living cells present)</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <div class="quick-facts">
+          <h4>Advantages</h4>
+          <ul>
+            <li>Continuous growth</li>
+            <li>Greater flexibility</li>
+            <li>Larger body sizes possible</li>
+            <li>Better repair capabilities</li>
+          </ul>
+        </div>
+
+        <h3>Bone Composition</h3>
+        <div class="highlight-box">
+          <p><strong>Organic (30%):</strong> Collagen → flexibility</p>
+          <p><strong>Inorganic (70%):</strong> Calcium phosphate → hardness</p>
+        </div>
+      </div>
+
+      <!-- MAMMALIAN SKELETON -->
+      <div class="section-card">
+        <h2><span class="emoji-header">🦴</span>Mammalian Skeleton (206 bones)</h2>
+
+        <h3>Axial Skeleton (80 bones)</h3>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Component</th>
+              <th>Bones</th>
+              <th>Function</th>
+            </tr>
+            <tr>
+              <td>Skull</td>
+              <td>Cranium + Facial bones</td>
+              <td>Protects brain; supports face</td>
+            </tr>
+            <tr>
+              <td>Vertebral Column</td>
+              <td>33 vertebrae (C7, T12, L5, S5, C4)</td>
+              <td>Supports trunk; protects spinal cord</td>
+            </tr>
+            <tr>
+              <td>Thoracic Cage</td>
+              <td>Sternum + 12 pairs of ribs</td>
+              <td>Protects heart and lungs</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <h3>Appendicular Skeleton (126 bones)</h3>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Component</th>
+              <th>Bones</th>
+              <th>Function</th>
+            </tr>
+            <tr>
+              <td>Pectoral Girdle</td>
+              <td>2 clavicles + 2 scapulae</td>
+              <td>Attach upper limbs</td>
+            </tr>
+            <tr>
+              <td>Upper Limbs</td>
+              <td>Humerus, radius, ulna, carpals, metacarpals, phalanges</td>
+              <td>Grasping, manipulation</td>
+            </tr>
+            <tr>
+              <td>Pelvic Girdle</td>
+              <td>2 hip bones</td>
+              <td>Attach lower limbs; support organs</td>
+            </tr>
+            <tr>
+              <td>Lower Limbs</td>
+              <td>Femur, patella, tibia, fibula, tarsals, metatarsals, phalanges</td>
+              <td>Locomotion, weight-bearing</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <h3>Types of Joints</h3>
+        
+        <img src="https://kimi-web-img.moonshot.cn/img/brookbushinstitute.com/aa8bc52b8d5224fa02cb832a219156d44700643b" alt="Synovial joint types" class="diagram-img">
+        <p class="image-caption">Types of synovial joints: Hinge, Ball & Socket, Pivot, Saddle, etc.</p>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Joint Type</th>
+              <th>Movement</th>
+              <th>Examples</th>
+            </tr>
+            <tr>
+              <td>Hinge</td>
+              <td>Flexion/extension only</td>
+              <td>Elbow, knee, ankle</td>
+            </tr>
+            <tr>
+              <td>Ball & Socket</td>
+              <td>All movements + rotation</td>
+              <td>Shoulder, hip</td>
+            </tr>
+            <tr>
+              <td>Pivot</td>
+              <td>Rotation only</td>
+              <td>Atlanto-axial (C1-C2)</td>
+            </tr>
+            <tr>
+              <td>Saddle</td>
+              <td>2 planes</td>
+              <td>Thumb</td>
+            </tr>
+            <tr>
+              <td>Condyloid</td>
+              <td>2 planes</td>
+              <td>Wrist</td>
+            </tr>
+            <tr>
+              <td>Plane</td>
+              <td>Gliding/sliding</td>
+              <td>Intercarpal</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+      </div>
+
+      <!-- ATLAS AND AXIS -->
+      <div class="section-card">
+        <h2><span class="emoji-header">🦴</span>Special Vertebrae: Atlas (C1) & Axis (C2)</h2>
+
+        <img src="https://kimi-web-img.moonshot.cn/img/anatomycorner.com/eff54d8d2c366c38d04bac2692a2a705f3a4f691.jpg" alt="Atlas and Axis vertebrae" class="diagram-img">
+        <p class="image-caption">Atlas (C1) and Axis (C2) showing articulation and dens</p>
+
+        <img src="https://kimi-web-img.moonshot.cn/img/i0.wp.com/302d5945d11487254522332ef0f42d16ea845535.jpg" alt="Atlas vs Axis comparison" class="diagram-img">
+        <p class="image-caption">Comparison: Atlas holds the head, Axis allows rotation</p>
+
+        <div class="atlas-highlight">
+          <h4>⭐ ATLAS (C1) — "The Ring"</h4>
+          <ul>
+            <li><strong>NO BODY:</strong> Lacks vertebral body (unique!)</li>
+            <li><strong>NO SPINOUS PROCESS:</strong> Only posterior tubercle</li>
+            <li><strong>RING STRUCTURE:</strong> Anterior + Posterior arches + Lateral masses</li>
+            <li><strong>SUPERIOR ARTICULAR FACETS:</strong> Large, concave, kidney-shaped (articulate with skull)</li>
+            <li><strong>Function:</strong> Supports skull; nods head ("Yes")</li>
+          </ul>
+        </div>
+
+        <div class="atlas-highlight">
+          <h4>⭐ AXIS (C2) — "The Pivot"</h4>
+          <ul>
+            <li><strong>ODONTOID PROCESS (DENS):</strong> Tooth-like projection upward — MOST DISTINCTIVE FEATURE</li>
+            <li><strong>BODY:</strong> Present below dens</li>
+            <li><strong>SUPERIOR ARTICULAR FACETS:</strong> Large, flat, slightly convex (articulate with Atlas)</li>
+            <li><strong>Function:</strong> Allows head rotation ("No" movement)</li>
+          </ul>
+        </div>
+
+        <h3>Atlas vs Axis Comparison</h3>
+        <div class="table-container">
+          <table class="summary-table wide">
+            <tr>
+              <th>Feature</th>
+              <th>ATLAS (C1)</th>
+              <th>AXIS (C2)</th>
+            </tr>
+            <tr>
+              <td>Vertebral Body</td>
+              <td>❌ ABSENT</td>
+              <td>✅ Present (below dens)</td>
+            </tr>
+            <tr>
+              <td>Spinous Process</td>
+              <td>❌ Absent (tubercle only)</td>
+              <td>✅ Large, bifid</td>
+            </tr>
+            <tr>
+              <td>Dens/Odontoid</td>
+              <td>❌ Absent</td>
+              <td>✅ PRESENT</td>
+            </tr>
+            <tr>
+              <td>Overall Shape</td>
+              <td>Ring-like</td>
+              <td>Typical + upward projection</td>
+            </tr>
+            <tr>
+              <td>Primary Movement</td>
+              <td>Flexion/Extension (Yes)</td>
+              <td>Rotation (No)</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY TRICKS:</strong>
+          <p>"Atlas holds the world" → Ring-shaped, supports skull, no body to get in the way</p>
+          <p>"Axis is the pivot" → Has the tooth-like dens that Atlas rotates around</p>
+          <p>"Yes = Atlas" (nodding), "No = Axis" (shaking head side to side)</p>
+        </div>
+
+        <div class="highlight-box">
+          <p><strong>Clinical Note:</strong> C1 and C2 differ because C1's body fuses with C2 during development to become the dens. Fractures here are serious due to proximity to brainstem.</p>
+        </div>
+      </div>
+
+      <!-- VERTEBRAE COMPARISON -->
+      <div class="section-card">
+        <h2><span class="emoji-header">🦴</span>Vertebrae Types Comparison</h2>
+
+        <img src="https://kimi-web-img.moonshot.cn/img/o.quizlet.com/591da2e856ceb7fb113368928db6bdedd87dffee.png" alt="Vertebrae types comparison" class="diagram-img">
+        <p class="image-caption">Cervical, Thoracic, and Lumbar vertebrae compared</p>
+
+        <div class="table-container">
+          <table class="summary-table wide">
+            <tr>
+              <th>Feature</th>
+              <th>Cervical (C1-C7)</th>
+              <th>Thoracic (T1-T12)</th>
+              <th>Lumbar (L1-L5)</th>
+            </tr>
+            <tr>
+              <td>Body size</td>
+              <td>Small</td>
+              <td>Medium</td>
+              <td>Large</td>
+            </tr>
+            <tr>
+              <td>Spinous process</td>
+              <td>Bifid, short</td>
+              <td>Long, downward</td>
+              <td>Thick, broad, hatchet</td>
+            </tr>
+            <tr>
+              <td>Transverse foramen</td>
+              <td>Present</td>
+              <td>Absent</td>
+              <td>Absent</td>
+            </tr>
+            <tr>
+              <td>Articular facets</td>
+              <td>Horizontal</td>
+              <td>Vertical</td>
+              <td>Vertical</td>
+            </tr>
+            <tr>
+              <td>Rib facets</td>
+              <td>Absent (except C7)</td>
+              <td>Present</td>
+              <td>Absent</td>
+            </tr>
+            <tr>
+              <td>Function</td>
+              <td>Neck flexibility</td>
+              <td>Thorax protection</td>
+              <td>Weight-bearing</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+      </div>
+
+      <!-- JAMB EXAM TIPS -->
+      <div class="jamb-alert">
+        <h4>⚠️ CRITICAL JAMB EXAM TIPS</h4>
+        <ul>
+          <li><strong>Root responses:</strong> Positive geotropism (down), Negative phototropism (away from light)</li>
+          <li><strong>Auxin effects:</strong> Promotes stem growth, INHIBITS root growth</li>
+          <li><strong>Exoskeletons:</strong> NON-LIVING; endoskeletons are LIVING</li>
+          <li><strong>Atlas (C1):</strong> NO body, NO spinous process — ring-shaped</li>
+          <li><strong>Axis (C2):</strong> Has the dens (odontoid process) for rotation</li>
+          <li><strong>All cervical vertebrae:</strong> Have transverse foramen (not just C1/C2)</li>
+          <li><strong>Thoracic vertebrae:</strong> Only ones with rib facets</li>
+          <li><strong>Collenchyma:</strong> Living, flexible, growing regions</li>
+          <li><strong>Sclerenchyma:</strong> Dead, rigid, lignified, mature regions</li>
+          <li><strong>Nastic movements:</strong> Turgor pressure (fast, reversible), NOT growth</li>
+        </ul>
+      </div>
+
+      <!-- MNEMONICS -->
+      <div class="section-card">
+        <h2><span class="emoji-header">🧠</span>Memory Aids & Mnemonics</h2>
+        
+        <div class="memory-tip">
+          <strong>Tropic Movements:</strong>
+          <p>"Shoots go to Light, Roots go to Water and Down"</p>
+        </div>
+
+        <div class="memory-tip">
+          <strong>Plant Tissues:</strong>
+          <p>"Coll-enchyma = Collecting (growing)" — Flexible, growing regions</p>
+          <p>"Scler-enchyma = Scary (hard)" — Hard, dead, lignified</p>
+        </div>
+
+        <div class="memory-tip">
+          <strong>Atlas & Axis:</strong>
+          <p>"Atlas holds the world" — Ring-shaped, supports skull</p>
+          <p>"Axis is the pivot" — Has dens for rotation</p>
+          <p>"Yes = Atlas" (nodding), "No = Axis" (shaking)</p>
+        </div>
+
+        <div class="memory-tip">
+          <strong>Tropic vs Nastic:</strong>
+          <p>"Tropics = Growth" — Slow, permanent, directional</p>
+          <p>"Nasty = Nastic = Now" — Fast, immediate, reversible</p>
+        </div>
+      </div>
+
+      <!-- QUICK REVISION -->
+      <div class="section-card">
+        <h2><span class="emoji-header">📋</span>Quick Revision Checklist</h2>
+        
+        <div class="comparison-grid">
+          <div class="comparison-card">
+            <h5>🌿 Plants</h5>
+            <ul>
+              <li>Phototropism: Light → Auxin → Bend</li>
+              <li>Geotropism: Roots (+), Shoots (-)</li>
+              <li>Collenchyma: Living, flexible</li>
+              <li>Sclerenchyma: Dead, lignified</li>
+              <li>Nastic: Turgor (fast)</li>
+            </ul>
+          </div>
+          <div class="comparison-card">
+            <h5>🦴 Animals</h5>
+            <ul>
+              <li>Exoskeleton: Chitin, molt</li>
+              <li>Endoskeleton: Bone, grows</li>
+              <li>Atlas: No body, ring</li>
+              <li>Axis: Has dens, pivot</li>
+              <li>Cervical: Transverse foramen</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="quick-facts">
+          <h4>Key Distinguishing Features</h4>
+          <ul>
+            <li><strong>Tropic:</strong> Directional, growth-based, slow, irreversible</li>
+            <li><strong>Nastic:</strong> Non-directional, turgor-based, fast, reversible</li>
+            <li><strong>Atlas (C1):</strong> No body, no spine, ring-shaped</li>
+            <li><strong>Axis (C2):</strong> Has dens, allows rotation</li>
+            <li><strong>Hinge joint:</strong> One plane (elbow, knee)</li>
+            <li><strong>Ball & socket:</strong> All planes (shoulder, hip)</li>
+          </ul>
+        </div>
+      </div>
+
+      <p style="text-align: center; font-size: 16px; margin: 32px 0; font-weight: bold; color: var(--accent);">
+        🎯 Master Atlas & Axis — JAMB favorites! 🎓
+      </p>
+
+      <button class="explore-btn" onclick="alert('Practice JAMB past questions on Support & Movement!')">Practice JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item">
+      <button class="neumorphic-btn">🔍</button>
+      <p>Search</p>
+    </div>
+    <div class="nav-item center">
+      <button class="neumorphic-btn">⭐</button>
+      <p>Favorite</p>
+    </div>
+    <div class="nav-item">
+      <button class="neumorphic-btn">📚</button>
+      <p>Library</p>
+    </div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme) {
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const newTheme = body.classList.contains('light') ? 'dark' : 'light';
+      setTheme(newTheme);
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      const scrolled = (scrollTop / scrollHeight) * 100;
+      progressBar.style.width = scrolled + '%';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Biology - Respiration</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Biology</h1>
+      <p>Respiration<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Respiration</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 70:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration
+const CONFIG={TIME:4200,PASS:60}; // 70 minutes for 70 questions
+
+// Section mapping - variable section sizes (15,15,15,15,10)
+const SECTIONS={
+  0:"A: Respiratory Surfaces & Organs",
+  15:"B: Mechanism of Gaseous Exchange",
+  30:"C: Aerobic Respiration",
+  45:"D: Anaerobic Respiration & Fermentation",
+  60:"E: Experiments & Miscellaneous"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 70 JAMB Biology Respiration Questions
+const QUIZ_DATA=[
+  // Section A: Respiratory Surfaces & Organs (Questions 1-15)
+  {q:"Which of the following is NOT a characteristic of an efficient respiratory surface?",o:["Thin and moist","Large surface area","Thick and dry","Rich blood supply"],a:2,e:"Respiratory surfaces must be thin (one cell thick) and moist for gas diffusion, not thick and dry."},
+  {q:"The body surface serves as the respiratory organ in:",o:["Earthworm","Amoeba","Fish","Insect"],a:1,e:"Amoeba and Paramecium use direct diffusion through their cell membrane as they are unicellular."},
+  {q:"Earthworms can survive only in damp soil because:",o:["Their skin is permeable to water only","Their respiratory surface (skin) must remain moist for gas dissolution","They feed on decaying matter in wet soil","They have no lungs"],a:1,e:"Earthworms breathe through their moist, vascularized skin (cuticle). Dry conditions would prevent gas exchange."},
+  {q:"The respiratory organ of fish consists of the following structures EXCEPT:",o:["Gill arch","Gill filaments","Lamellae","Trachea"],a:3,e:"Trachea are found in insects, not fish. Fish have gill arches, filaments, and lamellae."},
+  {q:"In the gills of fish, the counter-current flow mechanism ensures:",o:["Faster swimming speed","Maximum oxygen extraction from water","Equal distribution of blood","Reduced water intake"],a:1,e:"Blood flows opposite to water flow, maintaining a concentration gradient that allows maximum O₂ diffusion into blood."},
+  {q:"Which organism uses the tracheal system for respiration?",o:["Toad","Grasshopper","Lizard","Rat"],a:1,e:"Insects like grasshoppers have spiracles → tracheae → tracheoles, delivering air directly to tissues without blood transport."},
+  {q:"The tracheal system of insects ends in:",o:["Tracheoles","Gills","Alveoli","Spiracles"],a:0,e:"Tracheoles are the fine branches that end directly in tissues where gas exchange occurs."},
+  {q:"Which of the following organisms does NOT use lungs for respiration?",o:["Bat","Lizard","Frog","Cockroach"],a:3,e:"Cockroaches use tracheal system. Bats, lizards, and frogs all use lungs (frog also uses skin)."},
+  {q:"The spiracles in insects are equivalent to which structure in mammals?",o:["Alveoli","Nostrils","Bronchi","Stomata"],a:1,e:"Spiracles are external openings for air entry, functionally equivalent to nostrils in mammals."},
+  {q:"Which adaptation gives the mammalian lung a large surface area for gas exchange?",o:["Bronchial tubes","Bronveoli","Bronchioles","Millions of alveoli"],a:3,e:"The 300-500 million alveoli provide the massive surface area needed for efficient gas exchange."},
+  {q:"The alveoli are well-suited for gas exchange because they are:",o:["Thick-walled and dry","Thick-walled with poor blood supply","Thin-walled, moist, and surrounded by capillaries","Thin-walled but dry"],a:2,e:"Alveoli walls are one cell thick (thin), moist, and surrounded by dense capillary networks."},
+  {q:"In plants, gases enter and leave through:",o:["Lenticels only","Stomata mainly","Roots only","Xylem vessels"],a:1,e:"While lenticels (stems) and root hairs function in gas exchange, stomata on leaves are the primary respiratory surfaces."},
+  {q:"Lenticels are found in plants on the:",o:["Leaves","Stems and roots","Flowers","Fruits"],a:1,e:"Lenticels are porous tissues on woody stems and roots that allow gas exchange when stomata are absent or closed."},
+  {q:"Which structure controls the opening and closing of stomata?",o:["Guard cells","Epidermal cells","Subsidiary cells","Mesophyll cells"],a:0,e:"Guard cells are kidney-shaped cells containing chloroplasts that regulate stomatal aperture through turgor changes."},
+  {q:"The primary function of the respiratory system is to:",o:["Break down food","Release energy from food","Facilitate gaseous exchange","Transport nutrients"],a:2,e:"While respiration releases energy, the respiratory system's primary function is facilitating gas exchange (O₂ in, CO₂ out)."},
+  
+  // Section B: Mechanism of Gaseous Exchange (Questions 16-30)
+  {q:"Stomata open during the day because:",o:["Guard cells lose water and become flaccid","Guard cells accumulate glucose, become turgid","Photosynthesis stops","Temperature increases"],a:1,e:"Light causes photosynthesis → glucose production → water enters guard cells by osmosis → turgor → stoma opens."},
+  {q:"During the night, stomata close to prevent:",o:["Entry of oxygen","Excessive water loss through transpiration","Entry of carbon dioxide","Photosynthesis"],a:1,e:"Without light for photosynthesis, guard cells lose turgor (flaccid) closing stomata to prevent excessive water loss."},
+  {q:"Which of the following is a correct sequence of air passage in mammals?",o:["Nostril → Pharynx → Larynx → Trachea → Bronchus → Bronchioles → Alveoli","Nostril → Larynx → Pharynx → Trachea → Bronchus → Alveoli","Nostril → Trachea → Pharynx → Larynx → Bronchus → Alveoli","Nostril → Pharynx → Larynx → Trachea → Bronchus → Bronchioles → Alveoli"],a:3,e:"Correct pathway: Nostril → Pharynx → Larynx → Trachea → Bronchus → Bronchioles → Alveoli."},
+  {q:"The diaphragm during inhalation:",o:["Relaxes and becomes dome-shaped","Contracts and flattens","Remains unchanged","Contracts and becomes dome-shaped"],a:1,e:"Inhalation: diaphragm contracts, flattens (moves downward), increasing thoracic volume and decreasing pressure."},
+  {q:"During exhalation in mammals, the rib cage:",o:["Moves upward and outward","Moves downward and inward","Remains stationary","Expands laterally"],a:1,e:"Exhalation: ribs move downward and inward, decreasing thoracic volume, increasing pressure to expel air."},
+  {q:"What happens to the pressure in the thoracic cavity during inhalation?",o:["Increases","Decreases","Remains constant","Fluctuates randomly"],a:1,e:"When diaphragm contracts and ribs expand, thoracic volume increases, pressure decreases (Boyle's Law), drawing air in."},
+  {q:"The volume of the thoracic cavity during exhalation:",o:["Increases","Decreases","Remains the same","Increases then decreases"],a:1,e:"Exhalation decreases thoracic volume as ribs descend and diaphragm relaxes into dome shape."},
+  {q:"Which muscle plays the major role in breathing?",o:["Biceps","Intercostal muscles and diaphragm","Triceps","Cardiac muscle"],a:1,e:"Intercostal muscles (between ribs) move rib cage; diaphragm changes thoracic volume—both essential for breathing."},
+  {q:"In fish, water enters through the:",o:["Operculum","Mouth","Nostrils","Gills directly"],a:1,e:"Fish take water in through the mouth, which then passes over the gills and exits through the operculum (gill cover)."},
+  {q:"The operculum in fish serves to:",o:["Protect the gills and pump water over them","Produce mucus","Filter oxygen only","Cover the eyes"],a:0,e:"The operculum is a bony flap covering and protecting gills while helping pump water across the gill filaments."},
+  {q:"Which gas is dissolved in the moisture of respiratory surfaces before diffusion?",o:["Oxygen only","Carbon dioxide only","Both oxygen and carbon dioxide","Nitrogen"],a:2,e:"Both O₂ and CO₂ must dissolve in the moisture layer before diffusing across respiratory surfaces."},
+  {q:"The concentration gradient for oxygen during gas exchange is maintained by:",o:["Blood circulation and continuous respiration","Cell wall thickness","Plasma proteins","Lymph flow"],a:0,e:"Continuous blood flow removes O₂-rich blood and brings CO₂-rich blood, maintaining diffusion gradients."},
+  {q:"Why is the tracheal system of insects considered efficient?",o:["It requires blood to transport gases","It delivers air directly to cells without blood circulation","It filters out nitrogen","It produces oxygen"],a:1,e:"Tracheoles end directly in tissues, so cells get O₂ without blood transport—highly efficient for small organisms."},
+  {q:"Which statement about gaseous exchange in plants is CORRECT?",o:["Stomata are more numerous on the upper epidermis","Stomata are more numerous on the lower epidermis to reduce transpiration","Stomata are more numerous on the upper epidermis of floating leaves","Stomata occur only on leaves"],a:1,e:"Most plants have more stomata on lower epidermis to minimize water loss; floating leaves have stomata on upper surface."},
+  {q:"The main difference between breathing and respiration is:",o:["Breathing involves lungs only; respiration involves all cells","Breathing is mechanical ventilation; respiration is biochemical oxidation","Breathing produces ATP; respiration uses ATP","Breathing is faster than respiration"],a:1,e:"Breathing (ventilation) is physical air movement; respiration is the cellular biochemical process breaking down glucose to release energy."},
+  
+  // Section C: Aerobic Respiration (Questions 31-45)
+  {q:"The correct chemical equation for aerobic respiration is:",o:["C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O + Energy","C₆H₁₂O₆ → 2C₂H₅OH + 2CO₂ + Energy","6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂","Glucose → Lactic acid + Energy"],a:0,e:"Aerobic respiration: Glucose + Oxygen → Carbon dioxide + Water + Energy (ATP)."},
+  {q:"Where does glycolysis occur in the cell?",o:["Mitochondria","Cytoplasm","Nucleus","Cell membrane"],a:1,e:"Glycolysis (splitting of glucose into pyruvic acid) occurs in the cytoplasm, outside mitochondria."},
+  {q:"The Krebs cycle takes place in the:",o:["Cytoplasm","Mitochondrial matrix","Ribosomes","Golgi apparatus"],a:1,e:"The Krebs cycle (Citric Acid Cycle) occurs in the mitochondrial matrix, while electron transport occurs on inner membrane."},
+  {q:"How many ATP molecules are produced during glycolysis?",o:["2 ATP","36 ATP","38 ATP","4 ATP"],a:0,e:"Net gain is 2 ATP (4 produced, 2 used). This is the only ATP from anaerobic respiration."},
+  {q:"The total ATP yield from one molecule of glucose in aerobic respiration is:",o:["2 ATP","36-38 ATP","40 ATP","2-4 ATP"],a:1,e:"Glycolysis (2 ATP) + Krebs cycle and Electron Transport (34-36 ATP) = 36-38 ATP total."},
+  {q:"Which stage of aerobic respiration does NOT require oxygen?",o:["Glycolysis","Krebs cycle","Electron transport chain","Oxidative phosphorylation"],a:0,e:"Glycolysis is anaerobic (doesn't need O₂); Krebs cycle and electron transport require oxygen."},
+  {q:"The end product of glycolysis is:",o:["Carbon dioxide and water","Ethanol","Pyruvic acid (pyruvate)","Lactic acid"],a:2,e:"Glucose (6C) is split into 2 molecules of pyruvic acid (3C each), which then enters mitochondria."},
+  {q:"In aerobic respiration, oxygen serves as the:",o:["Final hydrogen acceptor forming water","Initial hydrogen donor","Catalyst for glycolysis only","Final carbon acceptor"],a:0,e:"At the end of electron transport chain, O₂ accepts electrons and H⁺ to form water (H₂O)."},
+  {q:"Which of the following processes occurs in the cytoplasm?",o:["Krebs cycle only","Glycolysis only","Both glycolysis and fermentation","Fermentation only"],a:2,e:"Both glycolysis and fermentation (anaerobic respiration) occur in cytoplasm; Krebs cycle is in mitochondria."},
+  {q:"The conversion of pyruvic acid to carbon dioxide and water occurs during:",o:["Glycolysis","Krebs cycle and electron transport chain","Fermentation","Anaerobic respiration"],a:1,e:"Pyruvic acid enters mitochondria → Krebs cycle (produces CO₂) → Electron transport (uses O₂ to form H₂O)."},
+  {q:"Which statement about the energy yield of aerobic respiration is CORRECT?",o:["Most ATP is produced during glycolysis","Most ATP is produced during the Krebs cycle and electron transport","Krebs cycle produces more ATP than electron transport","Glycolysis produces 36 ATP"],a:1,e:"Only 2 ATP from glycolysis; 34-36 ATP from Krebs cycle and electron transport chain (oxidative phosphorylation)."},
+  {q:"The substance that enters the mitochondria after glycolysis is:",o:["Glucose","Pyruvic acid","Lactic acid","Ethanol"],a:1,e:"Pyruvic acid (from glycolysis) enters mitochondrial matrix where it is converted to acetyl-CoA for Krebs cycle."},
+  {q:"Which of the following is a product of the Krebs cycle?",o:["Glucose","CO₂","Lactic acid","Ethanol"],a:1,e:"CO₂ is released during the Krebs cycle when acetyl-CoA is broken down; water forms at electron transport."},
+  {q:"If 10 molecules of glucose undergo aerobic respiration, how many ATP molecules are produced?",o:["380","360-380","360-380","380-400"],a:1,e:"1 glucose = 36-38 ATP. Therefore 10 glucose = 360-380 ATP."},
+  {q:"The primary reason aerobic respiration produces more ATP than anaerobic is:",o:["Complete breakdown of glucose","Presence of oxygen as final electron acceptor","Occurs in mitochondria","Speed of reaction"],a:1,e:"Oxygen allows complete oxidation of glucose through Krebs cycle and electron transport chain, extracting maximum energy (36-38 ATP vs 2 ATP)."},
+  
+  // Section D: Anaerobic Respiration & Fermentation (Questions 46-60)
+  {q:"Anaerobic respiration occurs in the absence of:",o:["Carbon dioxide","Oxygen","Glucose","Water"],a:1,e:"'Anaerobic' means without oxygen; it occurs when oxygen is insufficient or absent."},
+  {q:"The end products of anaerobic respiration in animals are:",o:["Ethanol and carbon dioxide","Lactic acid and energy","Carbon dioxide and water","Oxygen and glucose"],a:1,e:"Animals produce lactic acid (lactate) + 2 ATP when oxygen is insufficient (e.g., during vigorous exercise)."},
+  {q:"In yeast cells, anaerobic respiration produces:",o:["Ethanol and carbon dioxide","Lactic acid","Water and carbon dioxide","Oxygen"],a:0,e:"Yeast undergoes alcoholic fermentation: Glucose → Ethanol + CO₂ + 2 ATP."},
+  {q:"How many ATP molecules are produced in anaerobic respiration?",o:["2 ATP","36 ATP","38 ATP","4 ATP"],a:0,e:"Both animal and yeast anaerobic respiration produce only 2 ATP per glucose molecule (vs 36-38 for aerobic)."},
+  {q:"Muscle fatigue during vigorous exercise is caused by accumulation of:",o:["Ethanol","Lactic acid","Carbon dioxide","Water"],a:1,e:"When oxygen supply can't meet demand, lactic acid accumulates, lowering pH and causing fatigue/cramps."},
+  {q:"Oxygen debt is defined as the:",o:["Amount of oxygen required to oxidize lactic acid accumulated during anaerobic respiration","Total oxygen in the atmosphere","Oxygen stored in muscle hemoglobin","Oxygen required for glycolysis only"],a:0,e:"After exercise, heavy breathing repays the oxygen debt by oxidizing accumulated lactic acid back to pyruvic acid/glucose."},
+  {q:"The process of anaerobic respiration in yeast is specifically called:",o:["Lactic acid fermentation","Alcoholic fermentation","Acetic acid fermentation","Propionic fermentation"],a:1,e:"Yeast produces alcohol (ethanol); bacteria produce lactic acid; specific terms distinguish the pathways."},
+  {q:"Which of the following is an economic importance of yeast fermentation?",o:["Production of bread and alcoholic beverages","Production of plastics","Production of carbon paper","Manufacture of antibiotics"],a:0,e:"Yeast fermentation produces CO₂ (makes bread rise) and ethanol (beer/wine production)."},
+  {q:"In the fermentation experiment, lime water turns milky due to:",o:["Absorption of oxygen","Production of carbon dioxide","Production of ethanol","Absorption of heat"],a:1,e:"CO₂ reacts with calcium hydroxide (lime water) to form insoluble calcium carbonate, causing milky appearance."},
+  {q:"The word equation for anaerobic respiration in muscle is:",o:["Glucose → Lactic acid + Energy","Glucose → Ethanol + Carbon dioxide + Energy","Glucose + Oxygen → Carbon dioxide + Water","Glucose → Pyruvic acid + Energy"],a:0,e:"Muscle cells (animals) convert glucose to lactic acid when oxygen is insufficient, releasing only 2 ATP."},
+  {q:"Which condition promotes anaerobic respiration in human muscles?",o:["Sleeping","Vigorous exercise","Deep breathing","Normal walking"],a:1,e:"Vigorous exercise creates high oxygen demand that exceeds supply, forcing muscles into anaerobic respiration."},
+  {q:"The accumulation of lactic acid in muscles can be removed by:",o:["Rest and increased breathing (oxygen debt repayment)","Taking alkaline drinks only","Drinking more water","Immediate sleep"],a:0,e:"Oxygen debt is repaid through increased breathing during rest, oxidizing lactic acid and removing it from muscles."},
+  {q:"Which of the following organisms undergoes both aerobic and anaerobic respiration?",o:["Virus","Yeast","Amoeba","Human beings"],a:3,e:"Humans normally use aerobic respiration but switch to anaerobic (lactic acid) in muscles during oxygen deficiency (vigorous exercise)."},
+  {q:"The enzyme involved in the conversion of pyruvic acid to ethanol is:",o:["Zymase","Amylase","Lipase","Pepsin"],a:0,e:"Zymase (in yeast) converts pyruvic acid to ethanol and CO₂; other enzymes listed have different functions."},
+  {q:"Which statement about anaerobic respiration is INCORRECT?",o:["It produces less energy than aerobic respiration","It occurs in the cytoplasm only","It produces toxic substances (lactic acid or ethanol)","It requires oxygen"],a:3,e:"Anaerobic respiration specifically occurs WITHOUT oxygen; requiring oxygen makes it aerobic."},
+  
+  // Section E: Experiments & Miscellaneous (Questions 61-70)
+  {q:"In an experiment to demonstrate heat production during respiration, the control setup should contain:",o:["Germinating seeds","Boiled (dead) seeds","Wet cotton only","Living seedlings"],a:1,e:"Boiled seeds are dead and won't respire, serving as control to compare against living germinating seeds that produce heat."},
+  {q:"When limewater is placed in a flask with germinating seeds, it turns milky proving that:",o:["Oxygen is consumed","Carbon dioxide is produced","Heat is released","Water is produced"],a:1,e:"Limewater (calcium hydroxide) turns milky in presence of CO₂, confirming respiratory gas production."},
+  {q:"Hydrogencarbonate indicator changes from red to yellow when:",o:["Carbon dioxide concentration increases (becomes acidic)","Oxygen concentration decreases","Temperature increases","Light is absent"],a:0,e:"CO₂ dissolves in water forming carbonic acid, lowering pH and changing indicator from red to yellow."},
+  {q:"In the respiratory quotient (RQ) experiment, if an organism uses fat exclusively, the RQ value will be approximately:",o:["0.7","1.0","0.9","1.2"],a:0,e:"RQ = CO₂ produced/O₂ consumed. For fats: 0.7; Carbohydrates: 1.0; Proteins: 0.8-0.9."},
+  {q:"The respiratory substrate with an RQ of 1.0 is:",o:["Carbohydrate/Glucose","Fats","Proteins","Organic acids"],a:0,e:"Glucose (C₆H₁₂O₆) has equal molecules of O₂ consumed and CO₂ produced (6:6), giving RQ = 1.0."},
+  {q:"Which experimental observation proves that oxygen is used up during respiration?",o:["Rise in temperature","Colored indicator changing from red to yellow","Volume of gas decreasing in graduated tube","All of the above"],a:1,e:"Hydrogencarbonate indicator turning yellow shows CO₂ accumulation (from O₂ usage); CO₂ production proves respiration occurring using oxygen."},
+  {q:"Germinating seeds are preferred over dry seeds in respiration experiments because:",o:["They are easier to handle","They respire more actively, showing results faster","They contain more starch","They are cheaper"],a:1,e:"Germinating seeds have high metabolic activity and respiration rate, making experimental results visible quickly."},
+  {q:"The rate of respiration is affected by all EXCEPT:",o:["Temperature","Water/moisture","Oxygen availability","Light intensity"],a:3,e:"Light affects photosynthesis, not respiration directly. Temperature, water, and oxygen all affect respiratory rate."},
+  {q:"Which of the following correctly compares aerobic and anaerobic respiration? Feature: Aerobic produces 38 ATP vs Anaerobic 2 ATP; Requires O₂ vs Does not; End products CO₂+H₂O vs Lactic acid/Ethanol",o:["Only statement A is correct","Only statement B is correct","Only statement C is correct","All statements are correct"],a:3,e:"All statements are correct: Aerobic produces 38 ATP vs 2 ATP; requires O₂ vs doesn't; produces CO₂+H₂O vs Lactic acid/Ethanol."},
+  {q:"The ultimate goal of cellular respiration is to produce:",o:["Carbon dioxide","Water","ATP (energy currency)","Heat only"],a:2,e:"While CO₂, H₂O, and heat are by-products, the primary purpose is generating ATP (Adenosine Triphosphate) for cellular activities."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('respiration_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('respiration_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/70`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('respiration_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=45?'Ready for JAMB!':pct>=38?'Good, review weak areas':pct>=30?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections - using actual section boundaries
+  const sectionStarts=[0,15,30,45,60,70];
+  const sectionNames=["A: Respiratory Surfaces & Organs","B: Mechanism of Gaseous Exchange","C: Aerobic Respiration","D: Anaerobic Respiration & Fermentation","E: Experiments & Miscellaneous"];
+  
+  for(let s=0;s<5;s++){
+    const start=sectionStarts[s];
+    const end=sectionStarts[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('respiration_quiz_auth');
+  sessionStorage.removeItem('respiration_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('respiration_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('respiration_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

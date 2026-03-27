@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Biology - Excretion</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    :root { --background: #1e1e2f; --shadow-in: #171723; --shadow-out: #25253b; --text-primary: #f0f0ff; --text-secondary: #c0c0e0; --accent: #1db954; --accent-secondary: #ff6b6b; --accent-tertiary: #4ecdc4; --card-bg: #2a2a3f; }
+    body.light { --background: #e0e0e0; --shadow-in: #bebebe; --shadow-out: #ffffff; --text-primary: #1a1a1a; --text-secondary: #444; --card-bg: #f8f8f8; }
+    body { background: var(--background); color: var(--text-primary); display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow-x: hidden; }
+    .container { width: 100%; max-width: 420px; background: var(--background); border-radius: 20px; box-shadow: 10px 10px 20px var(--shadow-in), -10px -10px 20px var(--shadow-out); overflow: hidden; position: relative; height: 750px; overflow-y: auto; padding-top: 70px; padding-bottom: 80px; }
+    .neumorphic { background: var(--background); box-shadow: 5px 5px 10px var(--shadow-in), -5px -5px 10px var(--shadow-out); border-radius: 15px; }
+    .neumorphic-btn { background: var(--background); border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); cursor: pointer; color: var(--text-primary); font-size: 18px; transition: all 0.3s ease; }
+    .neumorphic-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.95); }
+    .top-bar { position: fixed; top: 0; width: 100%; max-width: 420px; background: var(--background); padding: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 5px 10px var(--shadow-in); z-index: 20; }
+    .top-bar .header { font-size: 18px; font-weight: bold; color: var(--accent); }
+    .top-bar .right-icons { display: flex; gap: 10px; }
+    .content { padding: 20px 16px; line-height: 1.7; }
+    .main-header { text-align: center; margin-bottom: 28px; padding: 20px; border-radius: 20px; background: rgba(29, 185, 84, 0.1); }
+    .main-header h1 { font-size: 26px; margin-bottom: 8px; color: var(--accent); font-weight: 800; }
+    .main-header p.subtitle { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
+    .section-card { background: var(--card-bg); padding: 24px 18px; border-radius: 20px; box-shadow: inset 4px 4px 10px var(--shadow-in), inset -4px -4px 10px var(--shadow-out); margin-bottom: 24px; border-left: 4px solid var(--accent); }
+    .section-card h2 { font-size: 20px; margin-bottom: 16px; color: var(--accent); font-weight: bold; display: flex; align-items: center; gap: 8px; }
+    .section-card h3 { font-size: 17px; margin: 20px 0 12px; color: var(--accent-tertiary); font-weight: 600; padding-left: 12px; border-left: 3px solid var(--accent-tertiary); }
+    .section-card h4 { font-size: 15px; margin: 16px 0 10px; color: var(--accent-secondary); font-weight: 600; }
+    .section-card p { margin-bottom: 14px; font-size: 14px; color: var(--text-primary); text-align: justify; }
+    .section-card ul, .section-card ol { padding-left: 20px; margin: 12px 0; }
+    .section-card li { margin-bottom: 8px; font-size: 14px; color: var(--text-primary); line-height: 1.6; }
+    .table-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 16px 0; border-radius: 12px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); }
+    .table-container::-webkit-scrollbar { height: 6px; }
+    .table-container::-webkit-scrollbar-track { background: var(--shadow-in); border-radius: 3px; }
+    .table-container::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+    .summary-table { width: 100%; min-width: 500px; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+    .summary-table th { background: var(--accent); color: #000; padding: 12px 10px; text-align: left; font-weight: 600; white-space: nowrap; }
+    .summary-table td { padding: 10px; border-bottom: 1px solid var(--shadow-in); background: var(--card-bg); white-space: nowrap; }
+    .summary-table tr:last-child td { border-bottom: none; }
+    .summary-table tr:nth-child(even) td { background: rgba(255,255,255,0.03); }
+    .summary-table.wide { min-width: 600px; }
+    .table-scroll-hint { font-size: 11px; color: var(--text-secondary); text-align: center; margin-top: 4px; font-style: italic; }
+    .quick-facts { background: linear-gradient(135deg, rgba(29,185,84,0.1), rgba(78,205,196,0.1)); padding: 16px; border-radius: 15px; margin: 16px 0; border: 1px solid rgba(29,185,84,0.3); }
+    .quick-facts h4 { color: var(--accent); margin-bottom: 10px; font-size: 15px; }
+    .quick-facts ul { margin: 0; padding-left: 18px; }
+    .quick-facts li { margin-bottom: 6px; font-size: 13px; }
+    .memory-tip { background: rgba(255,107,107,0.1); padding: 14px 16px; border-radius: 12px; margin: 16px 0; border-left: 4px solid var(--accent-secondary); }
+    .memory-tip strong { color: var(--accent-secondary); display: block; margin-bottom: 6px; font-size: 14px; }
+    .memory-tip p { margin: 0; font-size: 13px; font-style: italic; }
+    .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+    .comparison-card { background: var(--background); padding: 14px; border-radius: 12px; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); }
+    .comparison-card h5 { color: var(--accent); font-size: 14px; margin-bottom: 8px; text-align: center; }
+    .comparison-card ul { margin: 0; padding-left: 16px; font-size: 12px; }
+    .comparison-card li { margin-bottom: 4px; font-size: 12px; }
+    .diagram-img { width: 100%; max-height: 280px; object-fit: contain; border-radius: 12px; margin: 14px 0 10px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); background: #fff; padding: 8px; }
+    .nav-bar { position: fixed; bottom: 0; width: 100%; max-width: 420px; background: var(--background); padding: 10px; display: flex; justify-content: space-around; box-shadow: 0 -5px 10px var(--shadow-in); z-index: 20; }
+    .nav-bar .nav-item { text-align: center; position: relative; }
+    .nav-bar .nav-item button { width: 40px; height: 40px; font-size: 18px; color: var(--text-primary); }
+    .nav-bar .nav-item.center button { width: 50px; height: 50px; font-size: 24px; background: var(--accent); box-shadow: 0 0 15px var(--accent), 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); color: #000; }
+    .nav-bar .nav-item p { display: none; font-size: 11px; margin-top: 4px; color: var(--text-primary); }
+    .nav-bar .nav-item.active p { display: block; }
+    .progress-container { position: fixed; top: 70px; left: 0; width: 100%; max-width: 420px; height: 4px; background: var(--shadow-in); z-index: 15; }
+    .progress-bar { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
+    .explore-btn { background: var(--accent); border: none; padding: 14px 28px; border-radius: 25px; color: #000; cursor: pointer; box-shadow: 4px 4px 8px var(--shadow-in), -4px -4px 8px var(--shadow-out); font-size: 16px; margin: 24px auto; display: block; text-align: center; font-weight: bold; transition: all 0.3s ease; }
+    .explore-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.98); }
+    .jamb-alert { background: linear-gradient(135deg, rgba(255,193,7,0.15), rgba(255,152,0,0.1)); border: 1px solid rgba(255,193,7,0.4); border-radius: 12px; padding: 16px; margin: 20px 0; }
+    .jamb-alert h4 { color: #ffc107; margin-bottom: 10px; font-size: 15px; }
+    .jamb-alert ul { margin: 0; padding-left: 18px; }
+    .jamb-alert li { font-size: 13px; margin-bottom: 6px; }
+    .highlight-box { background: rgba(78,205,196,0.1); padding: 12px 16px; border-radius: 10px; margin: 12px 0; border-left: 3px solid var(--accent-tertiary); }
+    .type-badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; margin-right: 6px; }
+    .badge-structural { background: rgba(29,185,84,0.2); color: var(--accent); }
+    .badge-behavioural { background: rgba(255,107,107,0.2); color: var(--accent-secondary); }
+    .badge-functional { background: rgba(78,205,196,0.2); color: var(--accent-tertiary); }
+    .image-caption { text-align: center; font-size: 12px; color: var(--text-secondary); font-style: italic; margin-top: -8px; margin-bottom: 12px; }
+  </style>
+</head>
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">BIOLOGY</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📖 Bookmarked for later study!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>🚽 Chapter 8: Excretion</h1>
+        <p class="subtitle">Complete Consolidated Notes – Nephron, Hormones, Structures & Plant Excretion</p>
+      </div>
+
+      <!-- PART 1: DEFINITION & SIGNIFICANCE -->
+      <div class="section-card">
+        <h2>📌 1. Definition & Significance of Excretion</h2>
+        
+        <p><strong>Definition:</strong> Excretion is the removal of metabolic waste products (toxic substances produced during cell metabolism) to prevent harm and maintain internal balance (homeostasis).</p>
+
+        <div class="quick-facts">
+          <h4>🔥 Why It Matters</h4>
+          <ul>
+            <li>Prevents toxicity from wastes like ammonia, urea, CO₂</li>
+            <li>Maintains water/salt balance (osmoregulation), pH, blood pressure</li>
+            <li>Without excretion → poisoning or fatal imbalance → death</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY TRICK:</strong>
+          <p>"Excrete or die-crete" — Remove waste or suffer the fate!</p>
+        </div>
+      </div>
+
+      <!-- PART 2: TYPES OF EXCRETORY STRUCTURES -->
+      <div class="section-card">
+        <h2>🛠️ 2. Types of Excretory Structures</h2>
+
+        <div class="table-container">
+          <table class="summary-table wide">
+            <tr>
+              <th>Structure</th>
+              <th>Organism</th>
+              <th>Key Feature</th>
+              <th>Function</th>
+            </tr>
+            <tr>
+              <td>Contractile Vacuole</td>
+              <td>Amoeba, Paramecium</td>
+              <td>Pulsating, star-shaped with canals</td>
+              <td>Pumps out excess water + ammonia (freshwater osmoregulation)</td>
+            </tr>
+            <tr>
+              <td>Flame Cell</td>
+              <td>Planaria (flatworms)</td>
+              <td>Cilia beat like flame in cup-shaped cell</td>
+              <td>Filters body fluid, removes wastes via tubules</td>
+            </tr>
+            <tr>
+              <td>Nephridium</td>
+              <td>Earthworm</td>
+              <td>Coiled tube, nephrostome, bladder</td>
+              <td>Removes wastes from coelom fluid (mini-kidney)</td>
+            </tr>
+            <tr>
+              <td>Malpighian Tubule</td>
+              <td>Insects (grasshopper)</td>
+              <td>Blind tubes in haemocoel, empty into gut</td>
+              <td>Converts ammonia → uric acid (water conservation)</td>
+            </tr>
+            <tr>
+              <td>Kidney</td>
+              <td>Vertebrates (humans)</td>
+              <td>Nephrons (functional units)</td>
+              <td>Urine formation, osmoregulation</td>
+            </tr>
+            <tr>
+              <td>Stoma</td>
+              <td>Plant leaves</td>
+              <td>Pores with guard cells</td>
+              <td>Releases O₂, CO₂, water vapour</td>
+            </tr>
+            <tr>
+              <td>Lenticel</td>
+              <td>Woody plant stems/bark</td>
+              <td>Pores in periderm (cork layer)</td>
+              <td>Gas exchange, waste release (O₂, CO₂)</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY TRICK:</strong>
+          <p>"Amoeba vacuole → Flame Planaria → Nephridium Earth → Malpighian Insect → Kidney Human → Stoma/Lenticel Plant"</p>
+        </div>
+
+        <img src="https://example.com/contractile-vacuole-paramecium.jpg" alt="Contractile Vacuole in Paramecium" class="diagram-img">
+        <p class="image-caption">Contractile vacuole in Paramecium – pulsating osmoregulation</p>
+
+        <img src="https://example.com/flame-cell-planaria.jpg" alt="Flame Cell in Planaria" class="diagram-img">
+        <p class="image-caption">Flame cell system in Planaria – protonephridia</p>
+
+        <img src="https://example.com/nephridium-earthworm.jpg" alt="Nephridium in Earthworm" class="diagram-img">
+        <p class="image-caption">Nephridium in earthworm – coiled excretory tubule</p>
+
+        <img src="https://example.com/malpighian-tubules-insect.jpg" alt="Malpighian Tubules in Insect" class="diagram-img">
+        <p class="image-caption">Malpighian tubules in grasshopper – uric acid excretion</p>
+
+        <img src="https://example.com/human-kidney-nephron.jpg" alt="Human Kidney & Nephron" class="diagram-img">
+        <p class="image-caption">Human kidney – external view + nephron structure</p>
+
+        <img src="https://example.com/stoma-guard-cells.jpg" alt="Stoma open and closed" class="diagram-img">
+        <p class="image-caption">Stoma – open vs closed with guard cells</p>
+
+        <img src="https://example.com/lenticel-stem-bark.jpg" alt="Lenticel in woody stem" class="diagram-img">
+        <p class="image-caption">Lenticels on tree bark – gas exchange pores</p>
+      </div>
+
+      <!-- PART 3: HUMAN EXCRETORY MECHANISMS -->
+      <div class="section-card">
+        <h2>👤 3. Excretory Mechanisms in Humans</h2>
+
+        <h3>i. Kidneys (Main Organ – Nephron Functions)</h3>
+        <p>Three major processes:</p>
+        <ul>
+          <li><strong>Ultrafiltration</strong> (glomerulus + Bowman's capsule): High pressure filters water, urea, salts, glucose → glomerular filtrate (\~180 L/day). Large molecules (cells, proteins) stay in blood.</li>
+          <li><strong>Reabsorption</strong> (mainly PCT): Glucose (100%), amino acids, \~70% water/Na⁺/Cl⁻/HCO₃⁻ returned to blood.</li>
+          <li><strong>Secretion</strong> (PCT/DCT): H⁺, K⁺, drugs, NH₄⁺ added to tubule.</li>
+        </ul>
+
+        <div class="highlight-box">
+          <p><strong>Loop of Henle:</strong> Countercurrent multiplier creates medullary gradient (300–1200 mOsm/L) → enables urine concentration.</p>
+          <p><strong>Collecting duct:</strong> ADH controls final water reabsorption → urine concentration.</p>
+        </div>
+
+        <!-- Added images for human excretory organs -->
+        <img src="https://www.niddk.nih.gov/-/media/Images/Health-Information/Urologic-Diseases/Kidney-Failure/English/kidney-nephron-labeled.png" alt="Labeled diagram of human kidney and nephron" class="diagram-img">
+        <p class="image-caption">Human kidney cross-section with nephron (labeled: glomerulus, tubule, collecting duct, blood flow)</p>
+
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Nephron.svg/800px-Nephron.svg.png" alt="Detailed labeled nephron structure" class="diagram-img">
+        <p class="image-caption">Detailed structure of a nephron showing renal corpuscle, proximal tubule, loop of Henle, distal tubule & collecting duct</p>
+
+        <h3>ii. Lungs</h3>
+        <p>Remove CO₂ + water vapour during exhalation.</p>
+
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Alveoli_%28anatomy%29.svg/800px-Alveoli_%28anatomy%29.svg.png" alt="Labeled alveoli and gas exchange in lungs" class="diagram-img">
+        <p class="image-caption">Alveoli in lungs – site of gas exchange (O₂ in, CO₂ out as excretory product)</p>
+
+        <h3>iii. Skin</h3>
+        <p>Sweat glands excrete water, urea, salts, small amount of ammonia. Also helps thermoregulation.</p>
+
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Skin_layers.svg/800px-Skin_layers.svg.png" alt="Cross-section of human skin showing sweat glands" class="diagram-img">
+        <p class="image-caption">Human skin cross-section (labeled sweat gland/duct for excretion of sweat containing urea & salts)</p>
+
+      </div>
+
+      <!-- PART 4: NEPHRON DETAILED FUNCTIONS -->
+      <div class="section-card">
+        <h2>🔬 4. Nephron – Detailed Functions</h2>
+
+        <div class="table-container">
+          <table class="summary-table wide">
+            <tr>
+              <th>Nephron Part</th>
+              <th>Main Process</th>
+              <th>Reabsorbed</th>
+              <th>Secreted</th>
+              <th>Hormone/Notes</th>
+            </tr>
+            <tr>
+              <td>Glomerulus + Bowman's</td>
+              <td>Ultrafiltration</td>
+              <td>—</td>
+              <td>—</td>
+              <td>High pressure</td>
+            </tr>
+            <tr>
+              <td>Proximal Convoluted Tubule (PCT)</td>
+              <td>Obligatory reabsorption (\~65–70%)</td>
+              <td>Glucose 100%, AA, Na⁺, water, HCO₃⁻</td>
+              <td>H⁺, NH₄⁺, drugs</td>
+              <td>No direct hormone</td>
+            </tr>
+            <tr>
+              <td>Descending Loop of Henle</td>
+              <td>Water out (passive)</td>
+              <td>Water</td>
+              <td>—</td>
+              <td>Permeable to water</td>
+            </tr>
+            <tr>
+              <td>Ascending Loop of Henle</td>
+              <td>Salt out (active)</td>
+              <td>Na⁺, Cl⁻</td>
+              <td>—</td>
+              <td>Impermeable to water</td>
+            </tr>
+            <tr>
+              <td>Distal Convoluted Tubule</td>
+              <td>Fine tuning</td>
+              <td>Na⁺, Ca²⁺</td>
+              <td>K⁺, H⁺</td>
+              <td>Aldosterone (Na⁺), PTH (Ca²⁺)</td>
+            </tr>
+            <tr>
+              <td>Collecting Duct</td>
+              <td>Variable water reabsorption</td>
+              <td>Water (ADH-dependent)</td>
+              <td>K⁺, H⁺</td>
+              <td>ADH (aquaporins)</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY TRICK:</strong>
+          <p>PCT = "Please Come Take" (glucose, AA, most Na⁺ & water)</p>
+          <p>Loop = "Down Water – Up Salt"</p>
+          <p>DCT + CD = "Decide & Concentrate" (hormones rule here)</p>
+        </div>
+      </div>
+
+      <!-- PART 5: HORMONAL REGULATION -->
+      <div class="section-card">
+        <h2>⚖️ 5. Hormonal Regulation of Kidneys</h2>
+
+        <div class="quick-facts">
+          <h4>Main Hormones & Triggers</h4>
+          <ul>
+            <li><strong>RAAS / Aldosterone</strong>: Low BP / low volume / low Na⁺ → ↑ Na⁺ & water retention → ↑ BP</li>
+            <li><strong>ADH (Vasopressin)</strong>: High osmolarity / low volume → ↑ water reabsorption → concentrated urine</li>
+            <li><strong>ANP</strong>: High BP / high volume → ↑ Na⁺ & water excretion → ↓ BP</li>
+          </ul>
+        </div>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Hormone</th>
+              <th>Trigger</th>
+              <th>Main Effect</th>
+              <th>Net Result</th>
+            </tr>
+            <tr>
+              <td>RAAS / Aldosterone</td>
+              <td>↓ BP, ↓ volume</td>
+              <td>↑ Na⁺ & water retention, K⁺ secretion</td>
+              <td>↑ BP & volume</td>
+            </tr>
+            <tr>
+              <td>ADH</td>
+              <td>↑ osmolarity, ↓ volume</td>
+              <td>↑ water reabsorption</td>
+              <td>Concentrated urine</td>
+            </tr>
+            <tr>
+              <td>ANP</td>
+              <td>↑ BP, ↑ volume</td>
+              <td>↑ Na⁺ & water excretion</td>
+              <td>↓ BP & volume</td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY TRICK:</strong>
+          <p>"RAAS raises, ADH concentrates, ANP lowers – balance restored!"</p>
+        </div>
+      </div>
+
+      <!-- PART 6: PLANT EXCRETION & ECONOMIC IMPORTANCE -->
+      <div class="section-card">
+        <h2>🌿 6. Excretory Products of Plants + Economic Importance</h2>
+
+        <p>Plants excrete via stomata, lenticels, leaf shedding, vacuoles.</p>
+
+        <div class="table-container">
+          <table class="summary-table wide">
+            <tr>
+              <th>Product</th>
+              <th>Source/Example</th>
+              <th>Economic Importance</th>
+            </tr>
+            <tr>
+              <td>Oxygen</td>
+              <td>Photosynthesis</td>
+              <td>Respiration, ozone layer</td>
+            </tr>
+            <tr>
+              <td>CO₂</td>
+              <td>Respiration (night)</td>
+              <td>Fire extinguishers, photosynthesis</td>
+            </tr>
+            <tr>
+              <td>Tannins</td>
+              <td>Oak, tea</td>
+              <td>Leather tanning, dyes, medicine</td>
+            </tr>
+            <tr>
+              <td>Resins</td>
+              <td>Pine</td>
+              <td>Varnish, incense, adhesives</td>
+            </tr>
+            <tr>
+              <td>Gums</td>
+              <td>Acacia</td>
+              <td>Food thickener, medicine, glue</td>
+            </tr>
+            <tr>
+              <td>Mucilage</td>
+              <td>Okra, aloe</td>
+              <td>Laxative, cosmetics</td>
+            </tr>
+            <tr>
+              <td>Alkaloids</td>
+              <td>Quinine, caffeine</td>
+              <td>Anti-malaria, stimulants</td>
+            </tr>
+            <tr>
+              <td>Latex</td>
+              <td>Rubber tree</td>
+              <td>Tyres, gloves</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+      </div>
+
+      <!-- JAMB HOT TIPS -->
+      <div class="jamb-alert">
+        <h4>⚠️ JAMB HOT TIPS & HIGH-YIELD POINTS</h4>
+        <ul>
+          <li>Draw & label full nephron + RAAS pathway + stoma (open/closed)</li>
+          <li>Compare excretory products: Insects → uric acid (water saving), Mammals → urea, Fish → ammonia</li>
+          <li>Economic importance of plant products = easy 2–3 marks</li>
+          <li>RAAS → blood volume/pressure, ADH → osmolarity control</li>
+          <li>Malpighian tubules → uric acid = major insect adaptation</li>
+          <li>Countercurrent multiplier (Loop of Henle) = urine concentration mechanism</li>
+          <li>ANP opposes RAAS & ADH</li>
+        </ul>
+      </div>
+
+      <!-- QUICK REVISION CHECKLIST -->
+      <div class="section-card">
+        <h2>📋 Quick Revision Checklist</h2>
+        
+        <div class="comparison-grid">
+          <div class="comparison-card">
+            <h5>Must-Know Structures</h5>
+            <ul>
+              <li>Contractile vacuole</li>
+              <li>Flame cell</li>
+              <li>Nephridium</li>
+              <li>Malpighian tubule</li>
+              <li>Nephron (human)</li>
+              <li>Stoma & lenticel</li>
+            </ul>
+          </div>
+          <div class="comparison-card">
+            <h5>Must-Know Hormones</h5>
+            <ul>
+              <li>RAAS / Aldosterone</li>
+              <li>ADH (Vasopressin)</li>
+              <li>ANP</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="quick-facts">
+          <h4>Key Comparisons</h4>
+          <ul>
+            <li>Ammonia → Fish & aquatic animals</li>
+            <li>Urea → Mammals (less toxic, needs water)</li>
+            <li>Uric acid → Birds, insects, reptiles (water conservation)</li>
+          </ul>
+        </div>
+      </div>
+
+      <p style="text-align: center; font-size: 16px; margin: 32px 0; font-weight: bold; color: var(--accent);">
+        🌟 Master excretion, secure that A1 in JAMB Biology! 🌟
+      </p>
+
+      <button class="explore-btn" onclick="alert('Practice JAMB past questions on Excretion!')">Practice JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item">
+      <button class="neumorphic-btn">🔍</button>
+      <p>Search</p>
+    </div>
+    <div class="nav-item center">
+      <button class="neumorphic-btn">⭐</button>
+      <p>Favorite</p>
+    </div>
+    <div class="nav-item">
+      <button class="neumorphic-btn">📚</button>
+      <p>Library</p>
+    </div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme) {
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const newTheme = body.classList.contains('light') ? 'dark' : 'light';
+      setTheme(newTheme);
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      const scrolled = (scrollTop / scrollHeight) * 100;
+      progressBar.style.width = scrolled + '%';
+    });
+  </script>
+</body>
+</html>
