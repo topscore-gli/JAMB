@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Mathematics - Polynomials and Algebra</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f;--line:#8ea2ff;--grid:rgba(255,255,255,.08)
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8;--line:#2b59ff;--grid:rgba(0,0,0,.08)
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .formula-box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .formula-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .formula-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px
+    }
+    .example-box .answer{
+      margin-top:8px;font-size:13px;color:var(--accent-secondary);font-weight:800
+    }
+
+    .diagram-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:12px;
+      margin:14px 0
+    }
+    .diagram-title{
+      font-size:13px;
+      font-weight:900;
+      color:var(--accent-tertiary);
+      margin-bottom:8px
+    }
+    .diagram-caption{
+      font-size:12px;
+      color:var(--text-secondary);
+      margin-top:8px
+    }
+    svg{
+      width:100%;
+      height:auto;
+      display:block
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:500px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .quiz-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .quiz-box .q{font-size:14px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px}
+    .quiz-box button{
+      width:100%;margin-top:10px;border:none;border-radius:12px;padding:12px 14px;font-weight:900;cursor:pointer;
+      background:var(--accent);color:#000;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out)
+    }
+    .quiz-answer{
+      margin-top:10px;font-size:13px;color:var(--text-secondary);display:none
+    }
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+    .math{
+      font-weight:900;color:var(--accent-secondary)
+    }
+    .label{
+      fill:var(--text-primary);
+      font-size:11px;
+      font-weight:700
+    }
+    .axis{
+      stroke:var(--text-primary);
+      stroke-width:2
+    }
+    .curve{
+      stroke:var(--line);
+      stroke-width:3;
+      fill:none
+    }
+    .grid{
+      stroke:var(--grid);
+      stroke-width:1
+    }
+    .mark{
+      fill:var(--accent-secondary)
+    }
+    .fill-soft{
+      fill:rgba(29,185,84,.22)
+    }
+    .fill-soft-2{
+      fill:rgba(78,205,196,.22)
+    }
+    .fill-soft-3{
+      fill:rgba(255,107,107,.22)
+    }
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">MATHEMATICS</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>🧠 Polynomials & Algebra</h1>
+        <p>JAMB Mathematics • formulas • factor theorem • remainder theorem • factorization • roots • simultaneous equations • graphs</p>
+      </div>
+
+      <div class="section-card">
+        <h2>📋 Introduction to Chapter 5</h2>
+        <p>This chapter covers <strong>polynomials and algebraic methods</strong> that appear often in JAMB. You will learn how to rearrange formulas, multiply and divide polynomials, factorize expressions, find roots, solve simultaneous equations, and read polynomial graphs.</p>
+        <p>Most of the questions here become easier when you can spot patterns quickly, especially common factors, perfect squares, and useful identities.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li>JAMB usually focuses on polynomials up to degree 3</li>
+            <li>Remainder Theorem saves time compared to full long division</li>
+            <li>Factorization is the key to many roots questions</li>
+            <li>Graph questions usually ask for intercepts, turning points, and shape</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Big picture</strong>
+          <p>Polynomials are like structured algebra sentences. Once you know how to rearrange, factor, and test them, many different question types start to look connected.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Understanding Polynomials</h2>
+
+        <h3>What is a Polynomial?</h3>
+        <p>A polynomial is an expression made up of variables and coefficients, involving only addition, subtraction, multiplication, and non-negative integer powers of the variable.</p>
+
+        <div class="formula-box">
+          <div class="title">General form</div>
+          <div class="line"><span class="math">P(x) = aₙxⁿ + aₙ₋₁xⁿ⁻¹ + ... + a₁x + a₀</span></div>
+          <div class="line"><strong>aₙ, aₙ₋₁, ...</strong> are coefficients</div>
+          <div class="line"><strong>x</strong> is the variable</div>
+          <div class="line"><strong>n</strong> is the degree</div>
+          <div class="line"><strong>a₀</strong> is the constant term</div>
+        </div>
+
+        <h3>Types by Degree</h3>
+        <div class="table-container">
+          <table class="summary-table" style="min-width:900px">
+            <tr>
+              <th>Degree</th>
+              <th>Name</th>
+              <th>General Form</th>
+              <th>Example</th>
+            </tr>
+            <tr>
+              <td>0</td>
+              <td>Constant</td>
+              <td>P(x) = a</td>
+              <td>P(x) = 5</td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>Linear</td>
+              <td>P(x) = ax + b</td>
+              <td>P(x) = 2x + 3</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Quadratic</td>
+              <td>P(x) = ax² + bx + c</td>
+              <td>P(x) = x² - 4x + 4</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Cubic</td>
+              <td>P(x) = ax³ + bx² + cx + d</td>
+              <td>P(x) = 2x³ - x² + 3x - 1</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe left/right to see more →</div>
+
+        <div class="highlight-box">
+          <p><strong>JAMB note:</strong> In most exam questions, you only need to work confidently with linear, quadratic, and cubic polynomials.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Change of Subject of Formula</h2>
+
+        <h3>Making a Variable the Subject</h3>
+        <p>This means rearranging the formula until the required variable stands alone.</p>
+
+        <div class="example-box">
+          <div class="title">Example 1: Make x the subject in y = 3x + 7</div>
+          <p><strong>Step 1:</strong> Subtract 7 from both sides</p>
+          <p><span class="math">y - 7 = 3x</span></p>
+          <p><strong>Step 2:</strong> Divide by 3</p>
+          <p><span class="math">x = (y - 7)/3</span></p>
+          <div class="answer">Answer: x = (y - 7)/3</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 2: Make x the subject in y = 2x² - 8</div>
+          <p><strong>Step 1:</strong> Add 8 to both sides</p>
+          <p><span class="math">y + 8 = 2x²</span></p>
+          <p><strong>Step 2:</strong> Divide by 2</p>
+          <p><span class="math">x² = (y + 8)/2</span></p>
+          <p><strong>Step 3:</strong> Take square root</p>
+          <p><span class="math">x = ±√[(y + 8)/2]</span></p>
+          <div class="answer">Answer: x = ±√[(y + 8)/2]</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 3: Make x the subject in T = 2π√(x/g)</div>
+          <p><strong>Step 1:</strong> Divide by <span class="math">2π</span></p>
+          <p><span class="math">T/(2π) = √(x/g)</span></p>
+          <p><strong>Step 2:</strong> Square both sides</p>
+          <p><span class="math">(T/2π)² = x/g</span></p>
+          <p><strong>Step 3:</strong> Multiply by g</p>
+          <p><span class="math">x = g(T/2π)² = gT² / 4π²</span></p>
+          <div class="answer">Answer: x = gT² / 4π²</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Multiplication and Division</h2>
+
+        <h3>Multiplication of Polynomials</h3>
+        <div class="example-box">
+          <div class="title">Example 4: Multiply (2x + 3)(x² - 2x + 4)</div>
+          <p><strong>Step 1:</strong> Expand each part</p>
+          <p><span class="math">= 2x(x² - 2x + 4) + 3(x² - 2x + 4)</span></p>
+          <p><span class="math">= 2x³ - 4x² + 8x + 3x² - 6x + 12</span></p>
+          <p><strong>Step 2:</strong> Collect like terms</p>
+          <p><span class="math">= 2x³ - x² + 2x + 12</span></p>
+          <div class="answer">Answer: 2x³ - x² + 2x + 12</div>
+        </div>
+
+        <h3>Division of Polynomials</h3>
+        <div class="example-box">
+          <div class="title">Example 5: Divide 2x³ - 3x² + 4x - 5 by x - 2</div>
+          <p><strong>Result from long division:</strong></p>
+          <p><span class="math">Quotient = 2x² + x + 6</span></p>
+          <p><span class="math">Remainder = 7</span></p>
+          <p><strong>Final answer:</strong></p>
+          <p><span class="math">2x² + x + 6 + 7/(x - 2)</span></p>
+          <div class="answer">Answer: 2x² + x + 6 + 7/(x - 2)</div>
+        </div>
+
+        <div class="highlight-box">
+          <p><strong>Shortcut idea:</strong> If the question only asks for the remainder when dividing by <span class="math">(x - a)</span>, use the Remainder Theorem instead of long division.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Factor and Remainder Theorems</h2>
+
+        <h3>The Remainder Theorem</h3>
+        <div class="formula-box">
+          <div class="title">Remainder theorem</div>
+          <div class="line">If <span class="math">P(x)</span> is divided by <span class="math">(x - a)</span>, the remainder is <span class="math">P(a)</span>.</div>
+        </div>
+
+        <h3>The Factor Theorem</h3>
+        <div class="formula-box">
+          <div class="title">Factor theorem</div>
+          <div class="line">If <span class="math">P(a) = 0</span>, then <span class="math">(x - a)</span> is a factor of <span class="math">P(x)</span>.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 6: Find the remainder when P(x) = 2x³ - 5x² + 3x - 7 is divided by (x - 2)</div>
+          <p><strong>Step 1:</strong> Use the Remainder Theorem</p>
+          <p><span class="math">P(2) = 2(2³) - 5(2²) + 3(2) - 7</span></p>
+          <p><span class="math">= 16 - 20 + 6 - 7</span></p>
+          <p><span class="math">= -5</span></p>
+          <div class="answer">Answer: Remainder = -5</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 7: Show that (x - 3) is a factor of x³ - 6x² + 11x - 6</div>
+          <p><strong>Step 1:</strong> Evaluate at <span class="math">x = 3</span></p>
+          <p><span class="math">P(3) = 3³ - 6(3²) + 11(3) - 6</span></p>
+          <p><span class="math">= 27 - 54 + 33 - 6 = 0</span></p>
+          <p><strong>Step 2:</strong> Apply the Factor Theorem</p>
+          <p>Since <span class="math">P(3) = 0</span>, <span class="math">(x - 3)</span> is a factor.</p>
+          <div class="answer">Answer: (x - 3) is a factor ✓</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Factorization Techniques</h2>
+
+        <h3>A. Common Factor</h3>
+        <div class="example-box">
+          <div class="title">Example 8: Factorize 6x³ + 9x² - 3x</div>
+          <p><strong>Step 1:</strong> Take out the common factor</p>
+          <p><span class="math">= 3x(2x² + 3x - 1)</span></p>
+          <div class="answer">Answer: 3x(2x² + 3x - 1)</div>
+        </div>
+
+        <h3>B. Difference of Two Squares</h3>
+        <div class="formula-box">
+          <div class="title">Formula</div>
+          <div class="line"><span class="math">a² - b² = (a + b)(a - b)</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 9: Factorize 9x² - 16</div>
+          <p><span class="math">= (3x)² - 4²</span></p>
+          <p><span class="math">= (3x + 4)(3x - 4)</span></p>
+          <div class="answer">Answer: (3x + 4)(3x - 4)</div>
+        </div>
+
+        <h3>C. Perfect Square Trinomials</h3>
+        <div class="formula-box">
+          <div class="title">Formulas</div>
+          <div class="line"><span class="math">a² + 2ab + b² = (a + b)²</span></div>
+          <div class="line"><span class="math">a² - 2ab + b² = (a - b)²</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 10: Factorize 4x² - 12x + 9</div>
+          <p><span class="math">= (2x)² - 2(2x)(3) + 3²</span></p>
+          <p><span class="math">= (2x - 3)²</span></p>
+          <div class="answer">Answer: (2x - 3)²</div>
+        </div>
+
+        <h3>D. Quadratic Trinomials</h3>
+        <div class="example-box">
+          <div class="title">Example 11: Factorize 2x² + 7x + 3</div>
+          <p><strong>Step 1:</strong> Multiply first and last coefficients</p>
+          <p><span class="math">2 × 3 = 6</span></p>
+          <p><strong>Step 2:</strong> Find two numbers that multiply to 6 and add to 7</p>
+          <p><span class="math">6 and 1</span></p>
+          <p><strong>Step 3:</strong> Split the middle term</p>
+          <p><span class="math">= 2x² + 6x + x + 3</span></p>
+          <p><strong>Step 4:</strong> Factor by grouping</p>
+          <p><span class="math">= 2x(x + 3) + 1(x + 3)</span></p>
+          <p><span class="math">= (2x + 1)(x + 3)</span></p>
+          <div class="answer">Answer: (2x + 1)(x + 3)</div>
+        </div>
+
+        <h3>E. Sum and Difference of Cubes</h3>
+        <div class="formula-box">
+          <div class="title">Formulas</div>
+          <div class="line"><span class="math">a³ + b³ = (a + b)(a² - ab + b²)</span></div>
+          <div class="line"><span class="math">a³ - b³ = (a - b)(a² + ab + b²)</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 12: Factorize 8x³ - 27</div>
+          <p><span class="math">= (2x)³ - 3³</span></p>
+          <p><span class="math">= (2x - 3)(4x² + 6x + 9)</span></p>
+          <div class="answer">Answer: (2x - 3)(4x² + 6x + 9)</div>
+        </div>
+
+        <h3>F. Factorization by Grouping</h3>
+        <div class="example-box">
+          <div class="title">Example 13: Factorize x³ + 2x² - x - 2</div>
+          <p><strong>Step 1:</strong> Group the terms</p>
+          <p><span class="math">= x²(x + 2) - 1(x + 2)</span></p>
+          <p><strong>Step 2:</strong> Factor out the common bracket</p>
+          <p><span class="math">= (x² - 1)(x + 2)</span></p>
+          <p><strong>Step 3:</strong> Factor the difference of squares</p>
+          <p><span class="math">= (x + 1)(x - 1)(x + 2)</span></p>
+          <div class="answer">Answer: (x + 1)(x - 1)(x + 2)</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ Roots of Polynomials</h2>
+
+        <h3>Finding Roots</h3>
+        <p>Roots or zeros are the values of <span class="math">x</span> for which <span class="math">P(x) = 0</span>.</p>
+
+        <div class="example-box">
+          <div class="title">Example 14: Find the roots of x³ - 2x² - 5x + 6 = 0</div>
+          <p><strong>Step 1:</strong> Test a simple factor</p>
+          <p><span class="math">P(1) = 1 - 2 - 5 + 6 = 0</span></p>
+          <p>So <span class="math">(x - 1)</span> is a factor.</p>
+          <p><strong>Step 2:</strong> Divide to get the quadratic factor</p>
+          <p><span class="math">x³ - 2x² - 5x + 6 = (x - 1)(x² - x - 6)</span></p>
+          <p><strong>Step 3:</strong> Factor the quadratic</p>
+          <p><span class="math">= (x - 1)(x - 3)(x + 2)</span></p>
+          <div class="answer">Answer: Roots are x = 1, 3, -2</div>
+        </div>
+
+        <h3>Relationship Between Roots and Coefficients</h3>
+        <div class="formula-box">
+          <div class="title">Quadratic roots</div>
+          <div class="line">For <span class="math">ax² + bx + c = 0</span> with roots <span class="math">α, β</span>:</div>
+          <div class="line"><span class="math">α + β = -b/a</span></div>
+          <div class="line"><span class="math">αβ = c/a</span></div>
+        </div>
+
+        <div class="formula-box">
+          <div class="title">Cubic roots</div>
+          <div class="line">For <span class="math">ax³ + bx² + cx + d = 0</span> with roots <span class="math">α, β, γ</span>:</div>
+          <div class="line"><span class="math">α + β + γ = -b/a</span></div>
+          <div class="line"><span class="math">αβ + αγ + βγ = c/a</span></div>
+          <div class="line"><span class="math">αβγ = -d/a</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 15: If α and β are roots of 2x² - 6x + 3 = 0, find α² + β²</div>
+          <p><strong>Step 1:</strong> Use sum and product of roots</p>
+          <p><span class="math">α + β = 6/2 = 3</span></p>
+          <p><span class="math">αβ = 3/2</span></p>
+          <p><strong>Step 2:</strong> Use identity</p>
+          <p><span class="math">α² + β² = (α + β)² - 2αβ</span></p>
+          <p><span class="math">= 9 - 2(3/2)</span></p>
+          <p><span class="math">= 9 - 3 = 6</span></p>
+          <div class="answer">Answer: 6</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>7️⃣ Simultaneous Equations</h2>
+
+        <h3>One Linear and One Quadratic</h3>
+        <p>The usual method is substitution. Replace the linear expression into the quadratic equation.</p>
+
+        <div class="example-box">
+          <div class="title">Example 16: Solve y = x + 1 and x² + y² = 13</div>
+          <p><strong>Step 1:</strong> Substitute <span class="math">y = x + 1</span> into the second equation</p>
+          <p><span class="math">x² + (x + 1)² = 13</span></p>
+          <p><strong>Step 2:</strong> Expand</p>
+          <p><span class="math">x² + x² + 2x + 1 = 13</span></p>
+          <p><span class="math">2x² + 2x - 12 = 0</span></p>
+          <p><span class="math">x² + x - 6 = 0</span></p>
+          <p><strong>Step 3:</strong> Factorize</p>
+          <p><span class="math">(x + 3)(x - 2) = 0</span></p>
+          <p><strong>Step 4:</strong> Find corresponding y-values</p>
+          <p>If <span class="math">x = -3</span>, then <span class="math">y = -2</span></p>
+          <p>If <span class="math">x = 2</span>, then <span class="math">y = 3</span></p>
+          <div class="answer">Answer: (-3, -2) and (2, 3)</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>8️⃣ Graphs of Polynomials</h2>
+
+        <h3>Key Features to Identify</h3>
+        <div class="table-container">
+          <table class="summary-table" style="min-width:760px">
+            <tr>
+              <th>Feature</th>
+              <th>Description</th>
+            </tr>
+            <tr>
+              <td>x-intercepts</td>
+              <td>Where y = 0, that is, the roots</td>
+            </tr>
+            <tr>
+              <td>y-intercept</td>
+              <td>Where x = 0, the constant term</td>
+            </tr>
+            <tr>
+              <td>Turning points</td>
+              <td>Maximum and minimum points</td>
+            </tr>
+            <tr>
+              <td>Shape</td>
+              <td>General direction and curve behavior</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe left/right to see more →</div>
+
+        <div class="example-box">
+          <div class="title">Example 17: Sketch y = x² - 4x + 3</div>
+          <p><strong>Step 1:</strong> Find roots</p>
+          <p><span class="math">(x - 3)(x - 1) = 0</span>, so <span class="math">x = 1, 3</span></p>
+          <p><strong>Step 2:</strong> Find y-intercept</p>
+          <p>At <span class="math">x = 0</span>, <span class="math">y = 3</span></p>
+          <p><strong>Step 3:</strong> Find turning point</p>
+          <p><span class="math">x = -b/2a = 4/2 = 2</span></p>
+          <p><span class="math">y = 2² - 4(2) + 3 = -1</span></p>
+          <div class="answer">Answer: Vertex is (2, -1)</div>
+        </div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Quadratic sketch idea</div>
+          <svg viewBox="0 0 340 220" aria-label="Quadratic graph">
+            <line x1="25" y1="180" x2="320" y2="180" class="axis"/>
+            <line x1="80" y1="20" x2="80" y2="200" class="axis"/>
+            <line x1="140" y1="180" x2="140" y2="30" class="grid"/>
+            <line x1="200" y1="180" x2="200" y2="30" class="grid"/>
+            <line x1="260" y1="180" x2="260" y2="30" class="grid"/>
+            <path d="M110 140 Q170 30 230 140" class="curve"/>
+            <circle cx="110" cy="140" r="4" class="mark"/>
+            <circle cx="170" cy="80" r="4" class="mark"/>
+            <circle cx="230" cy="140" r="4" class="mark"/>
+            <text x="102" y="156" class="label">1</text>
+            <text x="166" y="74" class="label">(2,-1)</text>
+            <text x="226" y="156" class="label">3</text>
+          </svg>
+          <div class="diagram-caption">Mark the x-intercepts first, then the vertex, then sketch the curve smoothly.</div>
+        </div>
+
+        <h3>Finding Maxima and Minima</h3>
+        <div class="example-box">
+          <div class="title">Example 18: Find the turning points of y = x³ - 3x²</div>
+          <p><strong>Step 1:</strong> Differentiate</p>
+          <p><span class="math">dy/dx = 3x² - 6x</span></p>
+          <p><strong>Step 2:</strong> Set derivative to zero</p>
+          <p><span class="math">3x(x - 2) = 0</span></p>
+          <p><span class="math">x = 0 or x = 2</span></p>
+          <p><strong>Step 3:</strong> Find y-values</p>
+          <p>At <span class="math">x = 0</span>, <span class="math">y = 0</span></p>
+          <p>At <span class="math">x = 2</span>, <span class="math">y = 8 - 12 = -4</span></p>
+          <div class="answer">Answer: Turning points at (0, 0) and (2, -4)</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>9️⃣ Essential Formulas</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Topic</th>
+              <th>Formula</th>
+              <th>When to Use</th>
+            </tr>
+            <tr>
+              <td>Remainder Theorem</td>
+              <td>Remainder = P(a) when dividing by (x-a)</td>
+              <td>Quick remainder finding</td>
+            </tr>
+            <tr>
+              <td>Factor Theorem</td>
+              <td>If P(a)=0, then (x-a) is a factor</td>
+              <td>Testing factors</td>
+            </tr>
+            <tr>
+              <td>Difference of Squares</td>
+              <td>a² - b² = (a+b)(a-b)</td>
+              <td>Two perfect square terms</td>
+            </tr>
+            <tr>
+              <td>Perfect Square</td>
+              <td>a² ± 2ab + b² = (a ± b)²</td>
+              <td>Recognizing square trinomials</td>
+            </tr>
+            <tr>
+              <td>Sum of Cubes</td>
+              <td>a³ + b³ = (a+b)(a²-ab+b²)</td>
+              <td>Added cubic terms</td>
+            </tr>
+            <tr>
+              <td>Difference of Cubes</td>
+              <td>a³ - b³ = (a-b)(a²+ab+b²)</td>
+              <td>Subtracted cubic terms</td>
+            </tr>
+            <tr>
+              <td>Quadratic Formula</td>
+              <td>x = (-b ± √(b²-4ac)) / 2a</td>
+              <td>Solving ax² + bx + c = 0</td>
+            </tr>
+            <tr>
+              <td>Sum of Roots</td>
+              <td>α + β = -b/a</td>
+              <td>Without solving fully</td>
+            </tr>
+            <tr>
+              <td>Product of Roots</td>
+              <td>αβ = c/a</td>
+              <td>Without solving fully</td>
+            </tr>
+            <tr>
+              <td>Vertex x-coordinate</td>
+              <td>x = -b/2a</td>
+              <td>Turning point of a quadratic</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe left/right to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>🔟 Quick JAMB Tips</h2>
+
+        <div class="jamb-alert">
+          <h4>How to score high in polynomial questions</h4>
+          <ul>
+            <li>Always check your factors by expanding them back</li>
+            <li>Use the Remainder Theorem instead of long division when possible</li>
+            <li>For cubic equations, try simple factors of the constant term first</li>
+            <li>For graph questions, find intercepts before turning points</li>
+            <li>In simultaneous equations, substitute the linear equation into the quadratic</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Quick strategy</strong>
+          <p>When stuck, ask yourself: Is this a factorization question, a theorem question, or a graph question? That quickly narrows the method.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣1️⃣ Practice Questions</h2>
+
+        <div class="example-box">
+          <div class="title">Q1: Find the remainder when 3x³ - 2x² + 4x - 5 is divided by (x - 2)</div>
+          <p><strong>Step 1:</strong> Use the Remainder Theorem</p>
+          <p><span class="math">P(2) = 3(8) - 2(4) + 4(2) - 5</span></p>
+          <p><span class="math">= 24 - 8 + 8 - 5 = 19</span></p>
+          <div class="answer">Answer: 19</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Q2: Factorize completely x³ - 3x² - 4x + 12</div>
+          <p><strong>Step 1:</strong> Group terms</p>
+          <p><span class="math">= x²(x - 3) - 4(x - 3)</span></p>
+          <p><strong>Step 2:</strong> Factor common bracket</p>
+          <p><span class="math">= (x² - 4)(x - 3)</span></p>
+          <p><strong>Step 3:</strong> Factor difference of squares</p>
+          <p><span class="math">= (x - 2)(x + 2)(x - 3)</span></p>
+          <div class="answer">Answer: (x - 3)(x - 2)(x + 2)</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Q3: Solve simultaneously y = 2x - 1 and x² + y² = 5</div>
+          <p><strong>Step 1:</strong> Substitute</p>
+          <p><span class="math">x² + (2x - 1)² = 5</span></p>
+          <p><span class="math">x² + 4x² - 4x + 1 = 5</span></p>
+          <p><span class="math">5x² - 4x - 4 = 0</span></p>
+          <p><strong>Step 2:</strong> Solve</p>
+          <p><span class="math">x = [4 ± √96]/10 = [2 ± 2√6]/5</span></p>
+          <p><strong>Step 3:</strong> Find corresponding y-values using <span class="math">y = 2x - 1</span></p>
+          <p>One exact solution is <span class="math">x = (2 - 2√6)/5, y = (-1 - 4√6)/5</span></p>
+          <p>The other is <span class="math">x = (2 + 2√6)/5, y = (-1 + 4√6)/5</span></p>
+          <div class="answer">Answer: The exact solutions are ((2 - 2√6)/5, (-1 - 4√6)/5) and ((2 + 2√6)/5, (-1 + 4√6)/5)</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Q4: If (x - 2) is a factor of x³ + ax² - 5x + 2, find a</div>
+          <p><strong>Step 1:</strong> Since <span class="math">(x - 2)</span> is a factor, <span class="math">P(2)=0</span></p>
+          <p><span class="math">2³ + a(2²) - 5(2) + 2 = 0</span></p>
+          <p><span class="math">8 + 4a - 10 + 2 = 0</span></p>
+          <p><span class="math">4a = 0</span></p>
+          <p><span class="math">a = 0</span></p>
+          <div class="answer">Answer: a = 0</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Q5: Find the minimum value of 2x² - 8x + 5</div>
+          <p><strong>Step 1:</strong> Find the x-coordinate of the vertex</p>
+          <p><span class="math">x = -b/2a = 8/4 = 2</span></p>
+          <p><strong>Step 2:</strong> Substitute into the expression</p>
+          <p><span class="math">2(2²) - 8(2) + 5 = 8 - 16 + 5 = -3</span></p>
+          <div class="answer">Answer: -3</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣2️⃣ Quick Checklist for Polynomial Problems</h2>
+
+        <div class="memory-tip">
+          <strong>🧠 Checklist</strong>
+          <p>Check the degree first. Use the Remainder Theorem for quick remainder questions. Test factors using the Factor Theorem. For quadratics, check the discriminant when needed. Remember the sum and product of roots. For graphs, find x-intercepts, y-intercept, and the vertex. In simultaneous equations, substitute the linear into the quadratic.</p>
+        </div>
+
+        <div class="highlight-box">
+          <p><strong>Connects to:</strong> Chapter 4 Sets and Chapter 6 Geometry.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣3️⃣ Final Revision Note</h2>
+
+        <div class="memory-tip">
+          <strong>🌟 Final line</strong>
+          <p>You now have a full guide to Polynomials and Algebra with formulas, worked examples, factorization patterns, roots, simultaneous equations, and graph ideas. Practise a few questions daily and your speed will improve a lot.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Practise factorization, remainder theorem, roots, simultaneous equations, and graph questions today.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+
+    function showAns(id){
+      document.getElementById(id).style.display = 'block';
+    }
+  </script>
+</body>
+</html>

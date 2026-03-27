@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Mathematics - Measures of Dispersion</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f;--line:#8ea2ff;--grid:rgba(255,255,255,.08)
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8;--line:#2b59ff;--grid:rgba(0,0,0,.08)
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .formula-box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .formula-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .formula-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px
+    }
+    .example-box .answer{
+      margin-top:8px;font-size:13px;color:var(--accent-secondary);font-weight:800
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:500px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+    .math{
+      font-weight:900;color:var(--accent-secondary)
+    }
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">MATHEMATICS</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>📏 Measures of Dispersion</h1>
+        <p>JAMB Mathematics • range • mean deviation • variance • standard deviation • coefficient of variation</p>
+      </div>
+
+      <div class="section-card">
+        <h2>📋 Chapter Overview</h2>
+        <p>This chapter covers the main measures used to describe how widely data values are spread out from the center.</p>
+        <p>The key ideas are <strong>range, mean deviation, variance, standard deviation, and coefficient of variation</strong>.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li>Measures of location tell where the center is</li>
+            <li>Measures of dispersion tell how far values spread out</li>
+            <li>Standard deviation is the most commonly used measure</li>
+            <li>Coefficient of variation helps compare different data sets</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Big idea</strong>
+          <p>If two data sets have the same mean, measures of dispersion help you see which one is more scattered.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Types of Measures of Dispersion</h2>
+
+        <h3>A. Range</h3>
+        <p>Range is the simplest measure of dispersion. It is the difference between the highest and lowest values.</p>
+
+        <div class="formula-box">
+          <div class="title">Formula</div>
+          <div class="line"><span class="math">Range = Highest Value - Lowest Value</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 1: Range</div>
+          <p>Find the range of: 12, 18, 25, 30, 15, 22, 28</p>
+          <p>Highest = <span class="math">30</span>, Lowest = <span class="math">12</span></p>
+          <p><span class="math">Range = 30 - 12 = 18</span></p>
+          <div class="answer">Answer: Range = 18</div>
+        </div>
+
+        <div class="highlight-box">
+          <p><strong>Note:</strong> Range is easy to calculate, but it is strongly affected by extreme values.</p>
+        </div>
+
+        <h3>B. Mean Deviation (Average Deviation)</h3>
+        <p>Mean deviation is the average of the absolute distances of the data values from the mean.</p>
+
+        <div class="formula-box">
+          <div class="title">Formula</div>
+          <div class="line"><span class="math">Mean Deviation = ∑|x - x̄| / n</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 2: Mean Deviation</div>
+          <p>Find the mean deviation of: 5, 8, 12, 15, 10</p>
+          <p><strong>Step 1:</strong> Find the mean</p>
+          <p><span class="math">x̄ = (5 + 8 + 12 + 15 + 10)/5 = 50/5 = 10</span></p>
+
+          <div class="table-container">
+            <table class="summary-table" style="min-width:700px">
+              <tr>
+                <th>x</th>
+                <th>x - x̄</th>
+                <th>|x - x̄|</th>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>5 - 10 = -5</td>
+                <td>5</td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td>8 - 10 = -2</td>
+                <td>2</td>
+              </tr>
+              <tr>
+                <td>12</td>
+                <td>12 - 10 = 2</td>
+                <td>2</td>
+              </tr>
+              <tr>
+                <td>15</td>
+                <td>15 - 10 = 5</td>
+                <td>5</td>
+              </tr>
+              <tr>
+                <td>10</td>
+                <td>10 - 10 = 0</td>
+                <td>0</td>
+              </tr>
+            </table>
+          </div>
+          <div class="table-scroll-hint">← Swipe left/right to see more →</div>
+
+          <p><strong>Step 2:</strong> Sum of absolute deviations</p>
+          <p><span class="math">5 + 2 + 2 + 5 + 0 = 14</span></p>
+          <p><strong>Step 3:</strong></p>
+          <p><span class="math">Mean Deviation = 14/5 = 2.8</span></p>
+          <div class="answer">Answer: Mean Deviation = 2.8</div>
+        </div>
+
+        <h3>C. Variance</h3>
+        <p>Variance is the average of the squared deviations from the mean.</p>
+
+        <div class="formula-box">
+          <div class="title">Formula</div>
+          <div class="line"><span class="math">Variance (σ²) = ∑(x - x̄)² / n</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 3: Variance</div>
+          <p>Find the variance of: 4, 6, 8, 10, 12</p>
+          <p><strong>Step 1:</strong> Find the mean</p>
+          <p><span class="math">x̄ = (4 + 6 + 8 + 10 + 12)/5 = 40/5 = 8</span></p>
+
+          <div class="table-container">
+            <table class="summary-table" style="min-width:700px">
+              <tr>
+                <th>x</th>
+                <th>x - x̄</th>
+                <th>(x - x̄)²</th>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>4 - 8 = -4</td>
+                <td>16</td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>6 - 8 = -2</td>
+                <td>4</td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td>8 - 8 = 0</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td>10</td>
+                <td>10 - 8 = 2</td>
+                <td>4</td>
+              </tr>
+              <tr>
+                <td>12</td>
+                <td>12 - 8 = 4</td>
+                <td>16</td>
+              </tr>
+            </table>
+          </div>
+          <div class="table-scroll-hint">← Swipe left/right to see more →</div>
+
+          <p><strong>Step 2:</strong> Sum of squared deviations</p>
+          <p><span class="math">16 + 4 + 0 + 4 + 16 = 40</span></p>
+          <p><strong>Step 3:</strong></p>
+          <p><span class="math">Variance = 40/5 = 8</span></p>
+          <div class="answer">Answer: Variance = 8</div>
+        </div>
+
+        <h3>D. Standard Deviation</h3>
+        <p>Standard deviation is the square root of variance. It is one of the most reliable measures of spread because it returns to the original units.</p>
+
+        <div class="formula-box">
+          <div class="title">Formula</div>
+          <div class="line"><span class="math">σ = √Variance = √[∑(x - x̄)² / n]</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 4: Standard Deviation</div>
+          <p>From Example 3, variance = <span class="math">8</span></p>
+          <p><span class="math">σ = √8 ≈ 2.83</span></p>
+          <div class="answer">Answer: Standard Deviation ≈ 2.83</div>
+        </div>
+
+        <div class="highlight-box">
+          <p><strong>Quick note:</strong> Standard deviation is usually more useful than range when comparing spread.</p>
+        </div>
+
+        <h3>E. Coefficient of Variation</h3>
+        <p>Coefficient of variation is a relative measure used to compare the spread of different data sets.</p>
+
+        <div class="formula-box">
+          <div class="title">Formula</div>
+          <div class="line"><span class="math">CV = (σ / x̄) × 100%</span></div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Formulas for Grouped Data</h2>
+
+        <h3>Frequency Distribution Tables</h3>
+        <div class="table-container">
+          <table class="summary-table" style="min-width:860px">
+            <tr>
+              <th>Measure</th>
+              <th>Formula</th>
+            </tr>
+            <tr>
+              <td>Mean</td>
+              <td><span class="math">x̄ = ∑fx / ∑f</span></td>
+            </tr>
+            <tr>
+              <td>Variance</td>
+              <td><span class="math">σ² = (∑fx² / ∑f) - x̄²</span></td>
+            </tr>
+            <tr>
+              <td>Standard Deviation</td>
+              <td><span class="math">σ = √[(∑fx² / ∑f) - x̄²]</span></td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe left/right to see more →</div>
+
+        <div class="quick-facts">
+          <ul>
+            <li><span class="math">f</span> = frequency</li>
+            <li><span class="math">x</span> = midpoint of each class interval</li>
+            <li><span class="math">fx</span> = frequency × midpoint</li>
+            <li><span class="math">fx²</span> = frequency × (midpoint)²</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Worked Example: Grouped Data</h2>
+
+        <div class="example-box">
+          <div class="title">Example 5: Mean and Standard Deviation</div>
+          <p>Calculate the mean and standard deviation for the grouped data below:</p>
+
+          <div class="table-container">
+            <table class="summary-table" style="min-width:920px">
+              <tr>
+                <th>Class Interval</th>
+                <th>Frequency (f)</th>
+              </tr>
+              <tr>
+                <td>10-14</td>
+                <td>2</td>
+              </tr>
+              <tr>
+                <td>15-19</td>
+                <td>5</td>
+              </tr>
+              <tr>
+                <td>20-24</td>
+                <td>8</td>
+              </tr>
+              <tr>
+                <td>25-29</td>
+                <td>4</td>
+              </tr>
+              <tr>
+                <td>30-34</td>
+                <td>1</td>
+              </tr>
+            </table>
+          </div>
+          <div class="table-scroll-hint">← Swipe left/right to see more →</div>
+
+          <p><strong>Step 1:</strong> Complete the table</p>
+          <div class="table-container">
+            <table class="summary-table" style="min-width:980px">
+              <tr>
+                <th>Class</th>
+                <th>f</th>
+                <th>Midpoint (x)</th>
+                <th>fx</th>
+                <th>x²</th>
+                <th>fx²</th>
+              </tr>
+              <tr>
+                <td>10-14</td>
+                <td>2</td>
+                <td>12</td>
+                <td>24</td>
+                <td>144</td>
+                <td>288</td>
+              </tr>
+              <tr>
+                <td>15-19</td>
+                <td>5</td>
+                <td>17</td>
+                <td>85</td>
+                <td>289</td>
+                <td>1445</td>
+              </tr>
+              <tr>
+                <td>20-24</td>
+                <td>8</td>
+                <td>22</td>
+                <td>176</td>
+                <td>484</td>
+                <td>3872</td>
+              </tr>
+              <tr>
+                <td>25-29</td>
+                <td>4</td>
+                <td>27</td>
+                <td>108</td>
+                <td>729</td>
+                <td>2916</td>
+              </tr>
+              <tr>
+                <td>30-34</td>
+                <td>1</td>
+                <td>32</td>
+                <td>32</td>
+                <td>1024</td>
+                <td>1024</td>
+              </tr>
+              <tr>
+                <td>Total</td>
+                <td>20</td>
+                <td></td>
+                <td>425</td>
+                <td></td>
+                <td>9545</td>
+              </tr>
+            </table>
+          </div>
+          <div class="table-scroll-hint">← Swipe left/right to see more →</div>
+
+          <p><strong>Step 2:</strong> Mean</p>
+          <p><span class="math">x̄ = ∑fx / ∑f = 425/20 = 21.25</span></p>
+
+          <p><strong>Step 3:</strong> Variance</p>
+          <p><span class="math">σ² = (∑fx² / ∑f) - x̄²</span></p>
+          <p><span class="math">= 9545/20 - (21.25)²</span></p>
+          <p><span class="math">= 477.25 - 451.5625 = 25.6875</span></p>
+
+          <p><strong>Step 4:</strong> Standard deviation</p>
+          <p><span class="math">σ = √25.6875 ≈ 5.07</span></p>
+
+          <div class="answer">Answers: Mean = 21.25, Standard Deviation ≈ 5.07</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>📋 Complete Summary Table</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Measure</th>
+              <th>Definition</th>
+              <th>Formula (Ungrouped)</th>
+              <th>Formula (Grouped)</th>
+            </tr>
+            <tr>
+              <td>Range</td>
+              <td>Max − Min</td>
+              <td><span class="math">H - L</span></td>
+              <td><span class="math">H - L</span></td>
+            </tr>
+            <tr>
+              <td>Mean Deviation</td>
+              <td>Average absolute deviation</td>
+              <td><span class="math">∑|x-x̄| / n</span></td>
+              <td><span class="math">∑f|x-x̄| / ∑f</span></td>
+            </tr>
+            <tr>
+              <td>Variance</td>
+              <td>Average of squared deviations</td>
+              <td><span class="math">∑(x-x̄)² / n</span></td>
+              <td><span class="math">(∑fx² / ∑f) - x̄²</span></td>
+            </tr>
+            <tr>
+              <td>Standard Deviation</td>
+              <td>Square root of variance</td>
+              <td><span class="math">√Variance</span></td>
+              <td><span class="math">√Variance</span></td>
+            </tr>
+            <tr>
+              <td>Coefficient of Variation</td>
+              <td>Relative dispersion</td>
+              <td><span class="math">(σ / x̄) × 100%</span></td>
+              <td><span class="math">(σ / x̄) × 100%</span></td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe left/right to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>⚡ Quick Calculation Steps</h2>
+
+        <div class="quick-facts">
+          <ul>
+            <li>Find the mean first</li>
+            <li>Find deviations <span class="math">(x - x̄)</span></li>
+            <li>Use absolute values for mean deviation</li>
+            <li>Use squared deviations for variance</li>
+            <li>Take square root last for standard deviation</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>✏️ Practice Questions</h2>
+
+        <div class="example-box">
+          <div class="title">Q1</div>
+          <p>Find the range and standard deviation of: 20, 25, 30, 35, 40</p>
+          <div class="answer">Answer: Range = 20, SD ≈ 7.07</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Q2</div>
+          <p>Calculate the mean deviation of: 12, 15, 18, 21, 24</p>
+          <div class="answer">Answer: MD = 3.6</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Q3</div>
+          <p>Find the variance from the frequency table:</p>
+          <p>x: 2, 4, 6, 8, 10</p>
+          <p>f: 3, 5, 7, 4, 1</p>
+          <div class="answer">Answer: Variance ≈ 5.84</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>🎯 JAMB Exam Tips</h2>
+
+        <div class="jamb-alert">
+          <h4>Best strategy</h4>
+          <ul>
+            <li>Standard deviation is the most reliable measure when comparing spread</li>
+            <li>Range is simple but can be distorted by outliers</li>
+            <li>Variance is always positive because deviations are squared</li>
+            <li>Standard deviation has the same units as the original data</li>
+            <li>For grouped data, always use class midpoints</li>
+            <li>Use coefficient of variation when comparing different data sets</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>⚠️ Common mistakes</strong>
+          <p>Do not forget absolute values for mean deviation. Do not use class limits instead of midpoints for grouped data. Do not confuse variance with standard deviation. Also, do not take the square root too early.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>✅ Pre-Exam Checklist</h2>
+
+        <div class="memory-tip">
+          <strong>🧠 Checklist</strong>
+          <p>Revise range, mean deviation, variance, standard deviation, and coefficient of variation. Practise grouped data formulas using midpoints. Learn the table method involving <span class="math">∑fx</span> and <span class="math">∑fx²</span>. Also remember the alternative grouped variance formula <span class="math">(∑fx² / ∑f) - x̄²</span>.</p>
+        </div>
+
+        <div class="highlight-box">
+          <p><strong>Connects to:</strong> Measures of Location and Probability.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>🌟 Final Revision Note</h2>
+
+        <div class="memory-tip">
+          <strong>Excellent!</strong>
+          <p>You now have a complete guide to Measures of Dispersion. Once you know whether the question is asking for spread in simple data or grouped data, the method becomes much easier to apply.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Practise range, mean deviation, variance, standard deviation, and grouped dispersion questions today.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+
+    function showAns(id){
+      document.getElementById(id).style.display = 'block';
+    }
+  </script>
+</body>
+</html>

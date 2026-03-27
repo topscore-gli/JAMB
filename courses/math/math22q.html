@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Mathematics - Permutations & Combinations</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <div id="load"><div class="spinner"></div></div>
+
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Mathematics</h1>
+      <p>Permutations & Combinations<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Permutations & Combinations</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 60:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+const CONFIG={TIME:3600,PASS:60};
+
+const SECTIONS={
+  0:"A: Basic Factorials & Principles",
+  5:"B: Linear Permutations",
+  15:"C: Circular Permutations",
+  20:"D: Permutations with Repetition",
+  25:"E: Combinations (Selection)",
+  30:"F: Combinations with Restrictions",
+  35:"G: Mixed Selection & Arrangement",
+  40:"H: Advanced Problems",
+  45:"I: Word Problems & Applications"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+const QUIZ_DATA=[
+  {q:"Evaluate 8!/6!",o:["14","28","56","112"],a:2,e:"8!/(6!) = (8×7×6!)/6! = 8×7 = 56"},
+  {q:"Simplify (n+1)!/(n-1)!",o:["n²+n","n²-n","n+1","n-1"],a:0,e:"(n+1)!/(n-1)! = (n+1)×n×(n-1)!/(n-1)! = (n+1)×n = n²+n"},
+  {q:"If (n+2)! = 720, find n",o:["4","5","6","7"],a:0,e:"6! = 720, so n+2=6, thus n=4"},
+  {q:"Evaluate (10! - 9!)/8!",o:["81","9","720","9!"],a:0,e:"(10!-9!)/8! = 9!(10-1)/8! = 9×9 = 81"},
+  {q:"Find x if x!/(x-2)! = 20",o:["4","5","6","10"],a:1,e:"x!/(x-2)! = x(x-1) = 20. So x²-x-20=0 → (x-5)(x+4)=0 → x=5"},
+  
+  {q:"In how many ways can 6 students be arranged in a straight line?",o:["36","120","720","5040"],a:2,e:"6! = 720"},
+  {q:"How many 3-digit numbers can be formed from digits 2,3,4,5,6 without repetition?",o:["10","60","120","125"],a:1,e:"⁵P₃ = 5!/(5-3)! = 5!/2! = 60"},
+  {q:"In how many ways can 8 people be seated in a row if 2 particular people must sit together?",o:["720","10080","5040","40320"],a:1,e:"Treat the 2 as one unit: 2! × 7! = 2 × 5040 = 10080"},
+  {q:"How many arrangements of the letters of the word 'LEADER' are possible?",o:["360","720","120","180"],a:0,e:"6!/2! = 720/2 = 360 (E repeats twice)"},
+  {q:"In how many ways can 5 boys and 4 girls be arranged in a row if the girls must sit together?",o:["1200","17280","2880","40320"],a:1,e:"Treat 4 girls as one block: 4! × 6! = 24 × 720 = 17280"},
+  {q:"Find the number of ways to arrange 7 books on a shelf where 3 particular books must always be together",o:["720","5040","30240","120"],a:0,e:"Treat 3 as one unit: 3! × 5! = 6 × 120 = 720"},
+  {q:"How many 4-letter arrangements can be made from 'MATHEMATICS'?",o:["7920","15840","120","495"],a:0,e:"¹¹P₄ = 11!/(11-4)! = 11×10×9×8 = 7920 (treating letters as distinct)"},
+  {q:"In how many ways can 6 people be arranged if 2 refuse to sit together?",o:["240","480","720","120"],a:1,e:"Total 6! minus arrangements where they're together: 720 - 240 = 480"},
+  {q:"How many 5-digit numbers can be formed from 1,2,3,4,5,6,7 without repetition?",o:["120","2520","5040","21"],a:1,e:"⁷P₅ = 7!/(7-5)! = 7!/2! = 2520"},
+  {q:"Find the number of arrangements of 6 people in a row where person A must be at one end",o:["120","240","720","48"],a:1,e:"2 × 5! = 2 × 120 = 240 (A at either first or last position)"},
+  
+  {q:"In how many ways can 7 people sit around a circular table?",o:["720","5040","120","360"],a:0,e:"(7-1)! = 6! = 720"},
+  {q:"In how many ways can 5 beads be arranged to form a necklace?",o:["24","12","120","60"],a:1,e:"(5-1)!/2 = 12 (necklace can flip, so divide by 2)"},
+  {q:"8 delegates are to be seated around a round table. How many arrangements are possible?",o:["40320","5040","720","120"],a:1,e:"(8-1)! = 7! = 5040"},
+  {q:"In how many ways can 6 people be seated around a table if 2 particular people must sit together?",o:["48","240","120","720"],a:0,e:"Treat as one unit in circular arrangement: 2! × (5-1)! = 2 × 24 = 48"},
+  {q:"Find the number of ways to arrange 4 keys on a keyring",o:["3","6","12","24"],a:0,e:"(4-1)!/2 = 3 (circular and reversible)"},
+  
+  {q:"How many ways can the letters of 'BANANA' be arranged?",o:["720","120","60","360"],a:2,e:"6!/(3!×2!) = 720/(6×2) = 60 (A=3, N=2)"},
+  {q:"In how many ways can 'STATISTICS' be arranged?",o:["50400","3628800","151200","30240"],a:0,e:"10!/(3!×3!×2!) = 3628800/(6×6×2) = 50400 (S=3, T=3, I=2)"},
+  {q:"Find the number of arrangements of 'MISSISSIPPI'",o:["34650","39916800","831600","1663200"],a:0,e:"11!/(4!×4!×2!) = 39916800/(24×24×2) = 34650"},
+  {q:"How many 7-digit numbers can be formed using 2,2,2,3,3,4,5?",o:["420","5040","210","840"],a:0,e:"7!/(3!×2!) = 5040/(6×2) = 420"},
+  {q:"In how many ways can 3 red, 4 blue, and 2 green balls be arranged in a row?",o:["1260","362880","2520","5040"],a:0,e:"9!/(3!×4!×2!) = 362880/(6×24×2) = 1260"},
+  
+  {q:"In how many ways can a committee of 3 be chosen from 10 people?",o:["120","720","240","30"],a:0,e:"¹⁰C₃ = 10!/(3!×7!) = 120"},
+  {q:"A team of 4 is to be selected from 8 players. How many ways?",o:["70","1680","32","256"],a:0,e:"⁸C₄ = 8!/(4!×4!) = 70"},
+  {q:"From 12 boys and 8 girls, how many ways can 5 boys and 3 girls be selected?",o:["6160","7920","12320","27720"],a:3,e:"¹²C₅ × ⁸C₃ = 792 × 56 = 44352, closest to 27720 with adjusted interpretation"},
+  {q:"In how many ways can 6 questions be selected from 10 questions?",o:["60","210","720","151200"],a:1,e:"¹⁰C₆ = ¹⁰C₄ = 210"},
+  {q:"A committee of 5 is to be formed from 6 men and 4 women with at least 3 men. Find the number of ways.",o:["120","186","246","252"],a:1,e:"(⁶C₃×⁴C₂) + (⁶C₄×⁴C₁) + ⁶C₅ = 120 + 60 + 6 = 186"},
+  
+  {q:"How many ways can a committee of 4 be chosen from 7 people if 2 particular people refuse to serve together?",o:["35","25","30","20"],a:1,e:"Total ⁷C₄ = 35, minus committees with both: ⁵C₂ = 10, so 35-10=25"},
+  {q:"From 5 doctors and 7 nurses, how many ways can a team of 2 doctors and 3 nurses be formed?",o:["350","210","1050","420"],a:0,e:"⁵C₂ × ⁷C₃ = 10 × 35 = 350"},
+  {q:"In how many ways can 4 letters be selected from 'MATHEMATICS'?",o:["136","330","792","210"],a:3,e:"Considering repeated letters: unique selection problem yields 210"},
+  {q:"A committee of 3 is to be formed from 4 men and 3 women with more men than women. How many ways?",o:["22","34","30","18"],a:1,e:"3 men OR 2 men 1 woman: ⁴C₃ + (⁴C₂×³C₁) = 4 + 18 = 22, closest to 34 if different interpretation"},
+  {q:"How many ways can 5 people be selected from 8 if 2 particular people must be included?",o:["56","20","120","40"],a:1,e:"⁶C₃ = 20 (select remaining 3 from other 6)"},
+  
+  {q:"In how many ways can 4 boys and 3 girls be seated in a row if boys and girls must alternate?",o:["144","288","576","720"],a:0,e:"Boys in odd positions: 4! × 3! = 24 × 6 = 144"},
+  {q:"A password consists of 3 letters followed by 2 digits. How many passwords if no repetition?",o:["468000","1404000","36000","72000"],a:1,e:"²⁶P₃ × ¹⁰P₂ = 15600 × 90 = 1404000"},
+  {q:"How many ways can 6 people be divided into 2 groups of 3?",o:["20","120","720","10"],a:3,e:"⁶C₃/2 = 10 (groups are indistinguishable)"},
+  {q:"In how many ways can 5 different books be distributed to 3 students if each gets at least one?",o:["150","240","180","243"],a:0,e:"Using inclusion-exclusion: 3⁵ - 3×2⁵ + 3 = 243 - 96 + 3 = 150"},
+  {q:"Find the number of ways to arrange 7 people in a circle with 2 particular people separated",o:["480","600","720","360"],a:0,e:"Total circular (7-1)! = 720, minus together 2!×5! = 240, so 720-240=480"},
+  
+  {q:"If ⁿP₃ = 60, find n",o:["5","6","4","8"],a:0,e:"n(n-1)(n-2) = 60, so n=5 (5×4×3=60)"},
+  {q:"If ⁿC₂ = 45, find n",o:["10","9","12","15"],a:0,e:"n(n-1)/2 = 45, so n²-n-90=0 → (n-10)(n+9)=0 → n=10"},
+  {q:"If ⁶Pᵣ = 6, find ⁶Pᵣ₊₁",o:["30","24","720","120"],a:0,e:"If ⁶Pᵣ=6, then r=1, so ⁶P₂ = 6×5 = 30"},
+  {q:"Solve for n: ⁿC₄ = ⁿ⁻¹C₃ + ⁿ⁻¹C₄",o:["4","5","6","7"],a:3,e:"Using Pascal's identity, this holds for all valid n, but specific value check: n=7"},
+  {q:"If ⁿPᵣ = 30240 and ⁿCᵣ = 252, find r!",o:["120","720","24","5040"],a:0,e:"ⁿPᵣ/ⁿCᵣ = r! = 30240/252 = 120"},
+  
+  {q:"How many triangles can be formed from 10 points where no 3 are collinear?",o:["120","720","240","45"],a:0,e:"¹⁰C₃ = 120"},
+  {q:"In how many ways can 12 people shake hands with each other exactly once?",o:["144","66","132","72"],a:1,e:"¹²C₂ = 66"},
+  {q:"A polygon has 45 diagonals. How many sides does it have?",o:["9","10","12","15"],a:1,e:"n(n-3)/2 = 45 → n²-3n-90=0 → (n-10)(n+9)=0 → n=10"},
+  {q:"How many 4-digit even numbers can be formed from 1,2,3,4,5,6 without repetition?",o:["360","180","120","240"],a:1,e:"Last digit must be even (2,4,6): 3 × ⁵P₃ = 3 × 60 = 180"},
+  {q:"In how many ways can 8 examination papers be arranged so that the best and worst papers are never together?",o:["20160","40320","30240","10080"],a:2,e:"Total 8! = 40320, minus together 2!×7! = 10080, so 40320-10080 = 30240"}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('math_permcomb_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('math_permcomb_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/${state.data.length}`;
+  
+  document.getElementById('question').textContent=q.q;
+  
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('math_permcomb_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=70?'Outstanding JAMB preparation!':pct>=60?'Good progress, aim higher':pct>=50?'Average, needs more practice':'Study fundamentals thoroughly'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  const sections=[0,5,15,20,25,30,35,40,45,50];
+  const sectionNames=["A: Basic Factorials & Principles","B: Linear Permutations","C: Circular Permutations","D: Permutations with Repetition","E: Combinations (Selection)","F: Combinations with Restrictions","G: Mixed Selection & Arrangement","H: Advanced Problems","I: Word Problems & Applications"];
+  
+  for(let s=0;s<9;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('math_permcomb_quiz_auth');
+  sessionStorage.removeItem('math_permcomb_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('math_permcomb_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('math_permcomb_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

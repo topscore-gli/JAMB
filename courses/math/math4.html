@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Mathematics - Sets, Venn Diagrams and Applications</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f;--line:#8ea2ff;--grid:rgba(255,255,255,.08)
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8;--line:#2b59ff;--grid:rgba(0,0,0,.08)
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .formula-box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .formula-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .formula-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px
+    }
+    .example-box .answer{
+      margin-top:8px;font-size:13px;color:var(--accent-secondary);font-weight:800
+    }
+
+    .diagram-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:12px;
+      margin:14px 0
+    }
+    .diagram-title{
+      font-size:13px;
+      font-weight:900;
+      color:var(--accent-tertiary);
+      margin-bottom:8px
+    }
+    .diagram-caption{
+      font-size:12px;
+      color:var(--text-secondary);
+      margin-top:8px
+    }
+    svg{
+      width:100%;
+      height:auto;
+      display:block
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:500px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .quiz-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .quiz-box .q{font-size:14px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px}
+    .quiz-box button{
+      width:100%;margin-top:10px;border:none;border-radius:12px;padding:12px 14px;font-weight:900;cursor:pointer;
+      background:var(--accent);color:#000;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out)
+    }
+    .quiz-answer{
+      margin-top:10px;font-size:13px;color:var(--text-secondary);display:none
+    }
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+    .math{
+      font-weight:900;color:var(--accent-secondary)
+    }
+    .label{
+      fill:var(--text-primary);
+      font-size:11px;
+      font-weight:700
+    }
+    .axis{
+      stroke:var(--text-primary);
+      stroke-width:2
+    }
+    .curve{
+      stroke:var(--line);
+      stroke-width:3;
+      fill:none
+    }
+    .grid{
+      stroke:var(--grid);
+      stroke-width:1
+    }
+    .mark{
+      fill:var(--accent-secondary)
+    }
+    .venn-a{fill:rgba(29,185,84,.22)}
+    .venn-b{fill:rgba(78,205,196,.22)}
+    .venn-c{fill:rgba(255,107,107,.22)}
+    .venn-stroke{stroke:var(--line);stroke-width:2;fill:none}
+    .box-stroke{stroke:var(--text-primary);stroke-width:2;fill:none}
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">MATHEMATICS</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>🧩 Sets, Venn Diagrams & Applications</h1>
+        <p>JAMB Mathematics • set types • cardinality • set algebra • two-set and three-set Venn diagram problems</p>
+      </div>
+
+      <div class="section-card">
+        <h2>📋 Introduction to Chapter 4</h2>
+        <p>This chapter teaches how to identify types of sets, count elements correctly, use set operations, and solve Venn diagram questions involving two or three sets.</p>
+        <p>Set questions are very common in JAMB, especially word problems involving students, subjects, languages, clubs, or preferences.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li>Set questions often test careful counting, not difficult computation</li>
+            <li>Venn diagrams help prevent double-counting</li>
+            <li>Three-set problems should be solved from the center outward</li>
+            <li>Complement means “outside the set but inside the universal set”</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Main idea</strong>
+          <p>Think of the universal set as the whole group. Every other set sits inside it, and Venn diagrams help you see how the groups overlap.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Types of Sets</h2>
+
+        <h3>Basic Definitions</h3>
+        <div class="table-container">
+          <table class="summary-table" style="min-width:1100px">
+            <tr>
+              <th>Term</th>
+              <th>Symbol</th>
+              <th>Meaning</th>
+              <th>Example</th>
+            </tr>
+            <tr>
+              <td>Set</td>
+              <td>-</td>
+              <td>Well-defined collection of distinct objects</td>
+              <td>A = {1, 2, 3, 4, 5}</td>
+            </tr>
+            <tr>
+              <td>Element</td>
+              <td>∈</td>
+              <td>Object belonging to a set</td>
+              <td>2 ∈ A</td>
+            </tr>
+            <tr>
+              <td>Not an element</td>
+              <td>∉</td>
+              <td>Object not belonging to a set</td>
+              <td>7 ∉ A</td>
+            </tr>
+            <tr>
+              <td>Empty / Null Set</td>
+              <td>∅</td>
+              <td>Set with no element</td>
+              <td>∅ = {}</td>
+            </tr>
+            <tr>
+              <td>Universal Set</td>
+              <td>U</td>
+              <td>Set containing all objects under consideration</td>
+              <td>U = {1, 2, 3, ..., 10}</td>
+            </tr>
+            <tr>
+              <td>Finite Set</td>
+              <td>-</td>
+              <td>Set with countable number of elements</td>
+              <td>B = {a, e, i, o, u}</td>
+            </tr>
+            <tr>
+              <td>Infinite Set</td>
+              <td>-</td>
+              <td>Set with endlessly continuing elements</td>
+              <td>ℕ = {1, 2, 3, ...}</td>
+            </tr>
+            <tr>
+              <td>Subset</td>
+              <td>⊆</td>
+              <td>Every element of A is in B</td>
+              <td>A ⊆ B</td>
+            </tr>
+            <tr>
+              <td>Proper Subset</td>
+              <td>⊂</td>
+              <td>A is a subset of B but not equal to B</td>
+              <td>{1, 2} ⊂ {1, 2, 3}</td>
+            </tr>
+            <tr>
+              <td>Disjoint Sets</td>
+              <td>-</td>
+              <td>Sets with no common elements</td>
+              <td>{1, 2} and {3, 4}</td>
+            </tr>
+            <tr>
+              <td>Power Set</td>
+              <td>P(A)</td>
+              <td>Set of all subsets of A</td>
+              <td>P({1,2}) = {∅, {1}, {2}, {1,2}}</td>
+            </tr>
+            <tr>
+              <td>Complement</td>
+              <td>A'</td>
+              <td>Elements in U but not in A</td>
+              <td>If U={1,2,3,4}, A={1,2}, then A'={3,4}</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe left/right to see more →</div>
+
+        <h3>Cardinality of a Set</h3>
+        <div class="formula-box">
+          <div class="title">Cardinality rule</div>
+          <div class="line"><span class="math">n(A)</span> means the number of elements in set A</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 1: Given U = {1,2,3,4,5,6,7,8,9,10}</div>
+          <p><span class="math">A = {2,4,6,8,10}</span>, <span class="math">B = {1,3,5,7,9}</span>, <span class="math">C = {2,3,5,7}</span></p>
+          <p><strong>Step 1:</strong> Count the elements</p>
+          <p><span class="math">n(A)=5, n(B)=5, n(C)=4</span></p>
+          <p><strong>Step 2:</strong> Check disjointness</p>
+          <p>A and B are disjoint because they have no common elements.</p>
+          <p><strong>Step 3:</strong> Find intersection</p>
+          <p><span class="math">A ∩ C = {2}</span></p>
+          <p><strong>Step 4:</strong> Find complements</p>
+          <p><span class="math">A' = {1,3,5,7,9} = B</span></p>
+          <p><span class="math">C' = {1,4,6,8,9,10}</span></p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Algebra of Sets</h2>
+
+        <h3>Set Operations</h3>
+        <div class="table-container">
+          <table class="summary-table" style="min-width:1150px">
+            <tr>
+              <th>Operation</th>
+              <th>Symbol</th>
+              <th>Definition</th>
+              <th>Formula</th>
+            </tr>
+            <tr>
+              <td>Union</td>
+              <td>A ∪ B</td>
+              <td>All elements in A or B or both</td>
+              <td>n(A ∪ B) = n(A) + n(B) - n(A ∩ B)</td>
+            </tr>
+            <tr>
+              <td>Intersection</td>
+              <td>A ∩ B</td>
+              <td>Elements common to both</td>
+              <td>n(A ∩ B) = n(A) + n(B) - n(A ∪ B)</td>
+            </tr>
+            <tr>
+              <td>Complement</td>
+              <td>A'</td>
+              <td>Elements in U not in A</td>
+              <td>n(A') = n(U) - n(A)</td>
+            </tr>
+            <tr>
+              <td>Difference</td>
+              <td>A - B</td>
+              <td>Elements in A but not in B</td>
+              <td>n(A - B) = n(A) - n(A ∩ B)</td>
+            </tr>
+            <tr>
+              <td>Symmetric Difference</td>
+              <td>A Δ B</td>
+              <td>Elements in A or B but not both</td>
+              <td>n(A Δ B) = n(A ∪ B) - n(A ∩ B)</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe left/right to see more →</div>
+
+        <h3>Laws of Set Algebra</h3>
+        <div class="table-container">
+          <table class="summary-table" style="min-width:1050px">
+            <tr>
+              <th>Law</th>
+              <th>Expression</th>
+            </tr>
+            <tr>
+              <td>Commutative</td>
+              <td>A ∪ B = B ∪ A ; A ∩ B = B ∩ A</td>
+            </tr>
+            <tr>
+              <td>Associative</td>
+              <td>(A ∪ B) ∪ C = A ∪ (B ∪ C) ; (A ∩ B) ∩ C = A ∩ (B ∩ C)</td>
+            </tr>
+            <tr>
+              <td>Distributive</td>
+              <td>A ∪ (B ∩ C) = (A ∪ B) ∩ (A ∪ C) ; A ∩ (B ∪ C) = (A ∩ B) ∪ (A ∩ C)</td>
+            </tr>
+            <tr>
+              <td>Identity</td>
+              <td>A ∪ ∅ = A ; A ∩ U = A</td>
+            </tr>
+            <tr>
+              <td>Complement</td>
+              <td>A ∪ A' = U ; A ∩ A' = ∅</td>
+            </tr>
+            <tr>
+              <td>Double Complement</td>
+              <td>(A')' = A</td>
+            </tr>
+            <tr>
+              <td>De Morgan's</td>
+              <td>(A ∪ B)' = A' ∩ B' ; (A ∩ B)' = A' ∪ B'</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe left/right to see more →</div>
+
+        <div class="example-box">
+          <div class="title">Example 2: Given U = {1,2,3,4,5,6,7,8}, A = {1,2,3,4}, B = {3,4,5,6}</div>
+          <p><strong>Find the following:</strong></p>
+          <p><span class="math">A ∪ B = {1,2,3,4,5,6}</span></p>
+          <p><span class="math">A ∩ B = {3,4}</span></p>
+          <p><span class="math">A' = {5,6,7,8}</span></p>
+          <p><span class="math">B' = {1,2,7,8}</span></p>
+          <p><span class="math">A - B = {1,2}</span></p>
+          <p><span class="math">B - A = {5,6}</span></p>
+          <p><strong>Verification:</strong></p>
+          <p><span class="math">n(A ∪ B) = n(A) + n(B) - n(A ∩ B)</span></p>
+          <p><span class="math">6 = 4 + 4 - 2</span> ✓</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Venn Diagrams and Applications</h2>
+
+        <h3>Two-Set Venn Diagram</h3>
+        <div class="diagram-box">
+          <div class="diagram-title">Two-set Venn idea</div>
+          <svg viewBox="0 0 340 220" aria-label="Two set Venn diagram">
+            <rect x="30" y="25" width="280" height="170" rx="10" class="box-stroke"/>
+            <circle cx="140" cy="110" r="55" class="venn-a"/>
+            <circle cx="200" cy="110" r="55" class="venn-b"/>
+            <circle cx="140" cy="110" r="55" class="venn-stroke"/>
+            <circle cx="200" cy="110" r="55" class="venn-stroke"/>
+            <text x="92" y="58" class="label">A</text>
+            <text x="228" y="58" class="label">B</text>
+            <text x="20" y="20" class="label">U</text>
+            <text x="108" y="114" class="label">A only</text>
+            <text x="165" y="114" class="label">A∩B</text>
+            <text x="226" y="114" class="label">B only</text>
+          </svg>
+          <div class="diagram-caption">Only A = n(A) - n(A ∩ B), Only B = n(B) - n(A ∩ B), Neither = n(U) - n(A ∪ B).</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 3: In a class of 50 students, 30 offer Mathematics, 25 offer Physics, and 10 offer neither. How many offer both?</div>
+          <p><strong>Step 1:</strong> Find those offering at least one subject</p>
+          <p><span class="math">n(M ∪ P) = 50 - 10 = 40</span></p>
+          <p><strong>Step 2:</strong> Use the union formula</p>
+          <p><span class="math">n(M ∪ P) = n(M) + n(P) - n(M ∩ P)</span></p>
+          <p><span class="math">40 = 30 + 25 - n(M ∩ P)</span></p>
+          <p><strong>Step 3:</strong> Solve</p>
+          <p><span class="math">40 = 55 - n(M ∩ P)</span></p>
+          <p><span class="math">n(M ∩ P) = 15</span></p>
+          <div class="answer">Answer: 15 students offer both subjects</div>
+        </div>
+
+        <div class="quick-facts">
+          <ul>
+            <li>Mathematics only = 30 - 15 = 15</li>
+            <li>Physics only = 25 - 15 = 10</li>
+            <li>Both = 15</li>
+            <li>Neither = 10</li>
+            <li>Total = 15 + 10 + 15 + 10 = 50</li>
+          </ul>
+        </div>
+
+        <h3>Three-Set Venn Diagram</h3>
+        <div class="formula-box">
+          <div class="title">Three-set union formula</div>
+          <div class="line"><span class="math">n(A ∪ B ∪ C) = n(A) + n(B) + n(C) - n(A ∩ B) - n(A ∩ C) - n(B ∩ C) + n(A ∩ B ∩ C)</span></div>
+        </div>
+
+        <div class="highlight-box">
+          <p><strong>Memory rule:</strong> Add the singles, subtract the pair overlaps, then add back the triple overlap.</p>
+        </div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Three-set Venn idea</div>
+          <svg viewBox="0 0 340 240" aria-label="Three set Venn diagram">
+            <rect x="20" y="20" width="300" height="190" rx="10" class="box-stroke"/>
+            <circle cx="135" cy="110" r="55" class="venn-a"/>
+            <circle cx="205" cy="110" r="55" class="venn-b"/>
+            <circle cx="170" cy="70" r="55" class="venn-c"/>
+            <circle cx="135" cy="110" r="55" class="venn-stroke"/>
+            <circle cx="205" cy="110" r="55" class="venn-stroke"/>
+            <circle cx="170" cy="70" r="55" class="venn-stroke"/>
+            <text x="95" y="150" class="label">A only</text>
+            <text x="215" y="150" class="label">B only</text>
+            <text x="162" y="35" class="label">C</text>
+            <text x="155" y="103" class="label">ABC</text>
+            <text x="15" y="18" class="label">U</text>
+          </svg>
+          <div class="diagram-caption">In three-set problems, start from the center, then fill the exactly-two regions, then the only-one regions.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 4: In a survey of 100 students</div>
+          <p><span class="math">n(E)=40, n(M)=35, n(P)=30</span></p>
+          <p><span class="math">n(E∩M)=15, n(E∩P)=12, n(M∩P)=10, n(E∩M∩P)=5</span></p>
+          <p><strong>Step 1:</strong> Put the center first</p>
+          <p><span class="math">E ∩ M ∩ P = 5</span></p>
+          <p><strong>Step 2:</strong> Find exactly two regions</p>
+          <p><span class="math">E∩M only = 15 - 5 = 10</span></p>
+          <p><span class="math">E∩P only = 12 - 5 = 7</span></p>
+          <p><span class="math">M∩P only = 10 - 5 = 5</span></p>
+          <p><strong>Step 3:</strong> Find only-one regions</p>
+          <p><span class="math">English only = 40 - (10 + 5 + 7) = 18</span></p>
+          <p><span class="math">Mathematics only = 35 - (10 + 5 + 5) = 15</span></p>
+          <p><span class="math">Physics only = 30 - (7 + 5 + 5) = 13</span></p>
+          <p><strong>Step 4:</strong> Find required totals</p>
+          <p><span class="math">Exactly one = 18 + 15 + 13 = 46</span></p>
+          <p><span class="math">Exactly two = 10 + 7 + 5 = 22</span></p>
+          <p><span class="math">At least one = 46 + 22 + 5 = 73</span></p>
+          <p><span class="math">None = 100 - 73 = 27</span></p>
+          <div class="answer">Answers: Exactly one = 46, Exactly two = 22, None = 27</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Formula Summary</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Category</th>
+              <th>Formula / Rule</th>
+              <th>When to Use</th>
+            </tr>
+            <tr>
+              <td>Basic Cardinality</td>
+              <td>n(A) = number of elements in A</td>
+              <td>Counting elements</td>
+            </tr>
+            <tr>
+              <td>Complement</td>
+              <td>n(A') = n(U) - n(A)</td>
+              <td>Elements not in A</td>
+            </tr>
+            <tr>
+              <td>Union of 2 sets</td>
+              <td>n(A ∪ B) = n(A) + n(B) - n(A ∩ B)</td>
+              <td>Total in either set</td>
+            </tr>
+            <tr>
+              <td>Intersection of 2 sets</td>
+              <td>n(A ∩ B) = n(A) + n(B) - n(A ∪ B)</td>
+              <td>Common elements</td>
+            </tr>
+            <tr>
+              <td>Union of 3 sets</td>
+              <td>n(A ∪ B ∪ C) = n(A)+n(B)+n(C)-n(A∩B)-n(A∩C)-n(B∩C)+n(A∩B∩C)</td>
+              <td>Three-set problems</td>
+            </tr>
+            <tr>
+              <td>Only A</td>
+              <td>n(A only) = n(A) - n(A ∩ B)</td>
+              <td>Exclusive elements of A</td>
+            </tr>
+            <tr>
+              <td>Neither</td>
+              <td>n(U) - n(A ∪ B)</td>
+              <td>Outside the sets</td>
+            </tr>
+            <tr>
+              <td>Difference</td>
+              <td>n(A - B) = n(A) - n(A ∩ B)</td>
+              <td>In A but not B</td>
+            </tr>
+            <tr>
+              <td>Subset check</td>
+              <td>If A ⊆ B, then n(A) ≤ n(B)</td>
+              <td>Checking subset relations</td>
+            </tr>
+            <tr>
+              <td>Disjoint sets</td>
+              <td>n(A ∩ B) = 0</td>
+              <td>No overlap</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe left/right to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Practice Problems</h2>
+
+        <div class="example-box">
+          <div class="title">Problem 1: If n(X) = 15, n(Y) = 20, and n(X ∪ Y) = 30, find n(X ∩ Y)</div>
+          <p><strong>Step 1:</strong> Use the union formula</p>
+          <p><span class="math">30 = 15 + 20 - n(X ∩ Y)</span></p>
+          <p><strong>Step 2:</strong> Solve</p>
+          <p><span class="math">30 = 35 - n(X ∩ Y)</span></p>
+          <p><span class="math">n(X ∩ Y) = 5</span></p>
+          <div class="answer">Answer: 5</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Problem 2: In a group of 60 people, 35 speak Hausa, 25 speak Yoruba, and 15 speak both. How many speak neither?</div>
+          <p><strong>Step 1:</strong> Find those who speak at least one language</p>
+          <p><span class="math">n(H ∪ Y) = 35 + 25 - 15 = 45</span></p>
+          <p><strong>Step 2:</strong> Subtract from the universal set</p>
+          <p><span class="math">Neither = 60 - 45 = 15</span></p>
+          <div class="answer">Answer: 15 people</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Problem 3: Given U = {1,2,3,4,5,6,7}, A = {1,2,3,4}, B = {3,4,5,6}, find (A ∩ B)'</div>
+          <p><strong>Step 1:</strong> Find the intersection</p>
+          <p><span class="math">A ∩ B = {3,4}</span></p>
+          <p><strong>Step 2:</strong> Find its complement in U</p>
+          <p><span class="math">(A ∩ B)' = {1,2,5,6,7}</span></p>
+          <div class="answer">Answer: {1,2,5,6,7}</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ JAMB Exam Tips</h2>
+
+        <div class="jamb-alert">
+          <h4>How to score high in set problems</h4>
+          <ul>
+            <li>Always draw the Venn diagram for word problems</li>
+            <li>Start from the center in three-set questions</li>
+            <li>Check your answer by adding all regions to get the universal set</li>
+            <li>Use De Morgan's laws correctly for complement questions</li>
+            <li>Be careful with the meaning of “only” and “neither”</li>
+          </ul>
+        </div>
+
+        <div class="highlight-box">
+          <p><strong>Common mistake:</strong> Many students forget to subtract the intersection in <span class="math">n(A ∪ B) = n(A) + n(B) - n(A ∩ B)</span>. That causes double-counting.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>7️⃣ Quick Checklist for Set Problems</h2>
+
+        <div class="memory-tip">
+          <strong>🧠 Checklist</strong>
+          <p>Identify the universal set first. List the given cardinalities. Draw the Venn diagram. Start from the innermost intersection. Work outward to the only regions. Check that all regions add up to the universal set. Apply De Morgan's laws where needed.</p>
+        </div>
+
+        <div class="highlight-box">
+          <p><strong>Connects to:</strong> Chapter 3 Indices and Chapter 5 Algebra.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>8️⃣ Final Revision Note</h2>
+
+        <div class="memory-tip">
+          <strong>🌟 Final line</strong>
+          <p>You now have a complete guide to Sets, Venn Diagrams, and Applications with formulas, examples, diagrams, and exam tips. Practise a few two-set and three-set questions daily and this topic will become easy.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Practise set operations, complements, two-set Venn problems, and three-set Venn problems today.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+
+    function showAns(id){
+      document.getElementById(id).style.display = 'block';
+    }
+  </script>
+</body>
+</html>
