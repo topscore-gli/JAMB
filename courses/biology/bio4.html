@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Biology - Internal Structure</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    :root { --background: #1e1e2f; --shadow-in: #171723; --shadow-out: #25253b; --text-primary: #f0f0ff; --text-secondary: #c0c0e0; --accent: #1db954; --accent-secondary: #ff6b6b; --accent-tertiary: #4ecdc4; --card-bg: #2a2a3f; }
+    body.light { --background: #e0e0e0; --shadow-in: #bebebe; --shadow-out: #ffffff; --text-primary: #1a1a1a; --text-secondary: #444; --card-bg: #f8f8f8; }
+    body { background: var(--background); color: var(--text-primary); display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow-x: hidden; }
+    .container { width: 100%; max-width: 420px; background: var(--background); border-radius: 20px; box-shadow: 10px 10px 20px var(--shadow-in), -10px -10px 20px var(--shadow-out); overflow: hidden; position: relative; height: 750px; overflow-y: auto; padding-top: 70px; padding-bottom: 80px; }
+    .neumorphic { background: var(--background); box-shadow: 5px 5px 10px var(--shadow-in), -5px -5px 10px var(--shadow-out); border-radius: 15px; }
+    .neumorphic-btn { background: var(--background); border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); cursor: pointer; color: var(--text-primary); font-size: 18px; transition: all 0.3s ease; }
+    .neumorphic-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.95); }
+    .top-bar { position: fixed; top: 0; width: 100%; max-width: 420px; background: var(--background); padding: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 5px 10px var(--shadow-in); z-index: 20; }
+    .top-bar .header { font-size: 18px; font-weight: bold; color: var(--accent); }
+    .top-bar .right-icons { display: flex; gap: 10px; }
+    .content { padding: 20px 16px; line-height: 1.7; }
+    .main-header { text-align: center; margin-bottom: 28px; padding: 20px; border-radius: 20px; background: rgba(29, 185, 84, 0.1); }
+    .main-header h1 { font-size: 26px; margin-bottom: 8px; color: var(--accent); font-weight: 800; }
+    .main-header p.subtitle { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
+    .section-card { background: var(--card-bg); padding: 24px 18px; border-radius: 20px; box-shadow: inset 4px 4px 10px var(--shadow-in), inset -4px -4px 10px var(--shadow-out); margin-bottom: 24px; border-left: 4px solid var(--accent); }
+    .section-card h2 { font-size: 20px; margin-bottom: 16px; color: var(--accent); font-weight: bold; display: flex; align-items: center; gap: 8px; }
+    .section-card h3 { font-size: 17px; margin: 20px 0 12px; color: var(--accent-tertiary); font-weight: 600; padding-left: 12px; border-left: 3px solid var(--accent-tertiary); }
+    .section-card h4 { font-size: 15px; margin: 16px 0 10px; color: var(--accent-secondary); font-weight: 600; }
+    .section-card p { margin-bottom: 14px; font-size: 14px; color: var(--text-primary); text-align: justify; }
+    .section-card ul, .section-card ol { padding-left: 20px; margin: 12px 0; }
+    .section-card li { margin-bottom: 8px; font-size: 14px; color: var(--text-primary); line-height: 1.6; }
+    .table-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 16px 0; border-radius: 12px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); }
+    .table-container::-webkit-scrollbar { height: 6px; }
+    .table-container::-webkit-scrollbar-track { background: var(--shadow-in); border-radius: 3px; }
+    .table-container::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+    .summary-table { width: 100%; min-width: 500px; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+    .summary-table th { background: var(--accent); color: #000; padding: 12px 10px; text-align: left; font-weight: 600; white-space: nowrap; }
+    .summary-table td { padding: 10px; border-bottom: 1px solid var(--shadow-in); background: var(--card-bg); white-space: nowrap; }
+    .summary-table tr:last-child td { border-bottom: none; }
+    .summary-table tr:nth-child(even) td { background: rgba(255,255,255,0.03); }
+    .summary-table.wide { min-width: 600px; }
+    .table-scroll-hint { font-size: 11px; color: var(--text-secondary); text-align: center; margin-top: 4px; font-style: italic; }
+    .quick-facts { background: linear-gradient(135deg, rgba(29,185,84,0.1), rgba(78,205,196,0.1)); padding: 16px; border-radius: 15px; margin: 16px 0; border: 1px solid rgba(29,185,84,0.3); }
+    .quick-facts h4 { color: var(--accent); margin-bottom: 10px; font-size: 15px; }
+    .quick-facts ul { margin: 0; padding-left: 18px; }
+    .quick-facts li { margin-bottom: 6px; font-size: 13px; }
+    .memory-tip { background: rgba(255,107,107,0.1); padding: 14px 16px; border-radius: 12px; margin: 16px 0; border-left: 4px solid var(--accent-secondary); }
+    .memory-tip strong { color: var(--accent-secondary); display: block; margin-bottom: 6px; font-size: 14px; }
+    .memory-tip p { margin: 0; font-size: 13px; font-style: italic; }
+    .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+    .comparison-card { background: var(--background); padding: 14px; border-radius: 12px; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); }
+    .comparison-card h5 { color: var(--accent); font-size: 14px; margin-bottom: 8px; text-align: center; }
+    .comparison-card ul { margin: 0; padding-left: 16px; font-size: 12px; }
+    .comparison-card li { margin-bottom: 4px; font-size: 12px; }
+    .diagram-img { width: 100%; max-height: 280px; object-fit: contain; border-radius: 12px; margin: 14px 0 10px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); background: #fff; padding: 8px; }
+    .nav-bar { position: fixed; bottom: 0; width: 100%; max-width: 420px; background: var(--background); padding: 10px; display: flex; justify-content: space-around; box-shadow: 0 -5px 10px var(--shadow-in); z-index: 20; }
+    .nav-bar .nav-item { text-align: center; position: relative; }
+    .nav-bar .nav-item button { width: 40px; height: 40px; font-size: 18px; color: var(--text-primary); }
+    .nav-bar .nav-item.center button { width: 50px; height: 50px; font-size: 24px; background: var(--accent); box-shadow: 0 0 15px var(--accent), 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); color: #000; }
+    .nav-bar .nav-item p { display: none; font-size: 11px; margin-top: 4px; color: var(--text-primary); }
+    .nav-bar .nav-item.active p { display: block; }
+    .progress-container { position: fixed; top: 70px; left: 0; width: 100%; max-width: 420px; height: 4px; background: var(--shadow-in); z-index: 15; }
+    .progress-bar { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
+    .explore-btn { background: var(--accent); border: none; padding: 14px 28px; border-radius: 25px; color: #000; cursor: pointer; box-shadow: 4px 4px 8px var(--shadow-in), -4px -4px 8px var(--shadow-out); font-size: 16px; margin: 24px auto; display: block; text-align: center; font-weight: bold; transition: all 0.3s ease; }
+    .explore-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.98); }
+    .jamb-alert { background: linear-gradient(135deg, rgba(255,193,7,0.15), rgba(255,152,0,0.1)); border: 1px solid rgba(255,193,7,0.4); border-radius: 12px; padding: 16px; margin: 20px 0; }
+    .jamb-alert h4 { color: #ffc107; margin-bottom: 10px; font-size: 15px; }
+    .jamb-alert ul { margin: 0; padding-left: 18px; }
+    .jamb-alert li { font-size: 13px; margin-bottom: 6px; }
+    .highlight-box { background: rgba(78,205,196,0.1); padding: 12px 16px; border-radius: 10px; margin: 12px 0; border-left: 3px solid var(--accent-tertiary); }
+    .type-badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; margin-right: 6px; }
+    .badge-structural { background: rgba(29,185,84,0.2); color: var(--accent); }
+    .badge-behavioural { background: rgba(255,107,107,0.2); color: var(--accent-secondary); }
+    .badge-functional { background: rgba(78,205,196,0.2); color: var(--accent-tertiary); }
+    .image-caption { text-align: center; font-size: 12px; color: var(--text-secondary); font-style: italic; margin-top: -8px; margin-bottom: 12px; }
+  </style>
+</head>
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">BIOLOGY</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📖 Bookmarked for later study!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>🌱 Internal Structure</h1>
+        <p class="subtitle">JAMB Chapter 4: Flowering Plants & Mammals</p>
+      </div>
+
+      <!-- PART A: FLOWERING PLANTS -->
+      <div class="section-card">
+        <h2>🌿 A. Internal Structure of Flowering Plants</h2>
+        
+        <p><strong>Overview:</strong> You must identify transverse sections (TS) of root, stem, and leaf, relate structures to functions, and understand supporting tissues (collenchyma, sclerenchyma, xylem, phloem fibers).</p>
+
+        <h3>1. ROOT (Transverse Section)</h3>
+        
+        <img src="https://kimi-web-img.moonshot.cn/img/img.freepik.com/92c1f8401f0971d7933bc37a404b89391899818b.jpg" alt="Root cross section diagram" class="diagram-img">
+        <p class="image-caption">Dicot root cross-section showing vascular cylinder and tissues</p>
+
+        <img src="https://kimi-web-img.moonshot.cn/img/s3-us-west-2.amazonaws.com/8596154310df98fcac000d794c59feeac0667549.jpg" alt="Root microscope view" class="diagram-img">
+        <p class="image-caption">Microscopic view of root showing xylem, phloem, and endodermis</p>
+
+        <div class="quick-facts">
+          <h4>🔍 Key Structure (Outside → Inside)</h4>
+          <ul>
+            <li><strong>Epidermis:</strong> Single layer, no cuticle, has root hairs for absorption</li>
+            <li><strong>Cortex:</strong> Parenchyma cells for storage and water passage</li>
+            <li><strong>Endodermis:</strong> Barrel-shaped cells with Casparian strips (waxy suberin) - controls entry</li>
+            <li><strong>Pericycle:</strong> Produces lateral roots</li>
+            <li><strong>Vascular Bundle:</strong> Xylem + Phloem in radial arrangement (transport)</li>
+            <li><strong>Pith:</strong> Center storage (small in dicots, large in monocots)</li>
+          </ul>
+        </div>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Feature</th>
+              <th>Dicot Root</th>
+              <th>Monocot Root</th>
+            </tr>
+            <tr>
+              <td>Xylem bundles</td>
+              <td>2-4 (diarch/tetrarch)</td>
+              <td>Many (polyarch)</td>
+            </tr>
+            <tr>
+              <td>Pith</td>
+              <td>Small or absent</td>
+              <td>Large and prominent</td>
+            </tr>
+            <tr>
+              <td>Cambium</td>
+              <td>Present (secondary growth)</td>
+              <td>Absent</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY TRICK:</strong>
+          <p>"Root hairs drink, Cortex stores, Endodermis guards, Xylem climbs up, Phloem flows down"</p>
+        </div>
+
+        <h3>2. STEM (Transverse Section)</h3>
+        
+        <img src="https://kimi-web-img.moonshot.cn/img/static.vecteezy.com/236847db4a06a6e252e2008bbd04055887792d57.jpg" alt="Dicot stem diagram" class="diagram-img">
+        <p class="image-caption">Dicot stem showing vascular bundles arranged in a ring</p>
+
+        <img src="https://kimi-web-img.moonshot.cn/img/organismalbio.biosci.gatech.edu/ad965783dbade72012f49475e32fcd8be8014d83.jpg" alt="Dicot vs Monocot stem comparison" class="diagram-img">
+        <p class="image-caption">Comparison: Dicot (ring bundles) vs Monocot (scattered bundles)</p>
+
+        <img src="https://kimi-web-img.moonshot.cn/img/thumbs.dreamstime.com/98f606c4169cd47f2b3ccd9bf3590970a84e1aed.jpg" alt="Monocot stem detailed diagram" class="diagram-img">
+        <p class="image-caption">Detailed comparison showing bundle sheath in monocot</p>
+
+        <div class="quick-facts">
+          <h4>🌲 Dicot Stem Structure</h4>
+          <ul>
+            <li><strong>Epidermis:</strong> Single layer with cuticle and trichomes (protection)</li>
+            <li><strong>Hypodermis:</strong> Collenchyma cells (flexible support)</li>
+            <li><strong>Cortex:</strong> Parenchyma + chlorenchyma (photosynthesis, storage)</li>
+            <li><strong>Endodermis:</strong> Starch sheath (nutrient storage)</li>
+            <li><strong>Vascular Bundles:</strong> Arranged in a ring, collateral and open (with cambium)</li>
+            <li><strong>Pith:</strong> Large central pith + medullary rays (storage)</li>
+          </ul>
+        </div>
+
+        <div class="comparison-grid">
+          <div class="comparison-card">
+            <h5>🌳 DICOT STEM</h5>
+            <ul>
+              <li>Vascular bundles in ring</li>
+              <li>Cambium present</li>
+              <li>Distinct pith</li>
+              <li>Secondary growth</li>
+              <li>No bundle sheath</li>
+            </ul>
+          </div>
+          <div class="comparison-card">
+            <h5>🌾 MONOCOT STEM</h5>
+            <ul>
+              <li>Vascular bundles scattered</li>
+              <li>No cambium</li>
+              <li>No distinct pith</li>
+              <li>No secondary growth</li>
+              <li>Sclerenchymatous bundle sheath</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY TRICK:</strong>
+          <p>"Dicot = Ring around the rosy" (bundles in ring) | "Monocot = Messy scatter" (bundles scattered)</p>
+        </div>
+
+        <h3>3. LEAF (Transverse Section)</h3>
+        
+        <img src="https://kimi-web-img.moonshot.cn/img/www.pathwayz.org/517303f7be66dd4428aecbf6ca1a182afa7ad85a.jpg" alt="Leaf cross section 3D" class="diagram-img">
+        <p class="image-caption">3D view of leaf cross-section showing mesophyll layers</p>
+
+        <img src="https://kimi-web-img.moonshot.cn/img/images.edrawmax.com/f9140ad49d672904c830d6b63612e984d3fb5e81.jpg" alt="Leaf cross section detailed" class="diagram-img">
+        <p class="image-caption">Detailed leaf anatomy showing palisade and spongy mesophyll</p>
+
+        <div class="quick-facts">
+          <h4>🍃 Leaf Structure</h4>
+          <ul>
+            <li><strong>Upper Epidermis:</strong> Covered by cuticle (prevents water loss)</li>
+            <li><strong>Palisade Mesophyll:</strong> Elongated cells, many chloroplasts (main photosynthesis site)</li>
+            <li><strong>Spongy Mesophyll:</strong> Round cells with large air spaces (gas exchange)</li>
+            <li><strong>Lower Epidermis:</strong> Contains stomata with guard cells (gas exchange)</li>
+            <li><strong>Vascular Bundle (Vein):</strong> Xylem (upper), Phloem (lower) + bundle sheath</li>
+          </ul>
+        </div>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Layer</th>
+              <th>Structure</th>
+              <th>Function</th>
+            </tr>
+            <tr>
+              <td>Cuticle</td>
+              <td>Waxy, transparent</td>
+              <td>Prevents water loss</td>
+            </tr>
+            <tr>
+              <td>Palisade cells</td>
+              <td>Tightly packed, vertical</td>
+              <td>Maximum light absorption</td>
+            </tr>
+            <tr>
+              <td>Spongy mesophyll</td>
+              <td>Loose, air spaces</td>
+              <td>Gas circulation (CO2/O2)</td>
+            </tr>
+            <tr>
+              <td>Stomata</td>
+              <td>Pores with guard cells</td>
+              <td>Transpiration & gas exchange</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <h3>4. SUPPORTING TISSUES IN PLANTS ⭐</h3>
+        
+        <img src="https://kimi-web-img.moonshot.cn/img/cdn.britannica.com/84fc5813300b63a82caff6643737e737d5f44a15.jpg" alt="Plant tissue types diagram" class="diagram-img">
+        <p class="image-caption">Three basic plant tissues: Parenchyma, Collenchyma, Sclerenchyma</p>
+
+        <img src="https://kimi-web-img.moonshot.cn/img/cdn.britannica.com/838f9e6d083f382987949d2a67febbac338fe4b0.jpg" alt="Plant tissues detailed view" class="diagram-img">
+        <p class="image-caption">Detailed structure of parenchyma, collenchyma, and sclerenchyma cells</p>
+
+        <img src="https://kimi-web-img.moonshot.cn/img/www.shutterstock.com/024800360cd7b7825d4403693d7ac69b73519240.jpg" alt="Types of plant tissue comparison" class="diagram-img">
+        <p class="image-caption">Comparison showing cell wall thickness and structure differences</p>
+
+        <div class="table-container">
+          <table class="summary-table wide">
+            <tr>
+              <th>Tissue</th>
+              <th>Cell State</th>
+              <th>Wall Characteristics</th>
+              <th>Location</th>
+              <th>Function</th>
+            </tr>
+            <tr>
+              <td><strong>Collenchyma</strong></td>
+              <td>Living</td>
+              <td>Unevenly thickened primary walls (pectin/cellulose)</td>
+              <td>Below epidermis in stems & leaf margins</td>
+              <td>Flexible support in growing regions</td>
+            </tr>
+            <tr>
+              <td><strong>Sclerenchyma</strong></td>
+              <td>Dead at maturity</td>
+              <td>Lignified secondary walls</td>
+              <td>Seed coats, fruit cores, vascular bundles</td>
+              <td>Rigid support, protection</td>
+            </tr>
+            <tr>
+              <td><strong>Xylem Fibers</strong></td>
+              <td>Dead</td>
+              <td>Thick lignified walls</td>
+              <td>Xylem tissue</td>
+              <td>Mechanical support + water transport</td>
+            </tr>
+            <tr>
+              <td><strong>Phloem Fibers</strong></td>
+              <td>Dead</td>
+              <td>Thick lignified walls</td>
+              <td>Phloem tissue</td>
+              <td>Mechanical support</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <h4>Distribution in Plant Organs</h4>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Organ</th>
+              <th>Supporting Tissues Present</th>
+            </tr>
+            <tr>
+              <td><strong>Root</strong></td>
+              <td>Sclerenchyma (pericycle), Xylem fibers</td>
+            </tr>
+            <tr>
+              <td><strong>Stem</strong></td>
+              <td>Collenchyma (hypodermis), Sclerenchyma (bundle caps), Xylem & Phloem fibers</td>
+            </tr>
+            <tr>
+              <td><strong>Leaf</strong></td>
+              <td>Sclerenchyma (bundle sheath), Collenchyma (midrib), Xylem & Phloem fibers in veins</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY TRICKS:</strong>
+          <p>"Collenchyma = Celery Strings" (flexible, living)</p>
+          <p>"Sclerenchyma = Hard Shell" (rigid, dead, lignified)</p>
+          <p>"Xylem = Up, Phloem = Flow" (xylem carries water up, phloem carries food everywhere)</p>
+        </div>
+      </div>
+
+      <!-- PART B: MAMMALIAN ANATOMY -->
+      <div class="section-card">
+        <h2>🐄 B. Internal Structure of a Mammal</h2>
+
+        <img src="https://kimi-web-img.moonshot.cn/img/www.anatomystuff.com/a0420eaee43e712fd7cfa135d71615ff8d9402e2.jpg" alt="Human internal organs anatomy" class="diagram-img">
+        <p class="image-caption">Complete overview of human internal organs and their positions</p>
+
+        <img src="https://kimi-web-img.moonshot.cn/img/media.gettyimages.com/cc189092ce47051ffd9db9a8883d5869db825f96.jpg" alt="Mammalian organs detailed" class="diagram-img">
+        <p class="image-caption">Detailed view of digestive, excretory, and reproductive organs</p>
+
+        <h3>1. Digestive System</h3>
+        
+        <img src="https://kimi-web-img.moonshot.cn/img/cdn.britannica.com/f2501dfde517f370a625d28d2a89a44154cf358a.jpg" alt="Human digestive system" class="diagram-img">
+        <p class="image-caption">Human digestive system showing complete alimentary canal</p>
+
+        <img src="https://kimi-web-img.moonshot.cn/img/media.healthdirect.org.au/d408bfe3c4f1c4786e1e5fdbfa8c02b52b2cbf74.png" alt="Digestive system labeled" class="diagram-img">
+        <p class="image-caption">Labeled diagram of digestive tract and accessory organs</p>
+
+        <div class="table-container">
+          <table class="summary-table wide">
+            <tr>
+              <th>Organ</th>
+              <th>Position/Appearance</th>
+              <th>Function</th>
+            </tr>
+            <tr>
+              <td><strong>Mouth</strong></td>
+              <td>Anterior (head)</td>
+              <td>Ingestion, mechanical digestion</td>
+            </tr>
+            <tr>
+              <td><strong>Esophagus</strong></td>
+              <td>Tube behind trachea</td>
+              <td>Food passage to stomach</td>
+            </tr>
+            <tr>
+              <td><strong>Stomach</strong></td>
+              <td>Left upper abdomen, J-shaped</td>
+              <td>Chemical digestion (acid, enzymes)</td>
+            </tr>
+            <tr>
+              <td><strong>Small Intestine</strong></td>
+              <td>Coiled tube in central abdomen</td>
+              <td>Nutrient absorption</td>
+            </tr>
+            <tr>
+              <td><strong>Large Intestine</strong></td>
+              <td>Frames the small intestine</td>
+              <td>Water absorption, feces formation</td>
+            </tr>
+            <tr>
+              <td><strong>Liver</strong></td>
+              <td>Right upper abdomen, large reddish-brown</td>
+              <td>Bile production, detoxification</td>
+            </tr>
+            <tr>
+              <td><strong>Gall Bladder</strong></td>
+              <td>Under liver, small green sac</td>
+              <td>Bile storage</td>
+            </tr>
+            <tr>
+              <td><strong>Pancreas</strong></td>
+              <td>Behind stomach, elongated</td>
+              <td>Enzyme & hormone production</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY TRICK:</strong>
+          <p>"Mouth → Esophagus → Stomach → Small → Large" (M-E-S-S-L) or "Please Eat Some Sour Lemons"</p>
+        </div>
+
+        <h3>2. Excretory System</h3>
+        
+        <img src="https://kimi-web-img.moonshot.cn/img/www.pmfias.com/cdff186d83535c9d66d521f5226d0c2ab565bfa5.jpg" alt="Kidney structure diagram" class="diagram-img">
+        <p class="image-caption">Longitudinal section of kidney showing cortex, medulla, and pelvis</p>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Organ</th>
+              <th>Position/Appearance</th>
+              <th>Function</th>
+            </tr>
+            <tr>
+              <td><strong>Kidneys</strong></td>
+              <td>Paired, bean-shaped, dorsal abdominal wall</td>
+              <td>Filter blood, produce urine</td>
+            </tr>
+            <tr>
+              <td><strong>Ureters</strong></td>
+              <td>Tubes from kidneys to bladder</td>
+              <td>Urine transport</td>
+            </tr>
+            <tr>
+              <td><strong>Urinary Bladder</strong></td>
+              <td>Pelvic cavity, muscular sac</td>
+              <td>Urine storage</td>
+            </tr>
+            <tr>
+              <td><strong>Urethra</strong></td>
+              <td>Tube from bladder to exterior</td>
+              <td>Urine excretion</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <h3>3. Reproductive System</h3>
+
+        <div class="comparison-grid">
+          <div class="comparison-card">
+            <h5>♂️ MALE</h5>
+            <ul>
+              <li><strong>Testes:</strong> Scrotum, sperm production</li>
+              <li><strong>Epididymis:</strong> Sperm maturation</li>
+              <li><strong>Vas deferens:</strong> Sperm transport</li>
+              <li><strong>Prostate:</strong> Seminal fluid</li>
+            </ul>
+          </div>
+          <div class="comparison-card">
+            <h5>♀️ FEMALE</h5>
+            <ul>
+              <li><strong>Ovaries:</strong> Abdomen, egg production</li>
+              <li><strong>Fallopian tubes:</strong> Fertilization site</li>
+              <li><strong>Uterus:</strong> Pear-shaped, fetal development</li>
+              <li><strong>Vagina:</strong> Birth canal</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY TRICK:</strong>
+          <p>"Ovaries Over, Uterus Under" (Ovaries higher up, Uterus central) | "Testes Outside" (need cooler temp for sperm)</p>
+        </div>
+      </div>
+
+      <!-- COMPARISON TABLES -->
+      <div class="section-card">
+        <h2>📊 Quick Comparison Tables</h2>
+
+        <h3>Dicot vs Monocot Stems</h3>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Feature</th>
+              <th>Dicot Stem</th>
+              <th>Monocot Stem</th>
+            </tr>
+            <tr>
+              <td>Vascular bundles</td>
+              <td>Ring arrangement</td>
+              <td>Scattered</td>
+            </tr>
+            <tr>
+              <td>Cambium</td>
+              <td>Present (open bundles)</td>
+              <td>Absent (closed bundles)</td>
+            </tr>
+            <tr>
+              <td>Pith</td>
+              <td>Present</td>
+              <td>Absent or reduced</td>
+            </tr>
+            <tr>
+              <td>Bundle sheath</td>
+              <td>Absent</td>
+              <td>Present (sclerenchymatous)</td>
+            </tr>
+            <tr>
+              <td>Secondary growth</td>
+              <td>Present</td>
+              <td>Absent</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <h3>Xylem vs Phloem</h3>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Feature</th>
+              <th>Xylem</th>
+              <th>Phloem</th>
+            </tr>
+            <tr>
+              <td>Transports</td>
+              <td>Water & minerals</td>
+              <td>Organic nutrients (sugars)</td>
+            </tr>
+            <tr>
+              <td>Direction</td>
+              <td>Up only (root to leaf)</td>
+              <td>Up & down (bidirectional)</td>
+            </tr>
+            <tr>
+              <td>Cell state</td>
+              <td>Dead at maturity</td>
+              <td>Living</td>
+            </tr>
+            <tr>
+              <td>Wall lignification</td>
+              <td>Heavy</td>
+              <td>None/light</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+      </div>
+
+      <!-- EXAM TIPS -->
+      <div class="jamb-alert">
+        <h4>⚠️ CRITICAL JAMB EXAM TIPS</h4>
+        <ul>
+          <li><strong>Root TS:</strong> Know epidermis, cortex, endodermis (Casparian strips), pericycle, vascular cylinder</li>
+          <li><strong>Stem TS:</strong> Dicot = ring bundles, Monocot = scattered bundles (most common exam question!)</li>
+          <li><strong>Leaf TS:</strong> Palisade mesophyll (photosynthesis) vs Spongy mesophyll (gas exchange)</li>
+          <li><strong>Supporting tissues:</strong> Collenchyma (flexible, living) vs Sclerenchyma (rigid, dead, lignified)</li>
+          <li><strong>Xylem vs Phloem:</strong> Xylem = dead, lignified, upward; Phloem = living, bidirectional</li>
+          <li><strong>Mammal organs:</strong> Liver (right), Stomach (left), Kidneys (dorsal/retroperitoneal)</li>
+          <li><strong>Practice drawing:</strong> JAMB often asks you to draw and label TS of root, stem, or leaf</li>
+          <li><strong>Structure-function:</strong> Always relate structure to function (e.g., root hairs = absorption)</li>
+        </ul>
+      </div>
+
+      <!-- QUICK REVISION -->
+      <div class="section-card">
+        <h2>📋 Quick Revision Checklist</h2>
+        
+        <h3>Must-Know Diagrams:</h3>
+        <div class="quick-facts">
+          <ul>
+            <li>Root TS: Identify epidermis, cortex, endodermis, pericycle, xylem, phloem, pith</li>
+            <li>Stem TS (Dicot): Ring of vascular bundles, cambium, pith</li>
+            <li>Stem TS (Monocot): Scattered vascular bundles, bundle sheath</li>
+            <li>Leaf TS: Cuticle, upper epidermis, palisade, spongy mesophyll, lower epidermis, stomata</li>
+          </ul>
+        </div>
+
+        <h3>Must-Know Functions:</h3>
+        <div class="comparison-grid">
+          <div class="comparison-card">
+            <h5>Plant Tissues</h5>
+            <ul>
+              <li>Collenchyma: Flexible support</li>
+              <li>Sclerenchyma: Rigid support</li>
+              <li>Xylem: Water transport</li>
+              <li>Phloem: Food transport</li>
+            </ul>
+          </div>
+          <div class="comparison-card">
+            <h5>Mammal Organs</h5>
+            <ul>
+              <li>Liver: Bile production</li>
+              <li>Stomach: Protein digestion</li>
+              <li>Kidney: Filtration</li>
+              <li>Small intestine: Absorption</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- MNEMONICS SUMMARY -->
+      <div class="section-card">
+        <h2>🧩 Mnemonics Summary</h2>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Topic</th>
+              <th>Mnemonic</th>
+            </tr>
+            <tr>
+              <td>Root layers</td>
+              <td>"Eating Cake Every Period X-mas" (Epidermis, Cortex, Endodermis, Pericycle, Xylem)</td>
+            </tr>
+            <tr>
+              <td>Dicot stem</td>
+              <td>"Dicot = Ring around the rosy"</td>
+            </tr>
+            <tr>
+              <td>Monocot stem</td>
+              <td>"Monocot = Messy scatter"</td>
+            </tr>
+            <tr>
+              <td>Collenchyma</td>
+              <td>"Collenchyma = Celery Strings" (flexible)</td>
+            </tr>
+            <tr>
+              <td>Sclerenchyma</td>
+              <td>"Sclerenchyma = Hard Shell" (rigid)</td>
+            </tr>
+            <tr>
+              <td>Xylem</td>
+              <td>"Xylem = Up" (transports water up)</td>
+            </tr>
+            <tr>
+              <td>Phloem</td>
+              <td>"Phloem = Flow" (flows everywhere)</td>
+            </tr>
+            <tr>
+              <td>Digestive order</td>
+              <td>"Please Eat Some Sour Lemons" (Pharynx, Esophagus, Stomach, Small, Large)</td>
+            </tr>
+            <tr>
+              <td>Kidney position</td>
+              <td>"Kidneys Kick Back" (dorsal/retroperitoneal)</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+      </div>
+
+      <p style="text-align: center; font-size: 16px; margin: 32px 0; font-weight: bold; color: var(--accent);">
+        🌟 Master these structures, ace your JAMB! 🌟
+      </p>
+
+      <button class="explore-btn" onclick="alert('Practice JAMB past questions on Internal Structure!')">Practice JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item">
+      <button class="neumorphic-btn">🔍</button>
+      <p>Search</p>
+    </div>
+    <div class="nav-item center">
+      <button class="neumorphic-btn">⭐</button>
+      <p>Favorite</p>
+    </div>
+    <div class="nav-item">
+      <button class="neumorphic-btn">📚</button>
+      <p>Library</p>
+    </div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme) {
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const newTheme = body.classList.contains('light') ? 'dark' : 'light';
+      setTheme(newTheme);
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      const scrolled = (scrollTop / scrollHeight) * 100;
+      progressBar.style.width = scrolled + '%';
+    });
+  </script>
+</body>
+</html>

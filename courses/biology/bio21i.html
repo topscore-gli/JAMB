@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Biology - Heredity</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    :root { --background: #1e1e2f; --shadow-in: #171723; --shadow-out: #25253b; --text-primary: #f0f0ff; --text-secondary: #c0c0e0; --accent: #1db954; --accent-secondary: #ff6b6b; --accent-tertiary: #4ecdc4; --card-bg: #2a2a3f; }
+    body.light { --background: #e0e0e0; --shadow-in: #bebebe; --shadow-out: #ffffff; --text-primary: #1a1a1a; --text-secondary: #444; --card-bg: #f8f8f8; }
+    body { background: var(--background); color: var(--text-primary); display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow-x: hidden; }
+    .container { width: 100%; max-width: 420px; background: var(--background); border-radius: 20px; box-shadow: 10px 10px 20px var(--shadow-in), -10px -10px 20px var(--shadow-out); overflow: hidden; position: relative; height: 750px; overflow-y: auto; padding-top: 70px; padding-bottom: 80px; }
+    .neumorphic { background: var(--background); box-shadow: 5px 5px 10px var(--shadow-in), -5px -5px 10px var(--shadow-out); border-radius: 15px; }
+    .neumorphic-btn { background: var(--background); border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); cursor: pointer; color: var(--text-primary); font-size: 18px; transition: all 0.3s ease; }
+    .neumorphic-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.95); }
+    .top-bar { position: fixed; top: 0; width: 100%; max-width: 420px; background: var(--background); padding: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 5px 10px var(--shadow-in); z-index: 20; }
+    .top-bar .header { font-size: 18px; font-weight: bold; color: var(--accent); }
+    .top-bar .right-icons { display: flex; gap: 10px; }
+    .content { padding: 20px 16px; line-height: 1.7; }
+    .main-header { text-align: center; margin-bottom: 28px; padding: 20px; border-radius: 20px; background: rgba(29, 185, 84, 0.1); }
+    .main-header h1 { font-size: 26px; margin-bottom: 8px; color: var(--accent); font-weight: 800; }
+    .main-header p.subtitle { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
+    .section-card { background: var(--card-bg); padding: 24px 18px; border-radius: 20px; box-shadow: inset 4px 4px 10px var(--shadow-in), inset -4px -4px 10px var(--shadow-out); margin-bottom: 24px; border-left: 4px solid var(--accent); }
+    .section-card h2 { font-size: 20px; margin-bottom: 16px; color: var(--accent); font-weight: bold; display: flex; align-items: center; gap: 8px; }
+    .section-card h3 { font-size: 17px; margin: 20px 0 12px; color: var(--accent-tertiary); font-weight: 600; padding-left: 12px; border-left: 3px solid var(--accent-tertiary); }
+    .section-card h4 { font-size: 15px; margin: 16px 0 10px; color: var(--accent-secondary); font-weight: 600; }
+    .section-card p { margin-bottom: 14px; font-size: 14px; color: var(--text-primary); text-align: justify; }
+    .section-card ul, .section-card ol { padding-left: 20px; margin: 12px 0; }
+    .section-card li { margin-bottom: 8px; font-size: 14px; color: var(--text-primary); line-height: 1.6; }
+.table-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 16px 0; border-radius: 12px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); }
+.table-container::-webkit-scrollbar { height: 6px; }
+.table-container::-webkit-scrollbar-track { background: var(--shadow-in); border-radius: 3px; }
+.table-container::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+.summary-table { width: 100%; min-width: 520px; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+.summary-table th { background: var(--accent); color: #000; padding: 12px 10px; text-align: left; font-weight: 600; white-space: nowrap; }
+.summary-table td { padding: 10px; border-bottom: 1px solid var(--shadow-in); background: var(--card-bg); white-space: nowrap; }
+.summary-table tr:last-child td { border-bottom: none; }
+.summary-table tr:nth-child(even) td { background: rgba(255,255,255,0.03); }
+.summary-table.wide { min-width: 980px; }
+.table-scroll-hint { font-size: 11px; color: var(--text-secondary); text-align: center; margin-top: 4px; font-style: italic; }
+
+.quick-facts { background: linear-gradient(135deg, rgba(29,185,84,0.1), rgba(78,205,196,0.1)); padding: 16px; border-radius: 15px; margin: 16px 0; border: 1px solid rgba(29,185,84,0.3); }
+.quick-facts h4 { color: var(--accent); margin-bottom: 10px; font-size: 15px; }
+.quick-facts ul { margin: 0; padding-left: 18px; }
+.quick-facts li { margin-bottom: 6px; font-size: 13px; }
+
+.memory-tip { background: rgba(255,107,107,0.1); padding: 14px 16px; border-radius: 12px; margin: 16px 0; border-left: 4px solid var(--accent-secondary); }
+.memory-tip strong { color: var(--accent-secondary); display: block; margin-bottom: 6px; font-size: 14px; }
+.memory-tip p { margin: 0; font-size: 13px; font-style: italic; }
+
+.comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+.comparison-card { background: var(--background); padding: 14px; border-radius: 12px; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); }
+.comparison-card h5 { color: var(--accent); font-size: 14px; margin-bottom: 8px; text-align: center; }
+.comparison-card ul { margin: 0; padding-left: 16px; font-size: 12px; }
+.comparison-card li { margin-bottom: 4px; font-size: 12px; }
+
+.diagram-img { width: 100%; max-height: 280px; object-fit: contain; border-radius: 12px; margin: 14px 0 10px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); background: #fff; padding: 8px; }
+.image-caption { text-align: center; font-size: 12px; color: var(--text-secondary); font-style: italic; margin-top: -8px; margin-bottom: 12px; }
+
+.jamb-alert { background: linear-gradient(135deg, rgba(255,193,7,0.15), rgba(255,152,0,0.1)); border: 1px solid rgba(255,193,7,0.4); border-radius: 12px; padding: 16px; margin: 20px 0; }
+.jamb-alert h4 { color: #ffc107; margin-bottom: 10px; font-size: 15px; }
+.jamb-alert ul { margin: 0; padding-left: 18px; }
+.jamb-alert li { font-size: 13px; margin-bottom: 6px; }
+
+.highlight-box { background: rgba(78,205,196,0.1); padding: 12px 16px; border-radius: 10px; margin: 12px 0; border-left: 3px solid var(--accent-tertiary); }
+
+.nav-bar { position: fixed; bottom: 0; width: 100%; max-width: 420px; background: var(--background); padding: 10px; display: flex; justify-content: space-around; box-shadow: 0 -5px 10px var(--shadow-in); z-index: 20; }
+.nav-bar .nav-item { text-align: center; position: relative; }
+.nav-bar .nav-item button { width: 40px; height: 40px; font-size: 18px; color: var(--text-primary); }
+.nav-bar .nav-item.center button { width: 50px; height: 50px; font-size: 24px; background: var(--accent); box-shadow: 0 0 15px var(--accent), 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); color: #000; }
+.nav-bar .nav-item p { display: none; font-size: 11px; margin-top: 4px; color: var(--text-primary); }
+.nav-bar .nav-item.active p { display: block; }
+
+.progress-container { position: fixed; top: 70px; left: 0; width: 100%; max-width: 420px; height: 4px; background: var(--shadow-in); z-index: 15; }
+.progress-bar { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
+
+.explore-btn { background: var(--accent); border: none; padding: 14px 28px; border-radius: 25px; color: #000; cursor: pointer; box-shadow: 4px 4px 8px var(--shadow-in), -4px -4px 8px var(--shadow-out); font-size: 16px; margin: 24px auto; display: block; text-align: center; font-weight: bold; transition: all 0.3s ease; }
+.explore-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.98); }
+ </style>
+</head>
+  
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+    
+<div class="top-bar neumorphic">
+  <button class="neumorphic-btn" onclick="history.back()">←</button>
+  <div class="header">BIOLOGY</div>
+  <div class="right-icons">
+    <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+    <button class="neumorphic-btn" onclick="alert('📖 Bookmarked for later study!')">🚀</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="main-header">
+    <h1>🧬 Chapter 21: Heredity (JAMB)</h1>
+    <p class="subtitle">DNA + chromosomes + meiosis + Punnett squares + applications (Nigeria-friendly examples)</p>
+  </div>
+
+  <!-- 1. HEREDITY -->
+  <div class="section-card">
+    <h2>1️⃣ What is Heredity?</h2>
+    <p><strong>Heredity</strong> is the passing of traits (characters) from parents to children.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/Family_resemblance.jpg" alt="Family resemblance heredity" class="diagram-img">
+    <p class="image-caption">Children often resemble parents because traits are inherited through genes</p>
+
+    <h3>a) Inheritance of characters</h3>
+
+    <h4>(i) Heritable characters</h4>
+    <p><strong>Definition:</strong> Traits controlled by genes/DNA and can be passed to children.</p>
+    <div class="quick-facts">
+      <ul>
+        <li>Skin colour</li>
+        <li>Eye colour</li>
+        <li>Blood group</li>
+        <li>Tongue rolling</li>
+        <li>Sickle-cell trait</li>
+      </ul>
+    </div>
+
+    <h4>(ii) Non-heritable characters</h4>
+    <p><strong>Definition:</strong> Traits caused by environment or injury; not controlled by genes and cannot be inherited.</p>
+    <div class="quick-facts">
+      <ul>
+        <li>Scars from accidents</li>
+        <li>Muscles from gym</li>
+        <li>Pierced ears</li>
+        <li>Tattoos</li>
+        <li>Knowledge learned in school</li>
+      </ul>
+    </div>
+
+    <div class="jamb-alert">
+      <h4>✅ Quick Test (JAMB style)</h4>
+      <ul>
+        <li>Which is heritable? (a) height from good food (b) height because dad is tall → <strong>Answer: (b)</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 2. CHROMOSOMES & DNA -->
+  <div class="section-card">
+    <h2>2️⃣ Chromosomes – Basis of Heredity</h2>
+    <p><strong>Chromosomes</strong> are thread-like structures in the nucleus made of <strong>DNA</strong> coiled around proteins.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/8/8a/Chromosome_structure.svg" alt="Chromosome structure" class="diagram-img">
+    <p class="image-caption">Chromosome: DNA tightly coiled and packaged</p>
+
+    <h3>b) (i) Structure</h3>
+    <p><strong>DNA (Deoxyribonucleic acid)</strong> is the “blueprint of life”. It carries genetic information.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/8/8c/DNA_chemical_structure.svg" alt="DNA structure diagram" class="diagram-img">
+    <p class="image-caption">DNA: double helix with sugar-phosphate backbone and paired bases</p>
+
+    <div class="quick-facts">
+      <h4>Key parts of DNA (easy)</h4>
+      <ul>
+        <li><strong>Double helix</strong> = twisted ladder</li>
+        <li><strong>Sides</strong> = sugar + phosphate</li>
+        <li><strong>Steps</strong> = bases: A, T, C, G</li>
+        <li><strong>Base pairing:</strong> A pairs with T; C pairs with G</li>
+      </ul>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 Memory Trick:</strong>
+      <p>"A-T" and "C-G" always pair (like best friends).</p>
+    </div>
+
+    <h4>Gene</h4>
+    <p><strong>Definition (Gene):</strong> A gene is a small section of DNA that codes for one trait (character).</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/DNA_to_chromosome_en.svg" alt="DNA to chromosome packing" class="diagram-img">
+    <p class="image-caption">DNA coils to form chromatin, and chromatin condenses into chromosomes</p>
+  </div>
+
+  <!-- TRANSMISSION -->
+  <div class="section-card">
+    <h2>🔁 Transmission of Hereditary Characters</h2>
+    <p><strong>Definition:</strong> Traits move from parents to children through genes carried in gametes (sperm and egg).</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/8/86/Meiosis_Stages.svg" alt="Meiosis stages" class="diagram-img">
+    <p class="image-caption">Meiosis produces gametes with half the chromosome number</p>
+
+    <div class="highlight-box">
+      <p><strong>Simple flow:</strong> Meiosis → gametes (one copy) → fertilization → zygote (two copies)</p>
+    </div>
+
+    <div class="quick-facts">
+      <h4>Objectives (JAMB)</h4>
+      <ul>
+        <li><strong>Segregation:</strong> alleles separate during gamete formation (meiosis)</li>
+        <li><strong>Random fertilization:</strong> sperm and egg combine randomly → siblings differ</li>
+      </ul>
+    </div>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4d/Fertilization_diagram_en.svg" alt="Fertilization diagram" class="diagram-img">
+    <p class="image-caption">Fertilization restores full chromosome number in the zygote</p>
+  </div>
+
+  <!-- PUNNETT SQUARE -->
+  <div class="section-card">
+    <h2>🧩 Punnett Square (Cross-breeding Data)</h2>
+    <p><strong>Definition:</strong> A Punnett square is a simple table used to predict the possible genotypes and phenotypes of offspring.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/Punnett_square_mendel_flowers.svg" alt="Punnett square example" class="diagram-img">
+    <p class="image-caption">Punnett squares help predict offspring ratios</p>
+
+    <h3>Monohybrid Cross (Tt × Tt)</h3>
+    <div class="highlight-box">
+      <p><strong>Example:</strong> Tall (T) is dominant over short (t).</p>
+      <p><strong>Result:</strong> 3 Tall : 1 Short (75% tall, 25% short)</p>
+    </div>
+
+    <div class="jamb-alert">
+      <h4>🔑 JAMB Tip</h4>
+      <ul>
+        <li>Always draw a Punnett square when asked about inheritance.</li>
+      </ul>
+    </div>
+
+    <h3>Dihybrid (Quick recall)</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Typical ratio (when independent assortment occurs): <strong>9 : 3 : 3 : 1</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PROBABILITY + SEX DETERMINATION -->
+  <div class="section-card">
+    <h2>🎲 Probability & Sex Determination</h2>
+    <p><strong>Probability</strong> means chance.</p>
+
+    <div class="quick-facts">
+      <h4>Key ratios</h4>
+      <ul>
+        <li>Monohybrid: <strong>3:1</strong></li>
+        <li>Dihybrid: <strong>9:3:3:1</strong></li>
+      </ul>
+    </div>
+
+    <h3>Sex determination</h3>
+    <p><strong>Key idea:</strong> Mother always contributes <strong>X</strong>. Father contributes <strong>X or Y</strong>, so the father determines the sex.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7b/Sex_determination_XY_system.svg" alt="Sex determination XY system" class="diagram-img">
+    <p class="image-caption">XY system: XX = female, XY = male</p>
+
+    <div class="highlight-box">
+      <p><strong>Chance:</strong> 50% girl (XX), 50% boy (XY)</p>
+    </div>
+  </div>
+
+  <!-- APPLICATIONS -->
+  <div class="section-card">
+    <h2>🧠 Applications of Heredity</h2>
+
+    <h3>i) Agriculture (cross-breeding)</h3>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Maize_hybrid.jpg" alt="Hybrid maize" class="diagram-img">
+    <p class="image-caption">Cross-breeding can produce higher-yield and disease-resistant varieties</p>
+
+    <div class="comparison-grid">
+      <div class="comparison-card">
+        <h5>Out-breeding</h5>
+        <ul>
+          <li><strong>Meaning:</strong> crossing different varieties</li>
+          <li><strong>Advantage:</strong> hybrid vigour</li>
+          <li><strong>Disadvantage:</strong> takes time; may be less uniform</li>
+        </ul>
+      </div>
+      <div class="comparison-card">
+        <h5>In-breeding</h5>
+        <ul>
+          <li><strong>Meaning:</strong> mating within same family line</li>
+          <li><strong>Advantage:</strong> pure line, uniform traits</li>
+          <li><strong>Disadvantage:</strong> weak offspring; more genetic diseases</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>ii) Medicine (GMO, gene therapy, counseling)</h3>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/8/86/Genetic_engineering.svg" alt="Genetic engineering" class="diagram-img">
+    <p class="image-caption">Genetic engineering: inserting a gene into another organism</p>
+
+    <div class="quick-facts">
+      <h4>Key terms</h4>
+      <ul>
+        <li><strong>GMO:</strong> genetically modified organism (e.g., Bt crops)</li>
+        <li><strong>Gene therapy:</strong> correcting faulty genes (developing field)</li>
+        <li><strong>Biosafety:</strong> strict testing to protect humans and environment</li>
+      </ul>
+    </div>
+
+    <h3>Marriage counselling (Nigeria-relevant)</h3>
+    <div class="quick-facts">
+      <ul>
+        <li><strong>Rhesus factor:</strong> Rh- mother + Rh+ father can cause pregnancy issues (anti-D injection helps)</li>
+        <li><strong>Sickle cell:</strong> AS × AS → 25% SS (sickle cell disease)</li>
+        <li>Safer combos: AA × AA, AA × AS (depends on counselling)</li>
+      </ul>
+    </div>
+
+    <h3>iii) Recombinant DNA (making medicines)</h3>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3d/Insulin_recombinant_DNA.svg" alt="Recombinant insulin production" class="diagram-img">
+    <p class="image-caption">Bacteria can be engineered to produce human insulin</p>
+
+    <div class="quick-facts">
+      <h4>Examples</h4>
+      <ul>
+        <li>Insulin (diabetes)</li>
+        <li>Interferon (viral diseases)</li>
+        <li>Useful enzymes for medicine</li>
+      </ul>
+    </div>
+
+    <h3>iv) Sex-linked characters</h3>
+    <p><strong>Definition:</strong> Traits controlled by genes on the X chromosome (males have one X, so they show the trait more often).</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/X-linked_recessive_inheritance.svg" alt="X-linked inheritance" class="diagram-img">
+    <p class="image-caption">X-linked inheritance pattern (males more affected)</p>
+
+    <div class="quick-facts">
+      <h4>Examples</h4>
+      <ul>
+        <li>Colour blindness</li>
+        <li>Haemophilia</li>
+        <li>Pattern baldness (often taught as sex-influenced/sex-linked in basic biology)</li>
+      </ul>
+    </div>
+
+    <div class="jamb-alert">
+      <h4>Rule (Easy)</h4>
+      <ul>
+        <li>Affected father → daughters can carry the allele (sons may be safe if mother normal)</li>
+        <li>Carrier mother → 50% sons affected (in many X-linked recessive cases)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- CHECKLIST -->
+  <div class="section-card">
+    <h2>✅ Quick Revision Checklist</h2>
+    <div class="quick-facts">
+      <ul>
+        <li>Heritable vs non-heritable + examples</li>
+        <li>Draw & label DNA (double helix, bases, backbone)</li>
+        <li>Explain meiosis + fertilization (segregation + recombination)</li>
+        <li>Fill Punnett square + interpret ratios</li>
+        <li>Out-breeding vs in-breeding</li>
+        <li>Sickle-cell counselling (AS × AS risk)</li>
+        <li>Recombinant insulin example</li>
+        <li>Sex-linked diseases</li>
+      </ul>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 Exam Habit:</strong>
+      <p>If you’re stuck, draw a Punnett square. It saves marks.</p>
+    </div>
+  </div>
+
+  <div class="jamb-alert">
+    <h4>⚡ JAMB Tips</h4>
+    <ul>
+      <li>Use Nigeria-relevant examples: sickle cell, blood group, Rh factor</li>
+      <li>For GMO: mention both benefits + biosafety concerns</li>
+      <li>For sex determination: mother gives X, father decides (X or Y)</li>
+    </ul>
+  </div>
+
+  <p style="text-align: center; font-size: 16px; margin: 32px 0; font-weight: bold; color: var(--accent);">
+    🌟 If you can draw DNA and solve a Punnett square, Heredity becomes an easy chapter in JAMB. 🌟
+  </p>
+
+  <button class="explore-btn" onclick="alert('Practice JAMB questions on Heredity (Chapter 21)!')">Practice JAMB Questions</button>
+</div>
+</div>
+
+  <div class="nav-bar">
+    <div class="nav-item">
+      <button class="neumorphic-btn">🔍</button>
+      <p>Search</p>
+    </div>
+    <div class="nav-item center">
+      <button class="neumorphic-btn">⭐</button>
+      <p>Favorite</p>
+    </div>
+    <div class="nav-item">
+      <button class="neumorphic-btn">📚</button>
+      <p>Library</p>
+    </div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme) {
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const newTheme = body.classList.contains('light') ? 'dark' : 'light';
+      setTheme(newTheme);
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      const scrolled = (scrollTop / scrollHeight) * 100;
+      progressBar.style.width = scrolled + '%';
+    });
+  </script>
+</body>
+</html>

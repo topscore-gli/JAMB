@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Biology - Biotechnology</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    :root { --background: #1e1e2f; --shadow-in: #171723; --shadow-out: #25253b; --text-primary: #f0f0ff; --text-secondary: #c0c0e0; --accent: #1db954; --accent-secondary: #ff6b6b; --accent-tertiary: #4ecdc4; --card-bg: #2a2a3f; }
+    body.light { --background: #e0e0e0; --shadow-in: #bebebe; --shadow-out: #ffffff; --text-primary: #1a1a1a; --text-secondary: #444; --card-bg: #f8f8f8; }
+    body { background: var(--background); color: var(--text-primary); display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow-x: hidden; }
+    .container { width: 100%; max-width: 420px; background: var(--background); border-radius: 20px; box-shadow: 10px 10px 20px var(--shadow-in), -10px -10px 20px var(--shadow-out); overflow: hidden; position: relative; height: 750px; overflow-y: auto; padding-top: 70px; padding-bottom: 80px; }
+    .neumorphic { background: var(--background); box-shadow: 5px 5px 10px var(--shadow-in), -5px -5px 10px var(--shadow-out); border-radius: 15px; }
+    .neumorphic-btn { background: var(--background); border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); cursor: pointer; color: var(--text-primary); font-size: 18px; transition: all 0.3s ease; }
+    .neumorphic-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.95); }
+    .top-bar { position: fixed; top: 0; width: 100%; max-width: 420px; background: var(--background); padding: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 5px 10px var(--shadow-in); z-index: 20; }
+    .top-bar .header { font-size: 18px; font-weight: bold; color: var(--accent); }
+    .top-bar .right-icons { display: flex; gap: 10px; }
+    .content { padding: 20px 16px; line-height: 1.7; }
+    .main-header { text-align: center; margin-bottom: 28px; padding: 20px; border-radius: 20px; background: rgba(29, 185, 84, 0.1); }
+    .main-header h1 { font-size: 26px; margin-bottom: 8px; color: var(--accent); font-weight: 800; }
+    .main-header p.subtitle { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
+    .section-card { background: var(--card-bg); padding: 24px 18px; border-radius: 20px; box-shadow: inset 4px 4px 10px var(--shadow-in), inset -4px -4px 10px var(--shadow-out); margin-bottom: 24px; border-left: 4px solid var(--accent); }
+    .section-card h2 { font-size: 20px; margin-bottom: 16px; color: var(--accent); font-weight: bold; display: flex; align-items: center; gap: 8px; }
+    .section-card h3 { font-size: 17px; margin: 20px 0 12px; color: var(--accent-tertiary); font-weight: 600; padding-left: 12px; border-left: 3px solid var(--accent-tertiary); }
+    .section-card h4 { font-size: 15px; margin: 16px 0 10px; color: var(--accent-secondary); font-weight: 600; }
+    .section-card p { margin-bottom: 14px; font-size: 14px; color: var(--text-primary); text-align: justify; }
+    .section-card ul, .section-card ol { padding-left: 20px; margin: 12px 0; }
+    .section-card li { margin-bottom: 8px; font-size: 14px; color: var(--text-primary); line-height: 1.6; }
+.table-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 16px 0; border-radius: 12px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); }
+.table-container::-webkit-scrollbar { height: 6px; }
+.table-container::-webkit-scrollbar-track { background: var(--shadow-in); border-radius: 3px; }
+.table-container::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+.summary-table { width: 100%; min-width: 520px; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+.summary-table th { background: var(--accent); color: #000; padding: 12px 10px; text-align: left; font-weight: 600; white-space: nowrap; }
+.summary-table td { padding: 10px; border-bottom: 1px solid var(--shadow-in); background: var(--card-bg); white-space: nowrap; }
+.summary-table tr:last-child td { border-bottom: none; }
+.summary-table tr:nth-child(even) td { background: rgba(255,255,255,0.03); }
+.summary-table.wide { min-width: 980px; }
+.table-scroll-hint { font-size: 11px; color: var(--text-secondary); text-align: center; margin-top: 4px; font-style: italic; }
+
+.quick-facts { background: linear-gradient(135deg, rgba(29,185,84,0.1), rgba(78,205,196,0.1)); padding: 16px; border-radius: 15px; margin: 16px 0; border: 1px solid rgba(29,185,84,0.3); }
+.quick-facts h4 { color: var(--accent); margin-bottom: 10px; font-size: 15px; }
+.quick-facts ul { margin: 0; padding-left: 18px; }
+.quick-facts li { margin-bottom: 6px; font-size: 13px; }
+
+.memory-tip { background: rgba(255,107,107,0.1); padding: 14px 16px; border-radius: 12px; margin: 16px 0; border-left: 4px solid var(--accent-secondary); }
+.memory-tip strong { color: var(--accent-secondary); display: block; margin-bottom: 6px; font-size: 14px; }
+.memory-tip p { margin: 0; font-size: 13px; font-style: italic; }
+
+.comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+.comparison-card { background: var(--background); padding: 14px; border-radius: 12px; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); }
+.comparison-card h5 { color: var(--accent); font-size: 14px; margin-bottom: 8px; text-align: center; }
+.comparison-card ul { margin: 0; padding-left: 16px; font-size: 12px; }
+.comparison-card li { margin-bottom: 4px; font-size: 12px; }
+
+.diagram-img { width: 100%; max-height: 280px; object-fit: contain; border-radius: 12px; margin: 14px 0 10px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); background: #fff; padding: 8px; }
+.image-caption { text-align: center; font-size: 12px; color: var(--text-secondary); font-style: italic; margin-top: -8px; margin-bottom: 12px; }
+
+.jamb-alert { background: linear-gradient(135deg, rgba(255,193,7,0.15), rgba(255,152,0,0.1)); border: 1px solid rgba(255,193,7,0.4); border-radius: 12px; padding: 16px; margin: 20px 0; }
+.jamb-alert h4 { color: #ffc107; margin-bottom: 10px; font-size: 15px; }
+.jamb-alert ul { margin: 0; padding-left: 18px; }
+.jamb-alert li { font-size: 13px; margin-bottom: 6px; }
+
+.highlight-box { background: rgba(78,205,196,0.1); padding: 12px 16px; border-radius: 10px; margin: 12px 0; border-left: 3px solid var(--accent-tertiary); }
+
+.nav-bar { position: fixed; bottom: 0; width: 100%; max-width: 420px; background: var(--background); padding: 10px; display: flex; justify-content: space-around; box-shadow: 0 -5px 10px var(--shadow-in); z-index: 20; }
+.nav-bar .nav-item { text-align: center; position: relative; }
+.nav-bar .nav-item button { width: 40px; height: 40px; font-size: 18px; color: var(--text-primary); }
+.nav-bar .nav-item.center button { width: 50px; height: 50px; font-size: 24px; background: var(--accent); box-shadow: 0 0 15px var(--accent), 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); color: #000; }
+.nav-bar .nav-item p { display: none; font-size: 11px; margin-top: 4px; color: var(--text-primary); }
+.nav-bar .nav-item.active p { display: block; }
+
+.progress-container { position: fixed; top: 70px; left: 0; width: 100%; max-width: 420px; height: 4px; background: var(--shadow-in); z-index: 15; }
+.progress-bar { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
+
+.explore-btn { background: var(--accent); border: none; padding: 14px 28px; border-radius: 25px; color: #000; cursor: pointer; box-shadow: 4px 4px 8px var(--shadow-in), -4px -4px 8px var(--shadow-out); font-size: 16px; margin: 24px auto; display: block; text-align: center; font-weight: bold; transition: all 0.3s ease; }
+.explore-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.98); }
+</style>
+</head>
+  
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+    
+<div class="top-bar neumorphic">
+  <button class="neumorphic-btn" onclick="history.back()">←</button>
+  <div class="header">BIOLOGY</div>
+  <div class="right-icons">
+    <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+    <button class="neumorphic-btn" onclick="alert('📖 Bookmarked for later study!')">🚀</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="main-header">
+    <h1>🧫 Chapter 22: Biotechnology (JAMB)</h1>
+    <p class="subtitle">Definition + applications in agriculture, medicine, pharmaceuticals, and food industry</p>
+  </div>
+
+  <!-- 1. DEFINITION -->
+  <div class="section-card">
+    <h2>1️⃣ What is Biotechnology?</h2>
+    <p><strong>Definition:</strong> Biotechnology is the use of living organisms (or their parts like cells, enzymes, or genes), biological processes, or biological systems to create useful products and technologies that improve human life.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Biotechnology_workflow.png" alt="Biotechnology workflow" class="diagram-img">
+    <p class="image-caption">Biotechnology combines biology + technology to produce useful goods and services</p>
+
+    <div class="highlight-box">
+      <p><strong>JAMB definition (simple and correct):</strong> Biotechnology is the application of scientific and engineering principles to the processing of materials by biological agents to provide goods and services.</p>
+    </div>
+
+    <div class="quick-facts">
+      <h4>Modern biotechnology involves</h4>
+      <ul>
+        <li>Genetic engineering (changing DNA)</li>
+        <li>Recombinant DNA technology</li>
+        <li>Fermentation (using microbes)</li>
+        <li>Tissue culture / micropropagation</li>
+        <li>Biological enzymes (industrial use)</li>
+      </ul>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 Memory line:</strong>
+      <p>"Bio + Tech = using life to make useful things."</p>
+    </div>
+  </div>
+
+  <!-- 2. APPLICATIONS -->
+  <div class="section-card">
+    <h2>2️⃣ Applications of Biotechnology</h2>
+    <p>JAMB focuses on 4 main areas: <strong>Agriculture, Medicine, Pharmaceuticals, Food Industry</strong>.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/8/86/Genetic_engineering.svg" alt="Genetic engineering concept" class="diagram-img">
+    <p class="image-caption">Genetic engineering is a major part of modern biotechnology</p>
+
+    <h3>(i) Agriculture</h3>
+    <p><strong>Goal:</strong> Improve crops/livestock, increase yield, reduce pests, and support food security.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Bt_cotton_field.jpg" alt="Bt cotton field" class="diagram-img">
+    <p class="image-caption">GM crops (e.g., Bt cotton/maize) can resist insect pests</p>
+
+    <div class="quick-facts">
+      <h4>Key applications (memorize 4–6)</h4>
+      <ul>
+        <li><strong>Genetically modified crops (GMOs):</strong> Bt maize/cotton (insect-resistant), herbicide-tolerant crops</li>
+        <li><strong>Pest/disease resistance:</strong> plants produce Bt toxin (natural pesticide)</li>
+        <li><strong>Higher yields/faster growth:</strong> bigger/faster crops, less fertilizer needed</li>
+        <li><strong>Drought/salt tolerant crops:</strong> useful in dry or salty soils (e.g., northern Nigeria conditions)</li>
+        <li><strong>Biofertilizers:</strong> microbes like <em>Rhizobium</em> fix nitrogen → reduce chemical fertilizers</li>
+        <li><strong>Improved nutrition:</strong> Golden Rice (vitamin A)</li>
+        <li><strong>Tissue culture:</strong> rapid multiplication of disease-free banana, yam, cassava</li>
+      </ul>
+    </div>
+
+    <div class="jamb-alert">
+      <h4>⚠️ GMO Notes (JAMB)</h4>
+      <ul>
+        <li><strong>Advantages:</strong> more food, less pesticide, better nutrition</li>
+        <li><strong>Concerns:</strong> biosafety, environmental impact, unknown long-term effects</li>
+      </ul>
+    </div>
+
+    <h3>(ii) Medicine</h3>
+    <p><strong>Goal:</strong> Produce drugs, vaccines, tests, and treatments to fight diseases.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3d/Insulin_recombinant_DNA.svg" alt="Recombinant insulin production" class="diagram-img">
+    <p class="image-caption">Recombinant DNA helps bacteria produce human insulin</p>
+
+    <div class="quick-facts">
+      <h4>Key applications (classic JAMB examples)</h4>
+      <ul>
+        <li><strong>Insulin:</strong> for diabetes (produced by engineered bacteria/yeast)</li>
+        <li><strong>Human growth hormone:</strong> for growth disorders</li>
+        <li><strong>Interferon:</strong> antiviral protein (some cancers/hepatitis)</li>
+        <li><strong>Vaccines:</strong> e.g., Hepatitis B (recombinant)</li>
+        <li><strong>Monoclonal antibodies:</strong> cancer treatment/diagnosis</li>
+        <li><strong>Gene therapy:</strong> correcting faulty genes (developing)</li>
+        <li><strong>Diagnostics:</strong> PCR tests, ELISA</li>
+        <li><strong>Antibiotics:</strong> improved production from microbes</li>
+      </ul>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 Big Point:</strong>
+      <p>Recombinant DNA allows mass production of pure medicines like insulin and vaccines.</p>
+    </div>
+
+    <h3>(iii) Pharmaceuticals</h3>
+    <p><strong>Goal:</strong> Large-scale production of drugs and biological products (biologics).</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/9/98/Monoclonal_antibodies_production.svg" alt="Monoclonal antibody production" class="diagram-img">
+    <p class="image-caption">Biotech produces monoclonal antibodies used in diagnosis and treatment</p>
+
+    <div class="quick-facts">
+      <h4>Key applications</h4>
+      <ul>
+        <li>Therapeutic proteins/enzymes (e.g., clotting factors for hemophilia)</li>
+        <li>Antibiotics (e.g., improved penicillin production)</li>
+        <li>Vaccines and hormones</li>
+        <li>Drug discovery (faster screening)</li>
+        <li>Personalized medicine (based on genetics)</li>
+      </ul>
+    </div>
+
+    <h3>(iv) Food Industry</h3>
+    <p><strong>Goal:</strong> Improve food production, processing, preservation, and safety.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/8/8d/Yeast_fermentation.jpg" alt="Yeast fermentation" class="diagram-img">
+    <p class="image-caption">Fermentation uses microbes to make foods like bread, yogurt, and drinks</p>
+
+    <div class="quick-facts">
+      <h4>Key applications</h4>
+      <ul>
+        <li><strong>Fermentation:</strong> yogurt, cheese, bread, beer, wine</li>
+        <li><strong>Food enzymes:</strong> amylase (brewing), rennet (cheese), pectinase (juice clarification)</li>
+        <li><strong>Single-cell protein:</strong> microbes grown as protein food (yeast/algae)</li>
+        <li><strong>Improved quality:</strong> longer shelf life, better taste/texture</li>
+        <li><strong>Food safety:</strong> fast detection of contaminants</li>
+        <li><strong>GM foods:</strong> nutrient-enhanced/long-lasting fruits and vegetables</li>
+      </ul>
+    </div>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/0f/Cheese_making.jpg" alt="Cheese making" class="diagram-img">
+    <p class="image-caption">Cheese making uses microbes and enzymes (biotechnology in food)</p>
+  </div>
+
+  <!-- SUMMARY TABLE -->
+  <div class="section-card">
+    <h2>📋 Quick Summary Table (Easy Memorization)</h2>
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Area</th>
+          <th>Main Goal</th>
+          <th>Key Examples / Products</th>
+          <th>Benefit</th>
+        </tr>
+        <tr>
+          <td><strong>Agriculture</strong></td>
+          <td>Better crops & animals</td>
+          <td>GM crops (Bt cotton/maize), Golden Rice, biofertilizers, tissue culture</td>
+          <td>More food, less chemicals, drought resistance</td>
+        </tr>
+        <tr>
+          <td><strong>Medicine</strong></td>
+          <td>Treat & prevent diseases</td>
+          <td>Insulin, growth hormone, interferon, vaccines, PCR/ELISA, gene therapy</td>
+          <td>Better treatment and quick diagnosis</td>
+        </tr>
+        <tr>
+          <td><strong>Pharmaceuticals</strong></td>
+          <td>Produce drugs & biologics</td>
+          <td>Recombinant proteins, antibiotics, monoclonal antibodies</td>
+          <td>Cheap, pure, mass-produced medicines</td>
+        </tr>
+        <tr>
+          <td><strong>Food industry</strong></td>
+          <td>Better food processing</td>
+          <td>Fermentation (yogurt/bread), enzymes, single-cell protein, GM foods</td>
+          <td>Safer, tastier, longer-lasting food</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <div class="memory-tip">
+      <strong>🧠 4 Areas Shortcut:</strong>
+      <p>"A-M-P-F" → Agriculture, Medicine, Pharmaceuticals, Food</p>
+    </div>
+  </div>
+
+  <!-- OBJECTIVES -->
+  <div class="section-card">
+    <h2>✅ JAMB Objectives (What You Must Do)</h2>
+    <div class="quick-facts">
+      <ul>
+        <li>Define biotechnology (use the definition given)</li>
+        <li>List applications in agriculture, medicine, pharmaceuticals, and food industry</li>
+        <li>Give clear examples + what they achieve (2–3 per area is enough)</li>
+        <li>Explain benefits and possible concerns of GMOs (biosafety)</li>
+      </ul>
+    </div>
+
+    <div class="jamb-alert">
+      <h4>⚡ Quick Revision Tips</h4>
+      <ul>
+        <li>Memorize the definition word-for-word</li>
+        <li>For each area, remember 2–3 strong examples:
+          <ul>
+            <li>Agriculture: Bt crops, tissue culture, biofertilizers</li>
+            <li>Medicine: insulin, vaccines, PCR/ELISA</li>
+            <li>Pharma: monoclonal antibodies, antibiotics</li>
+            <li>Food: fermentation, enzymes</li>
+          </ul>
+        </li>
+        <li>Remember: recombinant DNA is key for insulin, vaccines, and proteins</li>
+      </ul>
+    </div>
+  </div>
+
+  <p style="text-align: center; font-size: 16px; margin: 32px 0; font-weight: bold; color: var(--accent);">
+    🌟 If you can define biotechnology and give 2–3 examples in each area, you’ll score well in JAMB. 🌟
+  </p>
+
+  <button class="explore-btn" onclick="alert('Practice JAMB questions on Biotechnology (Chapter 22)!')">Practice JAMB Questions</button>
+</div>
+</div>
+
+
+  <div class="nav-bar">
+    <div class="nav-item">
+      <button class="neumorphic-btn">🔍</button>
+      <p>Search</p>
+    </div>
+    <div class="nav-item center">
+      <button class="neumorphic-btn">⭐</button>
+      <p>Favorite</p>
+    </div>
+    <div class="nav-item">
+      <button class="neumorphic-btn">📚</button>
+      <p>Library</p>
+    </div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme) {
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const newTheme = body.classList.contains('light') ? 'dark' : 'light';
+      setTheme(newTheme);
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      const scrolled = (scrollTop / scrollHeight) * 100;
+      progressBar.style.width = scrolled + '%';
+    });
+  </script>
+</body>
+</html>

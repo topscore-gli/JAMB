@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Biology - Adaptations</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Biology</h1>
+      <p>Adaptations<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Adaptations</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 60:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration
+const CONFIG={TIME:3600,PASS:60}; // 60 minutes for 60 questions
+
+// Section mapping - variable section sizes (12,18,12,8,6,4)
+const SECTIONS={
+  0:"A: Adaptive Colouration",
+  12:"B: Behavioural Adaptations",
+  30:"C: Structural Adaptations - Feeding",
+  42:"D: Protection & Defence",
+  50:"E: Reproduction & Temperature",
+  56:"F: Water Conservation"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 60 JAMB Biology Adaptations Questions
+const QUIZ_DATA=[
+  // Section A: Adaptive Colouration (Questions 1-12)
+  {q:"What is the primary function of counter-shading in animals?",o:["To attract mates during breeding season","To regulate body temperature in cold environments","To provide camouflage from predators above and below","To store energy for hibernation"],a:2,e:"Counter-shading (dark top, light bottom) helps animals blend when viewed from above (dark back matches ground) and below (light belly matches sky)."},
+  {q:"Which animal exhibits counter-shading?",o:["Monarch butterfly","Poison dart frog","Mackerel fish","Peacock"],a:2,e:"Mackerel have dark tops and silvery-white undersides. Others show warning coloration or sexual display."},
+  {q:"In counter-shading, the ventral surface is typically:",o:["Dark colored to match soil","Light colored to blend with sunlight/sky","Bright colored to warn predators","Transparent"],a:1,e:"Light underside blends with bright sky when viewed from below."},
+  {q:"Warning colouration is also known as:",o:["Counter-shading","Aposematic coloration","Cryptic coloration","Sexual dimorphism"],a:1,e:"Aposematic coloration = bright warning colors (red, orange, yellow, black) signaling toxicity."},
+  {q:"Which organism uses warning colouration?",o:["Stick insect","Toad","Poison dart frog","Grass snake"],a:2,e:"Poison dart frogs display bright colors to warn of skin toxins (batrachotoxin)."},
+  {q:"The red cap with white spots in Amanita mushrooms indicates:",o:["Counter-shading","Warning colouration (deadly toxins)","Sexual selection","Mimicry"],a:1,e:"Red and white spots signal deadly toxins - nature's warning sign."},
+  {q:"Which colors are associated with warning colouration?",o:["Brown and green","Red, yellow, and black","White and grey","Blue and purple"],a:1,e:"'Red/yellow = Dead fellow' — nature's stop signs."},
+  {q:"Unlike counter-shading, warning colouration is meant to:",o:["Hide the organism","Be conspicuous and visible","Regulate temperature","Attract prey"],a:1,e:"Warning colors advertise danger — opposite of hiding."},
+  {q:"Penguins exhibit counter-shading to:",o:["Attract mates","Hide from aquatic predators","Regulate body heat","Hunt on ice"],a:1,e:"Dark back blends with ocean depths when viewed from above; white belly blends with surface light when viewed from below."},
+  {q:"The monarch butterfly's orange/black colors warn that it is:",o:["Fast-flying","Toxic from milkweed diet","Hard-shelled","Capable of stinging"],a:1,e:"Monarchs sequester cardiac glycosides from milkweed, making them toxic to predators."},
+  {q:"Which is NOT counter-shading?",o:["Sharks","Toads","Coral snakes","Grass snakes"],a:2,e:"Coral snakes use warning bands (red/yellow/black), not counter-shading."},
+  {q:"The main difference between counter-shading and warning colouration:",o:["Colors used","Whether poisonous","Purpose—hiding vs. being seen","Habitat"],a:2,e:"Counter-shading hides; warning colouration advertises. One conceals, the other reveals."},
+  
+  // Section B: Behavioural Adaptations (Questions 13-30)
+  {q:"Which termite caste defends the colony?",o:["Workers","Soldiers","Reproductives","King"],a:1,e:"Soldiers have large heads/powerful jaws but cannot feed themselves."},
+  {q:"Which caste lays 6,000-7,000 eggs/day?",o:["King","Queen","Workers","Alates"],a:1,e:"The queen is an egg-laying machine, attended constantly by workers."},
+  {q:"What is the function of alates?",o:["Build nests","Defend colony","Start new colonies during nuptial flight","Feed the queen"],a:2,e:"Alates are winged reproductives that leave to establish new colonies."},
+  {q:"Which is TRUE about termite workers?",o:["Have well-developed eyes","Are fertile","Are blind and sterile","Have large defensive mandibles"],a:2,e:"Workers are blind, sterile, wingless, and do all the labor."},
+  {q:"Basking in lizards is:",o:["Structural adaptation","Behavioural adaptation","Physiological adaptation","Protective coloration"],a:1,e:"Basking is an action/behavior, not a physical structure."},
+  {q:"Why do lizards bask in early morning?",o:["To attract mates","To increase body temperature after cold night","To hunt insects","To synthesize vitamin D"],a:1,e:"Ectotherms need external heat for metabolism and activity."},
+  {q:"Territorial behavior serves all EXCEPT:",o:["Securing food","Attracting mates","Reducing body temperature","Protecting breeding sites"],a:2,e:"Territory defense is about resources and reproduction, not thermoregulation."},
+  {q:"Which animal displays bright colors for territory/mating?",o:["Stick insect","Red-headed agama lizard","Toad","Grasshopper"],a:1,e:"Males show red/orange heads to signal fitness to females."},
+  {q:"Hibernation occurs in:",o:["Summer","Winter","Spring","Autumn"],a:1,e:"'HiberNATION = Winter NATION' — winter sleep to survive cold."},
+  {q:"What triggers aestivation?",o:["Extreme cold","Extreme heat and drought","Lack of oxygen","Excessive rain"],a:1,e:"'AestiVATION = Summer VACATION' — dormancy during hot/dry conditions."},
+  {q:"Which animal aestivates in a mucus cocoon?",o:["Bear","Hedgehog","African lungfish","Bat"],a:2,e:"JAMB favorite! Lungfish burrow in mud, secrete mucus cocoon, breathe air through lungs."},
+  {q:"During hibernation:",o:["Increased heart rate","Slow heartbeat and lowered temperature","Rapid breathing","High metabolism"],a:1,e:"Metabolic rate drops dramatically to conserve energy."},
+  {q:"Which animal hibernates?",o:["Lungfish","Snail","Bear","Crocodile"],a:2,e:"'HiberNATION = Winter NATION' — bears sleep through winter."},
+  {q:"Lungfish survive drought because they have:",o:["Thick fur","Both gills and lungs","Ability to fly","Winter hibernation"],a:1,e:"When water dries up, they switch from gills to lungs."},
+  {q:"Which is a behavioural adaptation?",o:["Counter-shading","Piercing-sucking mouthparts","Basking in the sun","Raptorial forelegs"],a:2,e:"Basking is an action; others are physical structures."},
+  {q:"A termite colony exhibits:",o:["Solitary behavior","Division of labor among castes","Random organization","Competition between all members"],a:1,e:"Complex social structure with specialized roles."},
+  {q:"Which is TRUE about termite soldiers?",o:["Can feed themselves","Most numerous caste","Have large heads/jaws but cannot feed themselves","Lay eggs"],a:2,e:"Soldiers are defense specialists dependent on workers for food."},
+  {q:"'HiberNATION = Winter NATION' reminds us:",o:["Bear habitat","Hibernation is winter sleep","Diet of hibernators","Duration of sleep"],a:1,e:"Mnemonic: Hibernation = winter dormancy."},
+  
+  // Section C: Structural Adaptations - Feeding (Questions 31-42)
+  {q:"A conical beak is for:",o:["Sucking nectar","Cracking hard seeds","Spearing fish","Straining plankton"],a:1,e:"Example: Finch, sparrow — short, thick beaks generate force."},
+  {q:"Which bird has a long curved beak for flowers?",o:["Eagle","Sunbird","Woodpecker","Duck"],a:1,e:"Hummingbirds/sunbirds reach deep into flowers for nectar."},
+  {q:"Herons have which beak type?",o:["Conical","Long and sharp (spear-like)","Broad and flat","Chisel-like"],a:1,e:"Spear-shaped for striking fish and amphibians."},
+  {q:"Birds of prey (eagles/hawks) have:",o:["Siphoning beaks","Hooked beaks","Sponging mouthparts","Biting-chewing mouthparts"],a:1,e:"For tearing flesh — the hook rips meat."},
+  {q:"Flamingos have beaks for:",o:["Drilling wood","Straining plankton/water","Piercing skin","Cracking bones"],a:1,e:"Filter feeders — upside-down beak with filtering lamellae."},
+  {q:"Woodpeckers have:",o:["Hooked beak","Chisel-like beak","Siphoning beak","Piercing-sucking mouthparts"],a:1,e:"For drilling into wood to find insects."},
+  {q:"Webbed feet are for:",o:["Perching","Catching prey","Swimming/paddling","Wading"],a:2,e:"Examples: Duck, penguin, goose — paddles for propulsion."},
+  {q:"Herons and flamingos have long thin legs for:",o:["Running fast","Wading in shallow water","Climbing trees","Digging burrows"],a:1,e:"Keeps body above water while feeding."},
+  {q:"Eagles have strong talons for:",o:["Swimming","Catching and holding prey","Perching on small branches","Walking on mud"],a:1,e:"Raptorial feet — sharp, curved, powerful for grasping."},
+  {q:"Perching birds have feet with:",o:["Webbed toes","Three toes forward, one back","Two toes each side","Fused toes"],a:1,e:"Anisodactyl arrangement — perfect grip on branches."},
+  {q:"Which insect has piercing-sucking mouthparts?",o:["Butterfly","Grasshopper","Female mosquito","Housefly"],a:2,e:"'Mosquito = Medical needle.' Only females bite for blood meal!"},
+  {q:"Butterflies feed using:",o:["Piercing-sucking","Siphoning (coiled proboscis)","Biting-chewing","Sponging"],a:1,e:"'Butterfly = Built-in straw' — proboscis uncoils to reach nectar."},
+  
+  // Section D: Protection & Defence (Questions 43-50)
+  {q:"Stick insects looking like twigs is:",o:["Warning colouration","Mimicry/camouflage","Counter-shading","Sexual dimorphism"],a:1,e:"'Plays stick' to survive — visual deception."},
+  {q:"Praying mantises are 'praying' because:",o:["Religious insects","Front legs fold as if in prayer","Make prayer sounds","Eat on holy days"],a:1,e:"The posture resembles hands folded in prayer."},
+  {q:"Raptorial forelegs are for:",o:["Digging","Catching and holding prey","Swimming","Climbing"],a:1,e:"'Praying = Preying' — those hands are weapons!"},
+  {q:"Toad parotoid glands secrete:",o:["Communication sounds","Bufotoxin for defense","Water storage","Mating attractants"],a:1,e:"Milky neurotoxin exuded when threatened."},
+  {q:"Praying mantis uses:",o:["Only camouflage","Only raptorial legs","Both camouflage AND raptorial legs","Neither"],a:2,e:"Green/brown color hides them; spined forelegs snatch prey."},
+  {q:"Stick insects sway like branches to enhance:",o:["Speed","Camouflage","Mating","Digestion"],a:1,e:"Behavioral component of disguise — moves like vegetation in wind."},
+  {q:"Which uses camouflage AND chemical defense?",o:["Stick insect","Praying mantis","Toad","Butterfly"],a:2,e:"Toads blend into leaf litter AND secrete bufotoxin."},
+  {q:"'Praying = Preying' means:",o:["Religious insect","'Praying' posture is for catching prey","Prays before eating","Preys on humans"],a:1,e:"The prayer pose is actually a predatory strike position."},
+  
+  // Section E: Reproduction & Temperature (Questions 51-56)
+  {q:"Why are male agamas more colorful?",o:["Hide from predators","Attract females and signal fitness","Regulate temperature","Digest food"],a:1,e:"Sexual selection — bright colors indicate health/genetic quality."},
+  {q:"Which helps birds regulate temperature?",o:["Scales","Feathers","Hair","Slimy skin"],a:1,e:"Fluff up to trap air (insulation), press down to release heat."},
+  {q:"Goosebumps help mammals:",o:["Increase speed","Trap air for insulation","Attract mates","Catch prey"],a:1,e:"Piloerection — raises hair to create insulating air layer."},
+  {q:"Reptile scales are for:",o:["Flight","Preventing water loss and absorbing heat","Attracting mates","Producing sounds"],a:1,e:"Keratinized barrier against desiccation; dark colors absorb heat."},
+  {q:"Sweat glands function to:",o:["Produce milk","Cool body through evaporation","Secrete toxins","Attract mates"],a:1,e:"Thermoregulation via evaporative cooling."},
+  {q:"Which are ectothermic?",o:["Mammals and birds","Reptiles and fish","Only insects","Only amphibians"],a:1,e:"Cold-blooded: rely on external heat sources."},
+  
+  // Section F: Water Conservation (Questions 57-60)
+  {q:"Cactus spines are modified:",o:["Stems","Roots","Leaves","Flowers"],a:2,e:"Reduced surface area = less water loss. 'Spines = Survival'"},
+  {q:"Thick cuticle in desert plants:",o:["Increases photosynthesis","Prevents water evaporation","Attracts pollinators","Stores food"],a:1,e:"Waxy layer seals moisture inside."},
+  {q:"Desert mammals conserve water by:",o:["Excessive sweating","Concentrated urine","Large ears","Wet skin"],a:1,e:"Examples: Kangaroo rat, camel — minimal water loss."},
+  {q:"'Spines = Survival' refers to:",o:["Predator protection","Reduced water loss in desert plants","Structural support","Reproduction"],a:1,e:"Modified leaves reduce transpiration surface area."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('adaptations_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('adaptations_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/60`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('adaptations_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=45?'Ready for JAMB!':pct>=38?'Good, review weak areas':pct>=30?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections - using actual section boundaries
+  const sectionStarts=[0,12,30,42,50,56,60];
+  const sectionNames=["A: Adaptive Colouration","B: Behavioural Adaptations","C: Structural Adaptations - Feeding","D: Protection & Defence","E: Reproduction & Temperature","F: Water Conservation"];
+  
+  for(let s=0;s<6;s++){
+    const start=sectionStarts[s];
+    const end=sectionStarts[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('adaptations_quiz_auth');
+  sessionStorage.removeItem('adaptations_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('adaptations_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('adaptations_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

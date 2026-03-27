@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BIOLOGY - Evolution (JAMB 2026)</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+
+    :root {
+      --background: #1e1e2f;
+      --shadow-in: #171723;
+      --shadow-out: #25253b;
+      --text-primary: #f0f0ff;
+      --text-secondary: #c0c0e0;
+      --accent: #1db954;
+      --card-bg: #2a2a3f;
+    }
+
+    body.light {
+      --background: #e0e0e0;
+      --shadow-in: #bebebe;
+      --shadow-out: #ffffff;
+      --text-primary: #1a1a1a;
+      --text-secondary: #444;
+      --accent: #1db954;
+      --card-bg: #f8f8f8;
+    }
+
+    body {
+      background: var(--background);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto;
+      background: var(--background);
+      border-radius: 20px;
+      box-shadow: 10px 10px 20px var(--shadow-in), -10px -10px 20px var(--shadow-out);
+      overflow: hidden;
+      min-height: 100vh;
+      position: relative;
+      padding-top: 70px;
+      padding-bottom: 80px;
+    }
+
+    .neumorphic {
+      background: var(--background);
+      box-shadow: 5px 5px 10px var(--shadow-in), -5px -5px 10px var(--shadow-out);
+      border-radius: 15px;
+    }
+
+    .neumorphic-btn {
+      background: var(--background);
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out);
+      cursor: pointer;
+      color: var(--text-primary);
+      font-size: 18px;
+    }
+
+    .neumorphic-btn:active {
+      box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out);
+    }
+
+    .top-bar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      max-width: 400px;
+      background: var(--background);
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 5px 10px var(--shadow-in);
+      z-index: 20;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .top-bar .header {
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--text-primary);
+    }
+
+    .top-bar .right-icons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .top-bar .profile-upload {
+      position: relative;
+    }
+
+    .top-bar .profile-upload input {
+      opacity: 0;
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+    }
+
+    .content {
+      padding: 20px 16px;
+      line-height: 1.6;
+    }
+
+    .main-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .main-header h1 {
+      font-size: 30px;
+      margin-bottom: 8px;
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .main-header p.subtitle {
+      font-size: 16px;
+      color: var(--text-secondary);
+    }
+
+    .section {
+      background: var(--card-bg);
+      padding: 24px 20px;
+      border-radius: 20px;
+      box-shadow: inset 4px 4px 10px var(--shadow-in), inset -4px -4px 10px var(--shadow-out);
+      margin-bottom: 30px;
+    }
+
+    .section h2 {
+      font-size: 22px;
+      margin: 0 0 16px;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .section h3 {
+      font-size: 18px;
+      margin: 24px 0 12px;
+      color: var(--accent);
+    }
+
+    .section p {
+      margin-bottom: 16px;
+      font-size: 15px;
+      color: var(--text-primary);
+    }
+
+    .section ul, .section ol {
+      padding-left: 24px;
+      margin: 16px 0;
+    }
+
+    .section li {
+      margin-bottom: 10px;
+      font-size: 15px;
+    }
+
+    .section .highlight {
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .diagram-img {
+      width: 100%;
+      border-radius: 12px;
+      margin: 16px 0 8px;
+      box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out);
+    }
+
+    .nav-bar {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      max-width: 400px;
+      background: var(--background);
+      padding: 10px;
+      display: flex;
+      justify-content: space-around;
+      box-shadow: 0 -5px 10px var(--shadow-in);
+      z-index: 20;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .nav-bar .nav-item {
+      text-align: center;
+      position: relative;
+    }
+
+    .nav-bar .nav-item button {
+      width: 40px;
+      height: 40px;
+      font-size: 18px;
+      color: var(--text-primary);
+    }
+
+    .nav-bar .nav-item.center button {
+      width: 50px;
+      height: 50px;
+      font-size: 24px;
+      background: var(--accent);
+      box-shadow: 0 0 15px var(--accent), 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out);
+      color: #000;
+    }
+
+    .nav-bar .nav-item p {
+      display: none;
+      font-size: 12px;
+      margin-top: 5px;
+      color: var(--text-primary);
+    }
+
+    .nav-bar .nav-item.active p {
+      display: block;
+    }
+  </style>
+</head>
+<body class="dark">
+  <div class="container">
+    <!-- Top Fixed Bar -->
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn">←</button>
+      <div class="header">BIOLOGY</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn profile-upload">
+          🏆
+          <input type="file" accept="image/*" id="profile-upload">
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+      <div class="main-header">
+        <h1>Level Up Your Biology Knowledge! 🚀</h1>
+        <p class="subtitle">– JAMB Topic: Evolution</p>
+      </div>
+
+      <div class="section">
+        
+        <h2>Definition of Evolution</h2>
+        <p><strong>Organic evolution</strong> is the sum total of all adaptive changes that have taken place over a long period of time, resulting in the diversity of forms, structures, and functions among organisms. It is the gradual process by which populations of organisms change over generations through descent with modification from common ancestors, leading to new species.</p>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Tree_of_life.svg/800px-Tree_of_life.svg.png" alt="Tree of life showing evolutionary relationships" class="diagram-img">
+
+        
+        <h2>Step 1: Theories of Evolution</h2>
+
+        <h3>Lamarck’s Theory (Inheritance of Acquired Characteristics)</h3>
+        <ul>
+          <li><strong>Use and disuse:</strong> Organs used a lot develop; unused ones shrink.</li>
+          <li><strong>Acquired traits passed to offspring.</strong></li>
+          <li><strong>Example:</strong> Giraffes stretched necks to reach leaves → longer necks inherited.</li>
+          <li>Rejected today (acquired traits not genetic).</li>
+          <li><strong>Contribution:</strong> First to propose species change over time.</li>
+        </ul>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Lamarckian_evolution.png/800px-Lamarckian_evolution.png" alt="Lamarck's giraffe example" class="diagram-img">
+
+        <h3>Darwin’s Theory (Natural Selection / Survival of the Fittest)</h3>
+        <ul>
+          <li>Overproduction → struggle for existence.</li>
+          <li>Variation exists naturally.</li>
+          <li>Fittest (best-adapted) survive and reproduce → favorable traits passed on.</li>
+          <li><strong>Example:</strong> Darwin's finches — different beak shapes for different foods.</li>
+        </ul>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Darwin%27s_finches_by_Gould.jpg/800px-Darwin%27s_finches_by_Gould.jpg" alt="Darwin's finches showing beak variation" class="diagram-img">
+
+        <h3>Modern Synthetic Theory (Neo-Darwinism / Organic Theory)</h3>
+        <ul>
+          <li>Combines Darwin + genetics.</li>
+          <li>Variations from mutation + recombination.</li>
+          <li>Natural selection acts on genetic variations.</li>
+          <li>Evolution = change in gene frequencies over generations.</li>
+          <li>Mutation provides raw material.</li>
+        </ul>
+
+        <h2>Step 2: Evidence of Evolution</h2>
+        <ul>
+          <li><strong>Fossil Records:</strong> Show progression from simple to complex organisms over time.</li>
+          <li><strong>Comparative Anatomy:</strong> Homologous structures (same basic plan, different functions).</li>
+          <li><strong>Example:</strong> Forelimbs of human, cat, whale, bat.</li>
+          <li><strong>Physiology:</strong> Similar biochemical processes/enzymes across species.</li>
+          <li><strong>Embryology:</strong> Early embryos similar (e.g., gill slits in vertebrates).</li>
+          <li><strong>Metamorphosis:</strong> Larval stages often resemble ancestral forms.</li>
+        </ul>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Homologous_structures.svg/800px-Homologous_structures.svg.png" alt="Homologous forelimbs in vertebrates" class="diagram-img">
+
+        <h2>Step 3: Metamorphosis as Evidence (Embryological / Developmental)</h2>
+
+        <h2>Definition of Metamorphosis</h2>
+        <p><strong>Metamorphosis</strong> is a biological process involving abrupt or gradual physical transformation in an organism after birth or hatching, typically during the transition from juvenile to adult form. It often involves distinct stages (e.g., larva → pupa → adult) and is common in insects and amphibians. In evolutionary biology, it serves as evidence of common ancestry because early stages often resemble ancestral forms.</p>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Metamorphosis_stages.jpg/800px-Metamorphosis_stages.jpg" alt="Metamorphosis overview" class="diagram-img">
+
+        <h3>Toad (Incomplete / Gradual Metamorphosis)</h3>
+        <ul>
+          <li>Stages: Egg → Tadpole (gills, tail, aquatic) → Toadlet (legs develop, tail shortens) → Adult (lungs, land).</li>
+          <li>Link: Tadpole recalls fish-like ancestors.</li>
+        </ul>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Toad_metamorphosis.jpg/800px-Toad_metamorphosis.jpg" alt="Toad metamorphosis stages" class="diagram-img">
+
+        <h3>Butterfly (Complete / Holometabolous)</h3>
+        <ul>
+          <li>Stages: Egg → Larva (caterpillar) → Pupa (chrysalis) → Adult (winged).</li>
+          <li>Link: Larva resembles primitive worm-like ancestors; allows niche separation.</li>
+        </ul>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Butterfly_life_cycle.jpg/800px-Butterfly_life_cycle.jpg" alt="Butterfly complete metamorphosis" class="diagram-img">
+
+        <h3>Housefly (Complete)</h3>
+        <ul>
+          <li>Stages: Egg → Larva (maggot) → Pupa → Adult (winged fly).</li>
+          <li>Link: Maggot resembles ancestral form; fast cycle for rapid reproduction.</li>
+        </ul>
+
+        <h3>Cockroach (Incomplete / Hemimetabolous)</h3>
+        <ul>
+          <li>Stages: Egg (ootheca) → Nymph (mini-adult, wingless, molts several times) → Adult (wings).</li>
+          <li>Link: Gradual change; conserved primitive insect trait.</li>
+        </ul>
+
+        <h2>Step 4: Evolutionary Trends</h2>
+        <p><strong>Plants:</strong> Algae → Mosses (no vessels) → Ferns (vascular, spores) → Gymnosperms (seeds) → Angiosperms (flowers/fruits) — increasing land adaptation.</p>
+        <p><strong>Animals:</strong> Invertebrates (simple) → Vertebrates: Fish → Amphibians → Reptiles → Birds/Mammals — from water to land, better mobility/brain/parental care.</p>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Evolutionary_tree_of_plants.svg/800px-Evolutionary_tree_of_plants.svg.png" alt="Plant evolutionary tree" class="diagram-img">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Vertebrate_evolution_tree.svg/800px-Vertebrate_evolution_tree.svg.png" alt="Vertebrate evolutionary tree" class="diagram-img">
+
+        <h2>Quick JAMB Tips</h2>
+        <ul>
+          <li>Memorize: Lamarck (acquired traits), Darwin (natural selection), Modern (mutation + selection).</li>
+          <li>Evidences: Fossil, Homologous anatomy, Embryology (metamorphosis shows ancestral stages).</li>
+          <li>Practice: Draw cycles + label stages; explain one evidence/example per theory.</li>
+          <li>Key phrase: "Sum total of adaptive changes over long time → diversity."</li>
+        </ul>
+        <p>Revise with diagrams — sketch them daily for retention. You've covered the full topic concisely. Aim for TopScore! 🚀</p>
+      </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="nav-bar">
+      <div class="nav-item">
+        <button class="neumorphic-btn">🔍</button>
+        <p>Search</p>
+      </div>
+      <div class="nav-item center">
+        <button class="neumorphic-btn">⭐</button>
+        <p>Favorite</p>
+      </div>
+      <div class="nav-item">
+        <button class="neumorphic-btn">📚</button>
+        <p>Library</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Theme Toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+
+    function setTheme(theme) {
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const newTheme = body.classList.contains('light') ? 'dark' : 'light';
+      setTheme(newTheme);
+    });
+
+    // Profile Upload placeholder
+    document.getElementById('profile-upload').addEventListener('change', (e) => {
+      if (e.target.files[0]) console.log('Profile picture selected!');
+    });
+  </script>
+</body>
+</html>

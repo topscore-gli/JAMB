@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Biology - Evolutionary Trends</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Biology</h1>
+      <p>Evolutionary Trends (Five Kingdoms)<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Evolutionary Trends</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 70:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration
+const CONFIG={TIME:4200,PASS:60}; // 70 minutes for 70 questions
+
+// Section mapping
+const SECTIONS={
+  0:"A: Kingdom Monera (Prokaryotes)",
+  10:"B: Kingdom Protista (Protozoans & Algae)",
+  20:"C: Kingdom Fungi",
+  30:"D: Kingdom Plantae - Thallophyta & Bryophyta",
+  40:"E: Kingdom Plantae - Pteridophyta & Spermatophyta",
+  50:"F: Kingdom Animalia - Invertebrates",
+  60:"G: Kingdom Animalia - Vertebrates & Evolution"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 70 JAMB Biology Evolutionary Trends Questions
+const QUIZ_DATA=[
+  // Section A: Kingdom Monera (Prokaryotes) - Questions 1-10
+  {q:"Which of the following is a characteristic feature of organisms in Kingdom Monera?",o:["Presence of membrane-bound nucleus","Absence of cell wall","Prokaryotic cell structure","Presence of mitochondria"],a:2,e:"Monera are prokaryotes - they lack a true nucleus and membrane-bound organelles like mitochondria. They have cell walls made of peptidoglycan."},
+  {q:"Blue-green algae (cyanobacteria) are classified under Kingdom Monera because they",o:["are multicellular","have cellulose cell walls","are prokaryotic","carry out photosynthesis"],a:2,e:"Despite being called 'algae', cyanobacteria are prokaryotes lacking membrane-bound organelles, placing them in Monera, not Plantae or Protista."},
+  {q:"The cell wall of bacteria is composed of",o:["Cellulose","Chitin","Peptidoglycan","Lignin"],a:2,e:"Bacterial cell walls contain peptidoglycan (murein), a unique polymer not found in other kingdoms. Fungi have chitin; plants have cellulose."},
+  {q:"Which structure is responsible for attachment and conjugation in bacteria?",o:["Flagellum","Pilus","Capsule","Plasmid"],a:1,e:"Pili (singular: pilus) are hair-like structures that help bacteria attach to surfaces and transfer genetic material during conjugation."},
+  {q:"Binary fission in bacteria is a type of",o:["Sexual reproduction","Asexual reproduction","Budding","Spore formation"],a:1,e:"Binary fission is asexual - the bacterial cell simply divides into two identical daughter cells without genetic exchange."},
+  {q:"The genetic material in bacteria is located in the",o:["Nucleus","Nucleoid","Nucleolus","Ribosome"],a:1,e:"Bacteria lack a membrane-bound nucleus. Their circular DNA floats freely in a region called the nucleoid."},
+  {q:"Which of the following is NOT found in prokaryotic cells?",o:["Ribosomes","Plasma membrane","Mitochondria","Cytoplasm"],a:2,e:"Mitochondria are membrane-bound organelles absent in prokaryotes. Prokaryotes have 70S ribosomes, plasma membrane, and cytoplasm."},
+  {q:"Cyanobacteria are important in nature because they",o:["cause diseases","fix atmospheric nitrogen","decompose organic matter","produce antibiotics"],a:1,e:"Cyanobacteria (blue-green algae) are nitrogen fixers, converting atmospheric N₂ into ammonia, enriching soil fertility."},
+  {q:"The primary mode of nutrition in most bacteria is",o:["autotrophic only","heterotrophic","mixotrophic","parasitic only"],a:1,e:"Most bacteria are heterotrophic decomposers. Some are autotrophic (photosynthetic or chemosynthetic), but heterotrophy is predominant."},
+  {q:"Which bacterial structure provides protection and helps evade host immune system?",o:["Flagellum","Capsule","Cell wall","Pilus"],a:1,e:"The capsule is a gelatinous outer layer that protects bacteria from phagocytosis and desiccation."},
+  
+  // Section B: Kingdom Protista (Protozoans & Algae) - Questions 11-20
+  {q:"Kingdom Protista is often called a 'catch-all' kingdom because it includes",o:["only multicellular organisms","organisms that don't fit into other kingdoms","only photosynthetic organisms","only heterotrophic organisms"],a:1,e:"Protista is a diverse group of eukaryotes that aren't plants, animals, or fungi - including algae, protozoa, and slime molds."},
+  {q:"Which organism possesses both plant and animal characteristics?",o:["Amoeba","Paramecium","Euglena","Plasmodium"],a:2,e:"Euglena has chloroplasts for photosynthesis (plant-like) and an eyespot with flagellum for movement (animal-like). It's mixotrophic."},
+  {q:"The contractile vacuole in Paramecium functions in",o:["digestion","osmoregulation","reproduction","locomotion"],a:1,e:"Contractile vacuoles pump out excess water to maintain osmotic balance, preventing the cell from bursting in hypotonic environments."},
+  {q:"Amoeba moves and feeds using",o:["cilia","flagella","pseudopodia","tentacles"],a:2,e:"Pseudopodia ('false feet') are temporary cytoplasmic projections used for movement (amoeboid movement) and phagocytosis (feeding)."},
+  {q:"Which structure in Euglena detects light direction?",o:["Chloroplast","Eyespot (stigma)","Contractile vacuole","Paramylon"],a:1,e:"The eyespot (stigma) is a light-sensitive structure that helps Euglena move toward light for photosynthesis."},
+  {q:"Paramecium has two types of nuclei. These are",o:["nucleolus and nucleoid","macronucleus and micronucleus","macro nucleus and micro nucleus","vegetative and generative nuclei"],a:1,e:"The macronucleus controls daily metabolic activities; the micronucleus is involved in sexual reproduction (conjugation)."},
+  {q:"The stored carbohydrate in Euglena is called",o:["Starch","Glycogen","Paramylon","Cellulose"],a:2,e:"Unlike plants that store starch, Euglena stores carbohydrates as paramylon granules."},
+  {q:"Which protozoan uses cilia for locomotion?",o:["Amoeba","Trypanosoma","Paramecium","Plasmodium"],a:2,e:"Paramecium is covered with thousands of cilia that beat in coordinated waves for movement and feeding."},
+  {q:"The process by which Amoeba engulfs food is called",o:["pinocytosis","phagocytosis","exocytosis","osmosis"],a:1,e:"Phagocytosis ('cell eating') is the process where pseudopodia surround and engulf food particles into food vacuoles."},
+  {q:"Which of the following is a fungus-like protist?",o:["Euglena","Slime mold","Paramecium","Spirogyra"],a:1,e:"Slime molds are fungus-like protists that decompose organic matter and produce spores, but they lack chitin cell walls."},
+  
+  // Section C: Kingdom Fungi - Questions 21-30
+  {q:"The cell wall of fungi is composed of",o:["Cellulose","Peptidoglycan","Chitin","Lignin"],a:2,e:"Fungi have chitin in their cell walls - the same material found in arthropod exoskeletons. This distinguishes them from plants (cellulose)."},
+  {q:"Fungi are classified as heterotrophs because they",o:["photosynthesize","absorb nutrients from dead organic matter","hunt prey","have chlorophyll"],a:1,e:"Fungi are absorptive heterotrophs - they secrete digestive enzymes externally and absorb the broken-down nutrients."},
+  {q:"Rhizopus (bread mold) reproduces asexually by means of",o:["binary fission","spores produced in sporangia","budding","fragmentation"],a:1,e:"Rhizopus produces asexual spores inside sporangia (black round structures at the top of sporangiophores)."},
+  {q:"The main body of a fungus consists of",o:["fruiting body","mycelium","rhizoid","sporangium"],a:1,e:"The mycelium is the network of thread-like hyphae that forms the main vegetative body, usually hidden in the substrate."},
+  {q:"Which structure in mushrooms produces spores?",o:["Stipe","Cap","Gills","Volva"],a:2,e:"Gills (lamellae) on the underside of the cap bear basidia that produce basidiospores in mushrooms."},
+  {q:"Yeast is unique among fungi because it is",o:["multicellular","unicellular","photosynthetic","a prokaryote"],a:1,e:"Most fungi are multicellular, but yeast is unicellular. It reproduces by budding, not binary fission like bacteria."},
+  {q:"The root-like structures in Rhizopus that anchor it and absorb nutrients are called",o:["hyphae","stolons","rhizoids","sporangiophores"],a:2,e:"Rhizoids are root-like hyphae that penetrate the substrate for anchorage and absorption, unlike true roots they lack vascular tissue."},
+  {q:"Fungi differ from plants in that fungi",o:["have cell walls","are autotrophic","lack chlorophyll","are eukaryotic"],a:2,e:"Fungi lack chlorophyll and cannot photosynthesize. Both have cell walls and are eukaryotic, but plants are autotrophic."},
+  {q:"In mushrooms, the ring (annulus) represents",o:["the site of spore production","remnant of the partial veil","the attachment point to substrate","the protective covering of the gills"],a:1,e:"The annulus is the remnant of the partial veil that protected the developing gills when the mushroom was young."},
+  {q:"Which of the following is NOT a characteristic of Kingdom Fungi?",o:["Chitin cell walls","Heterotrophic nutrition","Presence of chlorophyll","Hyphal structure"],a:2,e:"Fungi lack chlorophyll entirely. They have chitin cell walls, are heterotrophic, and grow as hyphae."},
+  
+  // Section D: Kingdom Plantae - Thallophyta & Bryophyta - Questions 31-40
+  {q:"Thallophytes are characterized by having",o:["true roots, stems and leaves","vascular tissues","undifferentiated body (thallus)","seeds for reproduction"],a:2,e:"Thallophytes (algae) have a simple thallus body without true roots, stems, or leaves. They lack vascular tissues and seeds."},
+  {q:"Spirogyra is characterized by",o:["spiral-shaped cells","spiral chloroplasts","flagellated cells","conjugation tubes only"],a:1,e:"Spirogyra gets its name from the spiral or ribbon-shaped chloroplasts that wind around the cell interior."},
+  {q:"Sexual reproduction in Spirogyra occurs through",o:["binary fission","conjugation","budding","spore formation"],a:1,e:"Conjugation involves two filaments forming conjugation tubes through which the protoplast of one cell moves to fuse with another."},
+  {q:"The pyrenoid in Spirogyra is involved in",o:["protein synthesis","starch storage","cell division","photosynthesis"],a:1,e:"Pyrenoids are protein structures within chloroplasts around which starch is deposited as a storage product."},
+  {q:"Thallophytes are primarily found in",o:["terrestrial habitats","aquatic habitats","arid regions","polar regions"],a:1,e:"Most thallophytes (algae) are aquatic, living in freshwater or marine environments, though some live in moist terrestrial areas."},
+  {q:"Bryophytes are called 'amphibians of the plant world' because",o:["they live in water and land simultaneously","they require water for fertilization","they have dual life stages","they can swim"],a:1,e:"Like amphibians, bryophytes need water for reproduction - their flagellated sperm must swim to reach the egg in the archegonium."},
+  {q:"Which of the following is absent in bryophytes?",o:["Chlorophyll","Cell walls","Vascular tissues (xylem and phloem)","Rhizoids"],a:2,e:"Bryophytes lack true vascular tissues, limiting their size. They have rhizoids (not true roots), chlorophyll, and cell walls."},
+  {q:"In bryophytes, the dominant generation is the",o:["sporophyte","gametophyte","spore","zygote"],a:1,e:"Unlike higher plants, bryophytes have a dominant gametophyte generation (the green leafy part we see). The sporophyte depends on it."},
+  {q:"Marchantia reproduces asexually through",o:["spores only","gemmae in gemma cups","fragmentation only","budding"],a:1,e:"Marchantia has cup-like structures (gemma cups) containing gemmae - small discs that detach and grow into new plants."},
+  {q:"The structures that anchor bryophytes and absorb water are called",o:["roots","rhizoids","hyphae","root hairs"],a:1,e:"Rhizoids are simple, hair-like anchoring structures. Unlike true roots, they lack vascular tissue and complex organization."},
+  
+  // Section E: Kingdom Plantae - Pteridophyta & Spermatophyta - Questions 41-50
+  {q:"Pteridophytes differ from bryophytes by having",o:["seeds","vascular tissues","flowers","fruits"],a:1,e:"Pteridophytes (ferns) were the first plants to evolve vascular tissues (xylem and phloem), allowing them to grow taller than bryophytes."},
+  {q:"In ferns, spores are produced in structures called",o:["cones","flowers","sori","seeds"],a:2,e:"Sori (singular: sorus) are clusters of sporangia on the underside of fern fronds where spores are produced."},
+  {q:"The young leaf of a fern is called a",o:["frond","fiddlehead","pinna","prothallus"],a:1,e:"Young fern leaves (fronds) emerge as tightly coiled structures called fiddleheads or crosiers (circinate vernation)."},
+  {q:"The gametophyte generation in ferns is represented by the",o:["frond","rhizome","prothallus","sporangium"],a:2,e:"The prothallus is a small, heart-shaped, independent gametophyte that produces antheridia and archegonia."},
+  {q:"Which of the following is TRUE about pteridophytes?",o:["They produce seeds","They have true roots, stems and leaves","They are flowering plants","They lack vascular tissues"],a:1,e:"Pteridophytes have true roots, stems (rhizomes), and leaves (fronds). They don't produce seeds or flowers."},
+  {q:"The main difference between gymnosperms and angiosperms is that gymnosperms",o:["lack vascular tissues","have naked seeds not enclosed in fruits","are all aquatic","do not produce pollen"],a:1,e:"Gymnosperms ('naked seeds') have seeds exposed on cones, while angiosperms have seeds enclosed in ovaries/fruits."},
+  {q:"Which of the following is a monocotyledonous plant?",o:["Bean","Water leaf","Maize","Groundnut"],a:2,e:"Maize has one cotyledon, parallel venation, and fibrous roots - all characteristics of monocots. Beans and groundnuts are dicots."},
+  {q:"Dicotyledonous plants are characterized by having",o:["parallel leaf venation","one seed leaf","tap root system","scattered vascular bundles"],a:2,e:"Dicots have tap root systems, net-like (reticulate) venation, two cotyledons, and ring-arranged vascular bundles."},
+  {q:"In a bean seed, the radicle develops into the",o:["shoot system","root system","leaves","fruit"],a:1,e:"The radicle is the embryonic root that grows downward into the soil to form the root system during germination."},
+  {q:"The plumule of a seed develops into the",o:["root","shoot","cotyledon","seed coat"],a:1,e:"The plumule is the embryonic shoot that develops into the stem and leaves above ground during germination."},
+  
+  // Section F: Kingdom Animalia - Invertebrates - Questions 51-60
+  {q:"Organisms in the phylum Coelenterata (Cnidaria) possess",o:["bilateral symmetry","radial symmetry","asymmetry","pentaradial symmetry"],a:1,e:"Coelenterates (Hydra, jellyfish) have radial symmetry - body parts arranged around a central axis like spokes on a wheel."},
+  {q:"Stinging cells found in Hydra are called",o:["cnidocytes","neurons","nematodes","flame cells"],a:0,e:"Cnidocytes are specialized cells containing nematocysts (stinging organelles) used for defense and capturing prey."},
+  {q:"Tapeworms (Taenia) belong to phylum",o:["Nematoda","Platyhelminthes","Annelida","Coelenterata"],a:1,e:"Tapeworms are flatworms (Platyhelminthes) - dorsoventrally flattened, acoelomate, and parasitic with no digestive system."},
+  {q:"Which of the following is a characteristic of annelids?",o:["Unsegmented body","True coelom and segmentation","Pseudocoelom","Radial symmetry"],a:1,e:"Annelids (earthworms, leeches) are segmented worms with a true coelom (body cavity lined with mesoderm)."},
+  {q:"The clitellum in earthworms is involved in",o:["locomotion","cocoon formation","digestion","respiration"],a:1,e:"The clitellum is a glandular, saddle-like structure that secretes the cocoon (containing eggs) during reproduction."},
+  {q:"Arthropods are distinguished from other invertebrates by having",o:["segmented bodies only","exoskeleton made of chitin and jointed appendages","radial symmetry","hydrostatic skeleton"],a:1,e:"Arthropods have a hard exoskeleton of chitin, jointed appendages, and segmented bodies - the largest animal phylum."},
+  {q:"Which class of arthropods has 8 legs and no antennae?",o:["Insecta","Crustacea","Arachnida","Myriapoda"],a:2,e:"Arachnids (spiders, scorpions, ticks) have 8 legs, two body segments, and lack antennae unlike insects (6 legs, 3 segments, antennae)."},
+  {q:"Mosquitoes belong to class",o:["Arachnida","Crustacea","Insecta","Myriapoda"],a:2,e:"Mosquitoes are insects with 3 body parts (head, thorax, abdomen), 6 legs, compound eyes, and one pair of wings."},
+  {q:"The proboscis of a mosquito is adapted for",o:["defense","piercing and sucking","grasping prey","sensing chemicals"],a:1,e:"The proboscis is a piercing-sucking mouthpart. Only female mosquitoes bite to obtain blood for egg development."},
+  {q:"Which phylum includes soft-bodied animals often with shells?",o:["Arthropoda","Annelida","Mollusca","Echinodermata"],a:2,e:"Molluscs (snails, clams, octopus) have soft bodies, a muscular foot, and often a calcium carbonate shell secreted by the mantle."},
+  
+  // Section G: Kingdom Animalia - Vertebrates & Evolution - Questions 61-70
+  {q:"Which class of vertebrates has scales, gills, and fins?",o:["Amphibia","Reptilia","Pisces","Aves"],a:2,e:"Pisces (fish) are aquatic vertebrates with scales covering the body, gills for respiration, and fins for locomotion."},
+  {q:"Amphibians are considered transitional between aquatic and terrestrial life because they",o:["have scales and lungs","have moist skin and undergo metamorphosis","lay amniotic eggs","are endothermic"],a:1,e:"Amphibians have moist, permeable skin (not scales), undergo metamorphosis (tadpoles aquatic, adults terrestrial), and lack amniotic eggs."},
+  {q:"Reptiles differ from amphibians in that reptiles",o:["have moist skin","lay eggs in water","have amniotic eggs and scales","are ectothermic"],a:2,e:"Reptiles have amniotic eggs (can lay on land), dry scaly skin, and are fully terrestrial - unlike amphibians that need water for reproduction."},
+  {q:"Birds and mammals are similar in that both are",o:["ectothermic","endothermic","oviparous","have scales"],a:1,e:"Both birds and mammals are endothermic (warm-blooded), maintaining constant body temperature internally. Most mammals are viviparous."},
+  {q:"Which evolutionary trend shows the correct progression in animals?",o:["Radial → Bilateral symmetry","Endothermy → Ectothermy","Internal → External fertilization","Coelom → Acoelom"],a:0,e:"Evolution progresses from simple radial symmetry (cnidarians) to more complex bilateral symmetry (most animals) with cephalization."},
+  {q:"Flowers with parts in multiples of three are characteristic of",o:["dicots","monocots","gymnosperms","ferns"],a:1,e:"Monocots typically have flower parts in multiples of three (3, 6, 9), while dicots have parts in 4s or 5s."},
+  {q:"A plant that completes its life cycle in one year is called",o:["biennial","perennial","annual","ephemeral"],a:2,e:"Annuals complete their entire life cycle (germination to seed production to death) in one growing season."},
+  {q:"Carrot and cabbage are examples of",o:["annuals","biennials","perennials","epiphytes"],a:1,e:"Biennials complete their life cycle in two years - vegetative growth in year 1, flowering and seed production in year 2."},
+  {q:"Vascular bundles arranged in a ring are found in the stems of",o:["monocots","dicots","all plants","bryophytes"],a:1,e:"Dicot stems have vascular bundles arranged in a ring, while monocots have scattered vascular bundles."},
+  {q:"Which structure allows water entry into a seed during germination?",o:["Hilum","Micropyle","Testa","Cotyledon"],a:1,e:"The micropyle is a small pore in the seed coat that allows water uptake and is where the pollen tube entered the ovule."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('biology_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('biology_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/70`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('biology_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=45?'Ready for JAMB!':pct>=38?'Good, review weak areas':pct>=30?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,10,20,30,40,50,60,70];
+  const sectionNames=["A: Kingdom Monera (Prokaryotes)","B: Kingdom Protista (Protozoans & Algae)","C: Kingdom Fungi","D: Kingdom Plantae - Thallophyta & Bryophyta","E: Kingdom Plantae - Pteridophyta & Spermatophyta","F: Kingdom Animalia - Invertebrates","G: Kingdom Animalia - Vertebrates & Evolution"];
+  
+  for(let s=0;s<7;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('biology_quiz_auth');
+  sessionStorage.removeItem('biology_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('biology_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('biology_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

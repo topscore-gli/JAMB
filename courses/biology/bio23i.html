@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Biology - Evolution</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    :root { --background: #1e1e2f; --shadow-in: #171723; --shadow-out: #25253b; --text-primary: #f0f0ff; --text-secondary: #c0c0e0; --accent: #1db954; --accent-secondary: #ff6b6b; --accent-tertiary: #4ecdc4; --card-bg: #2a2a3f; }
+    body.light { --background: #e0e0e0; --shadow-in: #bebebe; --shadow-out: #ffffff; --text-primary: #1a1a1a; --text-secondary: #444; --card-bg: #f8f8f8; }
+    body { background: var(--background); color: var(--text-primary); display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow-x: hidden; }
+    .container { width: 100%; max-width: 420px; background: var(--background); border-radius: 20px; box-shadow: 10px 10px 20px var(--shadow-in), -10px -10px 20px var(--shadow-out); overflow: hidden; position: relative; height: 750px; overflow-y: auto; padding-top: 70px; padding-bottom: 80px; }
+    .neumorphic { background: var(--background); box-shadow: 5px 5px 10px var(--shadow-in), -5px -5px 10px var(--shadow-out); border-radius: 15px; }
+    .neumorphic-btn { background: var(--background); border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); cursor: pointer; color: var(--text-primary); font-size: 18px; transition: all 0.3s ease; }
+    .neumorphic-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.95); }
+    .top-bar { position: fixed; top: 0; width: 100%; max-width: 420px; background: var(--background); padding: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 5px 10px var(--shadow-in); z-index: 20; }
+    .top-bar .header { font-size: 18px; font-weight: bold; color: var(--accent); }
+    .top-bar .right-icons { display: flex; gap: 10px; }
+    .content { padding: 20px 16px; line-height: 1.7; }
+    .main-header { text-align: center; margin-bottom: 28px; padding: 20px; border-radius: 20px; background: rgba(29, 185, 84, 0.1); }
+    .main-header h1 { font-size: 26px; margin-bottom: 8px; color: var(--accent); font-weight: 800; }
+    .main-header p.subtitle { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
+.section-card { background: var(--card-bg); padding: 24px 18px; border-radius: 20px; box-shadow: inset 4px 4px 10px var(--shadow-in), inset -4px -4px 10px var(--shadow-out); margin-bottom: 24px; border-left: 4px solid var(--accent); }
+.section-card h2 { font-size: 20px; margin-bottom: 16px; color: var(--accent); font-weight: bold; display: flex; align-items: center; gap: 8px; }
+.section-card h3 { font-size: 17px; margin: 20px 0 12px; color: var(--accent-tertiary); font-weight: 600; padding-left: 12px; border-left: 3px solid var(--accent-tertiary); }
+.section-card h4 { font-size: 15px; margin: 16px 0 10px; color: var(--accent-secondary); font-weight: 600; }
+.section-card p { margin-bottom: 14px; font-size: 14px; color: var(--text-primary); text-align: justify; }
+.section-card ul, .section-card ol { padding-left: 20px; margin: 12px 0; }
+.section-card li { margin-bottom: 8px; font-size: 14px; color: var(--text-primary); line-height: 1.6; }
+
+.table-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 16px 0; border-radius: 12px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); }
+.table-container::-webkit-scrollbar { height: 6px; }
+.table-container::-webkit-scrollbar-track { background: var(--shadow-in); border-radius: 3px; }
+.table-container::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+.summary-table { width: 100%; min-width: 520px; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+.summary-table th { background: var(--accent); color: #000; padding: 12px 10px; text-align: left; font-weight: 600; white-space: nowrap; }
+.summary-table td { padding: 10px; border-bottom: 1px solid var(--shadow-in); background: var(--card-bg); white-space: nowrap; }
+.summary-table tr:last-child td { border-bottom: none; }
+.summary-table tr:nth-child(even) td { background: rgba(255,255,255,0.03); }
+.summary-table.wide { min-width: 980px; }
+.table-scroll-hint { font-size: 11px; color: var(--text-secondary); text-align: center; margin-top: 4px; font-style: italic; }
+
+.quick-facts { background: linear-gradient(135deg, rgba(29,185,84,0.1), rgba(78,205,196,0.1)); padding: 16px; border-radius: 15px; margin: 16px 0; border: 1px solid rgba(29,185,84,0.3); }
+.quick-facts h4 { color: var(--accent); margin-bottom: 10px; font-size: 15px; }
+.quick-facts ul { margin: 0; padding-left: 18px; }
+.quick-facts li { margin-bottom: 6px; font-size: 13px; }
+
+.memory-tip { background: rgba(255,107,107,0.1); padding: 14px 16px; border-radius: 12px; margin: 16px 0; border-left: 4px solid var(--accent-secondary); }
+.memory-tip strong { color: var(--accent-secondary); display: block; margin-bottom: 6px; font-size: 14px; }
+.memory-tip p { margin: 0; font-size: 13px; font-style: italic; }
+
+.comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+.comparison-card { background: var(--background); padding: 14px; border-radius: 12px; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); }
+.comparison-card h5 { color: var(--accent); font-size: 14px; margin-bottom: 8px; text-align: center; }
+.comparison-card ul { margin: 0; padding-left: 16px; font-size: 12px; }
+.comparison-card li { margin-bottom: 4px; font-size: 12px; }
+
+.diagram-img { width: 100%; max-height: 280px; object-fit: contain; border-radius: 12px; margin: 14px 0 10px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); background: #fff; padding: 8px; }
+.image-caption { text-align: center; font-size: 12px; color: var(--text-secondary); font-style: italic; margin-top: -8px; margin-bottom: 12px; }
+
+.jamb-alert { background: linear-gradient(135deg, rgba(255,193,7,0.15), rgba(255,152,0,0.1)); border: 1px solid rgba(255,193,7,0.4); border-radius: 12px; padding: 16px; margin: 20px 0; }
+.jamb-alert h4 { color: #ffc107; margin-bottom: 10px; font-size: 15px; }
+.jamb-alert ul { margin: 0; padding-left: 18px; }
+.jamb-alert li { font-size: 13px; margin-bottom: 6px; }
+
+.highlight-box { background: rgba(78,205,196,0.1); padding: 12px 16px; border-radius: 10px; margin: 12px 0; border-left: 3px solid var(--accent-tertiary); }
+
+.nav-bar { position: fixed; bottom: 0; width: 100%; max-width: 420px; background: var(--background); padding: 10px; display: flex; justify-content: space-around; box-shadow: 0 -5px 10px var(--shadow-in); z-index: 20; }
+.nav-bar .nav-item { text-align: center; position: relative; }
+.nav-bar .nav-item button { width: 40px; height: 40px; font-size: 18px; color: var(--text-primary); }
+.nav-bar .nav-item.center button { width: 50px; height: 50px; font-size: 24px; background: var(--accent); box-shadow: 0 0 15px var(--accent), 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); color: #000; }
+.nav-bar .nav-item p { display: none; font-size: 11px; margin-top: 4px; color: var(--text-primary); }
+.nav-bar .nav-item.active p { display: block; }
+
+.progress-container { position: fixed; top: 70px; left: 0; width: 100%; max-width: 420px; height: 4px; background: var(--shadow-in); z-index: 15; }
+.progress-bar { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
+
+.explore-btn { background: var(--accent); border: none; padding: 14px 28px; border-radius: 25px; color: #000; cursor: pointer; box-shadow: 4px 4px 8px var(--shadow-in), -4px -4px 8px var(--shadow-out); font-size: 16px; margin: 24px auto; display: block; text-align: center; font-weight: bold; transition: all 0.3s ease; }
+.explore-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.98); }
+ </style>
+</head>
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div> 
+<div class="top-bar neumorphic">
+  <button class="neumorphic-btn" onclick="history.back()">←</button>
+  <div class="header">BIOLOGY</div>
+  <div class="right-icons">
+    <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+    <button class="neumorphic-btn" onclick="alert('📖 Bookmarked for later study!')">🚀</button>
+  </div>
+</div>
+<div class="content">
+  <div class="main-header">
+    <h1>🦴 Chapter 23: Evolution (JAMB)</h1>
+    <p class="subtitle">Theories of evolution + evidences (fossils, anatomy, embryology, genetics, mutation)</p>
+  </div>
+  <!-- 1. ORGANIC EVOLUTION -->
+  <div class="section-card">
+    <h2>1️⃣ What is Organic Evolution?</h2>
+    <p><strong>Organic evolution</strong> is the sum total of all adaptive changes that have taken place over a very long period of time. These changes result in the diversity of forms, structures, and functions among organisms.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Evolutionary_tree.svg" alt="Evolutionary tree" class="diagram-img">
+    <p class="image-caption">Evolution explains how organisms become diverse over long periods</p>
+
+    <div class="highlight-box">
+      <p><strong>Simple meaning:</strong> Life started simple, and over millions of years organisms changed to fit their environments, forming many species.</p>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 Memory line:</strong>
+      <p>"Evolution = adaptive changes over time → diversity."</p>
+    </div>
+  </div>
+  <!-- 2. THEORIES -->
+  <div class="section-card">
+    <h2>2️⃣ Theories of Evolution</h2>
+    <h3>a) Lamarck’s Theory</h3>
+    <p><strong>Jean-Baptiste Lamarck</strong> (early 1800s) proposed early ideas about evolution.</p>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/Giraffe_neck_evolution_lamarck_darwin.svg" alt="Lamarck vs Darwin giraffe" class="diagram-img">
+    <p class="image-caption">Classic example: giraffe neck (Lamarck vs Darwin explanation)</p>
+    <div class="quick-facts">
+      <h4>Key Ideas</h4>
+      <ul>
+        <li><strong>Use and disuse:</strong> used parts become stronger; unused parts weaken</li>
+        <li><strong>Inheritance of acquired characteristics:</strong> acquired changes passed to offspring</li>
+      </ul>
+    </div>
+    <div class="jamb-alert">
+      <h4>✅ Important Note</h4>
+      <ul>
+        <li>Lamarck helped introduce the idea that species change, but his mechanism (acquired traits inherited) is <strong>disproved</strong>.</li>
+      </ul>
+    </div>
+    <h3>b) Darwin’s Theory (Natural Selection)</h3>
+    <p><strong>Charles Darwin</strong> (1859, “On the Origin of Species”) proposed <strong>natural selection</strong> (survival of the fittest).</p>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Natural_selection_diagram.png" alt="Natural selection diagram" class="diagram-img">
+    <p class="image-caption">Natural selection: favourable traits survive and increase in population</p>
+    <div class="quick-facts">
+      <h4>Key Ideas (Step-by-step)</h4>
+      <ul>
+        <li><strong>Overproduction:</strong> more offspring are produced than can survive</li>
+        <li><strong>Variation:</strong> individuals are different</li>
+        <li><strong>Competition:</strong> limited resources</li>
+        <li><strong>Survival + reproduction:</strong> favourable traits survive and reproduce more</li>
+        <li><strong>Inheritance:</strong> favourable traits passed to offspring</li>
+        <li><strong>Gradual change:</strong> over many generations, species evolve</li>
+      </ul>
+    </div>
+    <div class="highlight-box">
+      <p><strong>Example:</strong> During drought, birds with longer beaks reach food → survive → reproduce → more long-beak birds in later generations.</p>
+    </div>
+    <div class="jamb-alert">
+      <h4>✅ Key Point</h4>
+      <ul>
+        <li>Darwin’s natural selection is accepted today and forms the foundation of modern evolution.</li>
+      </ul>
+    </div>
+    <h3>c) Organic Theory (General idea)</h3>
+    <p>This refers to the general idea that living things evolved from simpler ancestors through gradual changes. Lamarck and Darwin both contributed, but Darwin’s mechanism is accepted.</p>
+    <h3>Comparison Table (Lamarck vs Darwin)</h3>
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Aspect</th>
+          <th>Lamarck</th>
+          <th>Darwin (Natural Selection)</th>
+        </tr>
+        <tr>
+          <td><strong>Main mechanism</strong></td>
+          <td>Use & disuse + acquired traits inherited</td>
+          <td>Natural selection on existing variations</td>
+        </tr>
+        <tr>
+          <td><strong>When changes happen</strong></td>
+          <td>During lifetime</td>
+          <td>Over many generations</td>
+        </tr>
+        <tr>
+          <td><strong>Acquired traits inherited?</strong></td>
+          <td>Yes (wrong)</td>
+          <td>No (genetic traits inherited)</td>
+        </tr>
+        <tr>
+          <td><strong>Role of environment</strong></td>
+          <td>Directly causes change</td>
+          <td>Selects which variations survive</td>
+        </tr>
+        <tr>
+          <td><strong>Accepted today?</strong></td>
+          <td>No</td>
+          <td>Yes</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+    <div class="memory-tip">
+      <strong>🧠 Quick memory:</strong>
+      <p>Lamarck = “lifetime change” | Darwin = “selection over generations”</p>
+    </div>
+  </div>
+  <!-- 3. EVIDENCES -->
+  <div class="section-card">
+    <h2>3️⃣ Evidences of Evolution</h2>
+    <p>JAMB asks you to <strong>state and explain</strong> evidences. Know at least 4 well.</p>
+    <h3>1) Fossil records (Palaeontology)</h3>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/66/Fossil_ammonite.jpg" alt="Fossil ammonite" class="diagram-img">
+    <p class="image-caption">Fossils show organisms that lived long ago</p>
+    <div class="quick-facts">
+      <ul>
+        <li>Fossils are remains/traces of ancient organisms in rocks</li>
+        <li>Deeper layers usually have older, simpler fossils</li>
+        <li>Transitional fossils show gradual change (e.g., Archaeopteryx)</li>
+      </ul>
+    </div>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3b/Archaeopteryx_lithographica_%28Berlin_specimen%29.jpg" alt="Archaeopteryx fossil" class="diagram-img">
+    <p class="image-caption">Archaeopteryx: transitional fossil linking reptiles and birds</p>
+    <h3>2) Comparative anatomy</h3>
+    <p><strong>Definition:</strong> comparing structures in different organisms.</p>
+    <h4>a. Homologous structures</h4>
+    <p><strong>Meaning:</strong> same basic structure, different functions → common ancestry.</p>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3b/Homology_vertebrate_forelimb.svg" alt="Homologous structures" class="diagram-img">
+    <p class="image-caption">Homologous forelimbs: same bones, different uses (arm, wing, flipper)</p>
+    <h4>b. Analogous structures</h4>
+    <p><strong>Meaning:</strong> different structure, same function → convergent evolution.</p>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5b/Analogous_structures_wings.svg" alt="Analogous wings" class="diagram-img">
+    <p class="image-caption">Analogous wings: bird vs insect (same function, different structure)</p>
+    <h4>c. Vestigial structures</h4>
+    <p><strong>Meaning:</strong> reduced structures with little/no function → remnants from ancestors.</p>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Vestigial_structures_human.svg" alt="Vestigial structures" class="diagram-img">
+    <p class="image-caption">Vestigial structures: appendix, tailbone, wisdom teeth</p>
+    <h3>3) Physiology / Biochemistry</h3>
+    <p><strong>Idea:</strong> similar enzymes, hormones, and biochemical pathways suggest common ancestry.</p>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/8/84/ATP_synthase.png" alt="ATP synthase" class="diagram-img">
+    <p class="image-caption">Many organisms share key enzymes/proteins (biochemical similarity)</p>
+    <h3>4) Embryology (Comparative embryology)</h3>
+    <p><strong>Idea:</strong> early embryos of related organisms often look alike (gill slits, tail in early stages).</p>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/8/8f/Embryology_comparison.jpg" alt="Embryology comparison" class="diagram-img">
+    <p class="image-caption">Similar early embryos suggest common ancestry</p>
+
+    <h3>5) Modern evidence (Genetics + mutation)</h3>
+    <p><strong>Genetic/DNA evidence:</strong> closely related species have more similar DNA.</p>
+    <p><strong>Mutation:</strong> creates new genetic variation (raw material for natural selection).</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/DNA_sequence_alignment.png" alt="DNA sequence alignment" class="diagram-img">
+    <p class="image-caption">DNA comparison: more similarity = closer relationship</p>
+
+    <div class="jamb-alert">
+      <h4>Observed Evolution (Easy example)</h4>
+      <ul>
+        <li><strong>Antibiotic resistance:</strong> bacteria mutate; resistant ones survive and reproduce.</li>
+      </ul>
+    </div>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Antibiotic_resistance_mechanisms.png" alt="Antibiotic resistance" class="diagram-img">
+    <p class="image-caption">Antibiotic resistance is evolution happening in real time</p>
+
+    <h3>Other evidence (sometimes tested)</h3>
+    <div class="quick-facts">
+      <ul>
+        <li><strong>Biogeography:</strong> distribution of organisms (e.g., unique island species)</li>
+        <li><strong>Evolutionary trends:</strong> plants (algae → moss → ferns → seed plants); animals (invertebrates → fish → amphibians → reptiles → birds/mammals)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- QUICK SUMMARY -->
+  <div class="section-card">
+    <h2>📌 Quick Summary for JAMB</h2>
+    <div class="quick-facts">
+      <ul>
+        <li><strong>Organic evolution</strong> = adaptive changes over time → diversity</li>
+        <li><strong>Lamarck</strong> = use/disuse + acquired traits (wrong mechanism)</li>
+        <li><strong>Darwin</strong> = natural selection (correct mechanism)</li>
+        <li><strong>Evidences</strong> = fossils, anatomy (homologous/vestigial), physiology, embryology, genetics + mutation</li>
+      </ul>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 Evidence shortcut:</strong>
+      <p>"F-A-P-E-G" → Fossils, Anatomy, Physiology, Embryology, Genetics</p>
+    </div>
+  </div>
+
+  <div class="jamb-alert">
+    <h4>⚡ Exam Tips</h4>
+    <ul>
+      <li>Memorize the definition of organic evolution as written</li>
+      <li>Be able to list 4 evidences with short explanations</li>
+      <li>Always compare Lamarck vs Darwin in a table form (easy marks)</li>
+      <li>Many JAMB questions repeat on fossils, homologous vs analogous, and natural selection</li>
+    </ul>
+  </div>
+
+  <p style="text-align: center; font-size: 16px; margin: 32px 0; font-weight: bold; color: var(--accent);">
+    🌟 If you can define organic evolution + compare Lamarck/Darwin + explain 4 evidences, you’ll score high in JAMB Evolution. 🌟
+  </p>
+
+  <button class="explore-btn" onclick="alert('Practice JAMB past questions on Evolution (Chapter 23)!')">Practice JAMB Questions</button>
+</div>
+</div>
+
+  <div class="nav-bar">
+    <div class="nav-item">
+      <button class="neumorphic-btn">🔍</button>
+      <p>Search</p>
+    </div>
+    <div class="nav-item center">
+      <button class="neumorphic-btn">⭐</button>
+      <p>Favorite</p>
+    </div>
+    <div class="nav-item">
+      <button class="neumorphic-btn">📚</button>
+      <p>Library</p>
+    </div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme) {
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const newTheme = body.classList.contains('light') ? 'dark' : 'light';
+      setTheme(newTheme);
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      const scrolled = (scrollTop / scrollHeight) * 100;
+      progressBar.style.width = scrolled + '%';
+    });
+  </script>
+</body>
+</html>

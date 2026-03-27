@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Biology - Transport</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    :root { --background: #1e1e2f; --shadow-in: #171723; --shadow-out: #25253b; --text-primary: #f0f0ff; --text-secondary: #c0c0e0; --accent: #1db954; --accent-secondary: #ff6b6b; --accent-tertiary: #4ecdc4; --card-bg: #2a2a3f; }
+    body.light { --background: #e0e0e0; --shadow-in: #bebebe; --shadow-out: #ffffff; --text-primary: #1a1a1a; --text-secondary: #444; --card-bg: #f8f8f8; }
+    body { background: var(--background); color: var(--text-primary); display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow-x: hidden; }
+    .container { width: 100%; max-width: 420px; background: var(--background); border-radius: 20px; box-shadow: 10px 10px 20px var(--shadow-in), -10px -10px 20px var(--shadow-out); overflow: hidden; position: relative; height: 750px; overflow-y: auto; padding-top: 70px; padding-bottom: 80px; }
+    .neumorphic { background: var(--background); box-shadow: 5px 5px 10px var(--shadow-in), -5px -5px 10px var(--shadow-out); border-radius: 15px; }
+    .neumorphic-btn { background: var(--background); border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); cursor: pointer; color: var(--text-primary); font-size: 18px; transition: all 0.3s ease; }
+    .neumorphic-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.95); }
+    .top-bar { position: fixed; top: 0; width: 100%; max-width: 420px; background: var(--background); padding: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 5px 10px var(--shadow-in); z-index: 20; }
+    .top-bar .header { font-size: 18px; font-weight: bold; color: var(--accent); }
+    .top-bar .right-icons { display: flex; gap: 10px; }
+    .content { padding: 20px 16px; line-height: 1.7; }
+    .main-header { text-align: center; margin-bottom: 28px; padding: 20px; border-radius: 20px; background: rgba(29, 185, 84, 0.1); }
+    .main-header h1 { font-size: 26px; margin-bottom: 8px; color: var(--accent); font-weight: 800; }
+    .main-header p.subtitle { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
+    .section-card { background: var(--card-bg); padding: 24px 18px; border-radius: 20px; box-shadow: inset 4px 4px 10px var(--shadow-in), inset -4px -4px 10px var(--shadow-out); margin-bottom: 24px; border-left: 4px solid var(--accent); }
+    .section-card h2 { font-size: 20px; margin-bottom: 16px; color: var(--accent); font-weight: bold; display: flex; align-items: center; gap: 8px; }
+    .section-card h3 { font-size: 17px; margin: 20px 0 12px; color: var(--accent-tertiary); font-weight: 600; padding-left: 12px; border-left: 3px solid var(--accent-tertiary); }
+    .section-card h4 { font-size: 15px; margin: 16px 0 10px; color: var(--accent-secondary); font-weight: 600; }
+    .section-card p { margin-bottom: 14px; font-size: 14px; color: var(--text-primary); text-align: justify; }
+    .section-card ul, .section-card ol { padding-left: 20px; margin: 12px 0; }
+    .section-card li { margin-bottom: 8px; font-size: 14px; color: var(--text-primary); line-height: 1.6; }
+    .table-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 16px 0; border-radius: 12px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); }
+    .table-container::-webkit-scrollbar { height: 6px; }
+    .table-container::-webkit-scrollbar-track { background: var(--shadow-in); border-radius: 3px; }
+    .table-container::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+    .summary-table { width: 100%; min-width: 500px; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+    .summary-table th { background: var(--accent); color: #000; padding: 12px 10px; text-align: left; font-weight: 600; white-space: nowrap; }
+    .summary-table td { padding: 10px; border-bottom: 1px solid var(--shadow-in); background: var(--card-bg); white-space: nowrap; }
+    .summary-table tr:last-child td { border-bottom: none; }
+    .summary-table tr:nth-child(even) td { background: rgba(255,255,255,0.03); }
+    .summary-table.wide { min-width: 600px; }
+    .table-scroll-hint { font-size: 11px; color: var(--text-secondary); text-align: center; margin-top: 4px; font-style: italic; }
+    .quick-facts { background: linear-gradient(135deg, rgba(29,185,84,0.1), rgba(78,205,196,0.1)); padding: 16px; border-radius: 15px; margin: 16px 0; border: 1px solid rgba(29,185,84,0.3); }
+    .quick-facts h4 { color: var(--accent); margin-bottom: 10px; font-size: 15px; }
+    .quick-facts ul { margin: 0; padding-left: 18px; }
+    .quick-facts li { margin-bottom: 6px; font-size: 13px; }
+    .memory-tip { background: rgba(255,107,107,0.1); padding: 14px 16px; border-radius: 12px; margin: 16px 0; border-left: 4px solid var(--accent-secondary); }
+    .memory-tip strong { color: var(--accent-secondary); display: block; margin-bottom: 6px; font-size: 14px; }
+    .memory-tip p { margin: 0; font-size: 13px; font-style: italic; }
+    .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+    .comparison-card { background: var(--background); padding: 14px; border-radius: 12px; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); }
+    .comparison-card h5 { color: var(--accent); font-size: 14px; margin-bottom: 8px; text-align: center; }
+    .comparison-card ul { margin: 0; padding-left: 16px; font-size: 12px; }
+    .comparison-card li { margin-bottom: 4px; font-size: 12px; }
+    .diagram-img { width: 100%; max-height: 280px; object-fit: contain; border-radius: 12px; margin: 14px 0 10px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); background: #fff; padding: 8px; }
+    .nav-bar { position: fixed; bottom: 0; width: 100%; max-width: 420px; background: var(--background); padding: 10px; display: flex; justify-content: space-around; box-shadow: 0 -5px 10px var(--shadow-in); z-index: 20; }
+    .nav-bar .nav-item { text-align: center; position: relative; }
+    .nav-bar .nav-item button { width: 40px; height: 40px; font-size: 18px; color: var(--text-primary); }
+    .nav-bar .nav-item.center button { width: 50px; height: 50px; font-size: 24px; background: var(--accent); box-shadow: 0 0 15px var(--accent), 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); color: #000; }
+    .nav-bar .nav-item p { display: none; font-size: 11px; margin-top: 4px; color: var(--text-primary); }
+    .nav-bar .nav-item.active p { display: block; }
+    .progress-container { position: fixed; top: 70px; left: 0; width: 100%; max-width: 420px; height: 4px; background: var(--shadow-in); z-index: 15; }
+    .progress-bar { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
+    .explore-btn { background: var(--accent); border: none; padding: 14px 28px; border-radius: 25px; color: #000; cursor: pointer; box-shadow: 4px 4px 8px var(--shadow-in), -4px -4px 8px var(--shadow-out); font-size: 16px; margin: 24px auto; display: block; text-align: center; font-weight: bold; transition: all 0.3s ease; }
+    .explore-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.98); }
+    .jamb-alert { background: linear-gradient(135deg, rgba(255,193,7,0.15), rgba(255,152,0,0.1)); border: 1px solid rgba(255,193,7,0.4); border-radius: 12px; padding: 16px; margin: 20px 0; }
+    .jamb-alert h4 { color: #ffc107; margin-bottom: 10px; font-size: 15px; }
+    .jamb-alert ul { margin: 0; padding-left: 18px; }
+    .jamb-alert li { font-size: 13px; margin-bottom: 6px; }
+    .highlight-box { background: rgba(78,205,196,0.1); padding: 12px 16px; border-radius: 10px; margin: 12px 0; border-left: 3px solid var(--accent-tertiary); }
+    .type-badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; margin-right: 6px; }
+    .badge-structural { background: rgba(29,185,84,0.2); color: var(--accent); }
+    .badge-behavioural { background: rgba(255,107,107,0.2); color: var(--accent-secondary); }
+    .badge-functional { background: rgba(78,205,196,0.2); color: var(--accent-tertiary); }
+    .image-caption { text-align: center; font-size: 12px; color: var(--text-secondary); font-style: italic; margin-top: -8px; margin-bottom: 12px; }
+    .formula-box { background: rgba(29,185,84,0.1); padding: 10px; border-radius: 8px; font-family: monospace; text-align: center; margin: 10px 0; font-size: 13px; border: 1px solid rgba(29,185,84,0.3); }
+  </style>
+</head>
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">BIOLOGY</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📖 Bookmarked for later study!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>🚀 Transport</h1>
+        <p class="subtitle">JAMB Chapter 6: Circulatory Systems & Mechanisms</p>
+      </div>
+
+      <!-- SECTION A: WHY TRANSPORT -->
+      <div class="section-card">
+        <h2>📚 A. Why Do We Need Transport?</h2>
+
+        <p><strong>The Core Problem:</strong> As organisms grow larger and more complex, they face a logistics problem with size versus surface area to volume ratio.</p>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Feature</th>
+              <th>Small Organisms (Amoeba)</th>
+              <th>Large Organisms (Humans)</th>
+            </tr>
+            <tr>
+              <td><strong>Diffusion</strong></td>
+              <td>Simple diffusion works</td>
+              <td>Diffusion is too slow</td>
+            </tr>
+            <tr>
+              <td><strong>SA:V Ratio</strong></td>
+              <td>High ratio</td>
+              <td>Low ratio</td>
+            </tr>
+            <tr>
+              <td><strong>Transport System</strong></td>
+              <td>Not needed</td>
+              <td>Essential required</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY AID:</strong>
+          <p>Think of a small shop vs. a supermarket. The supermarket needs delivery trucks (transport system) to move stock around!</p>
+        </div>
+      </div>
+
+      <!-- SECTION B: MATERIALS TRANSPORTED -->
+      <div class="section-card">
+        <h2>📦 B. Materials for Transportation</h2>
+
+        <h3>What Gets Transported?</h3>
+
+        <div class="table-container">
+          <table class="summary-table wide">
+            <tr>
+              <th>Material</th>
+              <th>Source</th>
+              <th>Destination</th>
+              <th>Form</th>
+            </tr>
+            <tr>
+              <td><strong>Excretory products</strong></td>
+              <td>Liver, cells (metabolism)</td>
+              <td>Kidneys, lungs, skin</td>
+              <td>Urea, CO₂, water</td>
+            </tr>
+            <tr>
+              <td><strong>Gases</strong></td>
+              <td>Lungs (O₂) / Tissues (CO₂)</td>
+              <td>Tissues / Lungs</td>
+              <td>Dissolved in plasma</td>
+            </tr>
+            <tr>
+              <td><strong>Manufactured food</strong></td>
+              <td>Leaves (photosynthesis)</td>
+              <td>All plant parts</td>
+              <td>Sucrose (sugar)</td>
+            </tr>
+            <tr>
+              <td><strong>Digested food</strong></td>
+              <td>Small intestine</td>
+              <td>Liver, then all cells</td>
+              <td>Glucose, amino acids</td>
+            </tr>
+            <tr>
+              <td><strong>Nutrients</strong></td>
+              <td>Soil (plants) / Gut (animals)</td>
+              <td>All cells</td>
+              <td>Mineral ions, vitamins</td>
+            </tr>
+            <tr>
+              <td><strong>Water</strong></td>
+              <td>Soil / Intestine</td>
+              <td>All cells</td>
+              <td>Pure water</td>
+            </tr>
+            <tr>
+              <td><strong>Hormones</strong></td>
+              <td>Endocrine glands</td>
+              <td>Target organs</td>
+              <td>Chemical messengers</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY AID:</strong>
+          <p>"Every Good Mother Does Feed Us Nutritious Water & Honey" = Excretory, Gases, Manufactured food, Digested food, Food, Us (nutrients), Nutrients, Water, Hormones</p>
+        </div>
+      </div>
+
+      <!-- SECTION C(i): MAMMALIAN CIRCULATORY -->
+      <div class="section-card">
+        <h2>🫀 C(i). Mammalian Circulatory System</h2>
+
+        <h3>The Heart: Your Body's Pump</h3>
+
+        <div class="quick-facts">
+          <h4>🔍 Heart Structure</h4>
+          <ul>
+            <li><strong>4 chambers:</strong> 2 atria (upper, thin-walled) + 2 ventricles (lower, thick-walled)</li>
+            <li><strong>Left ventricle:</strong> Thickest wall (pumps to entire body)</li>
+            <li><strong>Septum:</strong> Divides left and right sides (prevents blood mixing)</li>
+            <li><strong>Valves:</strong> Ensure one-way blood flow</li>
+          </ul>
+        </div>
+
+        <img src="https://kimi-web-img.moonshot.cn/img/organismalbio.biosci.gatech.edu/ea65eb1392421d5b0a38fa2a06da04f09b4366b4.png" alt="Mammalian Circulatory System" class="diagram-img">
+        <p class="image-caption">The human heart showing four chambers and major blood vessels</p>
+
+        <h3>Blood Vessels: The Highways</h3>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Vessel</th>
+              <th>Structure</th>
+              <th>Function</th>
+              <th>Direction</th>
+            </tr>
+            <tr>
+              <td><strong>Arteries</strong></td>
+              <td>Thick, elastic, muscular</td>
+              <td>Carry blood AWAY from heart</td>
+              <td>Heart → Organs</td>
+            </tr>
+            <tr>
+              <td><strong>Veins</strong></td>
+              <td>Thin walls, valves present</td>
+              <td>Carry blood TO heart</td>
+              <td>Organs → Heart</td>
+            </tr>
+            <tr>
+              <td><strong>Capillaries</strong></td>
+              <td>One-cell thick, narrow</td>
+              <td>Exchange of materials</td>
+              <td>Arteries ↔ Veins</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY AID:</strong>
+          <p>Arteries = Away from heart | Veins = Very slow, back to heart (V-return) | Capillaries = Connection points</p>
+        </div>
+
+        <h3>Special Blood Vessels (VERY IMPORTANT!)</h3>
+
+        <div class="table-container">
+          <table class="summary-table wide">
+            <tr>
+              <th>Vessel</th>
+              <th>Path</th>
+              <th>Special Function</th>
+            </tr>
+            <tr>
+              <td><strong>Hepatic Portal Vein</strong></td>
+              <td>Intestine → Liver</td>
+              <td>Carries digested food to liver FIRST for processing before general circulation</td>
+            </tr>
+            <tr>
+              <td><strong>Pulmonary Artery</strong></td>
+              <td>Heart → Lungs</td>
+              <td>ONLY artery carrying deoxygenated blood (CO₂ to lungs)</td>
+            </tr>
+            <tr>
+              <td><strong>Pulmonary Vein</strong></td>
+              <td>Lungs → Heart</td>
+              <td>ONLY vein carrying oxygenated blood (O₂ to heart)</td>
+            </tr>
+            <tr>
+              <td><strong>Aorta</strong></td>
+              <td>Left ventricle → Body</td>
+              <td>Largest artery; oxygenated blood to all body parts</td>
+            </tr>
+            <tr>
+              <td><strong>Renal Artery</strong></td>
+              <td>Aorta → Kidneys</td>
+              <td>Supplies oxygenated blood to kidneys</td>
+            </tr>
+            <tr>
+              <td><strong>Renal Vein</strong></td>
+              <td>Kidneys → Vena Cava</td>
+              <td>Removes filtered blood from kidneys</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <div class="highlight-box">
+          <strong>Why Hepatic Portal Vein is Special:</strong><br>
+          Ensures liver processes nutrients first (detoxification, glucose storage as glycogen). This is called the hepatic portal system (connects two capillary beds).
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY TRICK:</strong>
+          <p>"The Arteries carry blood Away, even if it's deoxygenated. The Veins bring blood back, even if it's oxygenated."</p>
+        </div>
+      </div>
+
+      <!-- SECTION C(ii): PLANT VASCULAR -->
+      <div class="section-card">
+        <h2>🌿 C(ii). Plant Vascular System</h2>
+
+        <h3>Xylem vs. Phloem: The Plant's Transport Network</h3>
+
+        <img src="https://kimi-web-img.moonshot.cn/img/sciencenotes.org/b677b2fe132d64a90ef515fbbaaf7385bad786a8.png" alt="Xylem and Phloem" class="diagram-img">
+        <p class="image-caption">Cross-section showing xylem and phloem arrangement in plant stem</p>
+
+        <div class="table-container">
+          <table class="summary-table wide">
+            <tr>
+              <th>Feature</th>
+              <th>XYLEM</th>
+              <th>PHLOEM</th>
+            </tr>
+            <tr>
+              <td><strong>Transports</strong></td>
+              <td>Water + Mineral salts</td>
+              <td>Food (sucrose) + amino acids + hormones</td>
+            </tr>
+            <tr>
+              <td><strong>Direction</strong></td>
+              <td>ONE-way (upward only)</td>
+              <td>TWO-way (up and down)</td>
+            </tr>
+            <tr>
+              <td><strong>Cell type</strong></td>
+              <td>Dead cells (hollow tubes)</td>
+              <td>Living cells (sieve tubes)</td>
+            </tr>
+            <tr>
+              <td><strong>End walls</strong></td>
+              <td>No end walls (continuous)</td>
+              <td>Perforated (sieve plates)</td>
+            </tr>
+            <tr>
+              <td><strong>Substance</strong></td>
+              <td>Lignin (woody, support)</td>
+              <td>No lignin</td>
+            </tr>
+            <tr>
+              <td><strong>Location</strong></td>
+              <td>Center of vascular bundle</td>
+              <td>Outer edge of vascular bundle</td>
+            </tr>
+            <tr>
+              <td><strong>Mechanism</strong></td>
+              <td>Transpiration pull, root pressure</td>
+              <td>Translocation (active transport + osmosis)</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <div class="quick-facts">
+          <h4>🔍 Arrangement in Stems</h4>
+          <ul>
+            <li><strong>Dicots:</strong> Xylem inside, phloem outside (ring arrangement)</li>
+            <li><strong>Monocots:</strong> Scattered bundles throughout stem</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY AID:</strong>
+          <p>XYlem = XY axis goes up (one direction, upward) | PHloem = PHood (transports food) | X = dead, crossed out | P = people (living)</p>
+        </div>
+      </div>
+
+      <!-- SECTION D: MEDIA & MECHANISMS -->
+      <div class="section-card">
+        <h2>🔄 D. Media & Mechanisms of Transportation</h2>
+
+        <h3>1. Media of Transportation</h3>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Medium</th>
+              <th>Where Found</th>
+              <th>What It Transports</th>
+            </tr>
+            <tr>
+              <td><strong>Cytoplasm</strong></td>
+              <td>Inside cells</td>
+              <td>Organelles, nutrients within cell</td>
+            </tr>
+            <tr>
+              <td><strong>Cell Sap</strong></td>
+              <td>Vacuole of plant cells</td>
+              <td>Sugars, salts, pigments, waste</td>
+            </tr>
+            <tr>
+              <td><strong>Blood</strong></td>
+              <td>Animals (circulatory system)</td>
+              <td>Everything (gases, food, waste, hormones)</td>
+            </tr>
+            <tr>
+              <td><strong>Lymph</strong></td>
+              <td>Lymphatic vessels</td>
+              <td>Fat droplets, white blood cells, excess fluid</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <h3>2. Blood Composition & Functions</h3>
+
+        <img src="https://kimi-web-img.moonshot.cn/img/bam.files.bbci.co.uk/378ab616d6e418b36022695c9c6f327956df7c4d" alt="Blood Composition" class="diagram-img">
+        <p class="image-caption">Blood composition showing plasma, red cells, white cells, and platelets</p>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Component</th>
+              <th>Percentage</th>
+              <th>Function</th>
+            </tr>
+            <tr>
+              <td><strong>Plasma</strong> (liquid)</td>
+              <td>55%</td>
+              <td>Transports dissolved substances</td>
+            </tr>
+            <tr>
+              <td><strong>Red Blood Cells</strong></td>
+              <td>41%</td>
+              <td>Hemoglobin → transport O₂ and CO₂</td>
+            </tr>
+            <tr>
+              <td><strong>White Blood Cells</strong></td>
+              <td>4%</td>
+              <td>Fight infection, immunity</td>
+            </tr>
+            <tr>
+              <td><strong>Platelets</strong></td>
+              <td>&lt;1%</td>
+              <td>Blood clotting</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <div class="quick-facts">
+          <h4>🔍 Plasma Details</h4>
+          <ul>
+            <li>90% water</li>
+            <li>7% plasma proteins (albumin, globulins, fibrinogen)</li>
+            <li>3% other solutes (glucose, amino acids, hormones, minerals, waste)</li>
+          </ul>
+        </div>
+
+        <h3>3. Lymph Composition & Functions</h3>
+
+        <div class="quick-facts">
+          <h4>🔍 Lymph Features</h4>
+          <ul>
+            <li><strong>Origin:</strong> Tissue fluid entering lymphatic vessels</li>
+            <li><strong>Color:</strong> Pale yellow/clear</li>
+            <li><strong>Cells:</strong> Lymphocytes (WBCs)</li>
+            <li><strong>Special content:</strong> Fats (from lacteals in villi)</li>
+            <li><strong>Functions:</strong> Returns tissue fluid to blood, transports fats, immune defense</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 KEY POINT:</strong>
+          <p>Lymph is basically blood minus red blood cells and large proteins.</p>
+        </div>
+      </div>
+
+      <!-- MECHANISMS OF TRANSPORT -->
+      <div class="section-card">
+        <h2>⚙️ Mechanisms of Transportation</h2>
+
+        <h3>A. Physical/Passive Mechanisms (No Energy)</h3>
+
+        <div class="table-container">
+          <table class="summary-table wide">
+            <tr>
+              <th>Mechanism</th>
+              <th>Definition</th>
+              <th>Example</th>
+            </tr>
+            <tr>
+              <td><strong>Diffusion</strong></td>
+              <td>Movement from high to low concentration</td>
+              <td>Gas exchange in lungs (O₂ in, CO₂ out)</td>
+            </tr>
+            <tr>
+              <td><strong>Osmosis</strong></td>
+              <td>Water diffusion across semi-permeable membrane</td>
+              <td>Water absorption in roots</td>
+            </tr>
+            <tr>
+              <td><strong>Plasmolysis</strong></td>
+              <td>Cell membrane shrinks from wall when water leaves</td>
+              <td>Plant cells in salt solution (wilting)</td>
+            </tr>
+            <tr>
+              <td><strong>Turgidity</strong></td>
+              <td>Cell swells when water enters</td>
+              <td>Plant cells in pure water (firm stems)</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <div class="comparison-grid">
+          <div class="comparison-card">
+            <h5>✅ Turgid Cell</h5>
+            <ul>
+              <li>Cell full of water</li>
+              <li>Firm, upright</li>
+              <li>Membrane against wall</li>
+              <li>Good for plant</li>
+            </ul>
+          </div>
+          <div class="comparison-card">
+            <h5>❌ Plasmolysed Cell</h5>
+            <ul>
+              <li>Cell lost water</li>
+              <li>Flaccid, wilted</li>
+              <li>Membrane pulled away</li>
+              <li>Bad for plant</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>B. Biological Mechanisms (Energy Required)</h3>
+
+        <div class="quick-facts">
+          <h4>🔍 Active Transport</h4>
+          <ul>
+            <li><strong>Definition:</strong> Movement against concentration gradient (low → high) using energy</li>
+            <li><strong>Example:</strong> Root hair cells absorbing mineral ions from soil (soil has fewer minerals than root)</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- CIRCULATORY TYPES -->
+      <div class="section-card">
+        <h2>🔄 Circulatory System Types in Animals</h2>
+
+        <div class="comparison-grid">
+          <div class="comparison-card">
+            <h5>🔓 Open System</h5>
+            <ul>
+              <li>Blood flows freely in body cavity</li>
+              <li>No capillaries</li>
+              <li>Heart → spaces → slow return</li>
+              <li>Simple, low pressure</li>
+              <li>Slow, inefficient</li>
+              <li>Examples: Insects, Crustaceans</li>
+            </ul>
+          </div>
+          <div class="comparison-card">
+            <h5>🔒 Closed System</h5>
+            <ul>
+              <li>Blood stays in vessels always</li>
+              <li>Heart → Arteries → Capillaries → Veins</li>
+              <li>Fast, efficient</li>
+              <li>Can direct to specific organs</li>
+              <li>Complex, high energy cost</li>
+              <li>Examples: Mammals, Fish</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY AID:</strong>
+          <p>Open = Out in the open (body cavity) | Closed = Contained in vessels</p>
+        </div>
+      </div>
+
+      <!-- PLANT MECHANISMS -->
+      <div class="section-card">
+        <h2>🌱 Mechanisms in Plants</h2>
+
+        <h3>1. Transpiration Pull (Cohesion-Tension Theory)</h3>
+
+        <img src="https://kimi-web-img.moonshot.cn/img/cdn1.byjus.com/bf0f2514387f0c23ae9eb41feef5b9f2d57b9626.png" alt="Transpiration Pull" class="diagram-img">
+        <p class="image-caption">Transpiration pull mechanism showing water movement from roots to leaves</p>
+
+        <h4>How it works:</h4>
+        <div class="quick-facts">
+          <ol>
+            <li>Water evaporates from leaf mesophyll cells (transpiration)</li>
+            <li>Creates negative pressure (tension) in xylem</li>
+            <li>Water molecules are cohesive (stick together) → pull entire column up</li>
+            <li>Water molecules are adhesive (stick to xylem walls) → prevent breaking</li>
+            <li>Result: Continuous stream from roots to leaves</li>
+          </ol>
+        </div>
+
+        <h4>Conditions Increasing Transpiration:</h4>
+        <div class="quick-facts">
+          <ul>
+            <li>High light intensity (stomata open)</li>
+            <li>Low humidity</li>
+            <li>High temperature</li>
+            <li>Wind</li>
+          </ul>
+        </div>
+
+        <h3>2. Root Pressure</h3>
+
+        <div class="quick-facts">
+          <ul>
+            <li>Active transport of minerals into xylem creates osmotic gradient</li>
+            <li>Water follows by osmosis into xylem</li>
+            <li>Pushes water up (especially at night when transpiration is low)</li>
+            <li>Causes <strong>guttation</strong> (water droplets on leaf edges in morning)</li>
+          </ul>
+        </div>
+
+        <h3>Transpiration Pull vs. Root Pressure</h3>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Feature</th>
+              <th>Transpiration Pull</th>
+              <th>Root Pressure</th>
+            </tr>
+            <tr>
+              <td><strong>Force</strong></td>
+              <td>Suction from top (leaves)</td>
+              <td>Push from bottom (roots)</td>
+            </tr>
+            <tr>
+              <td><strong>Strength</strong></td>
+              <td>Strong (100m+)</td>
+              <td>Weak (few meters)</td>
+            </tr>
+            <tr>
+              <td><strong>When active</strong></td>
+              <td>Daytime</td>
+              <td>Nighttime</td>
+            </tr>
+            <tr>
+              <td><strong>Main use</strong></td>
+              <td>Tall trees</td>
+              <td>Small plants/night</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <h3>3. Active Transport in Plants</h3>
+        <p>Root hair cells use energy to absorb mineral ions against concentration gradient. Essential because soil water has very low mineral concentration.</p>
+      </div>
+
+      <!-- EXAM TIPS -->
+      <div class="jamb-alert">
+        <h4>⚠️ CRITICAL JAMB EXAM TIPS</h4>
+        <ul>
+          <li><strong>Special Vessels:</strong> Hepatic portal (intestine→liver), Pulmonary artery (deoxygenated), Pulmonary vein (oxygenated)</li>
+          <li><strong>Xylem vs Phloem:</strong> Xylem = water UP (dead cells), Phloem = food BOTH ways (living cells)</li>
+          <li><strong>Blood Components:</strong> Plasma (55%), RBC (41%), WBC (4%), Platelets (&lt;1%)</li>
+          <li><strong>Lymph:</strong> Blood minus RBCs and large proteins</li>
+          <li><strong>Mechanisms:</strong> Diffusion (high→low), Osmosis (water), Active transport (low→high, needs energy)</li>
+          <li><strong>Transpiration Pull:</strong> Main mechanism for tall trees (cohesion-tension)</li>
+          <li><strong>Root Pressure:</strong> Causes guttation, weak force</li>
+          <li><strong>Open vs Closed:</strong> Open = no vessels (insects), Closed = vessels always (mammals)</li>
+        </ul>
+      </div>
+
+      <!-- QUICK REVISION -->
+      <div class="section-card">
+        <h2>📋 Quick Revision Checklist</h2>
+
+        <h3>Must-Know Concepts:</h3>
+        <div class="quick-facts">
+          <ul>
+            <li>✅ Large organisms need transport systems (low SA:V ratio)</li>
+            <li>✅ Arteries = Away, Veins = To heart, Capillaries = Exchange</li>
+            <li>✅ Pulmonary artery = only artery with deoxygenated blood</li>
+            <li>✅ Pulmonary vein = only vein with oxygenated blood</li>
+            <li>✅ Hepatic portal vein → liver processes nutrients first</li>
+            <li>✅ Xylem: dead cells, lignin, one-way up, water + minerals</li>
+            <li>✅ Phloem: living cells, no lignin, two-way, food transport</li>
+            <li>✅ Blood: plasma (55%) + formed elements (45%)</li>
+            <li>✅ Lymph: contains fats from lacteals + WBCs</li>
+            <li>✅ Transpiration pull = main water transport in tall trees</li>
+            <li>✅ Active transport requires energy, moves against gradient</li>
+            <li>✅ Plasmolysis = cell loses water (bad) | Turgidity = gains water (good)</li>
+          </ul>
+        </div>
+
+        <h3>End Products & Key Facts:</h3>
+        <div class="comparison-grid">
+          <div class="comparison-card">
+            <h5>🩸 Blood Vessels</h5>
+            <ul>
+              <li>Aorta: Largest artery</li>
+              <li>Vena Cava: Largest vein</li>
+              <li>Capillaries: One cell thick</li>
+            </ul>
+          </div>
+          <div class="comparison-card">
+            <h5>🌱 Plant Transport</h5>
+            <ul>
+              <li>Xylem: X = up, dead</li>
+              <li>Phloem: P = food, living</li>
+              <li>Guttation: root pressure</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- MNEMONICS -->
+      <div class="section-card">
+        <h2>🧩 Mnemonics Summary</h2>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Topic</th>
+              <th>Mnemonic</th>
+            </tr>
+            <tr>
+              <td>Arteries vs Veins</td>
+              <td>"Arteries carry blood Away" | "Veins = V-return to heart"</td>
+            </tr>
+            <tr>
+              <td>Pulmonary exception</td>
+              <td>"Arteries Away, even if deoxygenated"</td>
+            </tr>
+            <tr>
+              <td>Xylem & Phloem</td>
+              <td>"XYlem = XY goes up" | "PHloem = PHood"</td>
+            </tr>
+            <tr>
+              <td>Cell states</td>
+              <td>"Turgid = Terrific (good)" | "Plasmolysed = Poor (bad)"</td>
+            </tr>
+            <tr>
+              <td>Materials transported</td>
+              <td>"Every Good Mother Does Feed Us Nutritious Water & Honey"</td>
+            </tr>
+            <tr>
+              <td>Open vs Closed</td>
+              <td>"Open = Out in the open cavity" | "Closed = Contained"</td>
+            </tr>
+            <tr>
+              <td>Hepatic</td>
+              <td>"Hepatic = Liver" (hepatitis affects liver)</td>
+            </tr>
+            <tr>
+              <td>Renal</td>
+              <td>"Renal = Kidneys" (renal failure = kidney failure)</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+      </div>
+
+      <!-- LIKELY QUESTIONS -->
+      <div class="section-card">
+        <h2>🎯 Likely JAMB Questions & Answers</h2>
+
+        <div class="quick-facts">
+          <h4>Q1: Which blood vessel carries deoxygenated blood away from the heart?</h4>
+          <p style="margin-top: 8px; font-weight: bold; color: var(--accent);">A: Pulmonary artery (the exception to the rule!)</p>
+        </div>
+
+        <div class="quick-facts">
+          <h4>Q2: Why does the hepatic portal vein carry blood from intestine to liver first?</h4>
+          <p style="margin-top: 8px; font-weight: bold; color: var(--accent);">A: To allow the liver to process nutrients (store glucose, detoxify) before general circulation.</p>
+        </div>
+
+        <div class="quick-facts">
+          <h4>Q3: What is the main mechanism of water transport in tall trees?</h4>
+          <p style="margin-top: 8px; font-weight: bold; color: var(--accent);">A: Transpiration pull (cohesion-tension theory)</p>
+        </div>
+
+        <div class="quick-facts">
+          <h4>Q4: How does active transport differ from osmosis?</h4>
+          <p style="margin-top: 8px; font-weight: bold; color: var(--accent);">A: Active transport moves against gradient using energy; osmosis is passive water movement down gradient.</p>
+        </div>
+
+        <div class="quick-facts">
+          <h4>Q5: What causes guttation in plants?</h4>
+          <p style="margin-top: 8px; font-weight: bold; color: var(--accent);">A: Root pressure at night when transpiration is low.</p>
+        </div>
+      </div>
+
+      <p style="text-align: center; font-size: 16px; margin: 32px 0; font-weight: bold; color: var(--accent);">
+        🌟 Master Transport, Ace Your JAMB! 🌟
+      </p>
+
+      <button class="explore-btn" onclick="alert('Practice JAMB past questions on Transport!')">Practice JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item">
+      <button class="neumorphic-btn">🔍</button>
+      <p>Search</p>
+    </div>
+    <div class="nav-item center">
+      <button class="neumorphic-btn">⭐</button>
+      <p>Favorite</p>
+    </div>
+    <div class="nav-item">
+      <button class="neumorphic-btn">📚</button>
+      <p>Library</p>
+    </div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme) {
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const newTheme = body.classList.contains('light') ? 'dark' : 'light';
+      setTheme(newTheme);
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      const scrolled = (scrollTop / scrollHeight) * 100;
+      progressBar.style.width = scrolled + '%';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BIOLOGY - Heredity (JAMB 2026)</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+
+    :root {
+      --background: #1e1e2f;
+      --shadow-in: #171723;
+      --shadow-out: #25253b;
+      --text-primary: #f0f0ff;
+      --text-secondary: #c0c0e0;
+      --accent: #1db954;
+      --card-bg: #2a2a3f;
+    }
+
+    body.light {
+      --background: #e0e0e0;
+      --shadow-in: #bebebe;
+      --shadow-out: #ffffff;
+      --text-primary: #1a1a1a;
+      --text-secondary: #444;
+      --accent: #1db954;
+      --card-bg: #f8f8f8;
+    }
+
+    body {
+      background: var(--background);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto;
+      background: var(--background);
+      border-radius: 20px;
+      box-shadow: 10px 10px 20px var(--shadow-in), -10px -10px 20px var(--shadow-out);
+      overflow: hidden;
+      min-height: 100vh;
+      position: relative;
+      padding-top: 70px;
+      padding-bottom: 80px;
+    }
+
+    .neumorphic {
+      background: var(--background);
+      box-shadow: 5px 5px 10px var(--shadow-in), -5px -5px 10px var(--shadow-out);
+      border-radius: 15px;
+    }
+
+    .neumorphic-btn {
+      background: var(--background);
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out);
+      cursor: pointer;
+      color: var(--text-primary);
+      font-size: 18px;
+    }
+
+    .neumorphic-btn:active {
+      box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out);
+    }
+
+    .top-bar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      max-width: 400px;
+      background: var(--background);
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 5px 10px var(--shadow-in);
+      z-index: 20;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .top-bar .header {
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--text-primary);
+    }
+
+    .top-bar .right-icons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .top-bar .profile-upload {
+      position: relative;
+    }
+
+    .top-bar .profile-upload input {
+      opacity: 0;
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+    }
+
+    .content {
+      padding: 20px 16px;
+      line-height: 1.6;
+    }
+
+    .main-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .main-header h1 {
+      font-size: 30px;
+      margin-bottom: 8px;
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .main-header p.subtitle {
+      font-size: 16px;
+      color: var(--text-secondary);
+    }
+
+    .section {
+      background: var(--card-bg);
+      padding: 24px 20px;
+      border-radius: 20px;
+      box-shadow: inset 4px 4px 10px var(--shadow-in), inset -4px -4px 10px var(--shadow-out);
+      margin-bottom: 30px;
+    }
+
+    .section h2 {
+      font-size: 22px;
+      margin: 0 0 16px;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .section h3 {
+      font-size: 18px;
+      margin: 24px 0 12px;
+      color: var(--accent);
+    }
+
+    .section p {
+      margin-bottom: 16px;
+      font-size: 15px;
+      color: var(--text-primary);
+    }
+
+    .section ul, .section ol {
+      padding-left: 24px;
+      margin: 16px 0;
+    }
+
+    .section li {
+      margin-bottom: 10px;
+      font-size: 15px;
+    }
+
+    .section .highlight {
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .diagram-img {
+      width: 100%;
+      border-radius: 12px;
+      margin: 16px 0 8px;
+      box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out);
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      margin: 16px 0;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .section table {
+      width: 100%;
+      min-width: 580px;
+      border-collapse: collapse;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out);
+    }
+
+    .section th,
+    .section td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .section th {
+      background: rgba(29, 185, 84, 0.2);
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .section tr:last-child td {
+      border-bottom: none;
+    }
+
+    .nav-bar {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      max-width: 400px;
+      background: var(--background);
+      padding: 10px;
+      display: flex;
+      justify-content: space-around;
+      box-shadow: 0 -5px 10px var(--shadow-in);
+      z-index: 20;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .nav-bar .nav-item {
+      text-align: center;
+      position: relative;
+    }
+
+    .nav-bar .nav-item button {
+      width: 40px;
+      height: 40px;
+      font-size: 18px;
+      color: var(--text-primary);
+    }
+
+    .nav-bar .nav-item.center button {
+      width: 50px;
+      height: 50px;
+      font-size: 24px;
+      background: var(--accent);
+      box-shadow: 0 0 15px var(--accent), 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out);
+      color: #000;
+    }
+
+    .nav-bar .nav-item p {
+      display: none;
+      font-size: 12px;
+      margin-top: 5px;
+      color: var(--text-primary);
+    }
+
+    .nav-bar .nav-item.active p {
+      display: block;
+    }
+  </style>
+</head>
+<body class="dark">
+  <div class="container">
+    <!-- Top Fixed Bar -->
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn">←</button>
+      <div class="header">BIOLOGY</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn profile-upload">
+          📷
+          <input type="file" accept="image/*" id="profile-upload">
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+      <div class="main-header">
+        <h1>Heredity (JAMB 2026) 🚀</h1>
+        <p class="subtitle">Complete Notes – Modern Biology & Syllabus</p>
+      </div>
+
+      <div class="section">
+        
+        <h2>Definition of Heredity</h2>
+        <p><strong>Heredity</strong> is the transmission of genetic characteristics from parents to offspring through genes, ensuring similarity between generations while allowing variation.</p>
+
+        <h2>1. Inheritance of Characters</h2>
+        <p><strong>Heritable Characters</strong> — Genetic traits passed via genes from parents to offspring.</p>
+        <ul>
+          <li><strong>Examples:</strong> Eye colour, skin colour, blood groups (A, B, AB, O), height, attached/detached earlobes, sickle-cell trait.</li>
+        </ul>
+        <p><strong>Non-heritable Characters</strong> — Acquired during lifetime; not encoded in DNA.</p>
+        <ul>
+          <li><strong>Examples:</strong> Scars, muscle from exercise, tattoos, learned skills, sunburn.</li>
+        </ul>
+        <img src="https://biologydictionary.net/wp-content/uploads/2020/07/inherited-vs-acquired-traits.jpg" alt="Inherited vs acquired traits" class="diagram-img">
+
+        <h2>2. Chromosomes – Basis of Heredity</h2>
+        <p><strong>Chromosomes:</strong> Thread-like DNA + protein structures in nucleus (humans: 46 chromosomes = 23 pairs).</p>
+        <p><strong>Gene:</strong> Segment of DNA that codes for a specific trait/protein (basic unit of heredity).</p>
+        <p><strong>Allele:</strong> Different forms/variants of the same gene (e.g., T = tall dominant, t = short recessive).</p>
+        <p><strong>Transmission:</strong></p>
+        <ul>
+          <li>Meiosis: Segregation of alleles → each gamete gets one allele (haploid).</li>
+          <li>Fertilisation: Random recombination of alleles → genetic variation in offspring.</li>
+        </ul>
+        <img src="https://biologydictionary.net/wp-content/uploads/2017/07/Meiosis.jpg" alt="Meiosis and allele segregation" class="diagram-img">
+
+        <h2>3. DNA Structure</h2>
+        <p><strong>Double helix</strong> (twisted ladder shape).</p>
+        <ul>
+          <li>Sides: Sugar-phosphate backbone.</li>
+          <li>Rungs: Nitrogenous bases held by hydrogen bonds.</li>
+        </ul>
+        <p><strong>Base Pairing Rules (DNA):</strong></p>
+        <div class="table-wrapper">
+          <table>
+            <tr>
+              <th>Base</th>
+              <th>Pairs With</th>
+              <th>Hydrogen Bonds</th>
+            </tr>
+            <tr>
+              <td>Adenine (A)</td>
+              <td>Thymine (T)</td>
+              <td>2</td>
+            </tr>
+            <tr>
+              <td>Guanine (G)</td>
+              <td>Cytosine (C)</td>
+              <td>3</td>
+            </tr>
+          </table>
+        </div>
+        <p>Purine (A, G – larger) always pairs with pyrimidine (T, C – smaller).</p>
+        <img src="https://biologydictionary.net/wp-content/uploads/2020/07/DNA-structure.jpg" alt="DNA double helix structure" class="diagram-img">
+
+        <h2>4. RNA Base Pairing</h2>
+        <p>RNA uses <strong>Uracil (U)</strong> instead of Thymine (T).</p>
+        <p><strong>Rules:</strong> A pairs with U (2 bonds); G pairs with C (3 bonds).</p>
+        <p>Used in transcription: DNA template strand → mRNA (A→U, T→A, C→G, G→C).</p>
+        <img src="https://biologydictionary.net/wp-content/uploads/2020/07/RNA-base-pairing.jpg" alt="RNA base pairing" class="diagram-img">
+
+        <h2>5. Mendel's Pea Plant Experiments</h2>
+        <p>Studied 7 contrasting traits in true-breeding pea plants.</p>
+        <p><strong>Advantages:</strong> Easy to grow, self-pollinate, distinct traits, many offspring.</p>
+        <p><strong>Mendel's 7 Traits (Dominant vs Recessive):</strong></p>
+        <div class="table-wrapper">
+          <table>
+            <tr>
+              <th>Trait</th>
+              <th>Dominant</th>
+              <th>Recessive</th>
+            </tr>
+            <tr><td>Seed Shape</td><td>Round (R)</td><td>Wrinkled (r)</td></tr>
+            <tr><td>Seed Color</td><td>Yellow (Y)</td><td>Green (y)</td></tr>
+            <tr><td>Pod Shape</td><td>Smooth (S)</td><td>Constricted (s)</td></tr>
+            <tr><td>Pod Color</td><td>Green (G)</td><td>Yellow (g)</td></tr>
+            <tr><td>Flower Color</td><td>Purple (P)</td><td>White (p)</td></tr>
+            <tr><td>Flower Position</td><td>Axial (A)</td><td>Terminal (a)</td></tr>
+            <tr><td>Plant Height</td><td>Tall (T)</td><td>Short (t)</td></tr>
+          </table>
+        </div>
+        <p><strong>Laws:</strong></p>
+        <ul>
+          <li><strong>Dominance:</strong> Dominant allele masks recessive in heterozygote.</li>
+          <li><strong>Segregation:</strong> Alleles separate during gamete formation.</li>
+          <li><strong>Independent Assortment:</strong> Genes for different traits assort independently (dihybrid).</li>
+        </ul>
+        <p><strong>Monohybrid Cross</strong> (e.g., Tall T dominant × short t recessive):</p>
+        <p>P: TT × tt → F1: All Tt (tall).</p>
+        <p>F1 × F1 → F2: 3 tall : 1 short (phenotypic); 1 TT : 2 Tt : 1 tt (genotypic).</p>
+        <img src="https://biologydictionary.net/wp-content/uploads/2020/07/Monohybrid-cross-Punnett-square.jpg" alt="Monohybrid Punnett square" class="diagram-img">
+
+        <p><strong>Dihybrid Cross</strong> (e.g., Round R/Y dominant × wrinkled r/y recessive):</p>
+        <p>P: RRYY × rryy → F1: All RrYy (round yellow).</p>
+        <p>F1 × F1 → F2: 9 round yellow : 3 round green : 3 wrinkled yellow : 1 wrinkled green (9:3:3:1).</p>
+        <img src="https://biologydictionary.net/wp-content/uploads/2020/07/Dihybrid-cross-Punnett-square.jpg" alt="Dihybrid Punnett square" class="diagram-img">
+
+        <h2>6. Homozygous vs Heterozygous</h2>
+        <p><strong>Homozygous:</strong> Two identical alleles (AA or aa) → true-breeding.</p>
+        <p><strong>Heterozygous:</strong> Two different alleles (Aa) → hybrid/carrier; shows dominant trait.</p>
+
+        <h2>7. Sex-Linked (X-Linked Recessive) Inheritance</h2>
+        <p>Traits on X chromosome; more males affected (XY).</p>
+        <p>No father-to-son transmission.</p>
+        <ul>
+          <li><strong>Examples:</strong> Haemophilia, red-green colour blindness, male pattern baldness (sometimes listed).</li>
+        </ul>
+        <p>Carrier female (X<sup>N</sup> X<sup>n</sup>) × normal male (X<sup>N</sup> Y) → 50% sons affected.</p>
+        <img src="https://biologydictionary.net/wp-content/uploads/2020/07/X-linked-recessive-Punnett-square.jpg" alt="X-linked inheritance Punnett square" class="diagram-img">
+
+        <h2>8. Autosomal Recessive Inheritance (Including Sickle-Cell)</h2>
+        <p>Needs two recessive alleles (aa) to express.</p>
+        <p>Carriers (Aa) unaffected.</p>
+        <p>Skips generations; equal males/females.</p>
+        <ul>
+          <li><strong>Examples:</strong> Sickle-cell anaemia (SS), cystic fibrosis, albinism.</li>
+        </ul>
+        <p><strong>Sickle-Cell Genetics (HbS gene):</strong></p>
+        <ul>
+          <li><strong>AA:</strong> Normal haemoglobin, no sickle-cell disease.</li>
+          <li><strong>AS:</strong> Sickle-cell trait (carrier) – mild symptoms, resistant to malaria.</li>
+          <li><strong>SS:</strong> Sickle-cell anaemia – painful crises, anemia, organ damage.</li>
+        </ul>
+        <p><strong>Crossing AS × AS (Carrier × Carrier):</strong></p>
+        <div class="table-wrapper">
+          <table>
+            <tr>
+              <th>Parent 1 \ Parent 2</th>
+              <th>A</th>
+              <th>S</th>
+            </tr>
+            <tr>
+              <td>A</td>
+              <td>AA (25% – normal)</td>
+              <td>AS (25% – carrier)</td>
+            </tr>
+            <tr>
+              <td>S</td>
+              <td>AS (25% – carrier)</td>
+              <td>SS (25% – sickle-cell anaemia)</td>
+            </tr>
+          </table>
+        </div>
+        <p>Offspring: 25% AA (normal), 50% AS (carrier, malaria resistant), 25% SS (affected).</p>
+        <img src="https://biologydictionary.net/wp-content/uploads/2020/07/Autosomal-recessive-Punnett-square.jpg" alt="Sickle-cell AS × AS Punnett square" class="diagram-img">
+        <p><strong>Genetic Counselling:</strong> AS × AS parents have 25% chance of SS child – advise on risks, prenatal testing.</p>
+
+        <h2>9. Autosomal Dominant Inheritance</h2>
+        <p>Needs only one dominant allele (Aa or AA) to express.</p>
+        <p>Appears every generation; male-to-male possible.</p>
+        <ul>
+          <li><strong>Examples:</strong> Huntington's disease, Marfan syndrome, neurofibromatosis, achondroplasia.</li>
+        </ul>
+        <p>Affected (Aa) × unaffected (aa) → 50% affected offspring.</p>
+        <img src="https://biologydictionary.net/wp-content/uploads/2020/07/Autosomal-dominant-Punnett-square.jpg" alt="Autosomal dominant Punnett square" class="diagram-img">
+
+        <h2>10. Applications</h2>
+        <p><strong>Agriculture:</strong> Cross-breeding (hybrids), in-breeding (uniformity but depression), out-breeding (vigour), GMOs (pros/cons: yield vs biosafety).</p>
+        <p><strong>Medicine:</strong> Genetic counselling (sickle-cell AS × AS = 25% SS risk; Rhesus/blood groups), recombinant DNA (insulin production), gene therapy.</p>
+        <img src="https://biologydictionary.net/wp-content/uploads/2020/07/Genetic-counselling.jpg" alt="Genetic counselling application" class="diagram-img">
+
+        <h2>Quick Revision Checklist</h2>
+        <ul>
+          <li>Ratios: Monohybrid 3:1; Dihybrid 9:3:3:1; Sickle-cell AS × AS = 1:2:1 (AA:AS:SS).</li>
+          <li>Bonds: A-T/U = 2; G-C = 3.</li>
+          <li>Patterns: Autosomal recessive (skips, carriers); Dominant (every generation); X-linked (more males, no father-son).</li>
+        </ul>
+        <p>Practice Punnett squares & pedigrees daily! You're ready for top scores, TopScore! 🚀</p>
+      </div>
+
+      <p style="text-align: center; font-size: 17px; margin: 40px 0; font-weight: bold; color: var(--accent);">
+        Great job 🌟 You now master JAMB Topic: Heredity!
+      </p>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="nav-bar">
+      <div class="nav-item">
+        <button class="neumorphic-btn">🔍</button>
+        <p>Search</p>
+      </div>
+      <div class="nav-item center">
+        <button class="neumorphic-btn">⭐</button>
+        <p>Favorite</p>
+      </div>
+      <div class="nav-item">
+        <button class="neumorphic-btn">📚</button>
+        <p>Library</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Theme Toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+
+    function setTheme(theme) {
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const newTheme = body.classList.contains('light') ? 'dark' : 'light';
+      setTheme(newTheme);
+    });
+
+    // Profile Upload placeholder
+    document.getElementById('profile-upload').addEventListener('change', (e) => {
+      if (e.target.files[0]) console.log('Profile picture selected!');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Biology - Nutrition</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    :root { --background: #1e1e2f; --shadow-in: #171723; --shadow-out: #25253b; --text-primary: #f0f0ff; --text-secondary: #c0c0e0; --accent: #1db954; --accent-secondary: #ff6b6b; --accent-tertiary: #4ecdc4; --card-bg: #2a2a3f; }
+    body.light { --background: #e0e0e0; --shadow-in: #bebebe; --shadow-out: #ffffff; --text-primary: #1a1a1a; --text-secondary: #444; --card-bg: #f8f8f8; }
+    body { background: var(--background); color: var(--text-primary); display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow-x: hidden; }
+    .container { width: 100%; max-width: 420px; background: var(--background); border-radius: 20px; box-shadow: 10px 10px 20px var(--shadow-in), -10px -10px 20px var(--shadow-out); overflow: hidden; position: relative; height: 750px; overflow-y: auto; padding-top: 70px; padding-bottom: 80px; }
+    .neumorphic { background: var(--background); box-shadow: 5px 5px 10px var(--shadow-in), -5px -5px 10px var(--shadow-out); border-radius: 15px; }
+    .neumorphic-btn { background: var(--background); border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); cursor: pointer; color: var(--text-primary); font-size: 18px; transition: all 0.3s ease; }
+    .neumorphic-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.95); }
+    .top-bar { position: fixed; top: 0; width: 100%; max-width: 420px; background: var(--background); padding: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 5px 10px var(--shadow-in); z-index: 20; }
+    .top-bar .header { font-size: 18px; font-weight: bold; color: var(--accent); }
+    .top-bar .right-icons { display: flex; gap: 10px; }
+    .content { padding: 20px 16px; line-height: 1.7; }
+    .main-header { text-align: center; margin-bottom: 28px; padding: 20px; border-radius: 20px; background: rgba(29, 185, 84, 0.1); }
+    .main-header h1 { font-size: 26px; margin-bottom: 8px; color: var(--accent); font-weight: 800; }
+    .main-header p.subtitle { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
+    .section-card { background: var(--card-bg); padding: 24px 18px; border-radius: 20px; box-shadow: inset 4px 4px 10px var(--shadow-in), inset -4px -4px 10px var(--shadow-out); margin-bottom: 24px; border-left: 4px solid var(--accent); }
+    .section-card h2 { font-size: 20px; margin-bottom: 16px; color: var(--accent); font-weight: bold; display: flex; align-items: center; gap: 8px; }
+    .section-card h3 { font-size: 17px; margin: 20px 0 12px; color: var(--accent-tertiary); font-weight: 600; padding-left: 12px; border-left: 3px solid var(--accent-tertiary); }
+    .section-card h4 { font-size: 15px; margin: 16px 0 10px; color: var(--accent-secondary); font-weight: 600; }
+    .section-card p { margin-bottom: 14px; font-size: 14px; color: var(--text-primary); text-align: justify; }
+    .section-card ul, .section-card ol { padding-left: 20px; margin: 12px 0; }
+    .section-card li { margin-bottom: 8px; font-size: 14px; color: var(--text-primary); line-height: 1.6; }
+    .table-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 16px 0; border-radius: 12px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); }
+    .table-container::-webkit-scrollbar { height: 6px; }
+    .table-container::-webkit-scrollbar-track { background: var(--shadow-in); border-radius: 3px; }
+    .table-container::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+    .summary-table { width: 100%; min-width: 500px; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+    .summary-table th { background: var(--accent); color: #000; padding: 12px 10px; text-align: left; font-weight: 600; white-space: nowrap; }
+    .summary-table td { padding: 10px; border-bottom: 1px solid var(--shadow-in); background: var(--card-bg); white-space: nowrap; }
+    .summary-table tr:last-child td { border-bottom: none; }
+    .summary-table tr:nth-child(even) td { background: rgba(255,255,255,0.03); }
+    .summary-table.wide { min-width: 600px; }
+    .table-scroll-hint { font-size: 11px; color: var(--text-secondary); text-align: center; margin-top: 4px; font-style: italic; }
+    .quick-facts { background: linear-gradient(135deg, rgba(29,185,84,0.1), rgba(78,205,196,0.1)); padding: 16px; border-radius: 15px; margin: 16px 0; border: 1px solid rgba(29,185,84,0.3); }
+    .quick-facts h4 { color: var(--accent); margin-bottom: 10px; font-size: 15px; }
+    .quick-facts ul { margin: 0; padding-left: 18px; }
+    .quick-facts li { margin-bottom: 6px; font-size: 13px; }
+    .memory-tip { background: rgba(255,107,107,0.1); padding: 14px 16px; border-radius: 12px; margin: 16px 0; border-left: 4px solid var(--accent-secondary); }
+    .memory-tip strong { color: var(--accent-secondary); display: block; margin-bottom: 6px; font-size: 14px; }
+    .memory-tip p { margin: 0; font-size: 13px; font-style: italic; }
+    .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+    .comparison-card { background: var(--background); padding: 14px; border-radius: 12px; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); }
+    .comparison-card h5 { color: var(--accent); font-size: 14px; margin-bottom: 8px; text-align: center; }
+    .comparison-card ul { margin: 0; padding-left: 16px; font-size: 12px; }
+    .comparison-card li { margin-bottom: 4px; font-size: 12px; }
+    .diagram-img { width: 100%; max-height: 280px; object-fit: contain; border-radius: 12px; margin: 14px 0 10px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); background: #fff; padding: 8px; }
+    .nav-bar { position: fixed; bottom: 0; width: 100%; max-width: 420px; background: var(--background); padding: 10px; display: flex; justify-content: space-around; box-shadow: 0 -5px 10px var(--shadow-in); z-index: 20; }
+    .nav-bar .nav-item { text-align: center; position: relative; }
+    .nav-bar .nav-item button { width: 40px; height: 40px; font-size: 18px; color: var(--text-primary); }
+    .nav-bar .nav-item.center button { width: 50px; height: 50px; font-size: 24px; background: var(--accent); box-shadow: 0 0 15px var(--accent), 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); color: #000; }
+    .nav-bar .nav-item p { display: none; font-size: 11px; margin-top: 4px; color: var(--text-primary); }
+    .nav-bar .nav-item.active p { display: block; }
+    .progress-container { position: fixed; top: 70px; left: 0; width: 100%; max-width: 420px; height: 4px; background: var(--shadow-in); z-index: 15; }
+    .progress-bar { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
+    .explore-btn { background: var(--accent); border: none; padding: 14px 28px; border-radius: 25px; color: #000; cursor: pointer; box-shadow: 4px 4px 8px var(--shadow-in), -4px -4px 8px var(--shadow-out); font-size: 16px; margin: 24px auto; display: block; text-align: center; font-weight: bold; transition: all 0.3s ease; }
+    .explore-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.98); }
+    .jamb-alert { background: linear-gradient(135deg, rgba(255,193,7,0.15), rgba(255,152,0,0.1)); border: 1px solid rgba(255,193,7,0.4); border-radius: 12px; padding: 16px; margin: 20px 0; }
+    .jamb-alert h4 { color: #ffc107; margin-bottom: 10px; font-size: 15px; }
+    .jamb-alert ul { margin: 0; padding-left: 18px; }
+    .jamb-alert li { font-size: 13px; margin-bottom: 6px; }
+    .highlight-box { background: rgba(78,205,196,0.1); padding: 12px 16px; border-radius: 10px; margin: 12px 0; border-left: 3px solid var(--accent-tertiary); }
+    .type-badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; margin-right: 6px; }
+    .badge-structural { background: rgba(29,185,84,0.2); color: var(--accent); }
+    .badge-behavioural { background: rgba(255,107,107,0.2); color: var(--accent-secondary); }
+    .badge-functional { background: rgba(78,205,196,0.2); color: var(--accent-tertiary); }
+    .image-caption { text-align: center; font-size: 12px; color: var(--text-secondary); font-style: italic; margin-top: -8px; margin-bottom: 12px; }
+  </style>
+</head>
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">BIOLOGY</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📖 Bookmarked for later study!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>🌱 Nutrition</h1>
+        <p class="subtitle">JAMB Chapter 5: Modes, Types & Processes</p>
+      </div>
+
+      <!-- PART A: MODES OF NUTRITION -->
+      <div class="section-card">
+        <h2>🌿 A. Modes of Nutrition</h2>
+        
+        <p><strong>Overview:</strong> Nutrition is the process by which organisms obtain and utilize food for growth, repair, and energy. There are two main modes: Autotrophic and Heterotrophic.</p>
+
+        <h3>1. AUTOTROPHIC NUTRITION</h3>
+        
+        <img src="https://kimi-web-img.moonshot.cn/img/cdn.teachoo.com/ffd9bce6fb7c7781511311bb36d672048ef0e803.jpg" alt="Autotroph vs Heterotroph diagram" class="diagram-img">
+        <p class="image-caption">Autotrophs (plants, algae) make their own food vs Heterotrophs (animals, fungi) depend on others</p>
+
+        <div class="quick-facts">
+          <h4>🔍 Key Features</h4>
+          <ul>
+            <li><strong>Definition:</strong> Organisms synthesize their own organic food from simple inorganic substances</li>
+            <li><strong>Energy Source:</strong> Light energy (photosynthesis) or chemical energy (chemosynthesis)</li>
+            <li><strong>Examples:</strong> Green plants, algae, photosynthetic bacteria, chemosynthetic bacteria</li>
+            <li><strong>Role:</strong> Producers in the food chain</li>
+          </ul>
+        </div>
+
+        <h3>2. HETEROTROPHIC NUTRITION</h3>
+
+        <div class="quick-facts">
+          <h4>🔍 Key Features</h4>
+          <ul>
+            <li><strong>Definition:</strong> Organisms cannot synthesize their own food; depend on ready-made organic substances</li>
+            <li><strong>Energy Source:</strong> Organic compounds from other organisms</li>
+            <li><strong>Examples:</strong> Animals, fungi, most bacteria, some plants</li>
+            <li><strong>Role:</strong> Consumers in the food chain</li>
+          </ul>
+        </div>
+
+        <div class="comparison-grid">
+          <div class="comparison-card">
+            <h5>🌳 AUTOTROPHS</h5>
+            <ul>
+              <li>Make own food</li>
+              <li>Use CO₂ + H₂O</li>
+              <li>Need chlorophyll (mostly)</li>
+              <li>Producers</li>
+              <li>Green plants, algae</li>
+            </ul>
+          </div>
+          <div class="comparison-card">
+            <h5>🐄 HETEROTROPHS</h5>
+            <ul>
+              <li>Cannot make food</li>
+              <li>Depend on others</li>
+              <li>No chlorophyll</li>
+              <li>Consumers</li>
+              <li>Animals, fungi, bacteria</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY TRICK:</strong>
+          <p>"Auto = Self" (self-feeding) | "Hetero = Other" (feeding on others)</p>
+        </div>
+      </div>
+
+      <!-- PART B: TYPES OF NUTRITION -->
+      <div class="section-card">
+        <h2>📋 B. Types of Nutrition</h2>
+
+        <h3>1. AUTOTROPHIC TYPES</h3>
+        
+        <h4>a) Photosynthesis (Photoautotrophs)</h4>
+        <p>Process by which green plants use light energy to convert CO₂ and water into glucose and oxygen.</p>
+        
+        <p style="background: rgba(29,185,84,0.1); padding: 10px; border-radius: 8px; font-family: monospace; text-align: center; margin: 10px 0;">
+          6CO₂ + 6H₂O + Light → C₆H₁₂O₆ + 6O₂
+        </p>
+
+        <h4>b) Chemosynthesis (Chemoautotrophs)</h4>
+        
+        <img src="https://kimi-web-img.moonshot.cn/img/www.sciencefacts.net/ab96af0e5bfd43c44f1741479fbf360e9c947665.jpg" alt="Chemosynthesis diagram" class="diagram-img">
+        <p class="image-caption">Chemosynthesis in bacteria using hydrogen sulfide at hydrothermal vents</p>
+
+        <p>Process by which certain bacteria synthesize organic compounds using chemical energy instead of light.</p>
+        
+        <div class="quick-facts">
+          <h4>🔍 Examples of Chemosynthetic Bacteria</h4>
+          <ul>
+            <li><strong>Nitrifying bacteria:</strong> Convert ammonia to nitrites/nitrates</li>
+            <li><strong>Sulphur bacteria:</strong> Oxidize hydrogen sulphide</li>
+            <li><strong>Iron bacteria:</strong> Oxidize ferrous iron</li>
+          </ul>
+        </div>
+
+        <h3>2. HETEROTROPHIC TYPES</h3>
+
+        <div class="table-container">
+          <table class="summary-table wide">
+            <tr>
+              <th>Type</th>
+              <th>Description</th>
+              <th>Examples</th>
+            </tr>
+            <tr>
+              <td><strong>Holozoic</strong></td>
+              <td>Ingesting complex organic food, digesting internally</td>
+              <td>Sheep, Man, Dog</td>
+            </tr>
+            <tr>
+              <td><strong>Parasitic</strong></td>
+              <td>Living on/in host, absorbing nutrients</td>
+              <td>Roundworm, Tapeworm, <em>Loranthus</em></td>
+            </tr>
+            <tr>
+              <td><strong>Saprophytic</strong></td>
+              <td>Feeding on dead/decaying organic matter</td>
+              <td><em>Rhizopus</em>, Mushroom</td>
+            </tr>
+            <tr>
+              <td><strong>Carnivorous Plants</strong></td>
+              <td>Plants that trap and digest insects</td>
+              <td>Sundew, Bladderwort</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <h4>Parasitic Plants - <em>Loranthus</em> (Mistletoe)</h4>
+        
+        <img src="https://kimi-web-img.moonshot.cn/img/www.shutterstock.com/9e75b43601a8cf61ade56f3f9aba29ec3a76a343.jpg" alt="Loranthus parasitic plant" class="diagram-img">
+        <p class="image-caption"><em>Loranthus</em> - A parasitic plant growing on tree branches</p>
+
+        <h4>Carnivorous Plants</h4>
+        
+        <img src="https://kimi-web-img.moonshot.cn/img/northernwoodlands.org/17e3cc67c359d521248a120cb42cd6becf2f7d0b.webp" alt="Bladderwort carnivorous plant" class="diagram-img">
+        <p class="image-caption">Bladderwort - A carnivorous plant with bladder-like traps</p>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY TRICK:</strong>
+          <p>"Holo = Whole" (whole food ingested) | "Para = Beside" (lives beside/on host) | "Sapro = Rotten" (feeds on rotten matter)</p>
+        </div>
+      </div>
+
+      <!-- PART C: PLANT NUTRITION -->
+      <div class="section-card">
+        <h2>🌱 C. Plant Nutrition</h2>
+
+        <h3>1. PHOTOSYNTHESIS</h3>
+
+        <img src="https://kimi-web-img.moonshot.cn/img/cdn1.byjus.com/ca734e6dae27606404215f01113f0de355ebb25c.png" alt="Light and Dark Reactions" class="diagram-img">
+        <p class="image-caption">Light reactions (thylakoid) and Dark reactions/Calvin Cycle (stroma)</p>
+
+        <h4>Light vs Dark Reactions:</h4>
+        
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Feature</th>
+              <th>Light Reaction</th>
+              <th>Dark Reaction</th>
+            </tr>
+            <tr>
+              <td>Location</td>
+              <td>Thylakoid membranes</td>
+              <td>Stroma</td>
+            </tr>
+            <tr>
+              <td>Requires light?</td>
+              <td>Yes</td>
+              <td>No (uses ATP & NADPH)</td>
+            </tr>
+            <tr>
+              <td>Input</td>
+              <td>H₂O, Light, ADP, NADP⁺</td>
+              <td>CO₂, ATP, NADPH</td>
+            </tr>
+            <tr>
+              <td>Output</td>
+              <td>O₂, ATP, NADPH</td>
+              <td>Glucose (Sugar)</td>
+            </tr>
+            <tr>
+              <td>Other name</td>
+              <td>Photochemical phase</td>
+              <td>Calvin Cycle</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <div class="quick-facts">
+          <h4>🔍 Requirements for Photosynthesis</h4>
+          <ul>
+            <li><strong>Light:</strong> Provides energy (trapped by chlorophyll)</li>
+            <li><strong>Chlorophyll:</strong> Green pigment in chloroplasts</li>
+            <li><strong>Carbon (IV) oxide:</strong> Raw material from air</li>
+            <li><strong>Water:</strong> Raw material from soil</li>
+            <li><strong>Optimum temperature:</strong> For enzyme activity (25-35°C)</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY TRICK:</strong>
+          <p>"L-I-G-H-T" = Light, Inorganic substances (CO₂, H₂O), Green pigment (chlorophyll), Heat (temperature), Time</p>
+        </div>
+
+        <h3>2. MINERAL REQUIREMENTS</h3>
+
+        <img src="https://kimi-web-img.moonshot.cn/img/i0.wp.com/4a9a789f0d26c619487712edbb14c3a4d847d050.png" alt="Plant nutrient deficiency symptoms" class="diagram-img">
+        <p class="image-caption">Visual guide to nutrient deficiency symptoms in plants</p>
+
+        <h4>Macro-nutrients (needed in large quantities):</h4>
+        
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Element</th>
+              <th>Function</th>
+              <th>Deficiency Symptoms</th>
+            </tr>
+            <tr>
+              <td><strong>Nitrogen (N)</strong></td>
+              <td>Protein synthesis, chlorophyll</td>
+              <td>Yellowing (chlorosis), stunted growth</td>
+            </tr>
+            <tr>
+              <td><strong>Phosphorus (P)</strong></td>
+              <td>Energy transfer (ATP), roots</td>
+              <td>Purple discoloration, poor roots</td>
+            </tr>
+            <tr>
+              <td><strong>Potassium (K)</strong></td>
+              <td>Enzyme activation, water regulation</td>
+              <td>Leaf edge browning, weak stems</td>
+            </tr>
+            <tr>
+              <td><strong>Calcium (Ca)</strong></td>
+              <td>Cell wall formation</td>
+              <td>Stunted root tips, distorted leaves</td>
+            </tr>
+            <tr>
+              <td><strong>Magnesium (Mg)</strong></td>
+              <td>Chlorophyll component</td>
+              <td>Interveinal chlorosis (yellow veins)</td>
+            </tr>
+            <tr>
+              <td><strong>Sulphur (S)</strong></td>
+              <td>Protein synthesis</td>
+              <td>Yellowing of young leaves</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <h4>Micro-nutrients (needed in small quantities):</h4>
+        <p>Iron, Manganese, Copper, Zinc, Boron, Molybdenum, Chlorine</p>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY TRICK:</strong>
+          <p>"N-P-K" = The three most important for plant growth | "Yellow leaves = Need Nitrogen"</p>
+        </div>
+      </div>
+
+      <!-- PART D: ANIMAL NUTRITION -->
+      <div class="section-card">
+        <h2>🐄 D. Animal Nutrition</h2>
+
+        <h3>1. CLASSES OF FOOD SUBSTANCES</h3>
+
+        <div class="table-container">
+          <table class="summary-table wide">
+            <tr>
+              <th>Class</th>
+              <th>Sources</th>
+              <th>Importance</th>
+              <th>Deficiency Diseases</th>
+            </tr>
+            <tr>
+              <td><strong>Carbohydrates</strong></td>
+              <td>Rice, yam, cassava, bread</td>
+              <td>Energy production</td>
+              <td>Weakness, fatigue</td>
+            </tr>
+            <tr>
+              <td><strong>Proteins</strong></td>
+              <td>Meat, fish, beans, eggs</td>
+              <td>Growth, repair, enzymes</td>
+              <td>Kwashiorkor</td>
+            </tr>
+            <tr>
+              <td><strong>Fats & Oils</strong></td>
+              <td>Butter, palm oil, groundnut</td>
+              <td>Energy storage, insulation</td>
+              <td>Skin problems</td>
+            </tr>
+            <tr>
+              <td><strong>Vitamins</strong></td>
+              <td>Fruits, vegetables</td>
+              <td>Metabolic regulation</td>
+              <td>Various (see below)</td>
+            </tr>
+            <tr>
+              <td><strong>Mineral Salts</strong></td>
+              <td>Milk, vegetables, meat</td>
+              <td>Body structure, enzymes</td>
+              <td>Various</td>
+            </tr>
+            <tr>
+              <td><strong>Water</strong></td>
+              <td>Drinks, fruits</td>
+              <td>Solvent, transport, temperature</td>
+              <td>Dehydration</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <h4>Vitamin Deficiency Diseases:</h4>
+        
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Vitamin</th>
+              <th>Source</th>
+              <th>Deficiency Disease</th>
+            </tr>
+            <tr>
+              <td>A</td>
+              <td>Carrots, liver</td>
+              <td>Night blindness</td>
+            </tr>
+            <tr>
+              <td>B-complex</td>
+              <td>Yeast, cereals</td>
+              <td>Beriberi</td>
+            </tr>
+            <tr>
+              <td>C (Ascorbic acid)</td>
+              <td>Citrus fruits</td>
+              <td>Scurvy (bleeding gums)</td>
+            </tr>
+            <tr>
+              <td>D</td>
+              <td>Sunlight, fish</td>
+              <td>Rickets (bone deformity)</td>
+            </tr>
+            <tr>
+              <td>E</td>
+              <td>Vegetable oils</td>
+              <td>Infertility</td>
+            </tr>
+            <tr>
+              <td>K</td>
+              <td>Green vegetables</td>
+              <td>Poor blood clotting</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <img src="https://kimi-web-img.moonshot.cn/img/www.chp.gov.hk/50e670ecc0a6face9adcf68dbf55070d24830548.jpg" alt="Balanced diet food pyramid" class="diagram-img">
+        <p class="image-caption">Food pyramid showing balanced diet proportions</p>
+
+        <h3>2. FOOD TESTS</h3>
+
+        <img src="https://kimi-web-img.moonshot.cn/img/cdn.savemyexams.com/ed22c719ade89609fda3301a3f5a2f3059a0a72a.png" alt="Food tests color changes" class="diagram-img">
+        <p class="image-caption">Food test color changes: Benedict's (sugar), Biuret (protein), Iodine (starch)</p>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Food Type</th>
+              <th>Reagent/Test</th>
+              <th>Positive Result</th>
+            </tr>
+            <tr>
+              <td><strong>Starch</strong></td>
+              <td>Iodine solution</td>
+              <td>Blue-black color</td>
+            </tr>
+            <tr>
+              <td><strong>Reducing Sugar</strong></td>
+              <td>Benedict's solution (heated)</td>
+              <td>Brick-red precipitate</td>
+            </tr>
+            <tr>
+              <td><strong>Protein</strong></td>
+              <td>Biuret test (NaOH + CuSO₄)</td>
+              <td>Violet/purple color</td>
+            </tr>
+            <tr>
+              <td><strong>Fats/Oils</strong></td>
+              <td>Emulsion test (ethanol + water)</td>
+              <td>White emulsion</td>
+            </tr>
+            <tr>
+              <td><strong>Oil spot test</strong></td>
+              <td>Brown paper</td>
+              <td>Translucent spot</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY TRICK:</strong>
+          <p>"Iodine = Indigo-black" (starch test) | "Benedict = Brick-red" (sugar test) | "Biuret = Blue-violet" (protein test)</p>
+        </div>
+
+        <h3>3. THE MAMMALIAN TOOTH</h3>
+
+        <img src="https://kimi-web-img.moonshot.cn/img/animaldiversity.org/498dbcdab599857329c0c36c0b6095238eb78cb3.jpg" alt="Tooth cross section" class="diagram-img">
+        <p class="image-caption">Cross-section of a mammalian tooth showing enamel, dentine, pulp cavity</p>
+
+        <h4>Structure of a Tooth:</h4>
+        
+        <div class="quick-facts">
+          <ul>
+            <li><strong>Crown:</strong> Visible part above gum</li>
+            <li><strong>Root:</strong> Embedded in jawbone</li>
+            <li><strong>Enamel:</strong> Hardest substance, protects tooth</li>
+            <li><strong>Dentine:</strong> Calcified tissue under enamel</li>
+            <li><strong>Pulp cavity:</strong> Contains nerves and blood vessels</li>
+            <li><strong>Cementum:</strong> Covers the root</li>
+          </ul>
+        </div>
+
+        <h4>Types of Teeth:</h4>
+        
+        <img src="https://kimi-web-img.moonshot.cn/img/www.nps.gov/d43113792eca24248a3f450131aee741eb255103.png" alt="Mammalian teeth types" class="diagram-img">
+        <p class="image-caption">Types of mammalian teeth: Incisors, Canines, Premolars, Molars</p>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Type</th>
+              <th>Structure</th>
+              <th>Function</th>
+            </tr>
+            <tr>
+              <td><strong>Incisors</strong></td>
+              <td>Chisel-shaped, flat</td>
+              <td>Cutting and biting</td>
+            </tr>
+            <tr>
+              <td><strong>Canines</strong></td>
+              <td>Pointed, conical</td>
+              <td>Tearing and piercing</td>
+            </tr>
+            <tr>
+              <td><strong>Premolars</strong></td>
+              <td>Flat with ridges</td>
+              <td>Grinding and crushing</td>
+            </tr>
+            <tr>
+              <td><strong>Molars</strong></td>
+              <td>Broad, flat surface</td>
+              <td>Grinding and chewing</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <h4>Dental Formulae:</h4>
+        
+        <img src="https://kimi-web-img.moonshot.cn/img/iloveveterinary.com/a20d00ead559c21825ef5f482ee27e8b895244cf.webp" alt="Dental formulas comparison" class="diagram-img">
+        <p class="image-caption">Dental formulas showing teeth count for different mammals</p>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Mammal</th>
+              <th>Dental Formula</th>
+              <th>Total Teeth</th>
+            </tr>
+            <tr>
+              <td><strong>Man</strong></td>
+              <td>I 2/2 C 1/1 P 2/2 M 3/3</td>
+              <td>32</td>
+            </tr>
+            <tr>
+              <td><strong>Sheep</strong></td>
+              <td>I 0/4 C 0/0 P 3/3 M 3/3</td>
+              <td>32</td>
+            </tr>
+            <tr>
+              <td><strong>Dog</strong></td>
+              <td>I 3/3 C 1/1 P 4/4 M 2/3</td>
+              <td>42</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY TRICK:</strong>
+          <p>"Sheep have no upper front teeth" (0/4 incisors) | "Man has 32 teeth" (wisdom teeth included)</p>
+        </div>
+
+        <h3>4. MAMMALIAN ALIMENTARY CANAL</h3>
+
+        <img src="https://kimi-web-img.moonshot.cn/img/cdn.britannica.com/f2501dfde517f370a625d28d2a89a44154cf358a.jpg" alt="Human digestive system" class="diagram-img">
+        <p class="image-caption">Complete human digestive system showing all organs</p>
+
+        <div class="table-container">
+          <table class="summary-table wide">
+            <tr>
+              <th>Organ</th>
+              <th>Function</th>
+            </tr>
+            <tr>
+              <td><strong>Mouth</strong></td>
+              <td>Ingestion, mechanical digestion (chewing), chemical digestion (salivary amylase)</td>
+            </tr>
+            <tr>
+              <td><strong>Esophagus</strong></td>
+              <td>Peristalsis - transports food to stomach</td>
+            </tr>
+            <tr>
+              <td><strong>Stomach</strong></td>
+              <td>Storage, protein digestion (pepsin), HCl kills bacteria</td>
+            </tr>
+            <tr>
+              <td><strong>Small Intestine</strong></td>
+              <td>Main digestion and absorption site</td>
+            </tr>
+            <tr>
+              <td><strong>Large Intestine</strong></td>
+              <td>Water absorption, feces formation</td>
+            </tr>
+            <tr>
+              <td><strong>Rectum</strong></td>
+              <td>Feces storage</td>
+            </tr>
+            <tr>
+              <td><strong>Anus</strong></td>
+              <td>Egestion</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <h4>Accessory Organs:</h4>
+        
+        <div class="comparison-grid">
+          <div class="comparison-card">
+            <h5>🫁 Liver</h5>
+            <ul>
+              <li>Produces bile</li>
+              <li>Emulsifies fats</li>
+              <li>Stores glycogen</li>
+              <li>Detoxification</li>
+            </ul>
+          </div>
+          <div class="comparison-card">
+            <h5>🫀 Pancreas</h5>
+            <ul>
+              <li>Pancreatic amylase</li>
+              <li>Trypsin (protein)</li>
+              <li>Lipase (fats)</li>
+              <li>Insulin production</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>5. NUTRITION PROCESS</h3>
+
+        <img src="https://kimi-web-img.moonshot.cn/img/sciencenotes.org/a65d9d24196eabe055b245f7639db4ca5be087d9.png" alt="Digestive enzymes chart" class="diagram-img">
+        <p class="image-caption">Major digestive enzymes and their functions in different organs</p>
+
+        <h4>Stages of Nutrition:</h4>
+        
+        <div class="quick-facts">
+          <ul>
+            <li><strong>Ingestion:</strong> Taking food into the mouth</li>
+            <li><strong>Digestion:</strong> Breakdown of food into absorbable units</li>
+            <li><strong>Absorption:</strong> Uptake of digested nutrients (mainly in small intestine)</li>
+            <li><strong>Assimilation:</strong> Using absorbed nutrients for body functions</li>
+            <li><strong>Egestion:</strong> Removal of undigested waste</li>
+          </ul>
+        </div>
+
+        <h4>Digestive Enzymes:</h4>
+        
+        <div class="table-container">
+          <table class="summary-table wide">
+            <tr>
+              <th>Enzyme</th>
+              <th>Source</th>
+              <th>Substrate</th>
+              <th>Product</th>
+              <th>pH</th>
+            </tr>
+            <tr>
+              <td><strong>Salivary amylase</strong></td>
+              <td>Salivary glands</td>
+              <td>Starch</td>
+              <td>Maltose</td>
+              <td>Neutral</td>
+            </tr>
+            <tr>
+              <td><strong>Pepsin</strong></td>
+              <td>Stomach</td>
+              <td>Proteins</td>
+              <td>Peptones</td>
+              <td>Acidic</td>
+            </tr>
+            <tr>
+              <td><strong>Trypsin</strong></td>
+              <td>Pancreas</td>
+              <td>Proteins/Peptones</td>
+              <td>Peptides</td>
+              <td>Basic</td>
+            </tr>
+            <tr>
+              <td><strong>Pancreatic amylase</strong></td>
+              <td>Pancreas</td>
+              <td>Starch</td>
+              <td>Maltose</td>
+              <td>Basic</td>
+            </tr>
+            <tr>
+              <td><strong>Lipase</strong></td>
+              <td>Pancreas</td>
+              <td>Fats/Oils</td>
+              <td>Fatty acids + Glycerol</td>
+              <td>Basic</td>
+            </tr>
+            <tr>
+              <td><strong>Maltase</strong></td>
+              <td>Small intestine</td>
+              <td>Maltose</td>
+              <td>Glucose</td>
+              <td>Basic</td>
+            </tr>
+            <tr>
+              <td><strong>Erepsin</strong></td>
+              <td>Small intestine</td>
+              <td>Peptides</td>
+              <td>Amino acids</td>
+              <td>Basic</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY TRICK:</strong>
+          <p>"Amino acids = end of protein road" | "Fatty acids + Glycerol = end of fat road" | "Glucose = end of carbohydrate road"</p>
+        </div>
+      </div>
+
+      <!-- EXAM TIPS -->
+      <div class="jamb-alert">
+        <h4>⚠️ CRITICAL JAMB EXAM TIPS</h4>
+        <ul>
+          <li><strong>Photosynthesis:</strong> Know the equation, light vs dark reactions, and requirements (light, CO₂, chlorophyll, water)</li>
+          <li><strong>Chemosynthesis:</strong> Bacteria use chemical energy (not light) - common in nitrifying bacteria</li>
+          <li><strong>Heterotrophic types:</strong> Be able to identify holozoic, parasitic, saprophytic, and carnivorous plants</li>
+          <li><strong>Mineral deficiencies:</strong> N (yellowing), P (purple), K (brown edges) - most commonly tested</li>
+          <li><strong>Food tests:</strong> Iodine (starch = blue-black), Benedict's (sugar = brick-red), Biuret (protein = violet)</li>
+          <li><strong>Dental formula:</strong> Man (2123/2123), Sheep (0033/4033), Dog (3142/3143)</li>
+          <li><strong>Digestive enzymes:</strong> Know where each is produced and what they digest</li>
+          <li><strong>Vitamin deficiencies:</strong> Vitamin C = Scurvy, Vitamin D = Rickets, Protein = Kwashiorkor</li>
+          <li><strong>End products:</strong> Carbohydrates → Glucose, Proteins → Amino acids, Fats → Fatty acids + Glycerol</li>
+        </ul>
+      </div>
+
+      <!-- QUICK REVISION -->
+      <div class="section-card">
+        <h2>📋 Quick Revision Checklist</h2>
+        
+        <h3>Must-Know Concepts:</h3>
+        <div class="quick-facts">
+          <ul>
+            <li>✅ Autotrophs make food; Heterotrophs eat other organisms</li>
+            <li>✅ Photosynthesis needs light, chlorophyll, CO₂, water</li>
+            <li>✅ Light reaction produces ATP and NADPH; Dark reaction produces glucose</li>
+            <li>✅ N, P, K are the three major plant nutrients</li>
+            <li>✅ Six classes of food: Carbohydrates, Proteins, Fats, Vitamins, Minerals, Water</li>
+            <li>✅ Food test colors: Starch (blue-black), Sugar (brick-red), Protein (violet)</li>
+            <li>✅ Four types of teeth: Incisors, Canines, Premolars, Molars</li>
+            <li>✅ Man has 32 teeth, Dog has 42, Sheep has 32 (but no upper incisors/canines)</li>
+            <li>✅ Digestion ends with: Glucose, Amino acids, Fatty acids + Glycerol</li>
+            <li>✅ Small intestine is the main site of absorption</li>
+          </ul>
+        </div>
+
+        <h3>End Products of Digestion:</h3>
+        <div class="comparison-grid">
+          <div class="comparison-card">
+            <h5>🍞 Carbohydrates</h5>
+            <ul>
+              <li>Starch → Maltose → <strong>Glucose</strong></li>
+              <li>Enzymes: Amylase, Maltase</li>
+            </ul>
+          </div>
+          <div class="comparison-card">
+            <h5>🥩 Proteins</h5>
+            <ul>
+              <li>Proteins → Peptones → Peptides → <strong>Amino acids</strong></li>
+              <li>Enzymes: Pepsin, Trypsin, Erepsin</li>
+            </ul>
+          </div>
+        </div>
+        <div class="comparison-grid" style="margin-top: 12px;">
+          <div class="comparison-card">
+            <h5>🧈 Fats & Oils</h5>
+            <ul>
+              <li>Fats → <strong>Fatty acids + Glycerol</strong></li>
+              <li>Enzyme: Lipase</li>
+            </ul>
+          </div>
+          <div class="comparison-card">
+            <h5>💧 Water</h5>
+            <ul>
+              <li>Absorbed in large intestine</li>
+              <li>Vitamins & minerals absorbed directly</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- MNEMONICS SUMMARY -->
+      <div class="section-card">
+        <h2>🧩 Mnemonics Summary</h2>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Topic</th>
+              <th>Mnemonic</th>
+            </tr>
+            <tr>
+              <td>Autotroph</td>
+              <td>"Auto = Self" (self-feeding)</td>
+            </tr>
+            <tr>
+              <td>Heterotroph</td>
+              <td>"Hetero = Other" (feed on others)</td>
+            </tr>
+            <tr>
+              <td>Photosynthesis requirements</td>
+              <td>"L-I-G-H-T" = Light, Inorganic substances, Green pigment, Heat, Time</td>
+            </tr>
+            <tr>
+              <td>Food tests</td>
+              <td>"Iodine = Indigo-black" | "Benedict = Brick-red" | "Biuret = Blue-violet"</td>
+            </tr>
+            <tr>
+              <td>Teeth types</td>
+              <td>"I Came Before My Mom" (Incisors, Canines, Premolars, Molars)</td>
+            </tr>
+            <tr>
+              <td>Sheep teeth</td>
+              <td>"Sheep have no upper front teeth" (0/4 incisors)</td>
+            </tr>
+            <tr>
+              <td>Digestive order</td>
+              <td>"Mouth → Esophagus → Stomach → Small → Large" (MESSL)</td>
+            </tr>
+            <tr>
+              <td>Enzymes</td>
+              <td>"Pepsin in the Stomach" (acidic) | "Pancreatic enzymes in Small intestine" (basic)</td>
+            </tr>
+            <tr>
+              <td>End products</td>
+              <td>"GAG" = Glucose (carbs), Amino acids (proteins), Glycerol (fats)</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+      </div>
+
+      <p style="text-align: center; font-size: 16px; margin: 32px 0; font-weight: bold; color: var(--accent);">
+        🌟 Master Nutrition, Ace Your JAMB! 🌟
+      </p>
+
+      <button class="explore-btn" onclick="alert('Practice JAMB past questions on Nutrition!')">Practice JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item">
+      <button class="neumorphic-btn">🔍</button>
+      <p>Search</p>
+    </div>
+    <div class="nav-item center">
+      <button class="neumorphic-btn">⭐</button>
+      <p>Favorite</p>
+    </div>
+    <div class="nav-item">
+      <button class="neumorphic-btn">📚</button>
+      <p>Library</p>
+    </div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme) {
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const newTheme = body.classList.contains('light') ? 'dark' : 'light';
+      setTheme(newTheme);
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      const scrolled = (scrollTop / scrollHeight) * 100;
+      progressBar.style.width = scrolled + '%';
+    });
+  </script>
+</body>
+</html>

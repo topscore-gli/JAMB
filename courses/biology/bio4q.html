@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Biology - Internal Structure</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Biology</h1>
+      <p>Internal Structure: Flowering Plants & Mammals<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Internal Structure</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 60:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration
+const CONFIG={TIME:3600,PASS:60}; // 60 minutes for 60 questions
+
+// Section mapping
+const SECTIONS={
+  0:"A: Flowering Plants - Root Structure",
+  10:"B: Flowering Plants - Stem Structure",
+  20:"C: Flowering Plants - Leaf Structure",
+  30:"D: Flowering Plants - Supporting Tissues",
+  40:"E: Mammals - Digestive System",
+  50:"F: Mammals - Excretory & Reproductive Systems"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 60 JAMB Biology Internal Structure Questions
+const QUIZ_DATA=[
+  // Section A: Flowering Plants - Root Structure (Questions 1-10)
+  {q:"In a transverse section of a dicot root, the Casparian strips are found in the:",o:["Epidermis","Cortex","Endodermis","Pericycle"],a:2,e:"Casparian strips are waxy deposits of suberin in the endodermis that control water and mineral entry into the vascular cylinder."},
+  {q:"Which of the following is responsible for producing lateral roots in a flowering plant?",o:["Epidermis","Cortex","Endodermis","Pericycle"],a:3,e:"The pericycle is the layer just inside the endodermis that retains meristematic ability and produces lateral roots."},
+  {q:"A wide pith in the center is characteristic of:",o:["Dicot root","Monocot root","Dicot stem","Monocot stem"],a:1,e:"Monocot roots have a large, prominent pith for storage, while dicot roots have small or absent pith."},
+  {q:"In the internal structure of a root, root hairs are extensions of the:",o:["Cortical cells","Epidermal cells","Endodermal cells","Pericycle cells"],a:1,e:"Root hairs are tubular extensions of epidermal cells that increase surface area for water and mineral absorption."},
+  {q:"The xylem bundles in a dicot root are typically arranged in a:",o:["Scattered pattern","Ring pattern","Radial arrangement with 2-4 bundles","Central solid core"],a:2,e:"Dicot roots have 2-4 xylem bundles (diarch/tetrarch) arranged radially, while monocots have many (polyarch)."},
+  {q:"Which tissue in the root provides mechanical support through lignified walls?",o:["Collenchyma","Sclerenchyma in pericycle","Parenchyma","Cambium"],a:1,e:"Sclerenchyma fibers in the pericycle and xylem fibers provide mechanical support in roots."},
+  {q:"The primary function of the cortex in a root is:",o:["Protection","Absorption","Storage and water passage","Transport of organic nutrients"],a:2,e:"The cortex consists of parenchyma cells that store food and allow water passage toward the vascular cylinder."},
+  {q:"Which structure controls the entry of water and minerals into the vascular cylinder of a root?",o:["Epidermis","Cortex","Endodermis with Casparian strips","Xylem vessels"],a:2,e:"The endodermis with its Casparian strips acts as a selective barrier controlling what enters the vascular tissue."},
+  {q:"The arrangement of xylem bundles in a monocot root is described as:",o:["Diarch","Triarch","Tetrarch","Polyarch"],a:3,e:"Monocot roots have many xylem bundles arranged polyarch (many-arched), unlike dicots which have fewer bundles."},
+  {q:"The endodermis in a root is characterized by:",o:["Thin cell walls","Casparian strips","Chloroplasts","Intercellular spaces"],a:1,e:"The endodermis has barrel-shaped cells with Casparian strips made of suberin that regulate nutrient passage."},
+  
+  // Section B: Flowering Plants - Stem Structure (Questions 11-20)
+  {q:"In a transverse section of a dicot stem, the vascular bundles are arranged in a:",o:["Scattered pattern throughout","Ring arrangement","Central core only","Alternating pattern with pith"],a:1,e:"Dicot stems have vascular bundles arranged in a ring/concentric pattern, enabling secondary growth."},
+  {q:"Which of the following structures is capable of producing more tissues in the stem of a herbaceous flowering plant?",o:["Epidermis","Pericycle","Xylem","Cambium"],a:3,e:"The cambium is a meristematic tissue between xylem and phloem that produces secondary xylem and phloem."},
+  {q:"Vascular bundles in a monocot stem are:",o:["Arranged in a ring with cambium","Scattered throughout the ground tissue","Found only in the center","Absent"],a:1,e:"Monocot stems have scattered vascular bundles with no cambium, preventing secondary growth."},
+  {q:"The bundle sheath in monocot stems is composed of:",o:["Parenchyma","Collenchyma","Sclerenchyma","Cambium"],a:2,e:"Monocot vascular bundles are surrounded by a sclerenchymatous bundle sheath for support."},
+  {q:"Collenchyma tissue in stems is typically found in the:",o:["Center of the stem","Hypodermis (below epidermis)","Xylem tissue","Phloem tissue"],a:1,e:"Collenchyma is found in the hypodermis (just below epidermis) providing flexible support to young stems."},
+  {q:"Which of the following is NOT present in a monocot stem?",o:["Vascular bundles","Pith","Cambium","Epidermis"],a:2,e:"Monocot stems lack cambium, which means they cannot undergo secondary growth (increase in girth)."},
+  {q:"The starch sheath is associated with which layer in a dicot stem?",o:["Epidermis","Hypodermis","Endodermis","Pericycle"],a:2,e:"The endodermis in stems (starch sheath) stores starch granules and is the innermost cortical layer."},
+  {q:"Secondary growth in thickness of a dicot stem is due to the activity of:",o:["Apical meristem","Lateral meristem (cambium)","Intercalary meristem","Phellogen only"],a:1,e:"The vascular cambium produces secondary xylem (wood) and secondary phloem, causing increase in girth."},
+  {q:"In a transverse section of a stem, which tissue provides flexible support to young parts?",o:["Sclerenchyma","Xylem fibers","Collenchyma","Phloem fibers"],a:2,e:"Collenchyma provides flexible mechanical support to young stems and leaves, allowing continued growth."},
+  {q:"The medullary rays in a dicot stem are composed of:",o:["Sclerenchyma","Xylem","Parenchyma","Collenchyma"],a:2,e:"Medullary rays are parenchymatous tissues that run radially between vascular bundles, connecting pith to cortex."},
+  
+  // Section C: Flowering Plants - Leaf Structure (Questions 21-30)
+  {q:"The palisade parenchyma is found in the:",o:["Stem","Leaf","Flower","Root"],a:1,e:"Palisade mesophyll is found in leaves, consisting of elongated cells rich in chloroplasts for photosynthesis."},
+  {q:"Which layer of the leaf is primarily responsible for gas exchange?",o:["Upper epidermis","Palisade mesophyll","Spongy mesophyll","Cuticle"],a:2,e:"Spongy mesophyll has large air spaces between cells that facilitate gas circulation (CO₂/O₂ exchange)."},
+  {q:"Stomata are most abundant in the:",o:["Upper epidermis of all leaves","Lower epidermis of most dicot leaves","Both surfaces equally","Only in the spongy mesophyll"],a:1,e:"In most dicot leaves, stomata are more abundant on the lower epidermis to reduce water loss."},
+  {q:"The cuticle covering the upper epidermis of a leaf is important for:",o:["Photosynthesis","Gas exchange","Preventing water loss","Nutrient absorption"],a:2,e:"The waxy, transparent cuticle prevents excessive water loss through transpiration while allowing light penetration."},
+  {q:"In a leaf vein (vascular bundle), the xylem is positioned:",o:["Below the phloem","Above the phloem (toward upper epidermis)","Beside the phloem only","Scattered around phloem"],a:1,e:"In leaf veins, xylem is positioned toward the upper epidermis (adaxial side) and phloem toward the lower."},
+  {q:"Which cells regulate the opening and closing of stomata?",o:["Epidermal cells","Guard cells","Palisade cells","Spongy mesophyll cells"],a:1,e:"Guard cells surrounding each stoma control its opening and closing by changing turgor pressure."},
+  {q:"The main photosynthetic tissue in a leaf is the:",o:["Upper epidermis","Palisade mesophyll","Lower epidermis","Vascular bundle"],a:1,e:"Palisade mesophyll contains the most chloroplasts per cell and is the primary site of photosynthesis."},
+  {q:"The spongy mesophyll is characterized by:",o:["Tightly packed cells","Large intercellular air spaces","Absence of chloroplasts","Location below the lower epidermis"],a:1,e:"Spongy mesophyll has loose cells with large air spaces for gas exchange and circulation."},
+  {q:"Which structure in the leaf is responsible for transporting water?",o:["Phloem in the vein","Xylem in the vein","Spongy mesophyll","Palisade cells"],a:1,e:"Xylem in the leaf vein transports water and minerals from the stem to the leaf cells."},
+  {q:"The lower epidermis of a leaf contains:",o:["More chloroplasts than upper epidermis","More stomata than upper epidermis","More cuticle than upper epidermis","No specialized cells"],a:1,e:"The lower epidermis typically has more stomata for gas exchange while being protected from direct sunlight."},
+  
+  // Section D: Flowering Plants - Supporting Tissues (Questions 31-40)
+  {q:"Which of the following plant tissues provides mechanical support to young stems and leaves?",o:["Collenchyma","Sclerenchyma","Xylem","Phloem"],a:0,e:"Collenchyma provides flexible support to growing regions with unevenly thickened primary cell walls."},
+  {q:"The main function of sclerenchyma tissue in plants is to:",o:["Transport water and nutrients","Provide mechanical support","Conduct photosynthesis","Store food reserves"],a:1,e:"Sclerenchyma has thick, lignified secondary walls providing rigid support and protection."},
+  {q:"Xylem tissue is made up of:",o:["Living cells","Dead cells","Both living and dead cells","Xylem fibers only"],a:1,e:"Xylem vessels and tracheids are dead at maturity, forming hollow tubes for water transport."},
+  {q:"Which tissue is responsible for transporting sugars and organic nutrients in plants?",o:["Collenchyma","Sclerenchyma","Xylem","Phloem"],a:3,e:"Phloem transports sugars, amino acids, and organic nutrients from leaves to other plant parts."},
+  {q:"Fibers in plants are primarily composed of:",o:["Collenchyma cells","Sclerenchyma cells","Parenchyma cells","Xylem vessels"],a:1,e:"Plant fibers (hemp, flax, jute) are mainly sclerenchyma cells with thick lignified walls."},
+  {q:"The conducting elements of xylem tissue are:",o:["Sieve tubes","Tracheids and vessels","Companion cells","Xylem parenchyma"],a:1,e:"Tracheids and vessel elements are the water-conducting cells of xylem tissue."},
+  {q:"Which supporting tissue is found in the hypodermis of dicot stems?",o:["Sclerenchyma","Xylem fibers","Collenchyma","Phloem fibers"],a:2,e:"Collenchyma is typically found in the hypodermis (below epidermis) of young dicot stems."},
+  {q:"Xylem fibers and phloem fibers provide:",o:["Only transport functions","Only mechanical support","Both transport and support","Food storage"],a:1,e:"These fibers are specialized sclerenchyma cells providing mechanical support within vascular bundles."},
+  {q:"Which of the following is a characteristic of collenchyma cells?",o:["Dead at maturity with lignified walls","Living cells with unevenly thickened primary walls","Hollow tubes without cytoplasm","Thick secondary walls with pits"],a:1,e:"Collenchyma cells are living with unevenly thickened primary walls of pectin and cellulose."},
+  {q:"Sclerenchyma tissue is commonly found in all of the following EXCEPT:",o:["Seed coats","Fruit cores","Young leaf petioles","Stem fibers"],a:2,e:"Young leaf petioles contain collenchyma for flexible support; sclerenchyma appears in mature, hardened parts."},
+  
+  // Section E: Mammals - Digestive System (Questions 41-50)
+  {q:"In mammals, digestion of starch starts in the:",o:["Stomach","Small intestine","Mouth","Liver"],a:2,e:"Salivary amylase in the mouth begins starch digestion; it continues in the small intestine."},
+  {q:"The liver in mammals is positioned in the:",o:["Left upper abdomen","Right upper abdomen","Central abdomen","Pelvic cavity"],a:1,e:"The liver is the largest gland, located in the right upper abdomen, producing bile for fat digestion."},
+  {q:"Which organ stores bile before releasing it into the duodenum?",o:["Liver","Gall bladder","Pancreas","Stomach"],a:1,e:"The gall bladder is a small green sac under the liver that stores and concentrates bile."},
+  {q:"The pancreas in mammals is located:",o:["In the pelvic cavity","Behind the stomach","In the liver","In the small intestine"],a:1,e:"The pancreas lies behind the stomach, producing digestive enzymes and hormones (insulin/glucagon)."},
+  {q:"The J-shaped organ in the left upper abdomen where protein digestion begins is the:",o:["Liver","Stomach","Small intestine","Esophagus"],a:1,e:"The stomach is J-shaped, secreting pepsin and HCl to begin protein digestion."},
+  {q:"Most nutrient absorption in mammals occurs in the:",o:["Stomach","Small intestine","Large intestine","Esophagus"],a:1,e:"The small intestine with its villi and microvilli is the primary site of nutrient absorption."},
+  {q:"The large intestine in mammals frames the small intestine and is responsible for:",o:["Protein digestion","Starch digestion","Water absorption and feces formation","Bile production"],a:2,e:"The large intestine absorbs water and electrolytes, forming and storing feces."},
+  {q:"The esophagus in mammals is located:",o:["In front of the trachea","Behind the trachea","To the left of the trachea","Inside the trachea"],a:1,e:"The esophagus is a muscular tube behind the trachea (windpipe) that carries food to the stomach."},
+  {q:"Which digestive organ produces enzymes that break down all three major food groups?",o:["Stomach","Liver","Pancreas","Gall bladder"],a:2,e:"The pancreas produces amylase (carbs), lipase (fats), and proteases (proteins) for complete digestion."},
+  {q:"The appendix in humans is attached to the:",o:["Stomach","Small intestine","Caecum of large intestine","Rectum"],a:2,e:"The appendix is a small, finger-like projection attached to the caecum at the beginning of the large intestine."},
+  
+  // Section F: Mammals - Excretory & Reproductive Systems (Questions 51-60)
+  {q:"The kidneys in mammals are positioned:",o:["In the pelvic cavity","On the dorsal abdominal wall (retroperitoneal)","In the chest cavity","In the lower abdomen only"],a:1,e:"Kidneys are bean-shaped organs on the dorsal abdominal wall, outside the peritoneal cavity (retroperitoneal)."},
+  {q:"Urine is transported from the kidneys to the bladder through the:",o:["Urethra","Ureters","Renal pelvis","Nephrons"],a:1,e:"Ureters are muscular tubes carrying urine from each kidney to the urinary bladder."},
+  {q:"The urinary bladder is located in the:",o:["Chest cavity","Abdominal cavity only","Pelvic cavity","Dorsal wall"],a:2,e:"The bladder is a muscular sac in the pelvic cavity that stores urine before excretion."},
+  {q:"The functional unit of the kidney where filtration occurs is the:",o:["Ureter","Nephron","Collecting duct","Renal pelvis"],a:1,e:"Each kidney contains about a million nephrons that filter blood and produce urine."},
+  {q:"Urine is expelled from the body through the:",o:["Ureter","Urethra","Renal artery","Renal vein"],a:1,e:"The urethra is the tube from the bladder to the exterior for urine excretion."},
+  {q:"In the male reproductive system, sperm production occurs in the:",o:["Epididymis","Vas deferens","Testes","Prostate gland"],a:2,e:"Testes (in the scrotum) produce sperm and testosterone; they need cooler temperature than body core."},
+  {q:"The site of fertilization in the female reproductive system is the:",o:["Ovary","Uterus","Fallopian tube (oviduct)","Vagina"],a:2,e:"Fertilization typically occurs in the fallopian tube where sperm meets the egg."},
+  {q:"The pear-shaped organ where fetal development occurs is the:",o:["Ovary","Fallopian tube","Uterus","Vagina"],a:2,e:"The uterus (womb) is a muscular, pear-shaped organ that houses and nourishes the developing fetus."},
+  {q:"Which structure in the male reproductive system stores sperm during maturation?",o:["Testes","Epididymis","Vas deferens","Seminal vesicle"],a:1,e:"The epididymis is a coiled tube on the testis where sperm mature and are stored before ejaculation."},
+  {q:"The female gamete (egg) is produced in the:",o:["Uterus","Ovary","Fallopian tube","Vagina"],a:1,e:"Ovaries produce eggs (ova) and female hormones estrogen and progesterone."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('biology_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('biology_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/60`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('biology_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=45?'Ready for JAMB!':pct>=38?'Good, review weak areas':pct>=30?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,10,20,30,40,50,60];
+  const sectionNames=["A: Flowering Plants - Root Structure","B: Flowering Plants - Stem Structure","C: Flowering Plants - Leaf Structure","D: Flowering Plants - Supporting Tissues","E: Mammals - Digestive System","F: Mammals - Excretory & Reproductive Systems"];
+  
+  for(let s=0;s<6;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('biology_quiz_auth');
+  sessionStorage.removeItem('biology_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('biology_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('biology_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

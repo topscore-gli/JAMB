@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Biology - Adaptations</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    :root { --background: #1e1e2f; --shadow-in: #171723; --shadow-out: #25253b; --text-primary: #f0f0ff; --text-secondary: #c0c0e0; --accent: #1db954; --accent-secondary: #ff6b6b; --accent-tertiary: #4ecdc4; --card-bg: #2a2a3f; }
+    body.light { --background: #e0e0e0; --shadow-in: #bebebe; --shadow-out: #ffffff; --text-primary: #1a1a1a; --text-secondary: #444; --card-bg: #f8f8f8; }
+    body { background: var(--background); color: var(--text-primary); display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow-x: hidden; }
+    .container { width: 100%; max-width: 420px; background: var(--background); border-radius: 20px; box-shadow: 10px 10px 20px var(--shadow-in), -10px -10px 20px var(--shadow-out); overflow: hidden; position: relative; height: 750px; overflow-y: auto; padding-top: 70px; padding-bottom: 80px; }
+    .neumorphic { background: var(--background); box-shadow: 5px 5px 10px var(--shadow-in), -5px -5px 10px var(--shadow-out); border-radius: 15px; }
+    .neumorphic-btn { background: var(--background); border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); cursor: pointer; color: var(--text-primary); font-size: 18px; transition: all 0.3s ease; }
+    .neumorphic-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.95); }
+    .top-bar { position: fixed; top: 0; width: 100%; max-width: 420px; background: var(--background); padding: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 5px 10px var(--shadow-in); z-index: 20; }
+    .top-bar .header { font-size: 18px; font-weight: bold; color: var(--accent); }
+    .top-bar .right-icons { display: flex; gap: 10px; }
+    .content { padding: 20px 16px; line-height: 1.7; }
+    .main-header { text-align: center; margin-bottom: 28px; padding: 20px; border-radius: 20px; background: rgba(29, 185, 84, 0.1); }
+    .main-header h1 { font-size: 26px; margin-bottom: 8px; color: var(--accent); font-weight: 800; }
+    .main-header p.subtitle { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
+    .section-card { background: var(--card-bg); padding: 24px 18px; border-radius: 20px; box-shadow: inset 4px 4px 10px var(--shadow-in), inset -4px -4px 10px var(--shadow-out); margin-bottom: 24px; border-left: 4px solid var(--accent); }
+    .section-card h2 { font-size: 20px; margin-bottom: 16px; color: var(--accent); font-weight: bold; display: flex; align-items: center; gap: 8px; }
+    .section-card h3 { font-size: 17px; margin: 20px 0 12px; color: var(--accent-tertiary); font-weight: 600; padding-left: 12px; border-left: 3px solid var(--accent-tertiary); }
+    .section-card h4 { font-size: 15px; margin: 16px 0 10px; color: var(--accent-secondary); font-weight: 600; }
+    .section-card p { margin-bottom: 14px; font-size: 14px; color: var(--text-primary); text-align: justify; }
+    .section-card ul, .section-card ol { padding-left: 20px; margin: 12px 0; }
+    .section-card li { margin-bottom: 8px; font-size: 14px; color: var(--text-primary); line-height: 1.6; }
+    .table-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 16px 0; border-radius: 12px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); }
+    .table-container::-webkit-scrollbar { height: 6px; }
+    .table-container::-webkit-scrollbar-track { background: var(--shadow-in); border-radius: 3px; }
+    .table-container::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+    .summary-table { width: 100%; min-width: 500px; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+    .summary-table th { background: var(--accent); color: #000; padding: 12px 10px; text-align: left; font-weight: 600; white-space: nowrap; }
+    .summary-table td { padding: 10px; border-bottom: 1px solid var(--shadow-in); background: var(--card-bg); white-space: nowrap; }
+    .summary-table tr:last-child td { border-bottom: none; }
+    .summary-table tr:nth-child(even) td { background: rgba(255,255,255,0.03); }
+    .summary-table.wide { min-width: 600px; }
+    .table-scroll-hint { font-size: 11px; color: var(--text-secondary); text-align: center; margin-top: 4px; font-style: italic; }
+    .quick-facts { background: linear-gradient(135deg, rgba(29,185,84,0.1), rgba(78,205,196,0.1)); padding: 16px; border-radius: 15px; margin: 16px 0; border: 1px solid rgba(29,185,84,0.3); }
+    .quick-facts h4 { color: var(--accent); margin-bottom: 10px; font-size: 15px; }
+    .quick-facts ul { margin: 0; padding-left: 18px; }
+    .quick-facts li { margin-bottom: 6px; font-size: 13px; }
+    .memory-tip { background: rgba(255,107,107,0.1); padding: 14px 16px; border-radius: 12px; margin: 16px 0; border-left: 4px solid var(--accent-secondary); }
+    .memory-tip strong { color: var(--accent-secondary); display: block; margin-bottom: 6px; font-size: 14px; }
+    .memory-tip p { margin: 0; font-size: 13px; font-style: italic; }
+    .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+    .comparison-card { background: var(--background); padding: 14px; border-radius: 12px; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); }
+    .comparison-card h5 { color: var(--accent); font-size: 14px; margin-bottom: 8px; text-align: center; }
+    .comparison-card ul { margin: 0; padding-left: 16px; font-size: 12px; }
+    .comparison-card li { margin-bottom: 4px; font-size: 12px; }
+    .diagram-img { width: 100%; max-height: 280px; object-fit: contain; border-radius: 12px; margin: 14px 0 10px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); background: #fff; padding: 8px; }
+    .nav-bar { position: fixed; bottom: 0; width: 100%; max-width: 420px; background: var(--background); padding: 10px; display: flex; justify-content: space-around; box-shadow: 0 -5px 10px var(--shadow-in); z-index: 20; }
+    .nav-bar .nav-item { text-align: center; position: relative; }
+    .nav-bar .nav-item button { width: 40px; height: 40px; font-size: 18px; color: var(--text-primary); }
+    .nav-bar .nav-item.center button { width: 50px; height: 50px; font-size: 24px; background: var(--accent); box-shadow: 0 0 15px var(--accent), 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); color: #000; }
+    .nav-bar .nav-item p { display: none; font-size: 11px; margin-top: 4px; color: var(--text-primary); }
+    .nav-bar .nav-item.active p { display: block; }
+    .progress-container { position: fixed; top: 70px; left: 0; width: 100%; max-width: 420px; height: 4px; background: var(--shadow-in); z-index: 15; }
+    .progress-bar { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
+    .explore-btn { background: var(--accent); border: none; padding: 14px 28px; border-radius: 25px; color: #000; cursor: pointer; box-shadow: 4px 4px 8px var(--shadow-in), -4px -4px 8px var(--shadow-out); font-size: 16px; margin: 24px auto; display: block; text-align: center; font-weight: bold; transition: all 0.3s ease; }
+    .explore-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.98); }
+    .jamb-alert { background: linear-gradient(135deg, rgba(255,193,7,0.15), rgba(255,152,0,0.1)); border: 1px solid rgba(255,193,7,0.4); border-radius: 12px; padding: 16px; margin: 20px 0; }
+    .jamb-alert h4 { color: #ffc107; margin-bottom: 10px; font-size: 15px; }
+    .jamb-alert ul { margin: 0; padding-left: 18px; }
+    .jamb-alert li { font-size: 13px; margin-bottom: 6px; }
+    .highlight-box { background: rgba(78,205,196,0.1); padding: 12px 16px; border-radius: 10px; margin: 12px 0; border-left: 3px solid var(--accent-tertiary); }
+    .type-badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; margin-right: 6px; }
+    .badge-structural { background: rgba(29,185,84,0.2); color: var(--accent); }
+    .badge-behavioural { background: rgba(255,107,107,0.2); color: var(--accent-secondary); }
+    .badge-functional { background: rgba(78,205,196,0.2); color: var(--accent-tertiary); }
+    .image-caption { text-align: center; font-size: 12px; color: var(--text-secondary); font-style: italic; margin-top: -8px; margin-bottom: 12px; }
+  </style>
+</head>
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">BIOLOGY</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📖 Bookmarked for later study!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>🦎 Structural & Behavioural Adaptations</h1>
+        <p class="subtitle">JAMB Chapter 3: How Organisms Survive Their Environment</p>
+      </div>
+
+      <!-- PART A: ADAPTIVE COLOURATION -->
+      <div class="section-card">
+        <h2>🎨 A. Adaptive Colouration</h2>
+        
+        <p><strong>Definition:</strong> Special coloration patterns that help organisms survive by blending with their environment or sending warning signals to predators/prey.</p>
+
+        <h3>1. Counter-Shading <span class="type-badge badge-structural">STRUCTURAL</span></h3>
+        
+        <img src="https://kimi-web-img.moonshot.cn/img/fiscian.com/218d37ce8b53b0c7fbf6e6145d9b5014c5bd7360.jpg" alt="Countershading in fish" class="diagram-img">
+        <p class="image-caption">Mackerel showing countershading: dark top, light bottom</p>
+
+        <div class="quick-facts">
+          <h4>🔍 Key Concept</h4>
+          <ul>
+            <li><strong>Dark on top, light underneath</strong></li>
+            <li>From above: Dark back blends with deep water/ground</li>
+            <li>From below: Light belly blends with sky/sunlight</li>
+          </ul>
+        </div>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Organism</th>
+              <th>Top Color</th>
+              <th>Bottom Color</th>
+              <th>Function</th>
+            </tr>
+            <tr>
+              <td><strong>Fish</strong> (mackerel, sharks)</td>
+              <td>Dark blue/black</td>
+              <td>Silvery-white</td>
+              <td>Camouflage from predators above & below</td>
+            </tr>
+            <tr>
+              <td><strong>Toads</strong></td>
+              <td>Brown/green</td>
+              <td>Pale cream</td>
+              <td>Hide from predators on land</td>
+            </tr>
+            <tr>
+              <td><strong>Snakes</strong> (grass snakes)</td>
+              <td>Dark olive</td>
+              <td>Yellowish-white</td>
+              <td>Blend with vegetation and sky</td>
+            </tr>
+            <tr>
+              <td><strong>Penguins</strong></td>
+              <td>Black</td>
+              <td>White</td>
+              <td>Hide from aquatic predators</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY TRICK:</strong>
+          <p>"Counter-shading = Counter-attack on visibility" — Think of it as wearing camouflage from both directions!</p>
+        </div>
+
+        <h3>2. Warning Colouration <span class="type-badge badge-structural">STRUCTURAL</span></h3>
+        
+        <img src="https://kimi-web-img.moonshot.cn/img/reptilesmagazine.com/cb279f7128a92e197eb4571ec02322959c9bcbbc.jpg" alt="Poison dart frog warning coloration" class="diagram-img">
+        <p class="image-caption">Poison dart frog: bright colors warn predators of toxicity</p>
+
+        <img src="https://kimi-web-img.moonshot.cn/img/www.popsci.com/8853d2859de4228365168007e2afe8951ff272bf.jpg" alt="Red poison dart frog" class="diagram-img">
+        <p class="image-caption">Red poison dart frog - classic aposematic coloration</p>
+
+        <div class="quick-facts">
+          <h4>⚠️ Key Concept</h4>
+          <ul>
+            <li>Bright, conspicuous colors (red, orange, yellow, black)</li>
+            <li>Signals: "I'm poisonous/dangerous — don't eat me!"</li>
+            <li>Opposite of hiding — meant to be seen!</li>
+          </ul>
+        </div>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Organism</th>
+              <th>Color Pattern</th>
+              <th>Defense Mechanism</th>
+            </tr>
+            <tr>
+              <td><strong>Mushrooms</strong> (Amanita)</td>
+              <td>Red with white spots</td>
+              <td>Contains deadly toxins</td>
+            </tr>
+            <tr>
+              <td><strong>Poison dart frogs</strong></td>
+              <td>Bright blue, yellow, red</td>
+              <td>Skin toxins (batrachotoxin)</td>
+            </tr>
+            <tr>
+              <td><strong>Monarch butterflies</strong></td>
+              <td>Orange & black</td>
+              <td>Toxic from milkweed diet</td>
+            </tr>
+            <tr>
+              <td><strong>Coral snakes</strong></td>
+              <td>Red, yellow, black bands</td>
+              <td>Venomous bite</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY TRICK:</strong>
+          <p>"Red/yellow = Dead fellow" — Bright colors are nature's stop signs!</p>
+        </div>
+      </div>
+
+      <!-- PART B: BEHAVIOURAL ADAPTATIONS -->
+      <div class="section-card">
+        <h2>🐝 B. Behavioural Adaptations in Social Animals</h2>
+
+        <h3>1. Termite Castes (Social Insects)</h3>
+        
+        <img src="https://kimi-web-img.moonshot.cn/img/cdn.britannica.com/e232a51f6b22674003789f29b42fb3a0e100a322.jpg" alt="Termite castes diagram" class="diagram-img">
+        <p class="image-caption">Termite castes: Queen, King, Workers, Soldiers, and Reproductives</p>
+
+        <img src="https://kimi-web-img.moonshot.cn/img/www.loyalpest.com/4c25cd479d72d795c58c12d815f67097308ec618.jpg" alt="Termite life cycle" class="diagram-img">
+        <p class="image-caption">Termite life cycle showing development into different castes</p>
+
+        <div class="quick-facts">
+          <h4>🏰 The Colony Structure</h4>
+          <ul>
+            <li>Division of labor — each caste has specialized function</li>
+            <li>Cooperative care of young</li>
+            <li>Overlap of generations (workers help raise siblings)</li>
+          </ul>
+        </div>
+
+        <div class="table-container">
+          <table class="summary-table wide">
+            <tr>
+              <th>Caste</th>
+              <th>Appearance</th>
+              <th>Function</th>
+              <th>Key Feature</th>
+            </tr>
+            <tr>
+              <td><strong>Queen</strong></td>
+              <td>Largest, swollen abdomen</td>
+              <td>Egg production</td>
+              <td>Lays 6,000-7,000 eggs/day</td>
+            </tr>
+            <tr>
+              <td><strong>King</strong></td>
+              <td>Smaller, winged initially</td>
+              <td>Mates with queen</td>
+              <td>Stays with queen for life</td>
+            </tr>
+            <tr>
+              <td><strong>Workers</strong></td>
+              <td>Most numerous, wingless, soft</td>
+              <td>Build, forage, feed, care</td>
+              <td>Blind, sterile, do all work</td>
+            </tr>
+            <tr>
+              <td><strong>Soldiers</strong></td>
+              <td>Large heads, powerful jaws</td>
+              <td>Defend colony</td>
+              <td>Cannot feed themselves!</td>
+            </tr>
+            <tr>
+              <td><strong>Reproductives (Alates)</strong></td>
+              <td>Winged, dark-colored</td>
+              <td>Start new colonies</td>
+              <td>Leave during nuptial flight</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY TRICK:</strong>
+          <p>"King & Queen make babies, Workers work, Soldiers guard, Alates relocate!"</p>
+        </div>
+
+        <h3>2. Basking in Lizards <span class="type-badge badge-behavioural">BEHAVIOURAL</span></h3>
+        
+        <img src="https://kimi-web-img.moonshot.cn/img/talltimbers-org.exactdn.com/613dac519dc7071abd35ca5227308b66a926f50a.jpg" alt="Toad basking" class="diagram-img">
+        <p class="image-caption">Basking behaviour: absorbing heat from the environment</p>
+
+        <div class="highlight-box">
+          <p><strong>What:</strong> Lizards lie in sun to warm up</p>
+          <p><strong>Why:</strong> They are ectotherms (cold-blooded) — need external heat for:</p>
+          <ul>
+            <li>Increased metabolism</li>
+            <li>Activity for hunting</li>
+            <li>Digestion of food</li>
+          </ul>
+          <p><strong>When:</strong> Early morning (after cold night)</p>
+        </div>
+
+        <h3>3. Territorial Behaviour <span class="type-badge badge-behavioural">BEHAVIOURAL</span></h3>
+        
+        <img src="https://kimi-web-img.moonshot.cn/img/alephrocco.com/2f3e9c72600ca1d49e3abe4a1963c3aac1d93e8c.jpg" alt="Red-headed agama lizard" class="diagram-img">
+        <p class="image-caption">Red-headed agama lizard: bright colors signal territory and fitness</p>
+
+        <img src="https://kimi-web-img.moonshot.cn/img/www.naturepl.com/ee041ef97512ee2a9ab2c4603cab3b0a8e63dd6f.jpg" alt="Agama lizard on tree" class="diagram-img">
+        <p class="image-caption">Male agama displaying bright colors to defend territory</p>
+
+        <div class="highlight-box">
+          <p><strong>Definition:</strong> Defending specific area against same-species intruders</p>
+          <p><strong>Purposes:</strong></p>
+          <ul>
+            <li>Secures food resources</li>
+            <li>Attracts mates (shows fitness)</li>
+            <li>Protects breeding/nesting sites</li>
+          </ul>
+          <p><strong>Examples:</strong> Male lions, singing birds, red-headed agama lizards</p>
+        </div>
+
+        <h3>4. Hibernation vs. Aestivation <span class="type-badge badge-behavioural">BEHAVIOURAL</span></h3>
+        
+        <img src="https://kimi-web-img.moonshot.cn/img/bear.org/ca72ee16b132cae8ece85005a8c414fb24ce3d5b.jpg" alt="Hibernating bear" class="diagram-img">
+        <p class="image-caption">Bear in winter den during hibernation</p>
+
+        <img src="https://kimi-web-img.moonshot.cn/img/biology.unm.edu/177e8dc47b968fb8ac8039caf3833c598c5f505f" alt="Lungfish aestivation" class="diagram-img">
+        <p class="image-caption">African lungfish in aestivation cocoon during dry season</p>
+
+        <img src="https://kimi-web-img.moonshot.cn/img/cdn.imago-images.com/ffb71628e50188352c11ebc3fb793ed687f9d054.jpg" alt="Lungfish mud cocoon" class="diagram-img">
+        <p class="image-caption">Lungfish buried in mud with mucus cocoon for aestivation</p>
+
+        <div class="comparison-grid">
+          <div class="comparison-card">
+            <h5>❄️ HIBERNATION</h5>
+            <ul>
+              <li><strong>When:</strong> Winter</li>
+              <li><strong>Why:</strong> Escape cold + food shortage</li>
+              <li><strong>Animals:</strong> Bears, hedgehogs, bats</li>
+              <li><strong>Body:</strong> Slow heartbeat, low temp</li>
+            </ul>
+          </div>
+          <div class="comparison-card">
+            <h5>☀️ AESTIVATION</h5>
+            <ul>
+              <li><strong>When:</strong> Summer</li>
+              <li><strong>Why:</strong> Escape heat + drought</li>
+              <li><strong>Animals:</strong> Lungfish, snails, crocodiles</li>
+              <li><strong>Body:</strong> Burrow in mud, mucus cocoon</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY TRICK:</strong>
+          <p>"HiberNATION = Winter NATION" | "AestiVATION = Summer VACATION"</p>
+        </div>
+
+        <div class="jamb-alert">
+          <h4>🌟 SPECIAL CASE: Lungfish</h4>
+          <ul>
+            <li>Lives in African rivers that dry up seasonally</li>
+            <li>Burrows into mud, secretes mucus cocoon</li>
+            <li>Breathes air through lungs (not just gills!)</li>
+            <li>Can survive months/years without water</li>
+            <li><strong>Key adaptation:</strong> Both gills AND lungs</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- PART C: STRUCTURAL ADAPTATIONS -->
+      <div class="section-card">
+        <h2>🔧 C. Structural Adaptations</h2>
+
+        <h3>1. Obtaining Food</h3>
+        
+        <h4>Bird Beaks & Legs</h4>
+        <div class="table-container">
+          <table class="summary-table wide">
+            <tr>
+              <th>Beak Type</th>
+              <th>Structure</th>
+              <th>Function</th>
+              <th>Example</th>
+            </tr>
+            <tr>
+              <td><strong>Conical/Short</strong></td>
+              <td>Thick, strong</td>
+              <td>Crack hard seeds</td>
+              <td>Finch, sparrow</td>
+            </tr>
+            <tr>
+              <td><strong>Thin/Pointed</strong></td>
+              <td>Tweezer-like</td>
+              <td>Pick insects from bark</td>
+              <td>Warbler</td>
+            </tr>
+            <tr>
+              <td><strong>Long/Curved</strong></td>
+              <td>Slender, curved</td>
+              <td>Reach into flowers for nectar</td>
+              <td>Sunbird, hummingbird</td>
+            </tr>
+            <tr>
+              <td><strong>Long/Sharp</strong></td>
+              <td>Spear-like</td>
+              <td>Spear fish</td>
+              <td>Kingfisher, heron</td>
+            </tr>
+            <tr>
+              <td><strong>Hooked</strong></td>
+              <td>Sharp, curved tip</td>
+              <td>Tear flesh/meat</td>
+              <td>Eagle, hawk, vulture</td>
+            </tr>
+            <tr>
+              <td><strong>Broad/Flat</strong></td>
+              <td>Comb-like edges</td>
+              <td>Strain plankton/water</td>
+              <td>Flamingo, duck</td>
+            </tr>
+            <tr>
+              <td><strong>Chisel-like</strong></td>
+              <td>Strong, pointed</td>
+              <td>Drill into wood</td>
+              <td>Woodpecker</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <h4>Bird Legs</h4>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Leg Type</th>
+              <th>Structure</th>
+              <th>Function</th>
+              <th>Example</th>
+            </tr>
+            <tr>
+              <td><strong>Webbed feet</strong></td>
+              <td>Toes connected by skin</td>
+              <td>Swimming/paddling</td>
+              <td>Duck, goose, penguin</td>
+            </tr>
+            <tr>
+              <td><strong>Long, thin legs</strong></td>
+              <td>Elongated tibia</td>
+              <td>Wading in shallow water</td>
+              <td>Heron, flamingo, stork</td>
+            </tr>
+            <tr>
+              <td><strong>Strong talons</strong></td>
+              <td>Sharp, curved claws</td>
+              <td>Catching/holding prey</td>
+              <td>Eagle, owl, hawk</td>
+            </tr>
+            <tr>
+              <td><strong>Perching feet</strong></td>
+              <td>3 toes forward, 1 back</td>
+              <td>Gripping branches</td>
+              <td>Sparrow, finch, crow</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <h4>Insect Mouthparts (JAMB Favorites!)</h4>
+        
+        <img src="https://kimi-web-img.moonshot.cn/img/c8.alamy.com/41b9d4120afd5dfc29a84bff738f43f366bc67b2.jpg" alt="Mosquito piercing skin" class="diagram-img">
+        <p class="image-caption">Mosquito using piercing-sucking proboscis to feed</p>
+
+        <img src="https://kimi-web-img.moonshot.cn/img/blogger.googleusercontent.com/e0ee1487f4bf267a2d7713cd206a574df0ba7ae9.jpg" alt="Butterfly coiled proboscis" class="diagram-img">
+        <p class="image-caption">Butterfly with coiled siphoning proboscis (like a drinking straw)</p>
+
+        <div class="table-container">
+          <table class="summary-table wide">
+            <tr>
+              <th>Insect</th>
+              <th>Mouthpart</th>
+              <th>Structure</th>
+              <th>Function</th>
+            </tr>
+            <tr>
+              <td><strong>Mosquito</strong> ♀️</td>
+              <td>Piercing-sucking</td>
+              <td>Needle-like proboscis</td>
+              <td>Pierce skin, suck blood</td>
+            </tr>
+            <tr>
+              <td><strong>Butterfly</strong></td>
+              <td>Siphoning</td>
+              <td>Long, coiled proboscis</td>
+              <td>Unroll to sip nectar</td>
+            </tr>
+            <tr>
+              <td><strong>Moth</strong></td>
+              <td>Siphoning</td>
+              <td>Long proboscis (feathery antennae)</td>
+              <td>Sip nectar (some adults don't eat!)</td>
+            </tr>
+            <tr>
+              <td><strong>Grasshopper</strong></td>
+              <td>Biting-chewing</td>
+              <td>Strong mandibles</td>
+              <td>Chew leaves/grass</td>
+            </tr>
+            <tr>
+              <td><strong>Housefly</strong></td>
+              <td>Sponging</td>
+              <td>Spongy labellum</td>
+              <td>Soak up liquid food</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY TRICKS:</strong>
+          <p>"Mosquito = Medical syringe" (needle proboscis)</p>
+          <p>"Butterfly = Built-in straw" (coiled proboscis)</p>
+        </div>
+
+        <h3>2. Protection & Defence</h3>
+        
+        <img src="https://kimi-web-img.moonshot.cn/img/woodandfield.wordpress.com/321f0fbac6dcbfd1126f78a4bd2c6e69be8d87d0.jpg" alt="Stick insect camouflage" class="diagram-img">
+        <p class="image-caption">Stick insect: perfect twig mimicry for camouflage</p>
+
+        <img src="https://kimi-web-img.moonshot.cn/img/media.springernature.com/3f765b59c22944d9ff7e497a76d33de01fa66d08.png" alt="Praying mantis raptorial forelegs" class="diagram-img">
+        <p class="image-caption">Praying mantis raptorial forelegs: spiked traps for catching prey</p>
+
+        <div class="table-container">
+          <table class="summary-table wide">
+            <tr>
+              <th>Organism</th>
+              <th>Adaptation</th>
+              <th>How It Works</th>
+            </tr>
+            <tr>
+              <td><strong>Stick Insect</strong></td>
+              <td>Camouflage (mimicry)</td>
+              <td>Body looks exactly like twigs; moves like swaying branches</td>
+            </tr>
+            <tr>
+              <td><strong>Praying Mantis</strong></td>
+              <td>Camouflage + raptorial forelegs</td>
+              <td>Looks like leaves; front legs folded like "praying" but are spiked traps</td>
+            </tr>
+            <tr>
+              <td><strong>Toad</strong></td>
+              <td>Poison glands + camouflage</td>
+              <td>Parotoid glands behind eyes secrete bufotoxin; skin matches ground</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY TRICKS:</strong>
+          <p>"Stick insect plays 'stick' to survive"</p>
+          <p>"Praying = Preying" (those hands are weapons!)</p>
+        </div>
+
+        <h3>3. Securing Mates (Reproductive Adaptations)</h3>
+        
+        <img src="https://kimi-web-img.moonshot.cn/img/alephrocco.com/2f3e9c72600ca1d49e3abe4a1963c3aac1d93e8c.jpg" alt="Red-headed agama display" class="diagram-img">
+        <p class="image-caption">Male red-headed agama: bright colors attract females and signal fitness</p>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Organism</th>
+              <th>Adaptation</th>
+              <th>Purpose</th>
+            </tr>
+            <tr>
+              <td><strong>Red-headed Agama</strong> (male)</td>
+              <td>Bright red/orange head</td>
+              <td>Attract females; signal health/fitness</td>
+            </tr>
+            <tr>
+              <td><strong>Agama lizard</strong></td>
+              <td>Head-bobbing, push-ups</td>
+              <td>Courtship display; show strength</td>
+            </tr>
+            <tr>
+              <td><strong>Birds of Paradise</strong></td>
+              <td>Elaborate feather displays</td>
+              <td>Dance to impress females</td>
+            </tr>
+            <tr>
+              <td><strong>Peacock</strong></td>
+              <td>Large colorful tail</td>
+              <td>"Eyes" on tail attract peahens</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <div class="highlight-box">
+          <p><strong>Key Point:</strong> Usually <strong>males</strong> are more colorful because they compete for females. Females choose mates based on display quality (indicator of good genes).</p>
+        </div>
+
+        <h3>4. Regulating Body Temperature</h3>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Feature</th>
+              <th>Organism</th>
+              <th>Mechanism</th>
+            </tr>
+            <tr>
+              <td><strong>Skin</strong></td>
+              <td>Mammals</td>
+              <td>Sweat glands (evaporative cooling); blood vessel dilation</td>
+            </tr>
+            <tr>
+              <td><strong>Feathers</strong></td>
+              <td>Birds</td>
+              <td>Fluff up to trap air (insulation); press down to release heat</td>
+            </tr>
+            <tr>
+              <td><strong>Hair/Fur</strong></td>
+              <td>Mammals</td>
+              <td>Thick coat in winter; thin/shed in summer; goosebumps trap air</td>
+            </tr>
+            <tr>
+              <td><strong>Scales</strong></td>
+              <td>Reptiles</td>
+              <td>Prevent water loss; absorb environmental heat</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY TRICK:</strong>
+          <p>"Feathers = Feature for Temperature" | "Hair = Heater (when fluffed)"</p>
+        </div>
+
+        <h3>5. Conserving Water</h3>
+        
+        <img src="https://kimi-web-img.moonshot.cn/img/www.kofastudy.com/6b47490811482b2c3a5e46369807a5ff832888b4.jpeg" alt="Cactus spines water conservation" class="diagram-img">
+        <p class="image-caption">Cactus spines: modified leaves that reduce water loss through transpiration</p>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Adaptation</th>
+              <th>Organism</th>
+              <th>Mechanism</th>
+            </tr>
+            <tr>
+              <td><strong>Spines</strong></td>
+              <td>Cacti, desert plants</td>
+              <td>Leaves modified to spines → reduce surface area → less transpiration</td>
+            </tr>
+            <tr>
+              <td><strong>Thick cuticle</strong></td>
+              <td>Desert plants</td>
+              <td>Waxy layer prevents evaporation</td>
+            </tr>
+            <tr>
+              <td><strong>Scales</strong></td>
+              <td>Pangolins, armadillos</td>
+              <td>Overlapping scales reduce water loss from skin</td>
+            </tr>
+            <tr>
+              <td><strong>No sweat glands</strong></td>
+              <td>Some desert mammals</td>
+              <td>Don't lose water through sweating</td>
+            </tr>
+            <tr>
+              <td><strong>Concentrated urine</strong></td>
+              <td>Kangaroo rat, camel</td>
+              <td>Remove maximum water from waste</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <div class="memory-tip">
+          <strong>🧠 MEMORY TRICK:</strong>
+          <p>"Spines = Survival" — No leaves = No water loss = Life in desert!</p>
+        </div>
+      </div>
+
+      <!-- EXAM TIPS -->
+      <div class="jamb-alert">
+        <h4>⚠️ CRITICAL JAMB EXAM TIPS</h4>
+        <ul>
+          <li><strong>Countershading:</strong> Dark top, light bottom — know examples (fish, toads, snakes)</li>
+          <li><strong>Warning colouration:</strong> Bright = Toxic — mushrooms, poison dart frogs</li>
+          <li><strong>Termite castes:</strong> Know functions of Queen, King, Workers, Soldiers, Alates</li>
+          <li><strong>Hibernation vs. Aestivation:</strong> Winter sleep vs. Summer sleep</li>
+          <li><strong>Lungfish:</strong> Can survive drought via aestivation — JAMB favorite!</li>
+          <li><strong>Mosquito mouthpart:</strong> Piercing-sucking (only female bites)</li>
+          <li><strong>Butterfly mouthpart:</strong> Siphoning (coiled proboscis)</li>
+          <li><strong>Stick insect:</strong> Camouflage (structural adaptation)</li>
+          <li><strong>Praying mantis:</strong> Raptorial forelegs for catching prey</li>
+          <li><strong>Agama lizard:</strong> Red head = male display for mating</li>
+          <li><strong>Structural vs. Behavioural:</strong> Physical parts vs. Actions</li>
+        </ul>
+      </div>
+
+      <!-- QUICK REVISION -->
+      <div class="section-card">
+        <h2>📋 Quick Revision Checklist</h2>
+        
+        <h3>Must-Know Definitions:</h3>
+        <div class="quick-facts">
+          <ul>
+            <li><strong>Countershading:</strong> Dark top, light bottom (hiding from predators)</li>
+            <li><strong>Warning colouration:</strong> Bright colors (toxic/dangerous warning)</li>
+            <li><strong>Hibernation:</strong> Winter sleep (cold escape)</li>
+            <li><strong>Aestivation:</strong> Summer sleep (heat/drought escape)</li>
+            <li><strong>Caste system:</strong> Division of labor in social insects</li>
+            <li><strong>Ectotherm:</strong> Cold-blooded (needs external heat)</li>
+          </ul>
+        </div>
+
+        <h3>Must-Know Examples:</h3>
+        <div class="comparison-grid">
+          <div class="comparison-card">
+            <h5>Structural</h5>
+            <ul>
+              <li>Countershading: Fish, toads, snakes</li>
+              <li>Warning: Mushrooms, poison frogs</li>
+              <li>Beaks: Finch, eagle, hummingbird</li>
+              <li>Camouflage: Stick insect, mantis</li>
+            </ul>
+          </div>
+          <div class="comparison-card">
+            <h5>Behavioural</h5>
+            <ul>
+              <li>Basking: Lizards</li>
+              <li>Hibernation: Bears</li>
+              <li>Aestivation: Lungfish</li>
+              <li>Display: Agama lizard</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- MNEMONICS SUMMARY -->
+      <div class="section-card">
+        <h2>🧩 Mnemonics Summary</h2>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Topic</th>
+              <th>Mnemonic</th>
+            </tr>
+            <tr>
+              <td>Countershading</td>
+              <td>"Dark top, light bottom = Can't spot 'em"</td>
+            </tr>
+            <tr>
+              <td>Warning colors</td>
+              <td>"Red/yellow = Dead fellow"</td>
+            </tr>
+            <tr>
+              <td>Termite castes</td>
+              <td>"King & Queen make Workers work, Soldiers guard, Alates relocate"</td>
+            </tr>
+            <tr>
+              <td>Hibernation</td>
+              <td>"HiberNATION = Winter NATION"</td>
+            </tr>
+            <tr>
+              <td>Aestivation</td>
+              <td>"AestiVATION = Summer VACATION"</td>
+            </tr>
+            <tr>
+              <td>Mosquito</td>
+              <td>"Mosquito = Medical needle"</td>
+            </tr>
+            <tr>
+              <td>Butterfly</td>
+              <td>"Butterfly = Built-in straw"</td>
+            </tr>
+            <tr>
+              <td>Stick insect</td>
+              <td>"Plays 'stick' to survive"</td>
+            </tr>
+            <tr>
+              <td>Praying mantis</td>
+              <td>"Praying = Preying"</td>
+            </tr>
+            <tr>
+              <td>Spines (plants)</td>
+              <td>"Spines = Survival"</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+      </div>
+
+      <p style="text-align: center; font-size: 16px; margin: 32px 0; font-weight: bold; color: var(--accent);">
+        🌟 Master these adaptations, ace your JAMB! 🌟
+      </p>
+
+      <button class="explore-btn" onclick="alert('Practice JAMB past questions on Adaptations!')">Practice JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item">
+      <button class="neumorphic-btn">🔍</button>
+      <p>Search</p>
+    </div>
+    <div class="nav-item center">
+      <button class="neumorphic-btn">⭐</button>
+      <p>Favorite</p>
+    </div>
+    <div class="nav-item">
+      <button class="neumorphic-btn">📚</button>
+      <p>Library</p>
+    </div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme) {
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const newTheme = body.classList.contains('light') ? 'dark' : 'light';
+      setTheme(newTheme);
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      const scrolled = (scrollTop / scrollHeight) * 100;
+      progressBar.style.width = scrolled + '%';
+    });
+  </script>
+</body>
+</html>

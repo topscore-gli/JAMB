@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Biology - Transport System</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Biology</h1>
+      <p>Transport System<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Transport System</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 70:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration
+const CONFIG={TIME:4200,PASS:60}; // 70 minutes for 70 questions
+
+// Section mapping - variable section sizes (5,10,20,15,10,10)
+const SECTIONS={
+  0:"A: Why Do We Need Transport?",
+  5:"B: Materials for Transportation",
+  15:"C(i): Mammalian Circulatory System",
+  35:"C(ii): Plant Vascular System",
+  50:"D: Media & Mechanisms of Transportation",
+  60:"E: Circulatory System Types & Comparisons"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 70 JAMB Biology Transport System Questions
+const QUIZ_DATA=[
+  // Section A: Why Do We Need Transport? (Questions 1-5)
+  {q:"A circulatory system is very essential in mammals but not in smaller organisms like Amoeba because",o:["Amoeba lives in freshwater","Diffusion is sufficient to transport materials in Amoeba","Amoeba lacks blood containing haemoglobin","Amoeba exhibits anaerobic respiration"],a:1,e:"Small organisms have high surface area to volume ratio, making diffusion adequate for material transport without specialized systems."},
+  {q:"As organisms increase in size and complexity, they need a transport system because",o:["Their cells become less active","Diffusion becomes too slow to meet metabolic demands","They produce less waste materials","Their surface area increases faster than volume"],a:1,e:"Large organisms have low SA:V ratio; diffusion distance becomes too great for efficient nutrient/waste exchange."},
+  {q:"Which of the following organisms does NOT require a specialized transport system?",o:["Earthworm","Cockroach","Paramecium","Rat"],a:2,e:"Paramecium is unicellular; cytoplasmic streaming and diffusion suffice for transport."},
+  {q:"The relationship between surface area to volume ratio and the need for a transport system is that",o:["High SA:V ratio requires complex transport systems","Low SA:V ratio makes diffusion efficient","Low SA:V ratio necessitates specialized transport systems","SA:V ratio has no effect on transport mechanisms"],a:2,e:"As organisms grow larger, volume increases faster than surface area (low SA:V), making diffusion insufficient."},
+  {q:"Which factor necessitates the evolution of transport systems in multicellular organisms?",o:["Decrease in metabolic rate","Increase in surface area to volume ratio","Decrease in surface area to volume ratio","Reduction in number of cells"],a:2,e:"Decreasing SA:V ratio with increasing size creates diffusion limitations, requiring circulatory systems."},
+  
+  // Section B: Materials for Transportation (Questions 6-15)
+  {q:"The end product of protein digestion transported to the liver via the hepatic portal vein is mainly in the form of",o:["Glycerol","Glucose","Amino acids","Fatty acids"],a:2,e:"Proteins are digested into amino acids, which are transported to the liver first for processing before entering general circulation."},
+  {q:"Urea is transported from the liver to the kidneys for excretion through the",o:["Hepatic portal vein","Hepatic artery","Renal artery","Blood plasma"],a:3,e:"Urea dissolves in blood plasma and is transported through the general circulatory system to kidneys."},
+  {q:"Which of the following substances is transported in the phloem tissue of plants?",o:["Water and mineral salts","Oxygen and carbon dioxide","Sucrose and amino acids","Hormones only"],a:2,e:"Phloem transports manufactured food (sucrose/sugar) and amino acids from leaves to other plant parts."},
+  {q:"Carbon dioxide is transported in mammalian blood mainly as",o:["Dissolved gas in plasma","Carbaminohaemoglobin","Bicarbonate ions","Oxyhaemoglobin"],a:2,e:"About 70% of CO₂ is transported as bicarbonate ions (HCO₃⁻) dissolved in plasma."},
+  {q:"The form in which oxygen is transported in the blood is",o:["Dissolved in plasma","Oxyhaemoglobin","Carboxyhaemoglobin","Bicarbonate ions"],a:1,e:"Oxygen binds to haemoglobin in red blood cells forming oxyhaemoglobin for transport."},
+  {q:"Which material is transported from the soil to plant leaves through the xylem?",o:["Starch","Sucrose","Water and mineral salts","Carbon dioxide"],a:2,e:"Xylem transports water and dissolved mineral salts upward from roots to leaves."},
+  {q:"The hepatic portal vein is unique because it carries",o:["Oxygenated blood to the liver","Blood from the liver to the heart","Digested food from intestine to liver before general circulation","Deoxygenated blood from liver to kidneys"],a:2,e:"The hepatic portal vein transports nutrient-rich blood from intestines to liver for processing first (detoxification, glycogen storage)."},
+  {q:"Which hormone is transported from the pancreas to target cells to lower blood glucose?",o:["Glucagon","Insulin","Adrenaline","Thyroxine"],a:1,e:"Insulin is produced by pancreatic β-cells and transported via blood to stimulate glucose uptake by cells."},
+  {q:"In plants, manufactured food is transported from the leaves to storage organs as",o:["Glucose","Starch","Sucrose","Cellulose"],a:2,e:"Photosynthetically produced glucose is converted to sucrose (disaccharide) for transport in phloem."},
+  {q:"Excess amino acids are deaminated in the liver to produce",o:["Glycogen and glucose","Urea and keto acids","Fatty acids and glycerol","Starch and cellulose"],a:1,e:"Deamination removes nitrogen (forms urea for excretion) leaving keto acids for energy production."},
+  
+  // Section C(i): Mammalian Circulatory System (Questions 16-35)
+  {q:"Which chamber of the human heart has the thickest muscular wall?",o:["Right atrium","Left atrium","Right ventricle","Left ventricle"],a:3,e:"The left ventricle pumps oxygenated blood to the entire body, requiring the most forceful contraction."},
+  {q:"The pulmonary artery is unique because it is the only artery that carries",o:["Oxygenated blood","Deoxygenated blood","Blood to the heart","Blood under low pressure"],a:1,e:"Pulmonary artery carries deoxygenated blood from right ventricle to lungs for oxygenation—exception to the rule."},
+  {q:"Which blood vessel carries oxygenated blood from the lungs to the heart?",o:["Pulmonary artery","Pulmonary vein","Aorta","Vena cava"],a:1,e:"Pulmonary vein is the only vein carrying oxygenated blood, returning it from lungs to left atrium."},
+  {q:"The function of the septum in the heart is to",o:["Pump blood to the body","Prevent mixing of oxygenated and deoxygenated blood","Receive blood from the lungs","Connect arteries to veins"],a:1,e:"The septum (interatrial and interventricular) completely separates left and right sides of the heart."},
+  {q:"Which blood vessel supplies oxygenated blood to the kidneys?",o:["Renal vein","Hepatic artery","Renal artery","Pulmonary artery"],a:2,e:"Renal artery branches from aorta delivering oxygenated blood to kidneys for filtration."},
+  {q:"Blood leaving the right ventricle passes through the pulmonary artery to the",o:["Kidneys","Liver","Lungs","Brain"],a:2,e:"Right ventricle → pulmonary artery → lungs (pulmonary circulation for gas exchange)."},
+  {q:"Which of the following blood vessels has valves to prevent backflow of blood?",o:["Arteries","Capillaries","Veins","Arterioles"],a:2,e:"Veins have semilunar valves to ensure one-way flow back to the heart against gravity."},
+  {q:"The hepatic portal vein connects the intestine to the",o:["Heart","Liver","Kidneys","Spleen"],a:1,e:"'Hepatic' refers to liver; this vein forms a portal system between intestinal and liver capillaries."},
+  {q:"Which chamber of the heart receives deoxygenated blood from the body?",o:["Left atrium","Left ventricle","Right atrium","Right ventricle"],a:2,e:"Superior and inferior vena cava empty deoxygenated blood into the right atrium."},
+  {q:"The largest artery in the human body is the",o:["Pulmonary artery","Aorta","Carotid artery","Renal artery"],a:1,e:"Aorta emerges from left ventricle, distributing oxygenated blood to all body parts via systemic circulation."},
+  {q:"Exchange of materials between blood and tissues occurs in the",o:["Arteries","Veins","Capillaries","Venules"],a:2,e:"Capillaries have one-cell-thick walls allowing diffusion of gases, nutrients, and wastes."},
+  {q:"Which of the following correctly describes the flow of blood in systemic circulation?",o:["Left ventricle → aorta → arteries → capillaries → veins → vena cava → right atrium","Right ventricle → pulmonary artery → lungs → left atrium","Right atrium → right ventricle → lungs → left atrium","Left atrium → left ventricle → pulmonary artery → lungs"],a:0,e:"Systemic circulation carries oxygenated blood from left ventricle to body tissues and returns deoxygenated blood to right atrium."},
+  {q:"The contraction of the left ventricle is initiated by the",o:["Sino-atrial node","Atrio-ventricular node","Purkinje fibres","Vagus nerve"],a:2,e:"Electrical impulse travels from SA node → AV node → Bundle of His → Purkinje fibres, stimulating ventricular contraction."},
+  {q:"Which blood vessel returns blood from the kidneys to the heart?",o:["Renal artery","Renal vein","Hepatic vein","Portal vein"],a:1,e:"Renal vein carries filtered, deoxygenated blood from kidneys to inferior vena cava."},
+  {q:"The function of the bicuspid (mitral) valve is to",o:["Prevent backflow from aorta to left ventricle","Prevent backflow from left ventricle to left atrium","Prevent backflow from right ventricle to right atrium","Prevent backflow from pulmonary artery to right ventricle"],a:1,e:"The bicuspid valve guards the opening between left atrium and left ventricle, closing during ventricular contraction."},
+  {q:"Which of the following is NOT a characteristic of arteries?",o:["Thick muscular walls","Presence of valves","Carry blood away from heart","Elastic walls to withstand pressure"],a:1,e:"Arteries lack valves (except at heart exits); valves are characteristic of veins."},
+  {q:"The pulmonary circulation involves blood flow between the",o:["Heart and body tissues","Heart and lungs","Liver and intestine","Kidneys and heart"],a:1,e:"Pulmonary circulation: right heart → lungs → left heart for oxygenation."},
+  {q:"Which structure ensures that blood flows in one direction through the heart?",o:["Chordae tendineae only","Semilunar valves and atrioventricular valves","The septum only","Coronary arteries"],a:1,e:"AV valves (tricuspid, bicuspid) and semilunar valves (pulmonary, aortic) prevent backflow."},
+  {q:"The hepatic artery supplies blood to the",o:["Intestine","Liver","Kidneys","Spleen"],a:1,e:"Hepatic artery delivers oxygenated blood from aorta to liver tissue."},
+  {q:"Which of the following correctly pairs a blood vessel with its function?",o:["Pulmonary vein - carries deoxygenated blood to lungs","Aorta - carries deoxygenated blood to body","Vena cava - carries deoxygenated blood to heart","Hepatic portal vein - carries oxygenated blood to liver"],a:2,e:"Vena cava (superior and inferior) returns deoxygenated blood from body to right atrium."},
+  
+  // Section C(ii): Plant Vascular System (Questions 36-50)
+  {q:"In vascular plants, the sieve tubes and companion cells are present in the",o:["Cambium","Cortex","Xylem","Phloem"],a:3,e:"Phloem contains sieve tubes (for transport) and companion cells (metabolic support)."},
+  {q:"Which of the following is a characteristic of xylem vessels but NOT phloem?",o:["Living cells at maturity","Presence of cross walls","Lignified walls","Transport in both directions"],a:2,e:"Xylem vessels are lignified (woody) for support and water transport; phloem lacks lignin."},
+  {q:"The tissue responsible for transporting manufactured food from leaves to roots is the",o:["Xylem","Phloem","Cambium","Epidermis"],a:1,e:"Phloem conducts sucrose and amino acids from sources (leaves) to sinks (roots, fruits)."},
+  {q:"Which of the following statements about xylem is correct?",o:["It transports food downward","It consists of living cells","It transports water and minerals upward","It has perforated end walls"],a:2,e:"Xylem is dead tissue forming hollow tubes conducting water and minerals unidirectionally upward."},
+  {q:"In a dicot stem, the arrangement of vascular bundles shows",o:["Xylem outside, phloem inside","Xylem inside, phloem outside in a ring","Scattered bundles throughout","Xylem and phloem alternating in concentric circles"],a:1,e:"Dicots have vascular bundles in a ring with xylem (water) inner and phloem (food) outer."},
+  {q:"The end walls of phloem sieve tubes contain perforations called",o:["Pits","Sieve plates","Stomata","Lenticels"],a:1,e:"Sieve plates are perforated end walls allowing cytoplasmic connections between sieve tube elements."},
+  {q:"Which of the following is found in xylem but absent in phloem?",o:["Cytoplasm","Nucleus","Lignin","Mitochondria"],a:2,e:"Xylem vessels are lignified for structural support; phloem sieve tubes are non-lignified living cells."},
+  {q:"Water movement in xylem is mainly driven by",o:["Active transport","Transpiration pull","Root pressure only","Photosynthesis"],a:1,e:"Transpiration (water loss from leaves) creates negative pressure pulling water up the xylem column."},
+  {q:"Which tissue is responsible for the upward movement of water in tall trees?",o:["Phloem","Cambium","Xylem","Pith"],a:2,e:"Xylem vessels form continuous tubes from roots to leaves, enabling water ascent via transpiration pull."},
+  {q:"The vascular tissue in plants that conducts substances in both upward and downward directions is the",o:["Xylem","Phloem","Cambium","Cortex"],a:1,e:"Phloem translocates food from sources to sinks, which may be above or below (bidirectional)."},
+  {q:"Root pressure is responsible for",o:["Water movement in tall trees during the day","Guttation (water droplets on leaf margins)","Transpiration from leaf stomata","Photosynthesis in roots"],a:1,e:"Root pressure (osmotic water entry into xylem) causes guttation when transpiration is low (night)."},
+  {q:"Which of the following would increase the rate of transpiration in plants?",o:["High humidity","Low temperature","High wind speed","Closed stomata"],a:2,e:"Wind removes water vapor from leaf surface, maintaining steep diffusion gradient for transpiration."},
+  {q:"In monocot stems, vascular bundles are",o:["Arranged in a ring","Scattered throughout the ground tissue","Absent","Found only at the center"],a:1,e:"Monocots (maize, rice) have scattered vascular bundles, unlike dicots' ring arrangement."},
+  {q:"The cohesion-tension theory explains",o:["Movement of food in phloem","Ascent of water in xylem","Absorption of minerals by roots","Opening and closing of stomata"],a:1,e:"Cohesion (water molecules stick together) and tension (transpiration pull) explain xylem water ascent."},
+  {q:"Which structure in the root is responsible for active uptake of mineral ions?",o:["Root cap","Root hair cells","Xylem vessels","Phloem sieve tubes"],a:1,e:"Root hair cells have carrier proteins using ATP to transport minerals against concentration gradient."},
+  
+  // Section D: Media & Mechanisms of Transportation (Questions 51-60)
+  {q:"The liquid component of blood that transports dissolved substances is the",o:["Serum","Plasma","Lymph","Tissue fluid"],a:1,e:"Plasma (55% of blood) is the liquid medium transporting nutrients, hormones, wastes, and proteins."},
+  {q:"Which blood component has the greatest affinity for oxygen?",o:["Lymphocytes","Leucocytes","Erythrocytes","Thrombocytes"],a:2,e:"Erythrocytes (RBCs) contain haemoglobin which binds oxygen reversibly."},
+  {q:"The primary function of lymphocytes is to",o:["Transport oxygen","Clot blood","Fight infection","Transport hormones"],a:2,e:"Lymphocytes (WBCs) are immune cells producing antibodies and destroying pathogens."},
+  {q:"Which of the following is a component of blood but NOT of lymph?",o:["White blood cells","Red blood cells","Fats","Proteins"],a:1,e:"Lymph lacks RBCs and large plasma proteins; it contains WBCs, fats (from lacteals), and tissue fluid."},
+  {q:"The process by which water moves across a semi-permeable membrane from high to low water potential is called",o:["Diffusion","Osmosis","Active transport","Translocation"],a:1,e:"Osmosis is the passive movement of water molecules across a selectively permeable membrane."},
+  {q:"Plasmolysis occurs when a plant cell is placed in",o:["Pure water","Hypotonic solution","Hypertonic solution","Isotonic solution"],a:2,e:"Hypertonic solution (higher solute concentration) causes water to leave cell, shrinking protoplast from wall."},
+  {q:"A cell becomes turgid when",o:["Water leaves the vacuole","Water enters the cell by osmosis","The cell loses minerals","The cell membrane breaks"],a:1,e:"Water entry by osmosis (in hypotonic solution) presses cytoplasm against cell wall, making cell firm."},
+  {q:"Which mechanism requires energy in the form of ATP?",o:["Diffusion","Osmosis","Active transport","Transpiration"],a:2,e:"Active transport moves substances against concentration gradient using metabolic energy (ATP)."},
+  {q:"An example of active transport in plants is",o:["Absorption of water by root hairs","Movement of water in xylem","Uptake of mineral ions by root hair cells","Loss of water from stomata"],a:2,e:"Mineral ions in soil are less concentrated than in root cells; uptake requires energy against gradient."},
+  {q:"The tissue fluid that enters lymphatic vessels is called",o:["Blood plasma","Lymph","Serum","Cytoplasm"],a:1,e:"Lymph is formed when tissue fluid (plasma minus large proteins) drains into lymphatic capillaries."},
+  
+  // Section E: Circulatory System Types & Comparisons (Questions 61-70)
+  {q:"Which of the following animals has an open circulatory system?",o:["Earthworm","Fish","Cockroach","Mammals"],a:2,e:"Insects (cockroach) have open circulation where haemolymph flows freely in body cavity (haemocoel)."},
+  {q:"In an open circulatory system, blood",o:["Flows only in arteries","Bathes tissues directly in body cavity","Never returns to the heart","Flows only in veins"],a:1,e:"Blood (haemolymph) leaves vessels to flow around organs in haemocoel before returning to heart."},
+  {q:"Which is an advantage of a closed circulatory system over an open system?",o:["Requires less energy","Blood flows at lower pressure","More efficient distribution of materials","Simpler structure"],a:2,e:"Closed system allows faster, directed blood flow and higher pressure for efficient transport."},
+  {q:"The main difference between transpiration pull and root pressure is that",o:["Transpiration pull is stronger and operates during the day","Root pressure operates only in tall trees","Transpiration pull requires energy","Root pressure moves food, not water"],a:0,e:"Transpiration pull (suction from leaves) is powerful for tall trees; root pressure is weak, mainly nocturnal."},
+  {q:"Which of the following correctly compares xylem and phloem?",o:["Xylem is living; phloem is dead","Xylem transports food; phloem transports water","Xylem is lignified; phloem is not","Xylem moves bidirectionally; phloem moves upward only"],a:2,e:"Xylem vessels are lignified (dead cells) for support; phloem sieve tubes are non-lignified living cells."},
+  {q:"The similarity between arteries and veins is that both",o:["Have valves","Carry blood away from the heart","Have muscular walls","Are blood vessels"],a:3,e:"Both are components of the vascular system, though they differ in structure and blood direction."},
+  {q:"Which mechanism is responsible for the movement of sucrose in phloem?",o:["Transpiration pull","Root pressure","Translocation (pressure-flow hypothesis)","Cohesion-tension"],a:2,e:"Translocation involves active loading at source creating osmotic pressure that drives sap flow to sinks."},
+  {q:"Compared to diffusion, active transport differs because it",o:["Requires no energy","Moves substances down concentration gradient","Requires energy and moves against gradient","Occurs only in gases"],a:2,e:"Active transport uses ATP to pump substances from low to high concentration (against gradient)."},
+  {q:"Which of the following is a characteristic of both lymph and tissue fluid?",o:["Presence of red blood cells","High protein content","Absence of red blood cells","Presence in blood vessels only"],a:2,e:"Both lymph and tissue fluid lack RBCs; they contain some WBCs and dissolved substances."},
+  {q:"The primary structure responsible for pumping blood for circulation through the mammalian circulatory system is the",o:["Veins","Right auricle","Arteries","Left ventricle"],a:3,e:"The left ventricle generates the highest pressure to pump oxygenated blood to the entire body."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('transport_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('transport_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/70`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('transport_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=45?'Ready for JAMB!':pct>=38?'Good, review weak areas':pct>=30?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections - using actual section boundaries
+  const sectionStarts=[0,5,15,35,50,60,70];
+  const sectionNames=["A: Why Do We Need Transport?","B: Materials for Transportation","C(i): Mammalian Circulatory System","C(ii): Plant Vascular System","D: Media & Mechanisms of Transportation","E: Circulatory System Types & Comparisons"];
+  
+  for(let s=0;s<6;s++){
+    const start=sectionStarts[s];
+    const end=sectionStarts[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('transport_quiz_auth');
+  sessionStorage.removeItem('transport_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('transport_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('transport_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

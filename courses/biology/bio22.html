@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BIOLOGY - Biotechnology (JAMB)</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+
+    :root {
+      --background: #1e1e2f;
+      --shadow-in: #171723;
+      --shadow-out: #25253b;
+      --text-primary: #f0f0ff;
+      --text-secondary: #c0c0e0;
+      --accent: #1db954;
+      --card-bg: #2a2a3f;
+    }
+
+    body.light {
+      --background: #e0e0e0;
+      --shadow-in: #bebebe;
+      --shadow-out: #ffffff;
+      --text-primary: #1a1a1a;
+      --text-secondary: #444;
+      --accent: #1db954;
+      --card-bg: #f8f8f8;
+    }
+
+    body {
+      background: var(--background);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto;
+      background: var(--background);
+      border-radius: 20px;
+      box-shadow: 10px 10px 20px var(--shadow-in), -10px -10px 20px var(--shadow-out);
+      overflow: hidden;
+      min-height: 100vh;
+      position: relative;
+      padding-top: 70px;
+      padding-bottom: 80px;
+    }
+
+    .neumorphic {
+      background: var(--background);
+      box-shadow: 5px 5px 10px var(--shadow-in), -5px -5px 10px var(--shadow-out);
+      border-radius: 15px;
+    }
+
+    .neumorphic-btn {
+      background: var(--background);
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out);
+      cursor: pointer;
+      color: var(--text-primary);
+      font-size: 18px;
+    }
+
+    .neumorphic-btn:active {
+      box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out);
+    }
+
+    .top-bar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      max-width: 400px;
+      background: var(--background);
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 5px 10px var(--shadow-in);
+      z-index: 20;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .top-bar .header {
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--text-primary);
+    }
+
+    .top-bar .right-icons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .top-bar .profile-upload {
+      position: relative;
+    }
+
+    .top-bar .profile-upload input {
+      opacity: 0;
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+    }
+
+    .content {
+      padding: 20px 16px;
+      line-height: 1.6;
+    }
+
+    .main-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .main-header h1 {
+      font-size: 30px;
+      margin-bottom: 8px;
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .main-header p.subtitle {
+      font-size: 16px;
+      color: var(--text-secondary);
+    }
+
+    .section {
+      background: var(--card-bg);
+      padding: 24px 20px;
+      border-radius: 20px;
+      box-shadow: inset 4px 4px 10px var(--shadow-in), inset -4px -4px 10px var(--shadow-out);
+      margin-bottom: 30px;
+    }
+
+    .section h2 {
+      font-size: 22px;
+      margin: 0 0 16px;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .section h3 {
+      font-size: 18px;
+      margin: 24px 0 12px;
+      color: var(--accent);
+    }
+
+    .section p {
+      margin-bottom: 16px;
+      font-size: 15px;
+      color: var(--text-primary);
+    }
+
+    .section ul, .section ol {
+      padding-left: 24px;
+      margin: 16px 0;
+    }
+
+    .section li {
+      margin-bottom: 10px;
+      font-size: 15px;
+    }
+
+    .section .highlight {
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .diagram-img {
+      width: 100%;
+      border-radius: 12px;
+      margin: 16px 0 8px;
+      box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out);
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      margin: 16px 0;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .section table {
+      width: 100%;
+      min-width: 580px;
+      border-collapse: collapse;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out);
+    }
+
+    .section th,
+    .section td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .section th {
+      background: rgba(29, 185, 84, 0.2);
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .section tr:last-child td {
+      border-bottom: none;
+    }
+
+    .nav-bar {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      max-width: 400px;
+      background: var(--background);
+      padding: 10px;
+      display: flex;
+      justify-content: space-around;
+      box-shadow: 0 -5px 10px var(--shadow-in);
+      z-index: 20;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .nav-bar .nav-item {
+      text-align: center;
+      position: relative;
+    }
+
+    .nav-bar .nav-item button {
+      width: 40px;
+      height: 40px;
+      font-size: 18px;
+      color: var(--text-primary);
+    }
+
+    .nav-bar .nav-item.center button {
+      width: 50px;
+      height: 50px;
+      font-size: 24px;
+      background: var(--accent);
+      box-shadow: 0 0 15px var(--accent), 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out);
+      color: #000;
+    }
+
+    .nav-bar .nav-item p {
+      display: none;
+      font-size: 12px;
+      margin-top: 5px;
+      color: var(--text-primary);
+    }
+
+    .nav-bar .nav-item.active p {
+      display: block;
+    }
+  </style>
+</head>
+<body class="dark">
+  <div class="container">
+    <!-- Top Fixed Bar -->
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn">←</button>
+      <div class="header">BIOLOGY</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn profile-upload">
+          📷
+          <input type="file" accept="image/*" id="profile-upload">
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+      <div class="main-header">
+        <h1>Level Up Your Biology Knowledge! 🚀</h1>
+        <p class="subtitle">– JAMB Topic: Biotechnology</p>
+      </div>
+
+      <div class="section">
+        
+        <h2>Understanding What Biotechnology Is</h2>
+        <p>Let's start with the basics. Before diving into its applications, it's important to know what biotechnology means. This will make everything else easier to grasp.</p>
+        <p><strong>Definition of Biotechnology:</strong> Biotechnology is the use of living organisms, cells, or biological systems to develop or create products and technologies that improve our lives. It combines biology with technology to solve problems in various fields. In simple terms, it's like harnessing nature's tools (like bacteria, plants, or genes) to make things better, faster, or more efficiently. For example, it involves modifying genes or using microbes to produce useful substances.</p>
+        <p>Think of it as "bio" (life) + "technology" (tools and methods). It's not new—humans have used basic biotech for centuries, like fermenting food to make bread or beer—but modern biotech uses advanced science like genetic engineering.</p>
+        <p>Key Takeaway: Biotechnology isn't just lab stuff; it's practical and impacts everyday life. Now, let's move to its applications, one field at a time.</p>
+
+<grok:render card_id="d7902d,4f5ea7" card_type="image_card_group"></grok:render>
+
+        <h2>Step 1: Applications of Biotechnology in Agriculture</h2>
+        <p>Agriculture is one of the biggest areas where biotechnology shines. It helps farmers grow more food with fewer resources, fight pests, and adapt to challenges like climate change. Here's how:</p>
+        <ul>
+          <li><strong>Genetic Modification of Crops:</strong> Scientists alter plant genes to make them resistant to pests, diseases, or harsh weather. For instance, Bt corn is engineered to produce a protein from bacteria that kills pests naturally, reducing the need for chemical pesticides. This leads to higher yields and lower costs.</li>
+          <li><strong>Improved Seed Quality:</strong> Biotech creates seeds that grow faster or need less water. Examples include drought-resistant maize or rice with added vitamins to fight malnutrition in developing countries.</li>
+          <li><strong>Animal Biotechnology:</strong> In livestock, it's used for breeding healthier animals or producing vaccines. Aquaculture (fish farming) benefits too, with biotech maximizing growth and disease resistance in fish like salmon.</li>
+          <li><strong>Soil and Fertilizer Enhancements:</strong> Microbes are engineered to improve soil fertility or help plants absorb nutrients better, promoting sustainable farming.</li>
+        </ul>
+        <p>Why It Matters: These applications help feed a growing world population while reducing environmental harm from chemicals. To learn this, remember: Biotech in agriculture = better crops, healthier animals, sustainable practices.</p>
+
+<grok:render card_id="2afe70,0da826,f62f97" card_type="image_card_group"></grok:render>
+
+        <div class="table-wrapper">
+          <table>
+            <tr>
+              <th>Application</th>
+              <th>Example</th>
+              <th>Benefit</th>
+            </tr>
+            <tr>
+              <td>GM Crops</td>
+              <td>Bt Corn</td>
+              <td>Pest resistance, reduced pesticides</td>
+            </tr>
+            <tr>
+              <td>Improved Seeds</td>
+              <td>Golden Rice</td>
+              <td>Vitamin A enrichment</td>
+            </tr>
+            <tr>
+              <td>Animal Biotech</td>
+              <td>Vaccines for livestock</td>
+              <td>Healthier animals, higher yield</td>
+            </tr>
+            <tr>
+              <td>Soil Enhancement</td>
+              <td>Biofertilizers</td>
+              <td>Better nutrient absorption</td>
+            </tr>
+          </table>
+        </div>
+
+        <h2>Step 2: Applications of Biotechnology in Medicine</h2>
+        <p>In medicine, biotechnology revolutionizes how we diagnose, treat, and prevent diseases. It focuses on using biology to heal the body at a cellular level.</p>
+        <ul>
+          <li><strong>Gene Therapy:</strong> This fixes faulty genes causing diseases like cystic fibrosis or certain cancers. Doctors insert healthy genes into cells using viruses as "delivery vehicles."</li>
+          <li><strong>Vaccines and Diagnostics:</strong> Biotech produces vaccines (e.g., mRNA vaccines for COVID-19) faster and more effectively. It also creates quick tests for diseases like HIV or diabetes using biomarkers.</li>
+          <li><strong>Stem Cell Therapy:</strong> Stem cells are grown in labs to repair damaged tissues, such as in treating spinal cord injuries or heart disease.</li>
+          <li><strong>Personalized Medicine:</strong> By analyzing a person's DNA, treatments can be tailored—like choosing the right cancer drug based on genetic makeup.</li>
+        </ul>
+        <p>Why It Matters: It shifts medicine from "one-size-fits-all" to targeted, effective care, saving lives and reducing side effects. Tip for understanding: Think of biotech as a "body mechanic" fixing problems from the inside.</p>
+
+<grok:render card_id="ee8a13,d02768" card_type="image_card_group"></grok:render>
+
+        <div class="table-wrapper">
+          <table>
+            <tr>
+              <th>Application</th>
+              <th>Example</th>
+              <th>Benefit</th>
+            </tr>
+            <tr>
+              <td>Gene Therapy</td>
+              <td>Fixing cystic fibrosis genes</td>
+              <td>Cures genetic disorders</td>
+            </tr>
+            <tr>
+              <td>Vaccines</td>
+              <td>mRNA COVID vaccine</td>
+              <td>Rapid response to pandemics</td>
+            </tr>
+            <tr>
+              <td>Stem Cells</td>
+              <td>Spinal cord repair</td>
+              <td>Tissue regeneration</td>
+            </tr>
+            <tr>
+              <td>Personalized Medicine</td>
+              <td>DNA-based cancer drugs</td>
+              <td>Targeted treatments</td>
+            </tr>
+          </table>
+        </div>
+
+        <h2>Step 3: Applications of Biotechnology in Pharmaceuticals</h2>
+        <p>Pharmaceuticals overlap with medicine but focus on drug development and production. Biotech makes drugs safer, cheaper, and more potent.</p>
+        <ul>
+          <li><strong>Production of Insulin and Hormones:</strong> Bacteria or yeast are genetically modified to produce human insulin for diabetes treatment, replacing animal sources.</li>
+          <li><strong>Monoclonal Antibodies:</strong> These are lab-made proteins that target specific diseases, like in cancer drugs (e.g., Herceptin for breast cancer) or autoimmune treatments.</li>
+          <li><strong>Antibiotics and Enzymes:</strong> Biotech improves antibiotic production and creates enzymes for drug synthesis, making processes efficient.</li>
+          <li><strong>Drug Discovery:</strong> Using biotech tools like CRISPR gene editing, new drugs are developed faster for rare diseases.</li>
+        </ul>
+        <p>Why It Matters: It speeds up drug creation from years to months and reduces costs, making medicines accessible. Remember: Pharma biotech = mass-producing biological drugs using living cells.</p>
+
+<grok:render card_id="d863d2,812434" card_type="image_card_group"></grok:render>
+
+        <div class="table-wrapper">
+          <table>
+            <tr>
+              <th>Application</th>
+              <th>Example</th>
+              <th>Benefit</th>
+            </tr>
+            <tr>
+              <td>Insulin Production</td>
+              <td>GM bacteria</td>
+              <td>Cheap, human-like insulin</td>
+            </tr>
+            <tr>
+              <td>Monoclonal Antibodies</td>
+              <td>Herceptin</td>
+              <td>Targeted cancer therapy</td>
+            </tr>
+            <tr>
+              <td>Antibiotics</td>
+              <td>Engineered microbes</td>
+              <td>Efficient production</td>
+            </tr>
+            <tr>
+              <td>Drug Discovery</td>
+              <td>CRISPR</td>
+              <td>Faster rare disease drugs</td>
+            </tr>
+          </table>
+        </div>
+
+        <h2>Step 4: Applications of Biotechnology in the Food Industry</h2>
+        <p>Biotech enhances food production, safety, and nutrition, making what we eat better and longer-lasting.</p>
+        <ul>
+          <li><strong>Genetically Modified Foods:</strong> Crops like golden rice are engineered with extra vitamins (e.g., vitamin A) to combat deficiencies. Other examples include pest-resistant potatoes or longer-shelf-life tomatoes.</li>
+          <li><strong>Fermentation and Enzymes:</strong> Used in making yogurt, cheese, or beer. Biotech enzymes speed up processes, like in baking or juice clarification, improving taste and texture.</li>
+          <li><strong>Food Safety and Preservation:</strong> Biotech detects contaminants quickly and creates preservatives from natural microbes to extend shelf life without chemicals.</li>
+          <li><strong>Nutritional Enhancements:</strong> Adding probiotics to foods for gut health or fortifying staples with iron and zinc.</li>
+        </ul>
+        <p>Why It Matters: It addresses food security by increasing production and reducing waste, especially in areas with hunger. Easy mnemonic: Food biotech = tastier, safer, more nutritious eats.</p>
+
+<grok:render card_id="bbc6bc,0c7d59" card_type="image_card_group"></grok:render>
+
+        <div class="table-wrapper">
+          <table>
+            <tr>
+              <th>Application</th>
+              <th>Example</th>
+              <th>Benefit</th>
+            </tr>
+            <tr>
+              <td>GM Foods</td>
+              <td>Golden Rice</td>
+              <td>Vitamin enrichment</td>
+            </tr>
+            <tr>
+              <td>Fermentation</td>
+              <td>Yogurt production</td>
+              <td>Improved texture</td>
+            </tr>
+            <tr>
+              <td>Food Safety</td>
+              <td>Contaminant detection</td>
+              <td>Reduced spoilage</td>
+            </tr>
+            <tr>
+              <td>Nutritional Boost</td>
+              <td>Probiotics</td>
+              <td>Better health</td>
+            </tr>
+          </table>
+        </div>
+
+        <h2>Final Tips for Learning and Remembering</h2>
+        <ul>
+          <li><strong>Summarize in Your Own Words:</strong> After each section, jot down 2-3 key examples.</li>
+          <li><strong>Visualize:</strong> Draw mind maps connecting "Biotech" to each field with arrows to applications.</li>
+          <li><strong>Practice Questions:</strong> Ask yourself: "What's one biotech example in agriculture?" Test recall.</li>
+          <li><strong>Real-World Link:</strong> Think about everyday items—like GM soy in snacks or biotech insulin for diabetics—to make it relatable.</li>
+        </ul>
+        <p>This covers the JAMB objectives fully. If you have questions on any part or want examples expanded, let me know!</p>
+      </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="nav-bar">
+      <div class="nav-item">
+        <button class="neumorphic-btn">🔍</button>
+        <p>Search</p>
+      </div>
+      <div class="nav-item center">
+        <button class="neumorphic-btn">⭐</button>
+        <p>Favorite</p>
+      </div>
+      <div class="nav-item">
+        <button class="neumorphic-btn">📚</button>
+        <p>Library</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Theme Toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+
+    function setTheme(theme) {
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const newTheme = body.classList.contains('light') ? 'dark' : 'light';
+      setTheme(newTheme);
+    });
+
+    // Profile Upload placeholder
+    document.getElementById('profile-upload').addEventListener('change', (e) => {
+      if (e.target.files[0]) console.log('Profile picture selected!');
+    });
+  </script>
+</body>
+</html>
