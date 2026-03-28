@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Oral English - Vowel Sounds Mastery Guide</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .sound-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .sound-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .sound-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+    .word-list{
+      display:flex;flex-wrap:wrap;gap:8px;margin-top:10px
+    }
+    .word-pill{
+      padding:6px 10px;border-radius:20px;
+      background:rgba(29,185,84,.12);border:1px solid rgba(29,185,84,.3);
+      font-size:12px
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:920px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .quiz-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .quiz-box .q{font-size:14px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px}
+    .quiz-box button{
+      width:100%;margin-top:10px;border:none;border-radius:12px;padding:12px 14px;font-weight:900;cursor:pointer;
+      background:var(--accent);color:#000;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out)
+    }
+    .quiz-answer{
+      margin-top:10px;font-size:13px;color:var(--text-secondary);display:none
+    }
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">ENGLISH</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>🔊 Vowel Sounds Mastery Guide</h1>
+        <p>JAMB 2026 • monophthongs • diphthongs • triphthongs • RP pronunciation • easy revision</p>
+      </div>
+
+      <div class="section-card">
+        <h2>📋 Quick Overview</h2>
+        <p>JAMB Oral English tests your ability to identify and pronounce vowel sounds correctly in <strong>Received Pronunciation (RP)</strong>, the British standard.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li><strong>12 Monophthongs</strong> → pure single vowel sounds</li>
+            <li><strong>8 Diphthongs</strong> → gliding two-vowel sounds</li>
+            <li><strong>5 Triphthongs</strong> → gliding three-sound vowels</li>
+          </ul>
+        </div>
+
+        <h3>Easy step-by-step learning method</h3>
+        <div class="jamb-alert">
+          <h4>How to learn each sound</h4>
+          <ul>
+            <li>Look at the sound symbol carefully</li>
+            <li>Say the example words slowly and clearly</li>
+            <li>Compare it with a similar sound</li>
+            <li>Practise minimal pairs like <strong>ship / sheep</strong></li>
+            <li>Repeat daily aloud</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Golden tip</strong>
+          <p>Do not just read with your eyes. Oral English improves fastest when you speak the words aloud.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Understand the 3 Main Groups</h2>
+
+        <div class="sound-box">
+          <div class="title">Monophthongs</div>
+          <div class="line"><strong>Meaning:</strong> One pure vowel sound.</div>
+          <div class="line"><strong>Example:</strong> /ɪ/ in <em>sit</em></div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">Diphthongs</div>
+          <div class="line"><strong>Meaning:</strong> A vowel sound that glides from one sound to another.</div>
+          <div class="line"><strong>Example:</strong> /eɪ/ in <em>day</em></div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">Triphthongs</div>
+          <div class="line"><strong>Meaning:</strong> A vowel sound that moves through three parts.</div>
+          <div class="line"><strong>Example:</strong> /aɪə/ in <em>fire</em></div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Short Monophthongs</h2>
+        <p>These are short, quick vowel sounds. Say them sharply and clearly.</p>
+
+        <div class="sound-box">
+          <div class="title">/ɪ/ as in “sit”</div>
+          <div class="line"><strong>How it sounds:</strong> Short “i” sound.</div>
+          <div class="line"><strong>Common confusion:</strong> /ɪ/ vs /iː/ → ship / sheep</div>
+          <div class="word-list">
+            <span class="word-pill">bit</span><span class="word-pill">sit</span><span class="word-pill">ship</span><span class="word-pill">hit</span><span class="word-pill">lip</span>
+            <span class="word-pill">pin</span><span class="word-pill">win</span><span class="word-pill">big</span><span class="word-pill">dig</span><span class="word-pill">fig</span>
+            <span class="word-pill">hill</span><span class="word-pill">mill</span><span class="word-pill">pill</span><span class="word-pill">fill</span><span class="word-pill">kill</span>
+            <span class="word-pill">bill</span><span class="word-pill">will</span><span class="word-pill">thin</span><span class="word-pill">chin</span><span class="word-pill">sick</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/e/ as in “bed”</div>
+          <div class="line"><strong>How it sounds:</strong> Short “e” sound.</div>
+          <div class="line"><strong>Common confusion:</strong> /e/ vs /æ/ → bed / bad</div>
+          <div class="word-list">
+            <span class="word-pill">bed</span><span class="word-pill">men</span><span class="word-pill">head</span><span class="word-pill">pen</span><span class="word-pill">ten</span>
+            <span class="word-pill">set</span><span class="word-pill">get</span><span class="word-pill">let</span><span class="word-pill">red</span><span class="word-pill">said</span>
+            <span class="word-pill">leg</span><span class="word-pill">beg</span><span class="word-pill">peg</span><span class="word-pill">hen</span><span class="word-pill">den</span>
+            <span class="word-pill">net</span><span class="word-pill">met</span><span class="word-pill">wet</span><span class="word-pill">yet</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/æ/ as in “cat”</div>
+          <div class="line"><strong>How it sounds:</strong> Open front vowel. Open your mouth wider.</div>
+          <div class="word-list">
+            <span class="word-pill">cat</span><span class="word-pill">man</span><span class="word-pill">bad</span><span class="word-pill">hat</span><span class="word-pill">bag</span>
+            <span class="word-pill">sad</span><span class="word-pill">mad</span><span class="word-pill">cap</span><span class="word-pill">map</span><span class="word-pill">tap</span>
+            <span class="word-pill">hand</span><span class="word-pill">land</span><span class="word-pill">band</span><span class="word-pill">sand</span><span class="word-pill">lamp</span>
+            <span class="word-pill">camp</span><span class="word-pill">back</span><span class="word-pill">pack</span><span class="word-pill">track</span><span class="word-pill">black</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/ʌ/ as in “cup”</div>
+          <div class="line"><strong>How it sounds:</strong> Short central vowel.</div>
+          <div class="word-list">
+            <span class="word-pill">cup</span><span class="word-pill">but</span><span class="word-pill">luck</span><span class="word-pill">sun</span><span class="word-pill">run</span>
+            <span class="word-pill">fun</span><span class="word-pill">gun</span><span class="word-pill">bus</span><span class="word-pill">cut</span><span class="word-pill">nut</span>
+            <span class="word-pill">hut</span><span class="word-pill">mud</span><span class="word-pill">thud</span><span class="word-pill">rub</span><span class="word-pill">tub</span>
+            <span class="word-pill">love</span><span class="word-pill">above</span><span class="word-pill">some</span><span class="word-pill">come</span><span class="word-pill">done</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/ɒ/ as in “hot”</div>
+          <div class="line"><strong>How it sounds:</strong> Short rounded vowel in British pronunciation.</div>
+          <div class="word-list">
+            <span class="word-pill">hot</span><span class="word-pill">lot</span><span class="word-pill">clock</span><span class="word-pill">box</span><span class="word-pill">dog</span>
+            <span class="word-pill">fog</span><span class="word-pill">log</span><span class="word-pill">pot</span><span class="word-pill">top</span><span class="word-pill">shop</span>
+            <span class="word-pill">rock</span><span class="word-pill">sock</span><span class="word-pill">lock</span><span class="word-pill">knock</span><span class="word-pill">job</span>
+            <span class="word-pill">rob</span><span class="word-pill">nod</span><span class="word-pill">god</span><span class="word-pill">bomb</span><span class="word-pill">want</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/ʊ/ as in “book”</div>
+          <div class="line"><strong>How it sounds:</strong> Short “u” sound with rounded lips.</div>
+          <div class="word-list">
+            <span class="word-pill">book</span><span class="word-pill">put</span><span class="word-pill">good</span><span class="word-pill">foot</span><span class="word-pill">look</span>
+            <span class="word-pill">took</span><span class="word-pill">cook</span><span class="word-pill">hook</span><span class="word-pill">wood</span><span class="word-pill">stood</span>
+            <span class="word-pill">could</span><span class="word-pill">should</span><span class="word-pill">would</span><span class="word-pill">bush</span><span class="word-pill">push</span>
+            <span class="word-pill">pull</span><span class="word-pill">full</span><span class="word-pill">bull</span><span class="word-pill">sugar</span><span class="word-pill">woman</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/ə/ as in “about”</div>
+          <div class="line"><strong>How it sounds:</strong> Schwa — the weakest and most relaxed vowel sound.</div>
+          <div class="line"><strong>Important:</strong> It appears a lot in unstressed syllables.</div>
+          <div class="word-list">
+            <span class="word-pill">about</span><span class="word-pill">teacher</span><span class="word-pill">banana</span><span class="word-pill">problem</span><span class="word-pill">support</span>
+            <span class="word-pill">again</span><span class="word-pill">famous</span><span class="word-pill">system</span><span class="word-pill">paper</span><span class="word-pill">better</span>
+            <span class="word-pill">mother</span><span class="word-pill">father</span><span class="word-pill">sister</span><span class="word-pill">brother</span><span class="word-pill">doctor</span>
+            <span class="word-pill">actor</span><span class="word-pill">colour</span><span class="word-pill">favour</span><span class="word-pill">labour</span><span class="word-pill">sugar</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Long Monophthongs</h2>
+        <p>These sounds are longer. Hold them a little more than short vowels.</p>
+
+        <div class="sound-box">
+          <div class="title">/iː/ as in “see”</div>
+          <div class="line"><strong>How it sounds:</strong> Long “ee” sound.</div>
+          <div class="line"><strong>Common confusion:</strong> /iː/ vs /ɪ/ → sheep / ship</div>
+          <div class="word-list">
+            <span class="word-pill">see</span><span class="word-pill">meet</span><span class="word-pill">key</span><span class="word-pill">tree</span><span class="word-pill">free</span>
+            <span class="word-pill">three</span><span class="word-pill">green</span><span class="word-pill">clean</span><span class="word-pill">dream</span><span class="word-pill">team</span>
+            <span class="word-pill">leave</span><span class="word-pill">please</span><span class="word-pill">cheese</span><span class="word-pill">these</span><span class="word-pill">piece</span>
+            <span class="word-pill">chief</span><span class="word-pill">believe</span><span class="word-pill">receive</span><span class="word-pill">ceiling</span><span class="word-pill">seize</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/ɑː/ as in “car”</div>
+          <div class="line"><strong>How it sounds:</strong> Long open back vowel.</div>
+          <div class="word-list">
+            <span class="word-pill">car</span><span class="word-pill">father</span><span class="word-pill">start</span><span class="word-pill">hard</span><span class="word-pill">dark</span>
+            <span class="word-pill">park</span><span class="word-pill">mark</span><span class="word-pill">part</span><span class="word-pill">large</span><span class="word-pill">charge</span>
+            <span class="word-pill">calm</span><span class="word-pill">palm</span><span class="word-pill">farm</span><span class="word-pill">arm</span><span class="word-pill">art</span>
+            <span class="word-pill">heart</span><span class="word-pill">bath</span><span class="word-pill">laugh</span><span class="word-pill">grass</span><span class="word-pill">dance</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/ɔː/ as in “law”</div>
+          <div class="line"><strong>How it sounds:</strong> Long rounded “aw” sound.</div>
+          <div class="word-list">
+            <span class="word-pill">law</span><span class="word-pill">thought</span><span class="word-pill">ball</span><span class="word-pill">all</span><span class="word-pill">call</span>
+            <span class="word-pill">fall</span><span class="word-pill">tall</span><span class="word-pill">wall</span><span class="word-pill">small</span><span class="word-pill">walk</span>
+            <span class="word-pill">talk</span><span class="word-pill">bought</span><span class="word-pill">taught</span><span class="word-pill">caught</span><span class="word-pill">war</span>
+            <span class="word-pill">warm</span><span class="word-pill">door</span><span class="word-pill">floor</span><span class="word-pill">more</span><span class="word-pill">saw</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/uː/ as in “blue”</div>
+          <div class="line"><strong>How it sounds:</strong> Long “oo” sound.</div>
+          <div class="line"><strong>Common confusion:</strong> /uː/ vs /ʊ/ → food / foot</div>
+          <div class="word-list">
+            <span class="word-pill">blue</span><span class="word-pill">food</span><span class="word-pill">moon</span><span class="word-pill">soon</span><span class="word-pill">school</span>
+            <span class="word-pill">tool</span><span class="word-pill">pool</span><span class="word-pill">cool</span><span class="word-pill">rule</span><span class="word-pill">true</span>
+            <span class="word-pill">fruit</span><span class="word-pill">suit</span><span class="word-pill">boot</span><span class="word-pill">root</span><span class="word-pill">shoot</span>
+            <span class="word-pill">move</span><span class="word-pill">prove</span><span class="word-pill">group</span><span class="word-pill">soup</span><span class="word-pill">through</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/ɜː/ as in “bird”</div>
+          <div class="line"><strong>How it sounds:</strong> Long central vowel.</div>
+          <div class="word-list">
+            <span class="word-pill">bird</span><span class="word-pill">learn</span><span class="word-pill">girl</span><span class="word-pill">turn</span><span class="word-pill">burn</span>
+            <span class="word-pill">hurt</span><span class="word-pill">church</span><span class="word-pill">shirt</span><span class="word-pill">skirt</span><span class="word-pill">first</span>
+            <span class="word-pill">thirst</span><span class="word-pill">nurse</span><span class="word-pill">purse</span><span class="word-pill">work</span><span class="word-pill">word</span>
+            <span class="word-pill">world</span><span class="word-pill">heard</span><span class="word-pill">serve</span><span class="word-pill">term</span><span class="word-pill">firm</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Diphthongs</h2>
+        <p>Diphthongs begin with one vowel position and glide into another.</p>
+
+        <div class="sound-box">
+          <div class="title">/eɪ/ as in “day”</div>
+          <div class="word-list">
+            <span class="word-pill">day</span><span class="word-pill">play</span><span class="word-pill">face</span><span class="word-pill">name</span><span class="word-pill">lake</span>
+            <span class="word-pill">make</span><span class="word-pill">take</span><span class="word-pill">cake</span><span class="word-pill">late</span><span class="word-pill">gate</span>
+            <span class="word-pill">pain</span><span class="word-pill">rain</span><span class="word-pill">train</span><span class="word-pill">wait</span><span class="word-pill">straight</span>
+            <span class="word-pill">paper</span><span class="word-pill">table</span><span class="word-pill">able</span><span class="word-pill">baby</span><span class="word-pill">lady</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/aɪ/ as in “time”</div>
+          <div class="word-list">
+            <span class="word-pill">time</span><span class="word-pill">my</span><span class="word-pill">light</span><span class="word-pill">high</span><span class="word-pill">sky</span>
+            <span class="word-pill">fly</span><span class="word-pill">buy</span><span class="word-pill">eye</span><span class="word-pill">try</span><span class="word-pill">cry</span>
+            <span class="word-pill">fine</span><span class="word-pill">line</span><span class="word-pill">mine</span><span class="word-pill">nine</span><span class="word-pill">right</span>
+            <span class="word-pill">fight</span><span class="word-pill">night</span><span class="word-pill">write</span><span class="word-pill">bright</span><span class="word-pill">white</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/ɔɪ/ as in “boy”</div>
+          <div class="word-list">
+            <span class="word-pill">boy</span><span class="word-pill">coin</span><span class="word-pill">choice</span><span class="word-pill">voice</span><span class="word-pill">noise</span>
+            <span class="word-pill">oil</span><span class="word-pill">boil</span><span class="word-pill">join</span><span class="word-pill">point</span><span class="word-pill">toy</span>
+            <span class="word-pill">enjoy</span><span class="word-pill">destroy</span><span class="word-pill">employ</span><span class="word-pill">royal</span><span class="word-pill">loyal</span>
+            <span class="word-pill">avoid</span><span class="word-pill">poison</span><span class="word-pill">toilet</span><span class="word-pill">moist</span><span class="word-pill">rejoice</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/əʊ/ as in “go”</div>
+          <div class="word-list">
+            <span class="word-pill">go</span><span class="word-pill">home</span><span class="word-pill">boat</span><span class="word-pill">no</span><span class="word-pill">so</span>
+            <span class="word-pill">show</span><span class="word-pill">know</span><span class="word-pill">grow</span><span class="word-pill">low</span><span class="word-pill">slow</span>
+            <span class="word-pill">road</span><span class="word-pill">load</span><span class="word-pill">coat</span><span class="word-pill">note</span><span class="word-pill">wrote</span>
+            <span class="word-pill">phone</span><span class="word-pill">stone</span><span class="word-pill">alone</span><span class="word-pill">hope</span><span class="word-pill">smoke</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/aʊ/ as in “now”</div>
+          <div class="word-list">
+            <span class="word-pill">now</span><span class="word-pill">house</span><span class="word-pill">loud</span><span class="word-pill">out</span><span class="word-pill">mouse</span>
+            <span class="word-pill">brown</span><span class="word-pill">cow</span><span class="word-pill">how</span><span class="word-pill">down</span><span class="word-pill">town</span>
+            <span class="word-pill">cloud</span><span class="word-pill">found</span><span class="word-pill">round</span><span class="word-pill">sound</span><span class="word-pill">pound</span>
+            <span class="word-pill">mouth</span><span class="word-pill">south</span><span class="word-pill">count</span><span class="word-pill">ground</span><span class="word-pill">mountain</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/ɪə/ as in “near”</div>
+          <div class="word-list">
+            <span class="word-pill">near</span><span class="word-pill">here</span><span class="word-pill">beer</span><span class="word-pill">dear</span><span class="word-pill">fear</span>
+            <span class="word-pill">year</span><span class="word-pill">ear</span><span class="word-pill">clear</span><span class="word-pill">tear</span><span class="word-pill">appear</span>
+            <span class="word-pill">serious</span><span class="word-pill">period</span><span class="word-pill">theory</span><span class="word-pill">experience</span><span class="word-pill">area</span>
+            <span class="word-pill">idea</span><span class="word-pill">real</span><span class="word-pill">deal</span><span class="word-pill">feel</span><span class="word-pill">meal</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/eə/ as in “hair”</div>
+          <div class="word-list">
+            <span class="word-pill">hair</span><span class="word-pill">there</span><span class="word-pill">fair</span><span class="word-pill">care</span><span class="word-pill">share</span>
+            <span class="word-pill">pair</span><span class="word-pill">chair</span><span class="word-pill">bear</span><span class="word-pill">wear</span><span class="word-pill">square</span>
+            <span class="word-pill">rare</span><span class="word-pill">stare</span><span class="word-pill">aware</span><span class="word-pill">prepare</span><span class="word-pill">compare</span>
+            <span class="word-pill">declare</span><span class="word-pill">repair</span><span class="word-pill">affair</span><span class="word-pill">prayer</span><span class="word-pill">layer</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/ʊə/ as in “pure”</div>
+          <div class="line"><strong>Note:</strong> This sound is less common in modern speech, but still useful for JAMB practice.</div>
+          <div class="word-list">
+            <span class="word-pill">pure</span><span class="word-pill">tour</span><span class="word-pill">sure</span><span class="word-pill">cure</span><span class="word-pill">poor</span>
+            <span class="word-pill">moor</span><span class="word-pill">lure</span><span class="word-pill">endure</span><span class="word-pill">secure</span><span class="word-pill">mature</span>
+            <span class="word-pill">during</span><span class="word-pill">furious</span><span class="word-pill">curious</span><span class="word-pill">jury</span><span class="word-pill">rural</span>
+            <span class="word-pill">plural</span><span class="word-pill">usual</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Triphthongs</h2>
+        <p>Triphthongs glide through three vowel movements. They may feel longer and more complex, but you can master them by slow practice.</p>
+
+        <div class="sound-box">
+          <div class="title">/aɪə/ as in “fire”</div>
+          <div class="word-list">
+            <span class="word-pill">fire</span><span class="word-pill">liar</span><span class="word-pill">tire</span><span class="word-pill">wire</span><span class="word-pill">hire</span>
+            <span class="word-pill">mire</span><span class="word-pill">dire</span><span class="word-pill">sire</span><span class="word-pill">buyer</span><span class="word-pill">dryer</span>
+            <span class="word-pill">flyer</span><span class="word-pill">higher</span><span class="word-pill">prior</span><span class="word-pill">quiet</span><span class="word-pill">science</span>
+            <span class="word-pill">giant</span><span class="word-pill">diet</span><span class="word-pill">violet</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/aʊə/ as in “hour”</div>
+          <div class="word-list">
+            <span class="word-pill">hour</span><span class="word-pill">power</span><span class="word-pill">flower</span><span class="word-pill">tower</span><span class="word-pill">shower</span>
+            <span class="word-pill">sour</span><span class="word-pill">flour</span><span class="word-pill">coward</span><span class="word-pill">our</span><span class="word-pill">hourglass</span>
+            <span class="word-pill">allowance</span><span class="word-pill">dowry</span><span class="word-pill">sunflower</span><span class="word-pill">overpower</span><span class="word-pill">cauliflower</span>
+            <span class="word-pill">devour</span><span class="word-pill">vowel</span><span class="word-pill">towel</span><span class="word-pill">cowardice</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/eɪə/ as in “player”</div>
+          <div class="word-list">
+            <span class="word-pill">player</span><span class="word-pill">layer</span><span class="word-pill">prayer</span><span class="word-pill">slayer</span><span class="word-pill">conveyor</span>
+            <span class="word-pill">mayor</span><span class="word-pill">surveyor</span><span class="word-pill">taxpayer</span><span class="word-pill">stayer</span><span class="word-pill">betrayer</span>
+            <span class="word-pill">delayer</span><span class="word-pill">payer</span><span class="word-pill">greyer</span><span class="word-pill">sprayer</span><span class="word-pill">strayer</span>
+            <span class="word-pill">assayer</span><span class="word-pill">arrayer</span><span class="word-pill">portrayer</span><span class="word-pill">defrayer</span><span class="word-pill">inlayer</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/ɔɪə/ as in “royal”</div>
+          <div class="word-list">
+            <span class="word-pill">royal</span><span class="word-pill">loyal</span><span class="word-pill">employer</span><span class="word-pill">destroyer</span><span class="word-pill">annoyer</span>
+            <span class="word-pill">enjoyer</span><span class="word-pill">boyish</span><span class="word-pill">voyage</span><span class="word-pill">buoyant</span><span class="word-pill">flamboyant</span>
+            <span class="word-pill">clairvoyant</span><span class="word-pill">joyous</span><span class="word-pill">poisoner</span><span class="word-pill">coiner</span><span class="word-pill">joiner</span>
+            <span class="word-pill">boiler</span><span class="word-pill">spoiler</span><span class="word-pill">toiler</span><span class="word-pill">recoiler</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/əʊə/ as in “lower”</div>
+          <div class="word-list">
+            <span class="word-pill">lower</span><span class="word-pill">mower</span><span class="word-pill">slower</span><span class="word-pill">blower</span><span class="word-pill">grower</span>
+            <span class="word-pill">knower</span><span class="word-pill">sower</span><span class="word-pill">thrower</span><span class="word-pill">goer</span><span class="word-pill">shoer</span>
+            <span class="word-pill">stower</span><span class="word-pill">follower</span><span class="word-pill">borrower</span><span class="word-pill">hollower</span><span class="word-pill">narrower</span>
+            <span class="word-pill">shallower</span><span class="word-pill">yellower</span><span class="word-pill">mellower</span><span class="word-pill">billower</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ Compare Similar Sounds</h2>
+        <p>This is where many students lose easy marks. Learn the difference clearly.</p>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Sound Pair</th>
+              <th>Example 1</th>
+              <th>Example 2</th>
+              <th>Main Difference</th>
+            </tr>
+            <tr>
+              <td>/ɪ/ vs /iː/</td>
+              <td>ship</td>
+              <td>sheep</td>
+              <td>Short vs long “ee”</td>
+            </tr>
+            <tr>
+              <td>/e/ vs /æ/</td>
+              <td>bed</td>
+              <td>bad</td>
+              <td>/æ/ opens the mouth wider</td>
+            </tr>
+            <tr>
+              <td>/ʊ/ vs /uː/</td>
+              <td>full</td>
+              <td>fool</td>
+              <td>Short vs long rounded vowel</td>
+            </tr>
+            <tr>
+              <td>/ɒ/ vs /ɔː/</td>
+              <td>cot</td>
+              <td>caught</td>
+              <td>Short vs long rounded sound</td>
+            </tr>
+            <tr>
+              <td>/aɪ/ vs /ɔɪ/</td>
+              <td>time</td>
+              <td>toy</td>
+              <td>Different glide pattern</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="memory-tip">
+          <strong>🧠 Quick trick</strong>
+          <p>When two words look almost the same, listen for vowel length and mouth shape.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>7️⃣ Where JAMB Usually Tests Vowel Sounds</h2>
+        <div class="jamb-alert">
+          <h4>Common question styles</h4>
+          <ul>
+            <li>Which word has the same vowel sound as the underlined part?</li>
+            <li>Which word differs in vowel sound?</li>
+            <li>Minimal pair comparison questions</li>
+            <li>Short vowel vs long vowel distinction</li>
+          </ul>
+        </div>
+
+        <div class="highlight-box">
+          <p><strong>Most repeated patterns:</strong> /ɪ/ vs /iː/, /e/ vs /æ/, /ʊ/ vs /uː/, /aɪ/ vs /ɔɪ/.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>8️⃣ Mini Self-Quiz</h2>
+
+        <div class="quiz-box">
+          <div class="q">1. Which word has the same vowel sound as <strong>ship</strong>?</div>
+          <div>A. sheep</div>
+          <div>B. seat</div>
+          <div>C. sit</div>
+          <div>D. see</div>
+          <button onclick="showAns('a1')">Show Answer</button>
+          <div class="quiz-answer" id="a1"><strong>Answer:</strong> C — sit. Both have /ɪ/.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">2. Which word has the same vowel sound as <strong>day</strong>?</div>
+          <div>A. die</div>
+          <div>B. play</div>
+          <div>C. boy</div>
+          <div>D. now</div>
+          <button onclick="showAns('a2')">Show Answer</button>
+          <div class="quiz-answer" id="a2"><strong>Answer:</strong> B — play. Both have /eɪ/.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">3. Which word has the same vowel sound as <strong>book</strong>?</div>
+          <div>A. moon</div>
+          <div>B. put</div>
+          <div>C. food</div>
+          <div>D. school</div>
+          <button onclick="showAns('a3')">Show Answer</button>
+          <div class="quiz-answer" id="a3"><strong>Answer:</strong> B — put. Both have /ʊ/.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">4. Which word has the same vowel sound as <strong>bird</strong>?</div>
+          <div>A. bed</div>
+          <div>B. beard</div>
+          <div>C. burn</div>
+          <div>D. board</div>
+          <button onclick="showAns('a4')">Show Answer</button>
+          <div class="quiz-answer" id="a4"><strong>Answer:</strong> C — burn. Both have /ɜː/.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">5. Which word differs in vowel sound?</div>
+          <div>A. cat</div>
+          <div>B. man</div>
+          <div>C. pen</div>
+          <div>D. bag</div>
+          <button onclick="showAns('a5')">Show Answer</button>
+          <div class="quiz-answer" id="a5"><strong>Answer:</strong> C — pen. It has /e/, while the others have /æ/.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>9️⃣ Quick JAMB Revision Tip</h2>
+        <div class="jamb-alert">
+          <h4>Best way to score high</h4>
+          <ul>
+            <li>Master 5–10 words for each sound first</li>
+            <li>Practise short vs long vowel pairs daily</li>
+            <li>Read the words aloud, not silently</li>
+            <li>Use past JAMB questions from 2018–2025</li>
+            <li>Group similar sounds together while revising</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🌟 Final line</strong>
+          <p>You now have the full vowel sounds guide: 12 monophthongs, 8 diphthongs, and 5 triphthongs. Practise aloud daily and Oral English will become one of your easiest scoring areas.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Practise 5 words from each sound aloud today, then test yourself with minimal pairs like ship/sheep and bed/bad.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+
+    function showAns(id){
+      document.getElementById(id).style.display = 'block';
+    }
+  </script>
+</body>
+</html>

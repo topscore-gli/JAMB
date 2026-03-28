@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB English - The Lekki Headmaster (Chapter 9: Laughing Waterfalls) Summary</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800}
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .quote-box{
+      background:rgba(255,255,255,.04);
+      padding:14px 16px;border-radius:12px;margin:12px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .quote-box .q{font-size:14px;font-style:italic;line-height:1.6}
+    .quote-box .who{margin-top:8px;font-size:12px;color:var(--text-secondary);font-weight:700}
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:1300px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);white-space:nowrap;vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">ENGLISH (NOVEL)</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>📘 Chapter 9 — “Laughing Waterfalls”</h1>
+        <p>The Lekki Headmaster (Kabir Alabi Garba) • excursions • experiential learning • patriotism • social mobility</p>
+      </div>
+
+      <div class="section-card">
+        <h2>📋 Summary Table (Fast Revision)</h2>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Area</th>
+              <th>Key detail</th>
+              <th>Likely JAMB angle</th>
+            </tr>
+            <tr>
+              <td><strong>Main focus</strong></td>
+              <td>Bepo’s passion for excursions and practical learning</td>
+              <td>Chapter theme</td>
+            </tr>
+            <tr>
+              <td><strong>School tradition</strong></td>
+              <td>At least one major excursion yearly</td>
+              <td>Educational method</td>
+            </tr>
+            <tr>
+              <td><strong>Waterfall site</strong></td>
+              <td>Ikogosi Warm Springs, Ekiti</td>
+              <td>Location question</td>
+            </tr>
+            <tr>
+              <td><strong>Waterfall site</strong></td>
+              <td>Erin Ijesha Waterfalls, Osun</td>
+              <td>Location question</td>
+            </tr>
+            <tr>
+              <td><strong>Highest in West Africa</strong></td>
+              <td>Owu Waterfalls, Kwara</td>
+              <td>Direct fact question</td>
+            </tr>
+            <tr>
+              <td><strong>Other site</strong></td>
+              <td>Gurara Falls, Niger</td>
+              <td>Excursion detail</td>
+            </tr>
+            <tr>
+              <td><strong>Historical places</strong></td>
+              <td>Badagry, National War Museum, Ooni of Ife Palace</td>
+              <td>Cultural exposure</td>
+            </tr>
+            <tr>
+              <td><strong>Lagos contrast</strong></td>
+              <td>Banana Island vs Ajegunle</td>
+              <td>Social mobility lesson</td>
+            </tr>
+            <tr>
+              <td><strong>Main lesson</strong></td>
+              <td>Background does not determine destiny</td>
+              <td>Quote/theme question</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="memory-tip">
+          <strong>🧠 One-line recall</strong>
+          <p>This chapter celebrates Bepo’s belief that students should know Nigeria deeply through excursions before dreaming only of abroad.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Main Idea of the Chapter</h2>
+        <p>Chapter 9 is a reflective and descriptive chapter showing Mr. Bepo Adewale’s love for <strong>experiential learning</strong>. He believes students should not learn only in classrooms but should also travel, see places, and understand Nigeria’s beauty, history, and diversity.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li>Stardom Schools is famous for excellent excursion planning</li>
+            <li>Bepo ensures at least <strong>one major excursion every year</strong></li>
+            <li>The aim is to help students appreciate Nigeria before traveling abroad</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ The “Laughing Waterfalls” Excursion Focus</h2>
+        <p>The chapter pays special attention to excursions to waterfalls across Nigeria. These waterfalls symbolize joy, beauty, and the richness of nature.</p>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Waterfall / Site</th>
+              <th>Location</th>
+              <th>Important note</th>
+            </tr>
+            <tr>
+              <td><strong>Ikogosi Warm Springs</strong></td>
+              <td>Ekiti State</td>
+              <td>Discovered in 1852 by Rev. John S. McGee</td>
+            </tr>
+            <tr>
+              <td><strong>Erin Ijesha Waterfalls</strong></td>
+              <td>Osun State</td>
+              <td>Popular excursion site</td>
+            </tr>
+            <tr>
+              <td><strong>Owu Waterfalls</strong></td>
+              <td>Kwara State</td>
+              <td>Highest in West Africa; 120m above water level, 330ft down escarpment</td>
+            </tr>
+            <tr>
+              <td><strong>Gurara Falls</strong></td>
+              <td>Niger State</td>
+              <td>Another notable natural site</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Planned/Future Waterfall Visits</h2>
+        <p>The chapter also mentions other waterfalls Bepo hopes students will visit in future excursions.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li><strong>Kwa Falls</strong> in Anegeje, Calabar</li>
+            <li><strong>Aesop</strong> in Plateau</li>
+            <li><strong>Karu</strong> in Nasarawa</li>
+            <li><strong>Barup</strong> in Gembu, Taraba</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Other Excursion Sites Beyond Waterfalls</h2>
+        <p>Stardom’s excursions are not limited to waterfalls. Students also visit important historical, cultural, and recreational places.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li><strong>Yankari Games Reserve</strong> in Bauchi</li>
+            <li><strong>National War Museum</strong> in Umuahia</li>
+            <li><strong>Ooni of Ife Palace</strong></li>
+            <li><strong>Badagry</strong> and the Akran of Badagry</li>
+            <li><strong>Whispering Palms Resort</strong></li>
+          </ul>
+        </div>
+
+        <div class="highlight-box">
+          <p>These excursions help students learn history, culture, and tourism in real life rather than only from books.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ The Banana Island vs Ajegunle Lesson</h2>
+        <p>One important part of the chapter is Bepo’s use of Lagos contrasts — from wealthy <strong>Banana Island</strong> to poorer <strong>Ajegunle</strong> — to teach students about hope, determination, and social mobility.</p>
+
+        <div class="quote-box">
+          <div class="q">"Being born in a place like this does not condemn one to a life of penury."</div>
+          <div class="who">— Mr. Bepo, speaking about Ajegunle</div>
+        </div>
+
+        <div class="quote-box">
+          <div class="q">"If you are determined, committed to education, and make the best use of your talent, time will move you from slum to limelight. You will be surprised to learn that many of those you see on Banana Island started off in slums somewhere in the country. Life is about movement; it is ever ready to move upward folks who make the best use of their talents, money and opportunities."</div>
+          <div class="who">— Mr. Bepo’s motivational speech to students</div>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Core lesson</strong>
+          <p>Your starting point in life does not have to be your final destination.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>🗣️ Important Quotes & Phrases from This Chapter</h2>
+
+        <div class="quote-box">
+          <div class="q">"Being born in a place like this does not condemn one to a life of penury."</div>
+          <div class="who">— Bepo’s lesson on Ajegunle</div>
+        </div>
+
+        <div class="quote-box">
+          <div class="q">"If you are determined, committed to education, and make the best use of your talent, time will move you from slum to limelight."</div>
+          <div class="who">— Motivational message from Bepo</div>
+        </div>
+
+        <div class="quote-box">
+          <div class="q">"Life is about movement; it is ever ready to move upward folks who make the best use of their talents, money and opportunities."</div>
+          <div class="who">— Bepo’s philosophy of growth and opportunity</div>
+        </div>
+
+        <div class="quote-box">
+          <div class="q">"Laughing Waterfalls"</div>
+          <div class="who">— Chapter title symbolizing joyful flowing natural wonders</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ Themes in Chapter 9</h2>
+        <div class="quick-facts">
+          <ul>
+            <li><strong>Experiential learning:</strong> learning by seeing and doing</li>
+            <li><strong>Patriotism:</strong> knowing Nigeria before being carried away by foreign dreams</li>
+            <li><strong>Social mobility:</strong> education and determination can change one’s status</li>
+            <li><strong>Exposure:</strong> students learn about nature, culture, inequality, and history</li>
+            <li><strong>Holistic education:</strong> education is not only academic; it also shapes values and perspective</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Theme line</strong>
+          <p>Bepo wants students to see Nigeria with their own eyes so they can value their country and their own potential.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>✅ Likely JAMB Questions</h2>
+        <div class="jamb-alert">
+          <h4>Common question patterns</h4>
+          <ul>
+            <li>Why does Bepo organize excursions regularly?</li>
+            <li>Name two waterfalls mentioned in the chapter.</li>
+            <li>Which waterfall is described as the highest in West Africa?</li>
+            <li>What lesson does Bepo teach using Ajegunle and Banana Island?</li>
+            <li>Who discovered Ikogosi Warm Springs?</li>
+            <li>State one key quote from the chapter.</li>
+            <li>What themes are highlighted in “Laughing Waterfalls”?</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>✅ Quick Revision Checklist</h2>
+        <div class="quick-facts">
+          <ul>
+            <li>One major excursion every year</li>
+            <li>Ikogosi Warm Springs – Ekiti</li>
+            <li>Erin Ijesha Waterfalls – Osun</li>
+            <li>Owu Waterfalls – Kwara, highest in West Africa</li>
+            <li>Gurara Falls – Niger</li>
+            <li>Other sites: Yankari, War Museum, Ooni Palace, Badagry, Whispering Palms</li>
+            <li>Ajegunle vs Banana Island lesson on social mobility</li>
+            <li>Education + determination can move one from “slum to limelight”</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Final memory line</strong>
+          <p>For JAMB, connect Chapter 9 with three things: excursions, waterfalls, and Bepo’s lesson that education can lift people upward.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Revise: waterfalls, excursion sites, and Bepo’s Ajegunle-to-Banana-Island lesson.')">Practice JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+  </script>
+</body>
+</html>

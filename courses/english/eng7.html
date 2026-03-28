@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB English - Lexis and Structure Mastery Guide</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .example-box,.word-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title,.word-box .title{
+      font-size:14px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .example-box .line,.word-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:1300px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .quiz-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .quiz-box .q{font-size:14px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px}
+    .quiz-box button{
+      width:100%;margin-top:10px;border:none;border-radius:12px;padding:12px 14px;font-weight:900;cursor:pointer;
+      background:var(--accent);color:#000;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out)
+    }
+    .quiz-answer{
+      margin-top:10px;font-size:13px;color:var(--text-secondary);display:none
+    }
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">ENGLISH</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>📘 Lexis and Structure Mastery Guide</h1>
+        <p>JAMB 2026 • mechanics • ordinary usage • figurative usage • idioms • high-score revision</p>
+      </div>
+
+      <div class="section-card">
+        <h2>📋 Overview & How to Use This Note</h2>
+        <p>This is the full guide for <strong>Lexis and Structure</strong>, one of the highest-scoring sections in JAMB Use of English.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li><strong>Mechanics</strong> → spelling, punctuation, capitalisation</li>
+            <li><strong>Ordinary Usage</strong> → literal dictionary meaning</li>
+            <li><strong>Figurative Usage</strong> → figures of speech and non-literal meaning</li>
+            <li><strong>Idiomatic Usage</strong> → fixed expressions with special meanings</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Best revision plan</strong>
+          <p>Revise 20–30 items per day. Cover the meaning side, test yourself, then repeat.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Mechanics</h2>
+        <p><strong>Mechanics</strong> means the rules of correct written English: spelling, punctuation, and capitalisation.</p>
+
+        <h3>Where to use mechanics correctly</h3>
+        <div class="jamb-alert">
+          <h4>Main rules</h4>
+          <ul>
+            <li>Use <strong>British spelling</strong>: colour, realise, programme, defence</li>
+            <li>Use apostrophe correctly: <strong>boy’s</strong>, <strong>boys’</strong>, <strong>don’t</strong></li>
+            <li>Use direct speech punctuation correctly</li>
+            <li>Capitalise <strong>I</strong>, proper nouns, days, months, and official titles when specific</li>
+          </ul>
+        </div>
+
+        <h3>100 most tested mechanics items</h3>
+        <div class="quick-facts">
+          <ul>
+            <li>1. accommodation</li>
+            <li>2. achieve</li>
+            <li>3. across</li>
+            <li>4. aggressive</li>
+            <li>5. argument</li>
+            <li>6. beginning</li>
+            <li>7. believe</li>
+            <li>8. calendar</li>
+            <li>9. cemetery</li>
+            <li>10. changeable</li>
+            <li>11. committee</li>
+            <li>12. conscience</li>
+            <li>13. conscious</li>
+            <li>14. definitely</li>
+            <li>15. dilemma</li>
+            <li>16. disappear</li>
+            <li>17. disappoint</li>
+            <li>18. embarrass</li>
+            <li>19. environment</li>
+            <li>20. existence</li>
+            <li>21. experience</li>
+            <li>22. fiery</li>
+            <li>23. foreign</li>
+            <li>24. gauge</li>
+            <li>25. government</li>
+            <li>26. grateful</li>
+            <li>27. guarantee</li>
+            <li>28. harass</li>
+            <li>29. height</li>
+            <li>30. independent</li>
+            <li>31. intelligence</li>
+            <li>32. knowledge</li>
+            <li>33. liaison</li>
+            <li>34. maintenance</li>
+            <li>35. manoeuvre</li>
+            <li>36. millennium</li>
+            <li>37. necessary</li>
+            <li>38. neighbour</li>
+            <li>39. occurrence</li>
+            <li>40. occasion</li>
+            <li>41. parallel</li>
+            <li>42. privilege</li>
+            <li>43. professor</li>
+            <li>44. pronunciation</li>
+            <li>45. receive</li>
+            <li>46. recommend</li>
+            <li>47. reference</li>
+            <li>48. rhythm</li>
+            <li>49. separate</li>
+            <li>50. sergeant</li>
+            <li>51. supersede</li>
+            <li>52. surprise</li>
+            <li>53. thorough</li>
+            <li>54. through</li>
+            <li>55. twelfth</li>
+            <li>56. weird</li>
+            <li>57. absence</li>
+            <li>58. acceptable</li>
+            <li>59. accidentally</li>
+            <li>60. acquaint</li>
+            <li>61. amateur</li>
+            <li>62. apparent</li>
+            <li>63. atheist</li>
+            <li>64. auxiliary</li>
+            <li>65. business</li>
+            <li>66. category</li>
+            <li>67. ceiling</li>
+            <li>68. collectible</li>
+            <li>69. commitment</li>
+            <li>70. conscientious</li>
+            <li>71. curiosity</li>
+            <li>72. deceive</li>
+            <li>73. desperate</li>
+            <li>74. discipline</li>
+            <li>75. equipment</li>
+            <li>76. exceed</li>
+            <li>77. exercise</li>
+            <li>78. exhilarate</li>
+            <li>79. fluorescent</li>
+            <li>80. humorous</li>
+            <li>81. immediate</li>
+            <li>82. indispensable</li>
+            <li>83. jealous</li>
+            <li>84. judgment</li>
+            <li>85. leisure</li>
+            <li>86. library</li>
+            <li>87. licence</li>
+            <li>88. miniature</li>
+            <li>89. mischievous</li>
+            <li>90. noticeable</li>
+            <li>91. occasion</li>
+            <li>92. omission</li>
+            <li>93. persevere</li>
+            <li>94. personnel</li>
+            <li>95. possess</li>
+            <li>96. precede</li>
+            <li>97. questionnaire</li>
+            <li>98. relevant</li>
+            <li>99. restaurant</li>
+            <li>100. successful</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 JAMB tip</strong>
+          <p>Words like accommodation, committee, embarrass, necessary, privilege, questionnaire and restaurant repeat a lot.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Ordinary Usage</h2>
+        <p><strong>Ordinary usage</strong> means the literal meaning of a word or expression.</p>
+
+        <h3>Where to use ordinary meaning correctly</h3>
+        <div class="highlight-box">
+          <p>Ask yourself: <strong>What does the word mean exactly as written, without metaphor or idiom?</strong></p>
+        </div>
+
+        <div class="example-box">
+          <div class="title">The bank of the river was slippery.</div>
+          <div class="line"><strong>Meaning:</strong> Side or edge of the river</div>
+          <div class="line"><strong>Why:</strong> This is literal geographical meaning.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">The light in the room was too dim to read.</div>
+          <div class="line"><strong>Meaning:</strong> Brightness or illumination</div>
+        </div>
+        <div class="example-box">
+          <div class="title">He ran to catch the bus.</div>
+          <div class="line"><strong>Meaning:</strong> Moved quickly on foot</div>
+        </div>
+        <div class="example-box">
+          <div class="title">The head of the school addressed the students.</div>
+          <div class="line"><strong>Meaning:</strong> The principal or leader</div>
+        </div>
+        <div class="example-box">
+          <div class="title">She bought a new pair of shoes.</div>
+          <div class="line"><strong>Meaning:</strong> Two matching items</div>
+        </div>
+        <div class="example-box">
+          <div class="title">The cold weather made him shiver.</div>
+          <div class="line"><strong>Meaning:</strong> Low temperature</div>
+        </div>
+        <div class="example-box">
+          <div class="title">The bark of the dog woke me up.</div>
+          <div class="line"><strong>Meaning:</strong> The sound a dog makes</div>
+        </div>
+        <div class="example-box">
+          <div class="title">He drew a picture of his house.</div>
+          <div class="line"><strong>Meaning:</strong> Made a sketch</div>
+        </div>
+        <div class="example-box">
+          <div class="title">The key to the door was missing.</div>
+          <div class="line"><strong>Meaning:</strong> A metal device used to open a lock</div>
+        </div>
+        <div class="example-box">
+          <div class="title">She planted flowers in the garden.</div>
+          <div class="line"><strong>Meaning:</strong> Put plants into the soil</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Figurative Usage</h2>
+        <p><strong>Figurative usage</strong> is non-literal language. JAMB may ask for the figure of speech, the intended meaning, or the best explanation.</p>
+
+        <h3>Where figurative usage is used</h3>
+        <div class="jamb-alert">
+          <h4>Main clue</h4>
+          <ul>
+            <li>If the sentence is not true literally, it is likely figurative</li>
+            <li>Look for comparison, exaggeration, human qualities, contradiction, or sound imitation</li>
+          </ul>
+        </div>
+
+        <h3>100 figures of speech</h3>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>No.</th>
+              <th>Expression</th>
+              <th>Type</th>
+              <th>Meaning</th>
+              <th>Example</th>
+            </tr>
+            <tr><td>1</td><td>As brave as a lion</td><td>Simile</td><td>Extremely courageous</td><td>He fought as brave as a lion.</td></tr>
+            <tr><td>2</td><td>Her smile is like sunshine</td><td>Simile</td><td>Bright and cheerful</td><td>Her smile is like sunshine.</td></tr>
+            <tr><td>3</td><td>As cold as ice</td><td>Simile</td><td>Emotionless or unfriendly</td><td>His stare was as cold as ice.</td></tr>
+            <tr><td>4</td><td>Busy as a bee</td><td>Simile</td><td>Very hardworking</td><td>She is busy as a bee.</td></tr>
+            <tr><td>5</td><td>As light as a feather</td><td>Simile</td><td>Very light</td><td>The box was as light as a feather.</td></tr>
+            <tr><td>6</td><td>He ran like the wind</td><td>Simile</td><td>Very fast</td><td>He ran like the wind.</td></tr>
+            <tr><td>7</td><td>As strong as an ox</td><td>Simile</td><td>Very strong</td><td>The wrestler is as strong as an ox.</td></tr>
+            <tr><td>8</td><td>Sweet as honey</td><td>Simile</td><td>Very pleasant</td><td>Her voice is sweet as honey.</td></tr>
+            <tr><td>9</td><td>Quiet as a mouse</td><td>Simile</td><td>Very silent</td><td>The child was quiet as a mouse.</td></tr>
+            <tr><td>10</td><td>As white as snow</td><td>Simile</td><td>Very white</td><td>Her dress was as white as snow.</td></tr>
+
+            <tr><td>11</td><td>Life is a roller coaster</td><td>Metaphor</td><td>Life has ups and downs</td><td>Life is a roller coaster.</td></tr>
+            <tr><td>12</td><td>Time is money</td><td>Metaphor</td><td>Time is valuable</td><td>Time is money.</td></tr>
+            <tr><td>13</td><td>The world is a stage</td><td>Metaphor</td><td>Life is like drama</td><td>The world is a stage.</td></tr>
+            <tr><td>14</td><td>Her eyes are diamonds</td><td>Metaphor</td><td>Eyes sparkle beautifully</td><td>Her eyes are diamonds.</td></tr>
+            <tr><td>15</td><td>He is a night owl</td><td>Metaphor</td><td>He stays up late</td><td>He is a night owl.</td></tr>
+            <tr><td>16</td><td>Love is a battlefield</td><td>Metaphor</td><td>Love involves struggle</td><td>Love is a battlefield.</td></tr>
+            <tr><td>17</td><td>The classroom was a zoo</td><td>Metaphor</td><td>Very noisy and chaotic</td><td>The classroom was a zoo.</td></tr>
+            <tr><td>18</td><td>She has a heart of gold</td><td>Metaphor</td><td>Very kind</td><td>She has a heart of gold.</td></tr>
+            <tr><td>19</td><td>Books are windows to the world</td><td>Metaphor</td><td>Reading gives knowledge</td><td>Books are windows to the world.</td></tr>
+            <tr><td>20</td><td>His words were daggers</td><td>Metaphor</td><td>His words hurt deeply</td><td>His words were daggers.</td></tr>
+
+            <tr><td>21</td><td>The wind whispered through the trees</td><td>Personification</td><td>Wind moved softly</td><td>The wind whispered through the trees.</td></tr>
+            <tr><td>22</td><td>The sun smiled down on us</td><td>Personification</td><td>Sun shone warmly</td><td>The sun smiled down on us.</td></tr>
+            <tr><td>23</td><td>Time flies when you're happy</td><td>Personification</td><td>Time passes quickly</td><td>Time flies when you're happy.</td></tr>
+            <tr><td>24</td><td>The flowers danced in the breeze</td><td>Personification</td><td>Flowers moved gracefully</td><td>The flowers danced in the breeze.</td></tr>
+            <tr><td>25</td><td>The moon danced in the night sky</td><td>Personification</td><td>Moon seemed playful</td><td>The moon danced in the night sky.</td></tr>
+            <tr><td>26</td><td>Death laid its cold hand</td><td>Personification</td><td>Death took someone</td><td>Death laid its cold hand on him.</td></tr>
+            <tr><td>27</td><td>The clock ticked impatiently</td><td>Personification</td><td>Clock sounded urgent</td><td>The clock ticked impatiently.</td></tr>
+            <tr><td>28</td><td>Opportunity knocked at the door</td><td>Personification</td><td>A chance arrived</td><td>Opportunity knocked at the door.</td></tr>
+            <tr><td>29</td><td>The stars winked at me</td><td>Personification</td><td>Stars twinkled</td><td>The stars winked at me.</td></tr>
+            <tr><td>30</td><td>Anger boiled inside him</td><td>Personification</td><td>Anger grew intensely</td><td>Anger boiled inside him.</td></tr>
+
+            <tr><td>31</td><td>I’ve told you a million times</td><td>Hyperbole</td><td>Many times</td><td>I’ve told you a million times.</td></tr>
+            <tr><td>32</td><td>I’m so hungry I could eat a horse</td><td>Hyperbole</td><td>Extremely hungry</td><td>I could eat a horse.</td></tr>
+            <tr><td>33</td><td>My bag weighs a ton</td><td>Hyperbole</td><td>Very heavy</td><td>My bag weighs a ton.</td></tr>
+            <tr><td>34</td><td>She cried an ocean of tears</td><td>Hyperbole</td><td>Cried a lot</td><td>She cried an ocean of tears.</td></tr>
+            <tr><td>35</td><td>I waited forever</td><td>Hyperbole</td><td>Waited a very long time</td><td>I waited forever.</td></tr>
+            <tr><td>36</td><td>It’s hotter than the sun</td><td>Hyperbole</td><td>Extremely hot</td><td>It’s hotter than the sun.</td></tr>
+            <tr><td>37</td><td>He’s older than the hills</td><td>Hyperbole</td><td>Very old</td><td>He’s older than the hills.</td></tr>
+            <tr><td>38</td><td>This book weighs a ton</td><td>Hyperbole</td><td>Very heavy</td><td>This book weighs a ton.</td></tr>
+            <tr><td>39</td><td>I could sleep for a year</td><td>Hyperbole</td><td>Extremely tired</td><td>I could sleep for a year.</td></tr>
+            <tr><td>40</td><td>I’m starving to death</td><td>Hyperbole</td><td>Very hungry</td><td>I’m starving to death.</td></tr>
+
+            <tr><td>41</td><td>“Lovely weather!” during rain</td><td>Irony</td><td>Opposite of reality</td><td>“Lovely weather!” she said.</td></tr>
+            <tr><td>42</td><td>“Great job!” after failure</td><td>Irony</td><td>Sarcastic praise</td><td>“Great job!” he said after they failed.</td></tr>
+            <tr><td>43</td><td>The fire station burned down</td><td>Irony</td><td>Unexpected opposite result</td><td>The fire station burned down.</td></tr>
+            <tr><td>44</td><td>“Nice going!” after a mistake</td><td>Irony</td><td>Sarcastic criticism</td><td>“Nice going!” she said.</td></tr>
+            <tr><td>45</td><td>A doctor afraid of blood</td><td>Irony</td><td>Contradictory situation</td><td>A doctor afraid of blood is ironic.</td></tr>
+            <tr><td>46</td><td>“Brilliant!” after silly mistake</td><td>Irony</td><td>Sarcastic opposite</td><td>“Brilliant!” he said.</td></tr>
+            <tr><td>47</td><td>“Well done!” after poor performance</td><td>Irony</td><td>Sarcastic praise</td><td>“Well done!” she said.</td></tr>
+
+            <tr><td>48</td><td>Deafening silence</td><td>Oxymoron</td><td>Very noticeable silence</td><td>A deafening silence filled the room.</td></tr>
+            <tr><td>49</td><td>Bitter-sweet</td><td>Oxymoron</td><td>Pleasure mixed with pain</td><td>The victory was bitter-sweet.</td></tr>
+            <tr><td>50</td><td>Jumbo shrimp</td><td>Oxymoron</td><td>Contradictory size terms</td><td>They served jumbo shrimp.</td></tr>
+            <tr><td>51</td><td>Living dead</td><td>Oxymoron</td><td>Barely alive</td><td>He felt like the living dead.</td></tr>
+            <tr><td>52</td><td>Act naturally</td><td>Oxymoron</td><td>Forced natural behaviour</td><td>Just act naturally.</td></tr>
+            <tr><td>53</td><td>Sweet sorrow</td><td>Oxymoron</td><td>Pleasant sadness</td><td>Parting is such sweet sorrow.</td></tr>
+
+            <tr><td>54</td><td>Passed away</td><td>Euphemism</td><td>Died</td><td>Her grandfather passed away.</td></tr>
+            <tr><td>55</td><td>Let go</td><td>Euphemism</td><td>Dismissed from work</td><td>The company let go of workers.</td></tr>
+            <tr><td>56</td><td>Economical with the truth</td><td>Euphemism</td><td>Not fully honest</td><td>He was economical with the truth.</td></tr>
+            <tr><td>57</td><td>In a better place</td><td>Euphemism</td><td>Dead</td><td>She is in a better place.</td></tr>
+            <tr><td>58</td><td>Big-boned</td><td>Euphemism</td><td>Overweight</td><td>He is big-boned.</td></tr>
+            <tr><td>59</td><td>Kick the bucket</td><td>Euphemism / Idiomatic</td><td>Died</td><td>He kicked the bucket.</td></tr>
+
+            <tr><td>60</td><td>Peter Piper picked a peck...</td><td>Alliteration</td><td>Repeated initial sound</td><td>Peter Piper picked a peck...</td></tr>
+            <tr><td>61</td><td>She sells seashells...</td><td>Alliteration</td><td>Repeated s sound</td><td>She sells seashells by the seashore.</td></tr>
+            <tr><td>62</td><td>Big bad wolf</td><td>Alliteration</td><td>Repeated b sound</td><td>The big bad wolf appeared.</td></tr>
+            <tr><td>63</td><td>Wild and wonderful</td><td>Alliteration</td><td>Repeated w sound</td><td>It was wild and wonderful.</td></tr>
+            <tr><td>64</td><td>Sally sang sweetly</td><td>Alliteration</td><td>Repeated s sound</td><td>Sally sang sweetly.</td></tr>
+
+            <tr><td>65</td><td>Tick-tock</td><td>Onomatopoeia</td><td>Clock sound</td><td>The clock went tick-tock.</td></tr>
+            <tr><td>66</td><td>Buzz</td><td>Onomatopoeia</td><td>Bee sound</td><td>The bees buzzed around us.</td></tr>
+            <tr><td>67</td><td>Creaked</td><td>Onomatopoeia</td><td>Old door sound</td><td>The door creaked open.</td></tr>
+            <tr><td>68</td><td>Splash</td><td>Onomatopoeia</td><td>Water impact sound</td><td>He entered the pool with a splash.</td></tr>
+            <tr><td>69</td><td>Boom</td><td>Onomatopoeia</td><td>Thunder sound</td><td>Thunder went boom.</td></tr>
+            <tr><td>70</td><td>Rustled</td><td>Onomatopoeia</td><td>Leaf sound</td><td>The leaves rustled.</td></tr>
+            <tr><td>71</td><td>Whistled</td><td>Onomatopoeia</td><td>Kettle sound</td><td>The kettle whistled.</td></tr>
+
+            <tr><td>72</td><td>O Death, where is thy sting?</td><td>Apostrophe</td><td>Addressing an abstract idea</td><td>O Death, where is thy sting?</td></tr>
+            <tr><td>73</td><td>O Captain! My Captain!</td><td>Apostrophe</td><td>Addressing an absent/dead person</td><td>O Captain! My Captain!</td></tr>
+            <tr><td>74</td><td>Hello darkness, my old friend</td><td>Apostrophe</td><td>Addressing darkness directly</td><td>Hello darkness, my old friend.</td></tr>
+            <tr><td>75</td><td>O Wind, if winter comes</td><td>Apostrophe</td><td>Addressing the wind</td><td>O Wind, if winter comes.</td></tr>
+            <tr><td>76</td><td>Twinkle, twinkle little star</td><td>Apostrophe</td><td>Addressing a star</td><td>Twinkle, twinkle little star.</td></tr>
+            <tr><td>77</td><td>O Moon, how you light the night</td><td>Apostrophe</td><td>Addressing the moon</td><td>O Moon, how you light the night.</td></tr>
+            <tr><td>78</td><td>O Romeo, Romeo...</td><td>Apostrophe</td><td>Addressing absent Romeo</td><td>O Romeo, Romeo, wherefore art thou?</td></tr>
+
+            <tr><td>79</td><td>Less is more</td><td>Paradox</td><td>Using less can achieve more</td><td>Less is more in design.</td></tr>
+            <tr><td>80</td><td>The beginning of the end</td><td>Paradox</td><td>The start of something’s finish</td><td>That quarrel was the beginning of the end.</td></tr>
+            <tr><td>81</td><td>I must be cruel to be kind</td><td>Paradox</td><td>Harshness may produce kindness</td><td>I must be cruel to be kind.</td></tr>
+            <tr><td>82</td><td>Failure is the mother of success</td><td>Paradox</td><td>Failure can lead to success</td><td>Failure is the mother of success.</td></tr>
+            <tr><td>83</td><td>The more you learn...</td><td>Paradox</td><td>Knowledge reveals ignorance</td><td>The more you learn, the more you realise you don’t know.</td></tr>
+            <tr><td>84</td><td>The only constant is change</td><td>Paradox</td><td>Change never stops</td><td>The only constant is change.</td></tr>
+            <tr><td>85</td><td>You cannot step into the same river twice</td><td>Paradox</td><td>Everything changes</td><td>You cannot step into the same river twice.</td></tr>
+
+            <tr><td>86</td><td>All the world’s a stage</td><td>Synecdoche/Metonymy</td><td>Life is like a play</td><td>All the world’s a stage.</td></tr>
+            <tr><td>87</td><td>The pen is mightier than the sword</td><td>Metonymy</td><td>Ideas are stronger than violence</td><td>The pen is mightier than the sword.</td></tr>
+            <tr><td>88</td><td>Lend me your ears</td><td>Synecdoche</td><td>Listen carefully</td><td>Lend me your ears.</td></tr>
+            <tr><td>89</td><td>The crown will decide</td><td>Metonymy</td><td>The monarch/government will decide</td><td>The crown will decide.</td></tr>
+            <tr><td>90</td><td>Many hands make light work</td><td>Synecdoche</td><td>Many workers make work easy</td><td>Many hands make light work.</td></tr>
+            <tr><td>91</td><td>He has many mouths to feed</td><td>Synecdoche</td><td>He supports many people</td><td>He has many mouths to feed.</td></tr>
+
+            <tr><td>92</td><td>As gentle as a lamb</td><td>Simile</td><td>Very gentle</td><td>He is as gentle as a lamb.</td></tr>
+            <tr><td>93</td><td>Her voice is music</td><td>Metaphor</td><td>Her voice is pleasant</td><td>Her voice is music.</td></tr>
+            <tr><td>94</td><td>The storm raged angrily</td><td>Personification</td><td>Storm acts like an angry being</td><td>The storm raged angrily.</td></tr>
+            <tr><td>95</td><td>As busy as a beaver</td><td>Simile</td><td>Very hardworking</td><td>She is as busy as a beaver.</td></tr>
+            <tr><td>96</td><td>The classroom exploded with laughter</td><td>Metaphor</td><td>Suddenly became very loud</td><td>The classroom exploded with laughter.</td></tr>
+            <tr><td>97</td><td>The river sang a lullaby</td><td>Personification</td><td>River sounded soothing</td><td>The river sang a lullaby.</td></tr>
+            <tr><td>98</td><td>I’ve died and gone to heaven</td><td>Hyperbole</td><td>Extremely pleased</td><td>I’ve died and gone to heaven.</td></tr>
+            <tr><td>99</td><td>Jumbo shrimp</td><td>Oxymoron</td><td>Contradictory terms</td><td>They served jumbo shrimp.</td></tr>
+            <tr><td>100</td><td>The kettle whistled</td><td>Onomatopoeia</td><td>Word imitates sound</td><td>The kettle whistled loudly.</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Idiomatic Usage</h2>
+        <p><strong>Idiomatic usage</strong> means fixed expressions whose meanings cannot be guessed literally.</p>
+
+        <h3>Where to use idioms correctly</h3>
+        <div class="jamb-alert">
+          <h4>Main rules</h4>
+          <ul>
+            <li>Do not translate idioms word for word</li>
+            <li>Memorise exact meaning and proper context</li>
+            <li>JAMB usually wants the idiomatic meaning, not the literal meaning</li>
+          </ul>
+        </div>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>No.</th>
+              <th>Idiom</th>
+              <th>Meaning</th>
+            </tr>
+            <tr><td>1</td><td>A blessing in disguise</td><td>Something good that first seemed bad</td></tr>
+            <tr><td>2</td><td>A drop in the ocean</td><td>A very small amount</td></tr>
+            <tr><td>3</td><td>A piece of cake</td><td>Very easy</td></tr>
+            <tr><td>4</td><td>Acid test</td><td>A decisive test</td></tr>
+            <tr><td>5</td><td>Actions speak louder than words</td><td>What you do matters more</td></tr>
+            <tr><td>6</td><td>Add insult to injury</td><td>Make a bad situation worse</td></tr>
+            <tr><td>7</td><td>All ears</td><td>Listening attentively</td></tr>
+            <tr><td>8</td><td>At the drop of a hat</td><td>Immediately</td></tr>
+            <tr><td>9</td><td>Back to square one</td><td>Start again from the beginning</td></tr>
+            <tr><td>10</td><td>Barking up the wrong tree</td><td>Mistaken about something</td></tr>
+            <tr><td>11</td><td>Beat around the bush</td><td>Avoid the main point</td></tr>
+            <tr><td>12</td><td>Break even</td><td>No profit, no loss</td></tr>
+            <tr><td>13</td><td>Break the ice</td><td>Start interaction</td></tr>
+            <tr><td>14</td><td>Burn the midnight oil</td><td>Study or work late</td></tr>
+            <tr><td>15</td><td>Bury the hatchet</td><td>Make peace</td></tr>
+            <tr><td>16</td><td>By the skin of one’s teeth</td><td>Narrowly succeed</td></tr>
+            <tr><td>17</td><td>Call it a day</td><td>Stop work</td></tr>
+            <tr><td>18</td><td>Cost an arm and a leg</td><td>Very expensive</td></tr>
+            <tr><td>19</td><td>Cry over spilt milk</td><td>Regret what cannot be changed</td></tr>
+            <tr><td>20</td><td>Cut to the chase</td><td>Get to the point</td></tr>
+            <tr><td>21</td><td>Die hard</td><td>Difficult to stop</td></tr>
+            <tr><td>22</td><td>Draw the line</td><td>Set a limit</td></tr>
+            <tr><td>23</td><td>Every cloud has a silver lining</td><td>Good exists in bad situations</td></tr>
+            <tr><td>24</td><td>Face the music</td><td>Accept consequences</td></tr>
+            <tr><td>25</td><td>Feel under the weather</td><td>Feel ill</td></tr>
+            <tr><td>26</td><td>Get cold feet</td><td>Become nervous</td></tr>
+            <tr><td>27</td><td>Give someone the cold shoulder</td><td>Ignore someone</td></tr>
+            <tr><td>28</td><td>Go the extra mile</td><td>Make extra effort</td></tr>
+            <tr><td>29</td><td>Hit the nail on the head</td><td>Be exactly right</td></tr>
+            <tr><td>30</td><td>Hit the jackpot</td><td>Become suddenly successful</td></tr>
+            <tr><td>31</td><td>Hold your horses</td><td>Be patient</td></tr>
+            <tr><td>32</td><td>In hot water</td><td>In trouble</td></tr>
+            <tr><td>33</td><td>In the same boat</td><td>In the same situation</td></tr>
+            <tr><td>34</td><td>Jump on the bandwagon</td><td>Follow a trend</td></tr>
+            <tr><td>35</td><td>Keep one’s fingers crossed</td><td>Hope for luck</td></tr>
+            <tr><td>36</td><td>Kick the bucket</td><td>Die</td></tr>
+            <tr><td>37</td><td>Let the cat out of the bag</td><td>Reveal a secret</td></tr>
+            <tr><td>38</td><td>Like a bull in a china shop</td><td>Very clumsy</td></tr>
+            <tr><td>39</td><td>Look before you leap</td><td>Think before acting</td></tr>
+            <tr><td>40</td><td>Make a long story short</td><td>Summarise briefly</td></tr>
+            <tr><td>41</td><td>Miss the boat</td><td>Miss an opportunity</td></tr>
+            <tr><td>42</td><td>Not playing with a full deck</td><td>Not very intelligent</td></tr>
+            <tr><td>43</td><td>On cloud nine</td><td>Very happy</td></tr>
+            <tr><td>44</td><td>Once in a blue moon</td><td>Very rarely</td></tr>
+            <tr><td>45</td><td>Out of the blue</td><td>Unexpectedly</td></tr>
+            <tr><td>46</td><td>Over the moon</td><td>Extremely happy</td></tr>
+            <tr><td>47</td><td>Pass with flying colours</td><td>Succeed excellently</td></tr>
+            <tr><td>48</td><td>Pull someone’s leg</td><td>Joke or tease</td></tr>
+            <tr><td>49</td><td>Put all eggs in one basket</td><td>Risk everything on one plan</td></tr>
+            <tr><td>50</td><td>Rain cats and dogs</td><td>Rain heavily</td></tr>
+            <tr><td>51</td><td>Read between the lines</td><td>Understand hidden meaning</td></tr>
+            <tr><td>52</td><td>See eye to eye</td><td>Agree completely</td></tr>
+            <tr><td>53</td><td>Sit on the fence</td><td>Remain undecided</td></tr>
+            <tr><td>54</td><td>Spill the beans</td><td>Reveal a secret</td></tr>
+            <tr><td>55</td><td>Steal someone’s thunder</td><td>Take credit for another’s idea</td></tr>
+            <tr><td>56</td><td>Take with a pinch of salt</td><td>Do not fully believe</td></tr>
+            <tr><td>57</td><td>The ball is in your court</td><td>Your turn to act</td></tr>
+            <tr><td>58</td><td>The early bird catches the worm</td><td>Act early to gain advantage</td></tr>
+            <tr><td>59</td><td>Through thick and thin</td><td>In good and bad times</td></tr>
+            <tr><td>60</td><td>Throw in the towel</td><td>Give up</td></tr>
+            <tr><td>61</td><td>Time flies</td><td>Time passes quickly</td></tr>
+            <tr><td>62</td><td>Under the weather</td><td>Feeling ill</td></tr>
+            <tr><td>63</td><td>Up in the air</td><td>Uncertain</td></tr>
+            <tr><td>64</td><td>When pigs fly</td><td>Never</td></tr>
+            <tr><td>65</td><td>Wrap your head around</td><td>Understand something difficult</td></tr>
+            <tr><td>66</td><td>Your guess is as good as mine</td><td>I do not know either</td></tr>
+            <tr><td>67</td><td>A burning question</td><td>Urgent issue</td></tr>
+            <tr><td>68</td><td>A dog’s life</td><td>A miserable life</td></tr>
+            <tr><td>69</td><td>Above board</td><td>Honest and legal</td></tr>
+            <tr><td>70</td><td>At daggers drawn</td><td>Ready to fight</td></tr>
+            <tr><td>71</td><td>Beat a dead horse</td><td>Waste effort on hopeless issue</td></tr>
+            <tr><td>72</td><td>Burn your bridges</td><td>Destroy your return options</td></tr>
+            <tr><td>73</td><td>By hook or by crook</td><td>By any means</td></tr>
+            <tr><td>74</td><td>Call the shots</td><td>Be in charge</td></tr>
+            <tr><td>75</td><td>Caught red-handed</td><td>Caught in the act</td></tr>
+            <tr><td>76</td><td>Chip on one’s shoulder</td><td>Holding a grudge</td></tr>
+            <tr><td>77</td><td>Cold turkey</td><td>Stop suddenly</td></tr>
+            <tr><td>78</td><td>Cross that bridge when you come to it</td><td>Deal with it later</td></tr>
+            <tr><td>79</td><td>Devil’s advocate</td><td>Argue opposite side</td></tr>
+            <tr><td>80</td><td>Don’t count your chickens before they hatch</td><td>Do not assume success too early</td></tr>
+            <tr><td>81</td><td>Drop like flies</td><td>Fall or die in large numbers</td></tr>
+            <tr><td>82</td><td>Elephant in the room</td><td>Obvious ignored issue</td></tr>
+            <tr><td>83</td><td>Fit as a fiddle</td><td>Very healthy</td></tr>
+            <tr><td>84</td><td>Get a taste of your own medicine</td><td>Receive same treatment you gave</td></tr>
+            <tr><td>85</td><td>Give the benefit of the doubt</td><td>Believe despite uncertainty</td></tr>
+            <tr><td>86</td><td>Go down in flames</td><td>Fail badly</td></tr>
+            <tr><td>87</td><td>Hang by a thread</td><td>Be in danger</td></tr>
+            <tr><td>88</td><td>Have a finger in every pie</td><td>Be involved in many matters</td></tr>
+            <tr><td>89</td><td>Hit the ground running</td><td>Start fast and effectively</td></tr>
+            <tr><td>90</td><td>In a nutshell</td><td>In summary</td></tr>
+            <tr><td>91</td><td>Jump the gun</td><td>Start too early</td></tr>
+            <tr><td>92</td><td>Keep something at bay</td><td>Hold off or prevent</td></tr>
+            <tr><td>93</td><td>Let sleeping dogs lie</td><td>Avoid starting trouble</td></tr>
+            <tr><td>94</td><td>Make ends meet</td><td>Manage financially</td></tr>
+            <tr><td>95</td><td>On the ball</td><td>Alert and competent</td></tr>
+            <tr><td>96</td><td>Out on a limb</td><td>In a risky position</td></tr>
+            <tr><td>97</td><td>Play it by ear</td><td>Improvise</td></tr>
+            <tr><td>98</td><td>Rule of thumb</td><td>Practical method</td></tr>
+            <tr><td>99</td><td>Take the bull by the horns</td><td>Face a problem directly</td></tr>
+            <tr><td>100</td><td>When pigs fly</td><td>Impossible / never</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Final Rules for High JAMB Success</h2>
+        <div class="jamb-alert">
+          <h4>Best strategy</h4>
+          <ul>
+            <li>Use British spelling only</li>
+            <li>Separate literal meaning from figurative meaning</li>
+            <li>Memorise common figures of speech by type</li>
+            <li>Memorise idioms exactly — never guess from the individual words</li>
+            <li>Revise in daily batches and test yourself often</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🌟 Final line</strong>
+          <p>Finished — complete Lexis and Structure note. Revise daily and your JAMB Use of English score can become very strong.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Revise 20 mechanics items, 10 idioms, and 10 figures of speech today, then test yourself before sleeping.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+
+    function showAns(id){
+      document.getElementById(id).style.display = 'block';
+    }
+  </script>
+</body>
+</html>

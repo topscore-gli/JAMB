@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB English - The Lekki Headmaster (Chapter 6: Ade as well as Jide COMES vs COME)</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+.progress-container{
+  position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+  background:var(--shadow-in);z-index:15
+}
+.progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+.content{padding:20px 16px;line-height:1.7}
+.main-header{
+  text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+  background:rgba(29,185,84,.1)
+}
+.main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+.main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+.section-card{
+  background:var(--card-bg);padding:22px 18px;border-radius:20px;
+  box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+  margin-bottom:22px;border-left:4px solid var(--accent)
+}
+.section-card h2{
+  font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+  display:flex;align-items:center;gap:8px
+}
+.section-card h3{
+  font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+  padding-left:12px;border-left:3px solid var(--accent-tertiary)
+}
+.section-card h4{font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800}
+.section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+.section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+.section-card li{margin-bottom:7px;font-size:14px}
+
+.quick-facts{
+  background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+  padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+}
+.quick-facts li{font-size:13px}
+
+.highlight-box{
+  background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+  border-left:3px solid var(--accent-tertiary)
+}
+
+.quote-box{
+  background:rgba(255,255,255,.04);
+  padding:14px 16px;border-radius:12px;margin:12px 0;
+  border-left:4px solid var(--accent-secondary)
+}
+.quote-box .q{font-size:14px;font-style:italic;line-height:1.6}
+.quote-box .who{margin-top:8px;font-size:12px;color:var(--text-secondary);font-weight:700}
+
+.memory-tip{
+  background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+  border-left:4px solid var(--accent-secondary)
+}
+.memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+.memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+.jamb-alert{
+  background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+  border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+}
+.jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+.jamb-alert li{font-size:13px}
+
+.table-container{
+  width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+  box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+}
+.summary-table{
+  width:100%;min-width:1200px;border-collapse:separate;border-spacing:0;font-size:13px
+}
+.summary-table th{
+  background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+}
+.summary-table td{
+  padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);white-space:nowrap;vertical-align:top
+}
+.summary-table tr:last-child td{border-bottom:none}
+.summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+.table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+.mini-quiz{
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.08);
+  padding:14px 16px;border-radius:14px;margin:12px 0
+}
+.mini-quiz .qtitle{font-weight:900;color:var(--accent-tertiary);margin-bottom:8px;font-size:14px}
+.mini-quiz button{
+  width:100%;margin-top:10px;border:none;border-radius:12px;padding:12px 14px;font-weight:900;cursor:pointer;
+  background:var(--accent);color:#000;
+  box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out)
+}
+.mini-quiz .ans{
+  margin-top:10px;font-size:13px;color:var(--text-secondary);display:none
+}
+
+.nav-bar{
+  position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+  display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+}
+.nav-bar .nav-item{text-align:center}
+.nav-bar .nav-item.center button{
+  width:50px;height:50px;font-size:24px;background:var(--accent);
+  box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+  color:#000
+}
+.nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+.explore-btn{
+  background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+  box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+  font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+}
+.explore-btn:active{
+  box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+  transform:scale(.98)
+}
+  </style>
+</head>
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+    
+<div class="top-bar neumorphic">
+  <button class="neumorphic-btn" onclick="history.back()">←</button>
+  <div class="header">ENGLISH (NOVEL)</div>
+  <div class="right-icons">
+    <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+    <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="main-header">
+    <h1>📘 Chapter 6 — “Ade as well as Jide COMES vs COME”</h1>
+    <p>The Lekki Headmaster (Kabir Alabi Garba) • Open Day drama • grammar rule • job security in private schools</p>
+  </div>
+
+  <!-- SUMMARY TABLE -->
+  <div class="section-card">
+    <h2>📋 Summary Table (Fast Revision)</h2>
+
+    <div class="table-container">
+      <table class="summary-table">
+        <tr>
+          <th>Area</th>
+          <th>Key detail</th>
+          <th>Likely JAMB angle</th>
+        </tr>
+        <tr>
+          <td><strong>Setting</strong></td>
+          <td>Open Day at Stardom Schools</td>
+          <td>Context/setting question</td>
+        </tr>
+        <tr>
+          <td><strong>Parent</strong></td>
+          <td>Mr. Guta complains aggressively</td>
+          <td>Character action</td>
+        </tr>
+        <tr>
+          <td><strong>Teacher</strong></td>
+          <td>Mr. Fafore (English teacher)</td>
+          <td>Who was punished?</td>
+        </tr>
+        <tr>
+          <td><strong>Disputed sentence</strong></td>
+          <td>“Ade as well as Jide comes early.”</td>
+          <td>Grammar objective question</td>
+        </tr>
+        <tr>
+          <td><strong>Complaint</strong></td>
+          <td>Parent insists it should be “come” not “comes”</td>
+          <td>Difference between “and” vs “as well as”</td>
+        </tr>
+        <tr>
+          <td><strong>MD’s mistake</strong></td>
+          <td>Mrs. Ibidun Gloss sacks Fafore hastily</td>
+          <td>Theme: hasty decision</td>
+        </tr>
+        <tr>
+          <td><strong>Bepo’s role</strong></td>
+          <td>Defends teacher; explains grammar calmly</td>
+          <td>Principal’s competence</td>
+        </tr>
+        <tr>
+          <td><strong>Outcome</strong></td>
+          <td>Phones confirm rule; MD re-employs Fafore</td>
+          <td>Resolution</td>
+        </tr>
+      </table>
+    </div>
+    <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+    <div class="memory-tip">
+      <strong>🧠 One-line recall</strong>
+      <p>Open Day + angry parent + “comes vs come” + MD sacks teacher + Bepo proves rule + teacher returns.</p>
+    </div>
+  </div>
+
+  <!-- Open Day -->
+  <div class="section-card">
+    <h2>1️⃣ Setting: Open Day at Stardom Schools</h2>
+    <p>The chapter takes place during <strong>Open Day</strong>—when parents visit to check progress, meet teachers, and sometimes bring gifts.</p>
+
+    <div class="quick-facts">
+      <ul>
+        <li>Teachers have mixed feelings: some expect praise/gifts</li>
+        <li>Others fear complaints and criticism</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Conflict -->
+  <div class="section-card">
+    <h2>2️⃣ The Conflict: Mr. Guta vs Mr. Fafore</h2>
+    <p>A parent, <strong>Mr. Guta</strong>, storms in furious about an English note his son copied from <strong>Mr. Fafore</strong>.</p>
+
+    <div class="quote-box">
+      <div class="q">“Ade as well as Jide comes early”.</div>
+      <div class="who">— Sentence in the student’s note (the disputed line)</div>
+    </div>
+
+    <div class="highlight-box">
+      <p><strong>Mr. Guta’s claim:</strong> it should be “Ade as well as Jide <strong>come</strong> early”.</p>
+    </div>
+
+    <div class="jamb-alert">
+      <h4>Threat</h4>
+      <ul>
+        <li>He threatens to withdraw his children unless Mr. Fafore is sacked.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- MD reaction -->
+  <div class="section-card">
+    <h2>3️⃣ MD’s Reaction: Hasty Dismissal</h2>
+    <p>The MD, <strong>Mrs. Ibidun Gloss</strong>, reacts strongly. She calls Mr. Fafore incompetent and orders his immediate dismissal without careful investigation.</p>
+
+    <div class="quick-facts">
+      <ul>
+        <li>Mr. Bepo informs Mr. Fafore while walking to the MD’s office</li>
+        <li>Mr. Fafore is shocked and confused (Mr. Guta checked the book and left quietly earlier)</li>
+        <li>Fafore goes to the staff room to pack his belongings</li>
+      </ul>
+    </div>
+
+    <div class="quote-box">
+      <div class="q">“there was no job security in the establishment.”</div>
+      <div class="who">— Staff conclusion after the sudden sacking</div>
+    </div>
+  </div>
+
+  <!-- Meeting + rule -->
+  <div class="section-card">
+    <h2>4️⃣ The Meeting: Grammar Rule Explained</h2>
+    <p>In a meeting, the MD repeats the disputed sentence as the “error.” Mr. Bepo defends Mr. Fafore calmly and explains the grammar rule.</p>
+
+    <div class="quote-box">
+      <div class="q">“When you use ‘and’, the verb that follows is ‘come’. But when you use ‘as well as’, ‘together with’, ‘alongside’, etc., we go for the singular verb with ‘s’.”</div>
+      <div class="who">— Mr. Bepo’s explanation (as given in your notes)</div>
+    </div>
+
+    <div class="quote-box">
+      <div class="q">“The clause is in the subjunctive mood and does not align with normal grammar rules.”</div>
+      <div class="who">— Mr. Bepo (as given in your notes)</div>
+    </div>
+
+    <div class="highlight-box">
+      <p><strong>Key rule:</strong> “as well as” does not make a compound subject like “and”; the verb agrees mainly with the first subject (Ade) → <strong>comes</strong>.</p>
+    </div>
+  </div>
+
+  <!-- Verification -->
+  <div class="section-card">
+    <h2>5️⃣ Verification: Phones Confirm the Truth</h2>
+    <p>The MD asks everyone to check the rule on their phones. They confirm Mr. Bepo and Mr. Fafore are correct.</p>
+
+    <div class="quick-facts">
+      <ul>
+        <li>MD becomes deflated and regretful</li>
+        <li>Mr. Audu cracks a joke to ease tension</li>
+        <li>MD reverses the decision and re-employs Mr. Fafore</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- JAMB Grammar box -->
+  <div class="section-card">
+    <h2>✍️ JAMB Grammar Box: “As well as” Agreement</h2>
+    <div class="highlight-box">
+      <p><strong>Correct:</strong> Ade, as well as Jide, <strong>comes</strong> early.</p>
+      <p><strong>Correct with AND:</strong> Ade and Jide <strong>come</strong> early.</p>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 Memory trick</strong>
+      <p>“As well as” is extra information; it doesn’t change the main subject.</p>
+    </div>
+  </div>
+
+  <!-- Mini quiz -->
+  <div class="section-card">
+    <h2>🧩 Mini Practice (1 Question)</h2>
+    <div class="mini-quiz">
+      <div class="qtitle">Choose the correct sentence:</div>
+      <div>1) The teacher as well as the students <strong>are</strong> happy.</div>
+      <div>2) The teacher as well as the students <strong>is</strong> happy.</div>
+      <button onclick="showAns()">Show Answer</button>
+      <div class="ans" id="ansBox"><strong>Answer:</strong> (2) is correct — “as well as” keeps the verb singular with “teacher”.</div>
+    </div>
+  </div>
+
+  <!-- Themes -->
+  <div class="section-card">
+    <h2>6️⃣ Themes / Lessons</h2>
+    <div class="quick-facts">
+      <ul>
+        <li>Danger of hasty decisions</li>
+        <li>Influence of wealthy parents in private schools</li>
+        <li>Job insecurity for teachers</li>
+        <li>Professionalism and competence in education</li>
+        <li>Humour as tension relief (Mr. Audu)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Likely questions -->
+  <div class="section-card">
+    <h2>✅ Likely JAMB Questions (Practice)</h2>
+    <div class="jamb-alert">
+      <h4>Common question patterns</h4>
+      <ul>
+        <li>What event was taking place in Stardom Schools?</li>
+        <li>Who complained and what was the complaint?</li>
+        <li>State the disputed sentence.</li>
+        <li>Why did the MD sack Mr. Fafore?</li>
+        <li>How did Mr. Bepo resolve the issue?</li>
+        <li>What grammar rule was taught?</li>
+        <li>What lesson does the chapter teach about decision-making?</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Checklist -->
+  <div class="section-card">
+    <h2>✅ Quick Revision Checklist</h2>
+    <div class="quick-facts">
+      <ul>
+        <li>Setting: Open Day</li>
+        <li>Parent: Mr. Guta; Teacher: Mr. Fafore</li>
+        <li>Disputed line: “Ade as well as Jide comes early.”</li>
+        <li>MD sacks hastily; staff fear “no job security”</li>
+        <li>Bepo explains “and” vs “as well as” rule</li>
+        <li>Phones confirm; MD re-employs Fafore</li>
+      </ul>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 Final memory line</strong>
+      <p>Remember: “and” → plural verb, “as well as” → verb agrees with first subject.</p>
+    </div>
+  </div>
+
+  <button class="explore-btn" onclick="alert('Revise: disputed sentence + grammar rule + who acted rashly (MD). Then practise agreement questions.')">Practice JAMB Questions</button>
+</div>
+</div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+
+    function showAns(){
+      document.getElementById('ansBox').style.display = 'block';
+    }
+  </script>
+</body>
+</html>

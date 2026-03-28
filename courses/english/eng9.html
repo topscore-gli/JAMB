@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Oral English - Consonant Sounds Mastery Guide</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .sound-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .sound-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .sound-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+    .word-list{
+      display:flex;flex-wrap:wrap;gap:8px;margin-top:10px
+    }
+    .word-pill{
+      padding:6px 10px;border-radius:20px;
+      background:rgba(29,185,84,.12);border:1px solid rgba(29,185,84,.3);
+      font-size:12px
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:1000px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .quiz-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .quiz-box .q{font-size:14px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px}
+    .quiz-box button{
+      width:100%;margin-top:10px;border:none;border-radius:12px;padding:12px 14px;font-weight:900;cursor:pointer;
+      background:var(--accent);color:#000;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out)
+    }
+    .quiz-answer{
+      margin-top:10px;font-size:13px;color:var(--text-secondary);display:none
+    }
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">ENGLISH</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>🔊 Consonant Sounds Mastery Guide</h1>
+        <p>JAMB 2026 • 24 consonant phonemes • RP pronunciation • easy learning • fast revision</p>
+      </div>
+
+      <div class="section-card">
+        <h2>📋 Quick Overview</h2>
+        <p>JAMB Oral English tests your ability to identify and pronounce <strong>consonant sounds</strong> correctly in <strong>Received Pronunciation (RP)</strong>, the British standard.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li>English has <strong>24 consonant phonemes</strong></li>
+            <li>JAMB often asks for the word with the same consonant sound</li>
+            <li>Minimal pairs are very common: <strong>thin / tin</strong>, <strong>ship / sip</strong>, <strong>very / berry</strong></li>
+          </ul>
+        </div>
+
+        <h3>Step-by-step learning method</h3>
+        <div class="jamb-alert">
+          <h4>How to study well</h4>
+          <ul>
+            <li>Look at the IPA sound symbol</li>
+            <li>Say the words slowly</li>
+            <li>Feel where your lips, teeth, and tongue touch</li>
+            <li>Compare similar sounds side by side</li>
+            <li>Practise minimal pairs aloud every day</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Easy idea</strong>
+          <p>Consonants are easier when you focus on mouth position. Ask yourself: Are my lips closed? Are my teeth touching my lip? Is my tongue between my teeth?</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Easy Meaning of Consonant Groups</h2>
+
+        <div class="sound-box">
+          <div class="title">Plosives</div>
+          <div class="line"><strong>Meaning:</strong> Air is stopped completely, then released suddenly.</div>
+          <div class="line"><strong>Examples:</strong> /p/, /b/, /t/, /d/, /k/, /g/</div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">Fricatives</div>
+          <div class="line"><strong>Meaning:</strong> Air passes through a narrow space and makes friction.</div>
+          <div class="line"><strong>Examples:</strong> /f/, /v/, /θ/, /ð/, /s/, /z/, /ʃ/, /ʒ/, /h/</div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">Affricates</div>
+          <div class="line"><strong>Meaning:</strong> A stop + friction sound together.</div>
+          <div class="line"><strong>Examples:</strong> /tʃ/, /dʒ/</div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">Nasals</div>
+          <div class="line"><strong>Meaning:</strong> Air passes through the nose.</div>
+          <div class="line"><strong>Examples:</strong> /m/, /n/, /ŋ/</div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">Approximants / Liquids</div>
+          <div class="line"><strong>Meaning:</strong> Air flows more smoothly with little friction.</div>
+          <div class="line"><strong>Examples:</strong> /l/, /r/, /j/, /w/</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Plosives</h2>
+        <p>These are strong stop sounds. Air is blocked and then released.</p>
+
+        <div class="sound-box">
+          <div class="title">/p/ as in “pen”</div>
+          <div class="line"><strong>Type:</strong> Voiceless plosive</div>
+          <div class="line"><strong>How to make it:</strong> Close both lips, then release air. No voice vibration.</div>
+          <div class="line"><strong>Compare with:</strong> /b/</div>
+          <div class="word-list">
+            <span class="word-pill">pen</span><span class="word-pill">pin</span><span class="word-pill">pan</span><span class="word-pill">pet</span><span class="word-pill">pat</span>
+            <span class="word-pill">pit</span><span class="word-pill">pot</span><span class="word-pill">put</span><span class="word-pill">pay</span><span class="word-pill">pie</span>
+            <span class="word-pill">pack</span><span class="word-pill">park</span><span class="word-pill">part</span><span class="word-pill">peak</span><span class="word-pill">pick</span>
+            <span class="word-pill">pig</span><span class="word-pill">pile</span><span class="word-pill">pipe</span><span class="word-pill">pink</span><span class="word-pill">page</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/b/ as in “bed”</div>
+          <div class="line"><strong>Type:</strong> Voiced plosive</div>
+          <div class="line"><strong>How to make it:</strong> Close both lips, release air, and use your voice.</div>
+          <div class="word-list">
+            <span class="word-pill">bed</span><span class="word-pill">bad</span><span class="word-pill">big</span><span class="word-pill">boy</span><span class="word-pill">bag</span>
+            <span class="word-pill">bat</span><span class="word-pill">bet</span><span class="word-pill">bit</span><span class="word-pill">but</span><span class="word-pill">buy</span>
+            <span class="word-pill">back</span><span class="word-pill">ball</span><span class="word-pill">band</span><span class="word-pill">bank</span><span class="word-pill">base</span>
+            <span class="word-pill">bear</span><span class="word-pill">beat</span><span class="word-pill">bell</span><span class="word-pill">best</span><span class="word-pill">bird</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/t/ as in “ten”</div>
+          <div class="line"><strong>Type:</strong> Voiceless plosive</div>
+          <div class="line"><strong>How to make it:</strong> Touch the tongue to the upper teeth ridge and release quickly.</div>
+          <div class="line"><strong>Compare with:</strong> /d/ and /θ/</div>
+          <div class="word-list">
+            <span class="word-pill">ten</span><span class="word-pill">tin</span><span class="word-pill">top</span><span class="word-pill">tap</span><span class="word-pill">tip</span>
+            <span class="word-pill">tea</span><span class="word-pill">tie</span><span class="word-pill">toy</span><span class="word-pill">two</span><span class="word-pill">town</span>
+            <span class="word-pill">talk</span><span class="word-pill">tall</span><span class="word-pill">tank</span><span class="word-pill">tape</span><span class="word-pill">task</span>
+            <span class="word-pill">team</span><span class="word-pill">tear</span><span class="word-pill">teeth</span><span class="word-pill">time</span><span class="word-pill">tire</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/d/ as in “dog”</div>
+          <div class="line"><strong>Type:</strong> Voiced plosive</div>
+          <div class="line"><strong>How to make it:</strong> Same tongue position as /t/, but with voice vibration.</div>
+          <div class="word-list">
+            <span class="word-pill">dog</span><span class="word-pill">day</span><span class="word-pill">die</span><span class="word-pill">do</span><span class="word-pill">dad</span>
+            <span class="word-pill">dark</span><span class="word-pill">date</span><span class="word-pill">deal</span><span class="word-pill">deep</span><span class="word-pill">desk</span>
+            <span class="word-pill">door</span><span class="word-pill">down</span><span class="word-pill">draw</span><span class="word-pill">dream</span><span class="word-pill">drink</span>
+            <span class="word-pill">drop</span><span class="word-pill">dry</span><span class="word-pill">dust</span><span class="word-pill">dance</span><span class="word-pill">danger</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/k/ as in “cat”</div>
+          <div class="line"><strong>Type:</strong> Voiceless plosive</div>
+          <div class="line"><strong>How to make it:</strong> Back of tongue touches soft palate, then releases.</div>
+          <div class="line"><strong>Important:</strong> Letter <strong>k</strong>, <strong>c</strong>, and sometimes <strong>ch</strong> can make this sound.</div>
+          <div class="word-list">
+            <span class="word-pill">cat</span><span class="word-pill">key</span><span class="word-pill">cake</span><span class="word-pill">kite</span><span class="word-pill">cup</span>
+            <span class="word-pill">cap</span><span class="word-pill">can</span><span class="word-pill">car</span><span class="word-pill">cut</span><span class="word-pill">keep</span>
+            <span class="word-pill">kick</span><span class="word-pill">kill</span><span class="word-pill">king</span><span class="word-pill">kind</span><span class="word-pill">kiss</span>
+            <span class="word-pill">kit</span><span class="word-pill">knee</span><span class="word-pill">know</span><span class="word-pill">knock</span><span class="word-pill">cool</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/g/ as in “go”</div>
+          <div class="line"><strong>Type:</strong> Voiced plosive</div>
+          <div class="line"><strong>How to make it:</strong> Same back tongue position as /k/, but with voice.</div>
+          <div class="word-list">
+            <span class="word-pill">go</span><span class="word-pill">get</span><span class="word-pill">girl</span><span class="word-pill">give</span><span class="word-pill">good</span>
+            <span class="word-pill">game</span><span class="word-pill">gate</span><span class="word-pill">gift</span><span class="word-pill">glass</span><span class="word-pill">gold</span>
+            <span class="word-pill">great</span><span class="word-pill">green</span><span class="word-pill">grow</span><span class="word-pill">guess</span><span class="word-pill">guide</span>
+            <span class="word-pill">gun</span><span class="word-pill">gap</span><span class="word-pill">gas</span><span class="word-pill">glad</span><span class="word-pill">goal</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Fricatives</h2>
+        <p>These sounds are made by forcing air through a narrow space.</p>
+
+        <div class="sound-box">
+          <div class="title">/f/ as in “fan”</div>
+          <div class="line"><strong>How to make it:</strong> Upper teeth touch lower lip. No voice.</div>
+          <div class="line"><strong>Compare with:</strong> /v/</div>
+          <div class="word-list">
+            <span class="word-pill">fan</span><span class="word-pill">fat</span><span class="word-pill">far</span><span class="word-pill">face</span><span class="word-pill">fact</span>
+            <span class="word-pill">fall</span><span class="word-pill">feel</span><span class="word-pill">fill</span><span class="word-pill">find</span><span class="word-pill">fine</span>
+            <span class="word-pill">fire</span><span class="word-pill">fish</span><span class="word-pill">five</span><span class="word-pill">food</span><span class="word-pill">foot</span>
+            <span class="word-pill">four</span><span class="word-pill">free</span><span class="word-pill">from</span><span class="word-pill">full</span><span class="word-pill">fun</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/v/ as in “van”</div>
+          <div class="line"><strong>How to make it:</strong> Upper teeth touch lower lip, but use voice.</div>
+          <div class="word-list">
+            <span class="word-pill">van</span><span class="word-pill">very</span><span class="word-pill">voice</span><span class="word-pill">view</span><span class="word-pill">visit</span>
+            <span class="word-pill">value</span><span class="word-pill">vary</span><span class="word-pill">vast</span><span class="word-pill">verb</span><span class="word-pill">video</span>
+            <span class="word-pill">village</span><span class="word-pill">vine</span><span class="word-pill">vote</span><span class="word-pill">voyage</span><span class="word-pill">valid</span>
+            <span class="word-pill">valley</span><span class="word-pill">vapour</span><span class="word-pill">vegan</span><span class="word-pill">vendor</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/θ/ as in “thin”</div>
+          <div class="line"><strong>How to make it:</strong> Put the tongue lightly between the teeth. Blow air. No voice.</div>
+          <div class="line"><strong>Very important:</strong> JAMB loves /θ/ vs /t/.</div>
+          <div class="word-list">
+            <span class="word-pill">thin</span><span class="word-pill">think</span><span class="word-pill">thank</span><span class="word-pill">three</span><span class="word-pill">thing</span>
+            <span class="word-pill">thumb</span><span class="word-pill">throw</span><span class="word-pill">theme</span><span class="word-pill">thick</span><span class="word-pill">thief</span>
+            <span class="word-pill">thigh</span><span class="word-pill">thorn</span><span class="word-pill">thread</span><span class="word-pill">throat</span><span class="word-pill">throne</span>
+            <span class="word-pill">through</span><span class="word-pill">thunder</span><span class="word-pill">thirty</span><span class="word-pill">thousand</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/ð/ as in “this”</div>
+          <div class="line"><strong>How to make it:</strong> Same tongue-between-teeth position, but with voice.</div>
+          <div class="line"><strong>Very important:</strong> JAMB also tests /ð/ vs /d/.</div>
+          <div class="word-list">
+            <span class="word-pill">this</span><span class="word-pill">that</span><span class="word-pill">these</span><span class="word-pill">those</span><span class="word-pill">then</span>
+            <span class="word-pill">them</span><span class="word-pill">there</span><span class="word-pill">though</span><span class="word-pill">thus</span><span class="word-pill">brother</span>
+            <span class="word-pill">father</span><span class="word-pill">mother</span><span class="word-pill">other</span><span class="word-pill">rather</span><span class="word-pill">weather</span>
+            <span class="word-pill">feather</span><span class="word-pill">gather</span><span class="word-pill">leather</span><span class="word-pill">neither</span><span class="word-pill">either</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/s/ as in “sit”</div>
+          <div class="line"><strong>How to make it:</strong> Air passes through a narrow space near the teeth. No voice.</div>
+          <div class="line"><strong>Compare with:</strong> /z/ and /ʃ/</div>
+          <div class="word-list">
+            <span class="word-pill">sit</span><span class="word-pill">see</span><span class="word-pill">say</span><span class="word-pill">sun</span><span class="word-pill">sea</span>
+            <span class="word-pill">song</span><span class="word-pill">some</span><span class="word-pill">same</span><span class="word-pill">send</span><span class="word-pill">side</span>
+            <span class="word-pill">six</span><span class="word-pill">soap</span><span class="word-pill">sock</span><span class="word-pill">soft</span><span class="word-pill">sold</span>
+            <span class="word-pill">soon</span><span class="word-pill">soup</span><span class="word-pill">speak</span><span class="word-pill">speed</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/z/ as in “zoo”</div>
+          <div class="line"><strong>How to make it:</strong> Same position as /s/, but with voice vibration.</div>
+          <div class="word-list">
+            <span class="word-pill">zoo</span><span class="word-pill">zip</span><span class="word-pill">zebra</span><span class="word-pill">zone</span><span class="word-pill">zero</span>
+            <span class="word-pill">zoom</span><span class="word-pill">zest</span><span class="word-pill">zinc</span><span class="word-pill">zany</span><span class="word-pill">freeze</span>
+            <span class="word-pill">rose</span><span class="word-pill">nose</span><span class="word-pill">size</span><span class="word-pill">prize</span><span class="word-pill">cause</span>
+            <span class="word-pill">raise</span><span class="word-pill">noise</span><span class="word-pill">choose</span><span class="word-pill">use</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/ʃ/ as in “ship”</div>
+          <div class="line"><strong>How to make it:</strong> Lips slightly rounded, air passes smoothly. No voice.</div>
+          <div class="line"><strong>Compare with:</strong> /s/</div>
+          <div class="word-list">
+            <span class="word-pill">ship</span><span class="word-pill">she</span><span class="word-pill">shoe</span><span class="word-pill">shop</span><span class="word-pill">show</span>
+            <span class="word-pill">shut</span><span class="word-pill">shine</span><span class="word-pill">sharp</span><span class="word-pill">short</span><span class="word-pill">shout</span>
+            <span class="word-pill">push</span><span class="word-pill">fish</span><span class="word-pill">wish</span><span class="word-pill">brush</span><span class="word-pill">cash</span>
+            <span class="word-pill">rush</span><span class="word-pill">fresh</span><span class="word-pill">crash</span><span class="word-pill">flash</span><span class="word-pill">trash</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/ʒ/ as in “measure”</div>
+          <div class="line"><strong>How to make it:</strong> Similar to /ʃ/, but voiced.</div>
+          <div class="line"><strong>Important:</strong> This sound is less common, so JAMB likes it.</div>
+          <div class="word-list">
+            <span class="word-pill">measure</span><span class="word-pill">vision</span><span class="word-pill">television</span><span class="word-pill">pleasure</span><span class="word-pill">leisure</span>
+            <span class="word-pill">treasure</span><span class="word-pill">decision</span><span class="word-pill">division</span><span class="word-pill">collision</span><span class="word-pill">occasion</span>
+            <span class="word-pill">usual</span><span class="word-pill">casual</span><span class="word-pill">visual</span><span class="word-pill">garage</span><span class="word-pill">beige</span>
+            <span class="word-pill">rouge</span><span class="word-pill">genre</span><span class="word-pill">massage</span><span class="word-pill">mirage</span><span class="word-pill">prestige</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/h/ as in “hat”</div>
+          <div class="line"><strong>How to make it:</strong> Air passes out gently from the throat. No voice friction in the mouth.</div>
+          <div class="word-list">
+            <span class="word-pill">hat</span><span class="word-pill">hot</span><span class="word-pill">house</span><span class="word-pill">hand</span><span class="word-pill">head</span>
+            <span class="word-pill">hear</span><span class="word-pill">heart</span><span class="word-pill">help</span><span class="word-pill">high</span><span class="word-pill">hill</span>
+            <span class="word-pill">hold</span><span class="word-pill">home</span><span class="word-pill">hope</span><span class="word-pill">horse</span><span class="word-pill">hour</span>
+            <span class="word-pill">huge</span><span class="word-pill">hunt</span><span class="word-pill">hurt</span><span class="word-pill">happy</span><span class="word-pill">heavy</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Affricates</h2>
+
+        <div class="sound-box">
+          <div class="title">/tʃ/ as in “chair”</div>
+          <div class="line"><strong>How to make it:</strong> Start with a stop, then release into /ʃ/ sound.</div>
+          <div class="line"><strong>Compare with:</strong> /ʃ/</div>
+          <div class="word-list">
+            <span class="word-pill">chair</span><span class="word-pill">church</span><span class="word-pill">cheese</span><span class="word-pill">chin</span><span class="word-pill">chip</span>
+            <span class="word-pill">chat</span><span class="word-pill">check</span><span class="word-pill">child</span><span class="word-pill">choose</span><span class="word-pill">cheap</span>
+            <span class="word-pill">chain</span><span class="word-pill">chance</span><span class="word-pill">change</span><span class="word-pill">charge</span><span class="word-pill">charm</span>
+            <span class="word-pill">chart</span><span class="word-pill">chase</span><span class="word-pill">cheek</span><span class="word-pill">cheer</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/dʒ/ as in “judge”</div>
+          <div class="line"><strong>How to make it:</strong> Same as /tʃ/, but voiced.</div>
+          <div class="line"><strong>Compare with:</strong> /ʒ/ and /tʃ/</div>
+          <div class="word-list">
+            <span class="word-pill">judge</span><span class="word-pill">jam</span><span class="word-pill">jar</span><span class="word-pill">jeep</span><span class="word-pill">jet</span>
+            <span class="word-pill">joke</span><span class="word-pill">jump</span><span class="word-pill">just</span><span class="word-pill">giant</span><span class="word-pill">gym</span>
+            <span class="word-pill">gem</span><span class="word-pill">joy</span><span class="word-pill">join</span><span class="word-pill">juice</span><span class="word-pill">june</span>
+            <span class="word-pill">jazz</span><span class="word-pill">jeans</span><span class="word-pill">jelly</span><span class="word-pill">jungle</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Nasals</h2>
+
+        <div class="sound-box">
+          <div class="title">/m/ as in “man”</div>
+          <div class="line"><strong>How to make it:</strong> Close the lips and let air pass through the nose.</div>
+          <div class="word-list">
+            <span class="word-pill">man</span><span class="word-pill">map</span><span class="word-pill">may</span><span class="word-pill">me</span><span class="word-pill">mine</span>
+            <span class="word-pill">moon</span><span class="word-pill">more</span><span class="word-pill">mother</span><span class="word-pill">much</span><span class="word-pill">music</span>
+            <span class="word-pill">make</span><span class="word-pill">many</span><span class="word-pill">mark</span><span class="word-pill">match</span><span class="word-pill">mean</span>
+            <span class="word-pill">meet</span><span class="word-pill">mind</span><span class="word-pill">money</span><span class="word-pill">morning</span><span class="word-pill">move</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/n/ as in “no”</div>
+          <div class="line"><strong>How to make it:</strong> Tongue touches the upper ridge; air goes through the nose.</div>
+          <div class="word-list">
+            <span class="word-pill">no</span><span class="word-pill">now</span><span class="word-pill">new</span><span class="word-pill">night</span><span class="word-pill">name</span>
+            <span class="word-pill">nose</span><span class="word-pill">note</span><span class="word-pill">nurse</span><span class="word-pill">nice</span><span class="word-pill">next</span>
+            <span class="word-pill">near</span><span class="word-pill">need</span><span class="word-pill">news</span><span class="word-pill">nine</span><span class="word-pill">none</span>
+            <span class="word-pill">north</span><span class="word-pill">nothing</span><span class="word-pill">number</span><span class="word-pill">nation</span><span class="word-pill">never</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/ŋ/ as in “sing”</div>
+          <div class="line"><strong>How to make it:</strong> Back of tongue lifts, air goes through the nose.</div>
+          <div class="line"><strong>Important:</strong> This is the “ng” sound, not /n/ + /g/ in many cases.</div>
+          <div class="word-list">
+            <span class="word-pill">sing</span><span class="word-pill">ring</span><span class="word-pill">king</span><span class="word-pill">wing</span><span class="word-pill">long</span>
+            <span class="word-pill">song</span><span class="word-pill">bank</span><span class="word-pill">think</span><span class="word-pill">drink</span><span class="word-pill">thank</span>
+            <span class="word-pill">link</span><span class="word-pill">pink</span><span class="word-pill">sink</span><span class="word-pill">rank</span><span class="word-pill">strong</span>
+            <span class="word-pill">young</span><span class="word-pill">bring</span><span class="word-pill">hang</span><span class="word-pill">wrong</span><span class="word-pill">among</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ Approximants / Liquids</h2>
+
+        <div class="sound-box">
+          <div class="title">/l/ as in “love”</div>
+          <div class="line"><strong>How to make it:</strong> Tongue touches the upper ridge and air flows around the sides.</div>
+          <div class="word-list">
+            <span class="word-pill">love</span><span class="word-pill">light</span><span class="word-pill">look</span><span class="word-pill">like</span><span class="word-pill">land</span>
+            <span class="word-pill">last</span><span class="word-pill">late</span><span class="word-pill">left</span><span class="word-pill">life</span><span class="word-pill">line</span>
+            <span class="word-pill">list</span><span class="word-pill">live</span><span class="word-pill">long</span><span class="word-pill">lost</span><span class="word-pill">loud</span>
+            <span class="word-pill">low</span><span class="word-pill">lucky</span><span class="word-pill">large</span><span class="word-pill">laugh</span><span class="word-pill">learn</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/r/ as in “red”</div>
+          <div class="line"><strong>How to make it:</strong> Tongue bends slightly back without touching hard.</div>
+          <div class="line"><strong>RP note:</strong> British RP is often non-rhotic, but JAMB still tests the consonant sound in words and linking /r/ situations.</div>
+          <div class="word-list">
+            <span class="word-pill">red</span><span class="word-pill">run</span><span class="word-pill">right</span><span class="word-pill">road</span><span class="word-pill">room</span>
+            <span class="word-pill">rain</span><span class="word-pill">read</span><span class="word-pill">real</span><span class="word-pill">rest</span><span class="word-pill">rice</span>
+            <span class="word-pill">rich</span><span class="word-pill">ride</span><span class="word-pill">ring</span><span class="word-pill">rise</span><span class="word-pill">rock</span>
+            <span class="word-pill">roll</span><span class="word-pill">roof</span><span class="word-pill">rose</span><span class="word-pill">round</span><span class="word-pill">rule</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/j/ as in “yes”</div>
+          <div class="line"><strong>How to make it:</strong> Glide sound like “y”.</div>
+          <div class="word-list">
+            <span class="word-pill">yes</span><span class="word-pill">you</span><span class="word-pill">yellow</span><span class="word-pill">young</span><span class="word-pill">yesterday</span>
+            <span class="word-pill">yoga</span><span class="word-pill">yolk</span><span class="word-pill">youth</span><span class="word-pill">yard</span><span class="word-pill">year</span>
+            <span class="word-pill">yield</span><span class="word-pill">yell</span><span class="word-pill">yacht</span><span class="word-pill">yawn</span><span class="word-pill">yet</span>
+            <span class="word-pill">yummy</span><span class="word-pill">yoke</span><span class="word-pill">yule</span><span class="word-pill">youthful</span>
+          </div>
+        </div>
+
+        <div class="sound-box">
+          <div class="title">/w/ as in “wet”</div>
+          <div class="line"><strong>How to make it:</strong> Round the lips and glide into the vowel.</div>
+          <div class="word-list">
+            <span class="word-pill">wet</span><span class="word-pill">win</span><span class="word-pill">way</span><span class="word-pill">well</span><span class="word-pill">want</span>
+            <span class="word-pill">was</span><span class="word-pill">we</span><span class="word-pill">week</span><span class="word-pill">west</span><span class="word-pill">what</span>
+            <span class="word-pill">when</span><span class="word-pill">where</span><span class="word-pill">which</span><span class="word-pill">white</span><span class="word-pill">who</span>
+            <span class="word-pill">why</span><span class="word-pill">wide</span><span class="word-pill">wife</span><span class="word-pill">will</span><span class="word-pill">wind</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>7️⃣ Compare Tricky Sounds</h2>
+        <p>This is where JAMB usually hides the marks.</p>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Pair</th>
+              <th>Example 1</th>
+              <th>Example 2</th>
+              <th>Main Difference</th>
+            </tr>
+            <tr>
+              <td>/p/ vs /b/</td>
+              <td>pat</td>
+              <td>bat</td>
+              <td>/p/ has no voice, /b/ has voice</td>
+            </tr>
+            <tr>
+              <td>/t/ vs /d/</td>
+              <td>ten</td>
+              <td>den</td>
+              <td>/t/ voiceless, /d/ voiced</td>
+            </tr>
+            <tr>
+              <td>/f/ vs /v/</td>
+              <td>fan</td>
+              <td>van</td>
+              <td>Same lip-teeth position, only /v/ has voice</td>
+            </tr>
+            <tr>
+              <td>/θ/ vs /ð/</td>
+              <td>thin</td>
+              <td>this</td>
+              <td>Both use tongue between teeth; /ð/ is voiced</td>
+            </tr>
+            <tr>
+              <td>/θ/ vs /t/</td>
+              <td>thin</td>
+              <td>tin</td>
+              <td>/θ/ uses tongue between teeth, /t/ does not</td>
+            </tr>
+            <tr>
+              <td>/ð/ vs /d/</td>
+              <td>then</td>
+              <td>den</td>
+              <td>/ð/ uses tongue between teeth</td>
+            </tr>
+            <tr>
+              <td>/s/ vs /z/</td>
+              <td>sip</td>
+              <td>zip</td>
+              <td>/z/ is voiced</td>
+            </tr>
+            <tr>
+              <td>/s/ vs /ʃ/</td>
+              <td>sip</td>
+              <td>ship</td>
+              <td>/ʃ/ is softer and more rounded</td>
+            </tr>
+            <tr>
+              <td>/ʃ/ vs /ʒ/</td>
+              <td>she</td>
+              <td>measure</td>
+              <td>/ʒ/ is voiced</td>
+            </tr>
+            <tr>
+              <td>/tʃ/ vs /ʃ/</td>
+              <td>cheep</td>
+              <td>sheep</td>
+              <td>/tʃ/ begins like a stop sound</td>
+            </tr>
+            <tr>
+              <td>/dʒ/ vs /ʒ/</td>
+              <td>judge</td>
+              <td>measure</td>
+              <td>/dʒ/ starts with a stop movement</td>
+            </tr>
+            <tr>
+              <td>/n/ vs /ŋ/</td>
+              <td>sin</td>
+              <td>sing</td>
+              <td>/ŋ/ is the back nasal “ng” sound</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>8️⃣ Where JAMB Usually Tests Consonants</h2>
+        <div class="jamb-alert">
+          <h4>Most common question styles</h4>
+          <ul>
+            <li>Which word has the same consonant sound as the underlined letter?</li>
+            <li>Choose the word with /k/, /ʃ/, /θ/, /ð/, or /ŋ/</li>
+            <li>Pick the odd word out</li>
+            <li>Minimal pair questions</li>
+          </ul>
+        </div>
+
+        <div class="highlight-box">
+          <p><strong>Most repeated trouble sounds:</strong> /θ/, /ð/, /ʃ/, /ʒ/, /ŋ/, /r/, /v/.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>9️⃣ Mini Self-Quiz</h2>
+
+        <div class="quiz-box">
+          <div class="q">1. Which word has the same consonant sound as the underlined sound in <strong>thin</strong>?</div>
+          <div>A. tin</div>
+          <div>B. thank</div>
+          <div>C. den</div>
+          <div>D. this</div>
+          <button onclick="showAns('a1')">Show Answer</button>
+          <div class="quiz-answer" id="a1"><strong>Answer:</strong> B — thank. Both have /θ/.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">2. Which word has the same initial consonant sound as <strong>van</strong>?</div>
+          <div>A. fan</div>
+          <div>B. very</div>
+          <div>C. pen</div>
+          <div>D. bag</div>
+          <button onclick="showAns('a2')">Show Answer</button>
+          <div class="quiz-answer" id="a2"><strong>Answer:</strong> B — very. Both begin with /v/.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">3. Which word differs in consonant sound?</div>
+          <div>A. ship</div>
+          <div>B. shoe</div>
+          <div>C. shop</div>
+          <div>D. sip</div>
+          <button onclick="showAns('a3')">Show Answer</button>
+          <div class="quiz-answer" id="a3"><strong>Answer:</strong> D — sip. It has /s/, the others have /ʃ/.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">4. Which word contains the /ŋ/ sound?</div>
+          <div>A. name</div>
+          <div>B. sing</div>
+          <div>C. near</div>
+          <div>D. note</div>
+          <button onclick="showAns('a4')">Show Answer</button>
+          <div class="quiz-answer" id="a4"><strong>Answer:</strong> B — sing. It contains /ŋ/.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">5. Which word has the same consonant sound as <strong>measure</strong>?</div>
+          <div>A. ship</div>
+          <div>B. pleasure</div>
+          <div>C. chair</div>
+          <div>D. zoo</div>
+          <button onclick="showAns('a5')">Show Answer</button>
+          <div class="quiz-answer" id="a5"><strong>Answer:</strong> B — pleasure. Both contain /ʒ/.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>🔟 Quick JAMB Revision Tips</h2>
+        <div class="jamb-alert">
+          <h4>Best way to score high</h4>
+          <ul>
+            <li>Practise the tricky pairs first: /θ/ vs /t/, /ð/ vs /d/, /ʃ/ vs /s/, /f/ vs /v/</li>
+            <li>Say the words aloud slowly</li>
+            <li>Use a mirror to watch your lips and tongue</li>
+            <li>Record yourself and compare with standard British pronunciation</li>
+            <li>Use past JAMB questions from 2018–2025 for repetition patterns</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🌟 Final line</strong>
+          <p>You now have the complete consonant sounds guide: all 24 phonemes with examples, clear explanations, and tricky sound comparisons. Practise daily and Oral English can become one of your easiest scoring areas.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Practise 5 words from each sound aloud today, then compare thin/tin, this/dis, ship/sip, and van/fan.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+
+    function showAns(id){
+      document.getElementById(id).style.display = 'block';
+    }
+  </script>
+</body>
+</html>

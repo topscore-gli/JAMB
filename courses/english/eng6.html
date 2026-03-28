@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB English - Grammar Mastery Guide</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:14px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .example-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:1200px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top;white-space:nowrap
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .quiz-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .quiz-box .q{font-size:14px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px}
+    .quiz-box button{
+      width:100%;margin-top:10px;border:none;border-radius:12px;padding:12px 14px;font-weight:900;cursor:pointer;
+      background:var(--accent);color:#000;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out)
+    }
+    .quiz-answer{
+      margin-top:10px;font-size:13px;color:var(--text-secondary);display:none
+    }
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">ENGLISH</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>📘 Grammar Mastery Guide</h1>
+        <p>JAMB 2026 • mood • tense • aspect • number • degree • question tags • irregular verbs</p>
+      </div>
+
+      <div class="section-card">
+        <h2>📋 Quick Overview</h2>
+        <p>JAMB tests grammar heavily in <strong>Lexis & Structure</strong>. If you master these topics and know <strong>where to use each form correctly</strong>, your score can rise sharply.</p>
+        <div class="quick-facts">
+          <ul>
+            <li>Mood</li>
+            <li>Tense</li>
+            <li>Aspect</li>
+            <li>Number / Concord</li>
+            <li>Degree of comparison</li>
+            <li>Question tags</li>
+            <li>Irregular verbs</li>
+          </ul>
+        </div>
+        <div class="memory-tip">
+          <strong>🧠 Study method</strong>
+          <p>Read one section daily and practise the examples repeatedly until the rule becomes automatic.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Mood</h2>
+        <p><strong>Mood</strong> shows the speaker’s attitude.</p>
+
+        <h3>Main types and where to use them</h3>
+        <div class="quick-facts">
+          <ul>
+            <li><strong>Indicative</strong> → for facts and real questions</li>
+            <li><strong>Imperative</strong> → for commands and instructions</li>
+            <li><strong>Subjunctive</strong> → most tested in JAMB</li>
+          </ul>
+        </div>
+
+        <h3>Where to use the subjunctive correctly</h3>
+        <div class="jamb-alert">
+          <h4>Use base verb form after:</h4>
+          <ul>
+            <li>suggest that</li>
+            <li>demand that</li>
+            <li>recommend that</li>
+            <li>insist that</li>
+            <li>essential that</li>
+            <li>important that</li>
+            <li>necessary that</li>
+            <li>would rather</li>
+            <li>it is time / high time</li>
+            <li>as if / as though in unreal situations</li>
+            <li>if I were you / wish + unreal situation</li>
+          </ul>
+        </div>
+
+        <div class="highlight-box">
+          <p><strong>Main rule:</strong> In unreal or demanded situations, use the <strong>base form</strong> of the verb. Also use <strong>were</strong> for all subjects in unreal conditions.</p>
+        </div>
+
+        <div class="example-box">
+          <div class="title">The Principal suggested that the unruly student be expelled immediately.</div>
+          <div class="line"><strong>Why:</strong> After “suggested that”, use subjunctive base form → <strong>be</strong>.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">Maryam treats people as if she were better than they are.</div>
+          <div class="line"><strong>Why:</strong> “As if” + unreal idea → use <strong>were</strong>.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">It is high time we left the meeting.</div>
+          <div class="line"><strong>Why:</strong> “High time” takes past subjunctive form.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">If I were you, I would forgive the boy.</div>
+          <div class="line"><strong>Why:</strong> Unreal condition → use <strong>were</strong>, not was.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">The teacher demanded that every student be present.</div>
+          <div class="line"><strong>Why:</strong> After “demanded that”, use base form.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">She wishes she were rich.</div>
+          <div class="line"><strong>Why:</strong> Wish + unreal condition → <strong>were</strong>.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Tense</h2>
+        <p><strong>Tense</strong> shows the time of an action.</p>
+
+        <h3>Where to use each tense correctly</h3>
+        <div class="jamb-alert">
+          <h4>Main tense clues</h4>
+          <ul>
+            <li><strong>Present Simple</strong> → habits, routines, general truths</li>
+            <li><strong>Past Simple</strong> → completed past actions, often with yesterday, last week</li>
+            <li><strong>Future</strong> → actions expected later</li>
+            <li><strong>Past Perfect</strong> → one past action happened before another past action</li>
+            <li><strong>Present Perfect</strong> → action from past connected to now</li>
+            <li><strong>Future Perfect</strong> → action completed before a future time</li>
+          </ul>
+        </div>
+
+        <div class="highlight-box">
+          <p><strong>JAMB key:</strong> always match tense with time signals like <strong>yesterday</strong>, <strong>since</strong>, <strong>by next year</strong>, <strong>when</strong>, <strong>before</strong>.</p>
+        </div>
+
+        <div class="example-box">
+          <div class="title">I had hardly lain down to sleep when I heard the gunshot.</div>
+          <div class="line"><strong>Why:</strong> “Had hardly” needs past participle. Lie (recline) → lay → <strong>lain</strong>.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">By 11:00 a.m., I will have been writing the test for two hours.</div>
+          <div class="line"><strong>Why:</strong> Future time + duration → future perfect continuous.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">When I entered the room, they were eating dinner.</div>
+          <div class="line"><strong>Why:</strong> Ongoing action interrupted by a past action → past continuous.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">She goes to school every day.</div>
+          <div class="line"><strong>Why:</strong> Habitual action → present simple.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">Yesterday, he went to the market.</div>
+          <div class="line"><strong>Why:</strong> “Yesterday” signals past simple.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">They had finished the work before the teacher arrived.</div>
+          <div class="line"><strong>Why:</strong> Earlier past action before another past action → past perfect.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">By next year, I will have been in this school for five years.</div>
+          <div class="line"><strong>Why:</strong> Future point + duration → future perfect.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">We haven’t eaten anything since morning.</div>
+          <div class="line"><strong>Why:</strong> “Since” + action up to now → present perfect.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Aspect</h2>
+        <p><strong>Aspect</strong> shows how the action is viewed: simple, continuous, perfect, or perfect continuous.</p>
+
+        <h3>Where to use each aspect correctly</h3>
+        <div class="quick-facts">
+          <ul>
+            <li><strong>Simple</strong> → ordinary fact or action</li>
+            <li><strong>Continuous</strong> → action in progress</li>
+            <li><strong>Perfect</strong> → completed action</li>
+            <li><strong>Perfect Continuous</strong> → action continuing for a period up to a point</li>
+          </ul>
+        </div>
+
+        <div class="jamb-alert">
+          <h4>Quick aspect rules</h4>
+          <ul>
+            <li>Use <strong>continuous</strong> for ongoing action</li>
+            <li>Use <strong>perfect</strong> for completed action with result</li>
+            <li>Use <strong>perfect continuous</strong> when duration matters: for two hours, since morning</li>
+          </ul>
+        </div>
+
+        <div class="example-box">
+          <div class="title">The students had been studying for two hours before the break.</div>
+          <div class="line"><strong>Why:</strong> Ongoing action up to a past point → past perfect continuous.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">She has been reading the book since morning.</div>
+          <div class="line"><strong>Why:</strong> Action began earlier and is still continuing.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">By the time we arrive, they will have finished the match.</div>
+          <div class="line"><strong>Why:</strong> Completion before future time → future perfect.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">While I was sleeping, the phone rang.</div>
+          <div class="line"><strong>Why:</strong> Interrupted ongoing action → past continuous.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">They have completed the project already.</div>
+          <div class="line"><strong>Why:</strong> Completed action with present relevance → present perfect.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">He had been walking in the rain for hours when we found him.</div>
+          <div class="line"><strong>Why:</strong> Duration continued up to past discovery point.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Number (Subject-Verb Concord)</h2>
+        <p><strong>Number</strong> means subject and verb must agree in singular or plural form.</p>
+
+        <h3>Where to use singular and plural correctly</h3>
+        <div class="jamb-alert">
+          <h4>High-frequency JAMB rules</h4>
+          <ul>
+            <li>Ignore phrases like <strong>with, as well as, together with</strong></li>
+            <li>With <strong>either…or / neither…nor</strong>, agree with the nearer subject</li>
+            <li><strong>The number of</strong> = singular</li>
+            <li><strong>A number of</strong> = plural</li>
+            <li>Collective nouns are usually singular</li>
+            <li><strong>One of</strong> = singular</li>
+            <li><strong>Every boy and every girl</strong> = singular</li>
+          </ul>
+        </div>
+
+        <div class="example-box">
+          <div class="title">The farmer, with his sons, grows millet.</div>
+          <div class="line"><strong>Why:</strong> Ignore “with his sons”; main subject is singular.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">One of the ladies who sell in the premises has been asked to withdraw.</div>
+          <div class="line"><strong>Why:</strong> “Ladies” → sell; “One” → has.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">Either Ekaette or you are to go.</div>
+          <div class="line"><strong>Why:</strong> Verb agrees with nearer subject “you”.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">The number of accidents is increasing.</div>
+          <div class="line"><strong>Why:</strong> “The number” is singular.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">A number of students are absent today.</div>
+          <div class="line"><strong>Why:</strong> “A number of” is plural.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">Neither the teacher nor the students are happy.</div>
+          <div class="line"><strong>Why:</strong> Nearest subject “students” is plural.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">Every boy and every girl is invited.</div>
+          <div class="line"><strong>Why:</strong> Each “every” item is treated singly.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Degree of Comparison</h2>
+        <p><strong>Degree</strong> shows comparison in adjectives and adverbs.</p>
+
+        <h3>Where to use each degree correctly</h3>
+        <div class="quick-facts">
+          <ul>
+            <li><strong>Positive</strong> → as...as</li>
+            <li><strong>Comparative</strong> → -er / more ... than</li>
+            <li><strong>Superlative</strong> → -est / most ...</li>
+          </ul>
+        </div>
+
+        <div class="jamb-alert">
+          <h4>Main JAMB rules</h4>
+          <ul>
+            <li>Use <strong>comparative</strong> when comparing two things</li>
+            <li>Use <strong>superlative</strong> for three or more</li>
+            <li>Use <strong>of the two</strong> with comparative, not superlative</li>
+            <li>Use <strong>as...as</strong> for equal comparison</li>
+            <li>Short adjectives often take <strong>-er/-est</strong>; long ones take <strong>more/most</strong></li>
+          </ul>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Which of the two questions is more difficult?</div>
+          <div class="line"><strong>Why:</strong> “Of the two” requires comparative.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">This is the best movie I have ever watched.</div>
+          <div class="line"><strong>Why:</strong> Superlative fits “the ... ever”.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">No other city is as large as Mumbai.</div>
+          <div class="line"><strong>Why:</strong> Equal comparison pattern = as...as.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">She is taller than her sister.</div>
+          <div class="line"><strong>Why:</strong> Comparison between two people.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">Mount Everest is the highest mountain in the world.</div>
+          <div class="line"><strong>Why:</strong> One above all others → superlative.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">Gold is more expensive than silver.</div>
+          <div class="line"><strong>Why:</strong> Long adjective → use “more”.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ Question Tags</h2>
+        <p><strong>Question tags</strong> are short questions added to statements for confirmation.</p>
+
+        <h3>Where to use them correctly</h3>
+        <div class="jamb-alert">
+          <h4>Main question tag rules</h4>
+          <ul>
+            <li>Positive statement → negative tag</li>
+            <li>Negative statement → positive tag</li>
+            <li>Use the same auxiliary verb as in the statement</li>
+            <li>If there is no auxiliary, use do / does / did</li>
+            <li><strong>I am</strong> → <strong>aren’t I?</strong></li>
+            <li><strong>Let’s</strong> → <strong>shall we?</strong></li>
+          </ul>
+        </div>
+
+        <div class="example-box">
+          <div class="title">You can travel on your own, can’t you?</div>
+          <div class="line"><strong>Why:</strong> Positive statement → negative tag with same auxiliary.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">He does not seem to know the answer, does he?</div>
+          <div class="line"><strong>Why:</strong> Negative statement → positive tag.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">He wrote to you, didn’t he?</div>
+          <div class="line"><strong>Why:</strong> Past simple with no auxiliary → use “did”.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">You don’t like Mathematics, do you?</div>
+          <div class="line"><strong>Why:</strong> Negative statement → positive tag.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">Students will always blame their teachers, won’t they?</div>
+          <div class="line"><strong>Why:</strong> Future auxiliary “will” takes “won’t” in the tag.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">Let’s go home, shall we?</div>
+          <div class="line"><strong>Why:</strong> Special rule for “let’s”.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">You are coming tomorrow, aren’t you?</div>
+          <div class="line"><strong>Why:</strong> Positive “are” → negative “aren’t”.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>7️⃣ 60 Irregular Verbs</h2>
+        <p>JAMB often tests the difference between <strong>base form</strong>, <strong>past tense</strong>, and <strong>past participle</strong>.</p>
+
+        <div class="highlight-box">
+          <p><strong>Main rule:</strong> After <strong>have / has / had</strong>, use the <strong>past participle</strong>, not the simple past.</p>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Key JAMB tip</strong>
+          <p>Say: <strong>has gone</strong>, not “has went”; <strong>had lain</strong>, not “had laid” when the meaning is “recline”.</p>
+        </div>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>No.</th>
+              <th>Base / Present</th>
+              <th>Past</th>
+              <th>Past Participle</th>
+              <th>Future</th>
+            </tr>
+            <tr><td>1</td><td>be</td><td>was/were</td><td>been</td><td>will be</td></tr>
+            <tr><td>2</td><td>become</td><td>became</td><td>become</td><td>will become</td></tr>
+            <tr><td>3</td><td>begin</td><td>began</td><td>begun</td><td>will begin</td></tr>
+            <tr><td>4</td><td>break</td><td>broke</td><td>broken</td><td>will break</td></tr>
+            <tr><td>5</td><td>bring</td><td>brought</td><td>brought</td><td>will bring</td></tr>
+            <tr><td>6</td><td>buy</td><td>bought</td><td>bought</td><td>will buy</td></tr>
+            <tr><td>7</td><td>catch</td><td>caught</td><td>caught</td><td>will catch</td></tr>
+            <tr><td>8</td><td>choose</td><td>chose</td><td>chosen</td><td>will choose</td></tr>
+            <tr><td>9</td><td>come</td><td>came</td><td>come</td><td>will come</td></tr>
+            <tr><td>10</td><td>cost</td><td>cost</td><td>cost</td><td>will cost</td></tr>
+            <tr><td>11</td><td>cut</td><td>cut</td><td>cut</td><td>will cut</td></tr>
+            <tr><td>12</td><td>do</td><td>did</td><td>done</td><td>will do</td></tr>
+            <tr><td>13</td><td>draw</td><td>drew</td><td>drawn</td><td>will draw</td></tr>
+            <tr><td>14</td><td>drink</td><td>drank</td><td>drunk</td><td>will drink</td></tr>
+            <tr><td>15</td><td>drive</td><td>drove</td><td>driven</td><td>will drive</td></tr>
+            <tr><td>16</td><td>eat</td><td>ate</td><td>eaten</td><td>will eat</td></tr>
+            <tr><td>17</td><td>fall</td><td>fell</td><td>fallen</td><td>will fall</td></tr>
+            <tr><td>18</td><td>feel</td><td>felt</td><td>felt</td><td>will feel</td></tr>
+            <tr><td>19</td><td>find</td><td>found</td><td>found</td><td>will find</td></tr>
+            <tr><td>20</td><td>fly</td><td>flew</td><td>flown</td><td>will fly</td></tr>
+            <tr><td>21</td><td>forget</td><td>forgot</td><td>forgotten</td><td>will forget</td></tr>
+            <tr><td>22</td><td>get</td><td>got</td><td>got / gotten</td><td>will get</td></tr>
+            <tr><td>23</td><td>give</td><td>gave</td><td>given</td><td>will give</td></tr>
+            <tr><td>24</td><td>go</td><td>went</td><td>gone</td><td>will go</td></tr>
+            <tr><td>25</td><td>grow</td><td>grew</td><td>grown</td><td>will grow</td></tr>
+            <tr><td>26</td><td>have</td><td>had</td><td>had</td><td>will have</td></tr>
+            <tr><td>27</td><td>hear</td><td>heard</td><td>heard</td><td>will hear</td></tr>
+            <tr><td>28</td><td>keep</td><td>kept</td><td>kept</td><td>will keep</td></tr>
+            <tr><td>29</td><td>know</td><td>knew</td><td>known</td><td>will know</td></tr>
+            <tr><td>30</td><td>leave</td><td>left</td><td>left</td><td>will leave</td></tr>
+            <tr><td>31</td><td>lend</td><td>lent</td><td>lent</td><td>will lend</td></tr>
+            <tr><td>32</td><td>let</td><td>let</td><td>let</td><td>will let</td></tr>
+            <tr><td>33</td><td>lose</td><td>lost</td><td>lost</td><td>will lose</td></tr>
+            <tr><td>34</td><td>make</td><td>made</td><td>made</td><td>will make</td></tr>
+            <tr><td>35</td><td>meet</td><td>met</td><td>met</td><td>will meet</td></tr>
+            <tr><td>36</td><td>pay</td><td>paid</td><td>paid</td><td>will pay</td></tr>
+            <tr><td>37</td><td>put</td><td>put</td><td>put</td><td>will put</td></tr>
+            <tr><td>38</td><td>read</td><td>read</td><td>read</td><td>will read</td></tr>
+            <tr><td>39</td><td>run</td><td>ran</td><td>run</td><td>will run</td></tr>
+            <tr><td>40</td><td>say</td><td>said</td><td>said</td><td>will say</td></tr>
+            <tr><td>41</td><td>see</td><td>saw</td><td>seen</td><td>will see</td></tr>
+            <tr><td>42</td><td>sell</td><td>sold</td><td>sold</td><td>will sell</td></tr>
+            <tr><td>43</td><td>send</td><td>sent</td><td>sent</td><td>will send</td></tr>
+            <tr><td>44</td><td>sing</td><td>sang</td><td>sung</td><td>will sing</td></tr>
+            <tr><td>45</td><td>sit</td><td>sat</td><td>sat</td><td>will sit</td></tr>
+            <tr><td>46</td><td>sleep</td><td>slept</td><td>slept</td><td>will sleep</td></tr>
+            <tr><td>47</td><td>speak</td><td>spoke</td><td>spoken</td><td>will speak</td></tr>
+            <tr><td>48</td><td>stand</td><td>stood</td><td>stood</td><td>will stand</td></tr>
+            <tr><td>49</td><td>take</td><td>took</td><td>taken</td><td>will take</td></tr>
+            <tr><td>50</td><td>teach</td><td>taught</td><td>taught</td><td>will teach</td></tr>
+            <tr><td>51</td><td>lie (recline)</td><td>lay</td><td>lain</td><td>will lie</td></tr>
+            <tr><td>52</td><td>lay (put/place)</td><td>laid</td><td>laid</td><td>will lay</td></tr>
+            <tr><td>53</td><td>lie (tell falsehood)</td><td>lied</td><td>lied</td><td>will lie</td></tr>
+            <tr><td>54</td><td>rise</td><td>rose</td><td>risen</td><td>will rise</td></tr>
+            <tr><td>55</td><td>shine</td><td>shone</td><td>shone</td><td>will shine</td></tr>
+            <tr><td>56</td><td>shoot</td><td>shot</td><td>shot</td><td>will shoot</td></tr>
+            <tr><td>57</td><td>show</td><td>showed</td><td>shown</td><td>will show</td></tr>
+            <tr><td>58</td><td>swim</td><td>swam</td><td>swum</td><td>will swim</td></tr>
+            <tr><td>59</td><td>throw</td><td>threw</td><td>thrown</td><td>will throw</td></tr>
+            <tr><td>60</td><td>write</td><td>wrote</td><td>written</td><td>will write</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <h3>Special lie / lay rule</h3>
+        <div class="jamb-alert">
+          <h4>Do not mix these three</h4>
+          <ul>
+            <li><strong>lie</strong> = recline → lay → lain</li>
+            <li><strong>lay</strong> = put/place something → laid → laid</li>
+            <li><strong>lie</strong> = tell falsehood → lied → lied</li>
+          </ul>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Yesterday I lay on the bed for one hour.</div>
+          <div class="line"><strong>Meaning:</strong> reclined → past of lie.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">I have lain there since noon.</div>
+          <div class="line"><strong>Meaning:</strong> past participle of lie (recline).</div>
+        </div>
+        <div class="example-box">
+          <div class="title">She laid the book on the table.</div>
+          <div class="line"><strong>Meaning:</strong> put or placed something.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">He has gone to school.</div>
+          <div class="line"><strong>Why:</strong> After “has”, use past participle “gone”, not “went”.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>8️⃣ Final Rules for 100% JAMB Success</h2>
+        <div class="jamb-alert">
+          <h4>Best revision plan</h4>
+          <ul>
+            <li>Learn the trigger words for each grammar area</li>
+            <li>Underline time markers before choosing tense</li>
+            <li>Look for demand, suggestion, wish, as if, high time → think subjunctive</li>
+            <li>Check whether the subject is singular or plural before choosing a verb</li>
+            <li>Count how many things are compared before choosing degree</li>
+            <li>In question tags, copy the auxiliary and reverse the polarity</li>
+            <li>Memorize irregular verbs, especially go/went/gone and lie/lay/lain</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🌟 Final line</strong>
+          <p>Finished — complete grammar mastery guide. Revise one section daily and practise examples until the rules become natural.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Revise one grammar topic now, solve 10 examples, and repeat tomorrow for mastery.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+
+    function showAns(id){
+      document.getElementById(id).style.display = 'block';
+    }
+  </script>
+</body>
+</html>
