@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Chemistry - Energy Changes, Entropy & Gibbs Free Energy</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:18px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+.progress-container{
+  position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+  background:var(--shadow-in);z-index:15
+}
+.progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+.content{padding:20px 16px;line-height:1.7}
+.main-header{
+  text-align:center;margin-bottom:28px;padding:20px;border-radius:20px;
+  background:rgba(29,185,84,.1)
+}
+.main-header h1{font-size:22px;margin-bottom:8px;color:var(--accent);font-weight:900}
+.main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+.section-card{
+  background:var(--card-bg);padding:24px 18px;border-radius:20px;
+  box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+  margin-bottom:24px;border-left:4px solid var(--accent)
+}
+.section-card h2{
+  font-size:19px;margin-bottom:14px;color:var(--accent);font-weight:900;
+  display:flex;align-items:center;gap:8px
+}
+.section-card h3{
+  font-size:16px;margin:18px 0 10px;color:var(--accent-tertiary);font-weight:800;
+  padding-left:12px;border-left:3px solid var(--accent-tertiary)
+}
+.section-card h4{font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800}
+.section-card p{margin-bottom:12px;font-size:14px;text-align:justify}
+.section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+.section-card li{margin-bottom:7px;font-size:14px}
+
+.diagram-img{
+  width:100%;max-height:280px;object-fit:contain;border-radius:12px;
+  margin:12px 0 8px;
+  box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out);
+  background:#fff;padding:8px
+}
+.image-caption{
+  text-align:center;font-size:12px;color:var(--text-secondary);
+  font-style:italic;margin-bottom:10px;margin-top:-4px
+}
+
+.quick-facts{
+  background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+  padding:16px;border-radius:15px;margin:14px 0;border:1px solid rgba(29,185,84,.3)
+}
+.quick-facts h4{color:var(--accent);margin-bottom:8px;font-size:15px;font-weight:900}
+.quick-facts li{font-size:13px}
+
+.highlight-box{
+  background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+  border-left:3px solid var(--accent-tertiary)
+}
+.memory-tip{
+  background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+  border-left:4px solid var(--accent-secondary)
+}
+.memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+.memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+.jamb-alert{
+  background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+  border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:16px;margin:18px 0
+}
+.jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:15px;font-weight:900}
+.jamb-alert li{font-size:13px}
+
+.table-container{
+  width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+  box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+}
+.summary-table{
+  width:100%;min-width:1150px;border-collapse:separate;border-spacing:0;font-size:13px
+}
+.summary-table th{
+  background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+}
+.summary-table td{
+  padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);white-space:nowrap;vertical-align:top
+}
+.summary-table tr:last-child td{border-bottom:none}
+.summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+.table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.field{
+  background:var(--background);
+  box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+  border-radius:12px;padding:12px
+}
+.field label{display:block;font-size:12px;color:var(--text-secondary);margin-bottom:6px}
+.field input{
+  width:100%;border:none;outline:none;background:transparent;color:var(--text-primary);
+  font-size:16px;font-weight:800
+}
+.mini-btn{
+  width:100%;border:none;border-radius:12px;padding:12px 14px;font-weight:900;cursor:pointer;
+  background:var(--accent);color:#000;
+  box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out)
+}
+.result{
+  margin-top:10px;padding:12px 14px;border-radius:12px;
+  background:rgba(78,205,196,.10);border:1px solid rgba(78,205,196,.25);
+  color:var(--text-primary);font-size:13px
+}
+.small-note{font-size:12px;color:var(--text-secondary);margin-top:6px}
+
+.nav-bar{
+  position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+  display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+}
+.nav-bar .nav-item{text-align:center}
+.nav-bar .nav-item.center button{
+  width:50px;height:50px;font-size:24px;background:var(--accent);
+  box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+  color:#000
+}
+.nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+.explore-btn{
+  background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+  box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+  font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+}
+.explore-btn:active{
+  box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+  transform:scale(.98)
+}
+
+  </style>
+</head>
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+    
+<div class="top-bar neumorphic">
+  <button class="neumorphic-btn" onclick="history.back()">←</button>
+  <div class="header">CHEMISTRY</div>
+  <div class="right-icons">
+    <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+    <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="main-header">
+    <h1>🔥 Enthalpy (∆H), Entropy (∆S) & Gibbs Free Energy (∆G) — JAMB</h1>
+    <p>Energy changes • disorder • spontaneity • sign table • 6 worked examples + mini calculators</p>
+  </div>
+
+  <!-- SUMMARY TABLE FOR FORMULAS -->
+  <div class="section-card">
+    <h2>📋 Summary Table (Formulas You Must Know)</h2>
+
+    <div class="table-container">
+      <table class="summary-table">
+        <tr>
+          <th>Quantity</th>
+          <th>Formula / meaning</th>
+          <th>Units</th>
+          <th>Exam notes</th>
+        </tr>
+        <tr>
+          <td><strong>Enthalpy change</strong></td>
+          <td>∆H = heat change at constant pressure</td>
+          <td>kJ/mol (often)</td>
+          <td>Exo: ∆H negative; Endo: ∆H positive</td>
+        </tr>
+        <tr>
+          <td><strong>Gibbs free energy</strong></td>
+          <td>∆G° = ∆H° − T∆S°</td>
+          <td>kJ/mol (if consistent)</td>
+          <td>T must be in Kelvin</td>
+        </tr>
+        <tr>
+          <td><strong>Temperature at equilibrium</strong></td>
+          <td>At ∆G = 0: T = ∆H / ∆S</td>
+          <td>K</td>
+          <td>Convert ∆S to kJ/mol·K if ∆H in kJ/mol</td>
+        </tr>
+        <tr>
+          <td><strong>Spontaneity test</strong></td>
+          <td>∆G &lt; 0 (spontaneous); ∆G = 0 (equilibrium); ∆G &gt; 0 (non-spontaneous)</td>
+          <td>—</td>
+          <td>Most MCQs = sign checking</td>
+        </tr>
+        <tr>
+          <td><strong>Entropy idea</strong></td>
+          <td>More disorder → higher entropy → ∆S positive</td>
+          <td>J/mol·K</td>
+          <td>Solid→liquid→gas increases entropy</td>
+        </tr>
+        <tr>
+          <td><strong>Kelvin conversion</strong></td>
+          <td>K = °C + 273</td>
+          <td>K</td>
+          <td>Always convert for ∆G problems</td>
+        </tr>
+      </table>
+    </div>
+    <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+    <div class="memory-tip">
+      <strong>🧠 Quick memory</strong>
+      <p>∆G = ∆H − T∆S. If ∆S is in J, convert to kJ before using with ∆H in kJ.</p>
+    </div>
+  </div>
+
+  <!-- 1 Enthalpy -->
+  <div class="section-card">
+    <h2>1️⃣ Energy Changes (∆H) — Enthalpy</h2>
+    <p><strong>∆H</strong> is the heat change at constant pressure.</p>
+
+    <div class="table-container">
+      <table class="summary-table">
+        <tr>
+          <th>Type</th>
+          <th>What happens</th>
+          <th>Effect on surroundings</th>
+          <th>Sign of ∆H</th>
+        </tr>
+        <tr>
+          <td><strong>Exothermic</strong></td>
+          <td>Heat released</td>
+          <td>Surroundings warmer</td>
+          <td><strong>Negative (−∆H)</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Endothermic</strong></td>
+          <td>Heat absorbed</td>
+          <td>Surroundings cooler</td>
+          <td><strong>Positive (+∆H)</strong></td>
+        </tr>
+      </table>
+    </div>
+    <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+    <div class="highlight-box">
+      <p><strong>Quick check:</strong> Temperature ↑ → exothermic (−∆H). Temperature ↓ → endothermic (+∆H).</p>
+    </div>
+
+    <div class="quick-facts">
+      <h4>Examples</h4>
+      <ul>
+        <li>Na(s) + H₂O(l) → NaOH(aq) + ½H₂(g) — <strong>exothermic</strong> (very hot)</li>
+        <li>NH₄Cl(s) → NH₄⁺(aq) + Cl⁻(aq) — <strong>endothermic</strong> (cold)</li>
+      </ul>
+    </div>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Exothermic_endothermic.svg" alt="Exothermic vs endothermic diagram" class="diagram-img">
+    <div class="image-caption">Energy diagrams: exothermic products lower; endothermic products higher</div>
+  </div>
+
+  <!-- 2 Entropy -->
+  <div class="section-card">
+    <h2>2️⃣ Entropy (∆S) — Order vs Disorder</h2>
+    <p><strong>Entropy</strong> measures disorder/randomness. Higher disorder = higher entropy (∆S positive).</p>
+
+    <div class="quick-facts">
+      <h4>When ∆S is usually positive</h4>
+      <ul>
+        <li>Solid → liquid → gas (disorder increases)</li>
+        <li>Mixing gases (spreading out)</li>
+        <li>Dissolving salts (ions free to move)</li>
+      </ul>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 Shortcut</strong>
+      <p>If particles become freer to move, ∆S is likely positive.</p>
+    </div>
+  </div>
+
+  <!-- 3 Gibbs -->
+  <div class="section-card">
+    <h2>3️⃣ Spontaneity — Gibbs Free Energy (∆G)</h2>
+    <p><strong>Formula:</strong> ∆G° = ∆H° − T∆S° (T in Kelvin).</p>
+
+    <div class="table-container">
+      <table class="summary-table">
+        <tr>
+          <th>∆G value</th>
+          <th>Meaning</th>
+        </tr>
+        <tr>
+          <td><strong>∆G &lt; 0</strong></td>
+          <td>Spontaneous</td>
+        </tr>
+        <tr>
+          <td><strong>∆G = 0</strong></td>
+          <td>Equilibrium</td>
+        </tr>
+        <tr>
+          <td><strong>∆G &gt; 0</strong></td>
+          <td>Non-spontaneous</td>
+        </tr>
+      </table>
+    </div>
+    <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+    <h3>Sign combination table (very important)</h3>
+    <div class="table-container">
+      <table class="summary-table">
+        <tr>
+          <th>∆H</th>
+          <th>∆S</th>
+          <th>Spontaneity</th>
+        </tr>
+        <tr>
+          <td><strong>−</strong> (exo)</td>
+          <td><strong>+</strong></td>
+          <td><strong>Always spontaneous</strong></td>
+        </tr>
+        <tr>
+          <td><strong>−</strong> (exo)</td>
+          <td><strong>−</strong></td>
+          <td>Spontaneous at <strong>low T</strong></td>
+        </tr>
+        <tr>
+          <td><strong>+</strong> (endo)</td>
+          <td><strong>+</strong></td>
+          <td>Spontaneous at <strong>high T</strong></td>
+        </tr>
+        <tr>
+          <td><strong>+</strong> (endo)</td>
+          <td><strong>−</strong></td>
+          <td><strong>Never spontaneous</strong></td>
+        </tr>
+      </table>
+    </div>
+    <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+    <div class="jamb-alert">
+      <h4>Unit warning</h4>
+      <ul>
+        <li>If ∆H is in <strong>kJ/mol</strong> and ∆S in <strong>J/mol·K</strong>, convert ∆S to kJ/mol·K by dividing by 1000.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Worked examples -->
+  <div class="section-card">
+    <h2>🧮 6 JAMB Examples (Worked)</h2>
+
+    <h3>Example 1: Hot/cold beaker</h3>
+    <p><strong>NaOH dissolves and beaker feels hot. Exo or endo?</strong></p>
+    <div class="highlight-box">
+      <p>Temperature of surroundings rises → heat released</p>
+      <p>So ∆H is negative → <strong>exothermic</strong></p>
+    </div>
+
+    <h3>Example 2: Calculate ∆G and spontaneity</h3>
+    <p><strong>∆H° = −92 kJ/mol, ∆S° = +198 J/mol·K, T = 298 K</strong></p>
+    <div class="highlight-box">
+      <p>Convert ∆S°: 198 J/mol·K = 0.198 kJ/mol·K</p>
+      <p>T∆S° = 298×0.198 = 59.004 kJ/mol</p>
+      <p>∆G° = −92 − 59.004 = <strong>−151 kJ/mol</strong> → spontaneous</p>
+    </div>
+
+    <h3>Example 3: Temperature for ∆G = 0</h3>
+    <p><strong>∆H° = +178 kJ/mol, ∆S° = +160 J/mol·K. Find T when ∆G = 0</strong></p>
+    <div class="highlight-box">
+      <p>∆S° = 0.160 kJ/mol·K</p>
+      <p>T = ∆H/∆S = 178/0.160 = <strong>1112.5 K</strong></p>
+      <p>Above 1112.5 K → spontaneous</p>
+    </div>
+
+    <h3>Example 4: Entropy from state change</h3>
+    <p><strong>Ice melts to water: ∆S positive or negative?</strong></p>
+    <div class="highlight-box">
+      <p>Solid (more ordered) → liquid (less ordered) → disorder increases</p>
+      <p><strong>∆S positive</strong></p>
+    </div>
+
+    <h3>Example 5: Energy diagram interpretation</h3>
+    <p><strong>Products lower energy than reactants: exo or endo?</strong></p>
+    <div class="highlight-box">
+      <p>Energy released to surroundings → ∆H negative</p>
+      <p><strong>Exothermic</strong></p>
+    </div>
+
+    <h3>Example 6: ∆G with signs</h3>
+    <p><strong>∆H = +120 kJ/mol, ∆S = −0.15 kJ/mol·K, T = 298 K</strong></p>
+    <div class="highlight-box">
+      <p>T∆S = 298×(−0.15) = −44.7 kJ/mol</p>
+      <p>∆G = 120 − (−44.7) = <strong>164.7 kJ/mol</strong></p>
+      <p>∆G &gt; 0 → non-spontaneous</p>
+    </div>
+  </div>
+
+  <!-- Mini calculators -->
+  <div class="section-card">
+    <h2>🧰 Mini Calculators (∆G + T)</h2>
+
+    <h3>Calculator 1: Compute ∆G = ∆H − T∆S</h3>
+    <div class="calc-grid">
+      <div class="field">
+        <label>∆H (kJ/mol)</label>
+        <input id="dH" type="number" placeholder="e.g., -92" />
+      </div>
+      <div class="field">
+        <label>∆S (J/mol·K)</label>
+        <input id="dS" type="number" placeholder="e.g., 198" />
+      </div>
+      <div class="field" style="grid-column:1 / -1">
+        <label>T (K)</label>
+        <input id="tempK" type="number" placeholder="e.g., 298" />
+      </div>
+    </div>
+    <button class="mini-btn" onclick="calcDG()">Calculate ∆G</button>
+    <div class="result" id="dgResult">Result will appear here…</div>
+
+    <h3 style="margin-top:18px">Calculator 2: Temperature for ∆G = 0 (T = ∆H/∆S)</h3>
+    <div class="calc-grid">
+      <div class="field">
+        <label>∆H (kJ/mol)</label>
+        <input id="dH2" type="number" placeholder="e.g., 178" />
+      </div>
+      <div class="field">
+        <label>∆S (J/mol·K)</label>
+        <input id="dS2" type="number" placeholder="e.g., 160" />
+      </div>
+    </div>
+    <button class="mini-btn" onclick="calcT()">Calculate T (K)</button>
+    <div class="result" id="tResult">Result will appear here…</div>
+
+    <div class="small-note">These calculators assume ∆H is in kJ/mol and ∆S is in J/mol·K (it auto-converts ∆S to kJ/mol·K).</div>
+  </div>
+
+  <!-- Checklist -->
+  <div class="section-card">
+    <h2>✅ Quick Revision Checklist</h2>
+    <div class="quick-facts">
+      <ul>
+        <li>Exothermic (−∆H) vs endothermic (+∆H) using temperature change</li>
+        <li>Entropy increases with disorder (solid→liquid→gas)</li>
+        <li>∆G = ∆H − T∆S (T in Kelvin)</li>
+        <li>∆G sign decides spontaneity</li>
+        <li>4 sign-combinations table (low T vs high T)</li>
+        <li>Unit conversion: J to kJ for ∆S</li>
+      </ul>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 Final memory line</strong>
+      <p>If ∆H is negative and ∆S is positive, you can confidently pick “spontaneous” without calculation.</p>
+    </div>
+  </div>
+
+  <button class="explore-btn" onclick="alert('Practice: sign table + ∆G calculations (always convert J to kJ)!')">Practice JAMB Questions</button>
+</div>
+</div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+
+    function calcDG(){
+      const dH = parseFloat(document.getElementById('dH').value || "0");
+      const dS_J = parseFloat(document.getElementById('dS').value || "0");
+      const T = parseFloat(document.getElementById('tempK').value || "0");
+      const out = document.getElementById('dgResult');
+
+      if(T<=0){
+        out.textContent = "Enter a valid temperature in Kelvin (T > 0).";
+        return;
+      }
+      const dS = dS_J/1000; // kJ/mol·K
+      const TdS = T*dS;
+      const dG = dH - TdS;
+
+      let tag = "Non-spontaneous";
+      if(dG < 0) tag = "Spontaneous";
+      else if(Math.abs(dG) < 1e-9) tag = "Equilibrium";
+
+      out.textContent = `∆S = ${dS_J} J/mol·K = ${dS.toFixed(6)} kJ/mol·K. T∆S = ${T}×${dS.toFixed(6)} = ${TdS.toFixed(4)} kJ/mol. ∆G = ∆H − T∆S = ${dH} − ${TdS.toFixed(4)} = ${dG.toFixed(4)} kJ/mol → ${tag}.`;
+    }
+
+    function calcT(){
+      const dH = parseFloat(document.getElementById('dH2').value || "0");
+      const dS_J = parseFloat(document.getElementById('dS2').value || "0");
+      const out = document.getElementById('tResult');
+
+      if(dS_J === 0){
+        out.textContent = "∆S cannot be 0 for this calculation.";
+        return;
+      }
+      const dS = dS_J/1000; // kJ/mol·K
+      const T = dH / dS;
+
+      out.textContent = `Convert ∆S: ${dS_J} J/mol·K = ${dS.toFixed(6)} kJ/mol·K. T = ∆H/∆S = ${dH}/${dS.toFixed(6)} = ${T.toFixed(2)} K.`;
+    }
+  </script>
+</body>
+</html>

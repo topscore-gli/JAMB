@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Chemistry - Electrolysis</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:18px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+.progress-container{
+  position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+  background:var(--shadow-in);z-index:15
+}
+.progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+.content{padding:20px 16px;line-height:1.7}
+.main-header{
+  text-align:center;margin-bottom:28px;padding:20px;border-radius:20px;
+  background:rgba(29,185,84,.1)
+}
+.main-header h1{font-size:23px;margin-bottom:8px;color:var(--accent);font-weight:900}
+.main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+.section-card{
+  background:var(--card-bg);padding:24px 18px;border-radius:20px;
+  box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+  margin-bottom:24px;border-left:4px solid var(--accent)
+}
+.section-card h2{
+  font-size:19px;margin-bottom:14px;color:var(--accent);font-weight:900;
+  display:flex;align-items:center;gap:8px
+}
+.section-card h3{
+  font-size:16px;margin:18px 0 10px;color:var(--accent-tertiary);font-weight:800;
+  padding-left:12px;border-left:3px solid var(--accent-tertiary)
+}
+.section-card h4{font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800}
+.section-card p{margin-bottom:12px;font-size:14px;text-align:justify}
+.section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+.section-card li{margin-bottom:7px;font-size:14px}
+
+.diagram-img{
+  width:100%;max-height:280px;object-fit:contain;border-radius:12px;
+  margin:12px 0 8px;
+  box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out);
+  background:#fff;padding:8px
+}
+.image-caption{
+  text-align:center;font-size:12px;color:var(--text-secondary);
+  font-style:italic;margin-bottom:10px;margin-top:-4px
+}
+
+.quick-facts{
+  background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+  padding:16px;border-radius:15px;margin:14px 0;border:1px solid rgba(29,185,84,.3)
+}
+.quick-facts h4{color:var(--accent);margin-bottom:8px;font-size:15px;font-weight:900}
+.quick-facts li{font-size:13px}
+
+.highlight-box{
+  background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+  border-left:3px solid var(--accent-tertiary)
+}
+.memory-tip{
+  background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+  border-left:4px solid var(--accent-secondary)
+}
+.memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+.memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+.jamb-alert{
+  background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+  border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:16px;margin:18px 0
+}
+.jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:15px;font-weight:900}
+.jamb-alert li{font-size:13px}
+
+.table-container{
+  width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+  box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+}
+.summary-table{
+  width:100%;min-width:1200px;border-collapse:separate;border-spacing:0;font-size:13px
+}
+.summary-table th{
+  background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+}
+.summary-table td{
+  padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);white-space:nowrap;vertical-align:top
+}
+.summary-table tr:last-child td{border-bottom:none}
+.summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+.table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.field{
+  background:var(--background);
+  box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+  border-radius:12px;padding:12px
+}
+.field label{display:block;font-size:12px;color:var(--text-secondary);margin-bottom:6px}
+.field input, .field select{
+  width:100%;border:none;outline:none;background:transparent;color:var(--text-primary);
+  font-size:16px;font-weight:800
+}
+.mini-btn{
+  width:100%;border:none;border-radius:12px;padding:12px 14px;font-weight:900;cursor:pointer;
+  background:var(--accent);color:#000;
+  box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out)
+}
+.result{
+  margin-top:10px;padding:12px 14px;border-radius:12px;
+  background:rgba(78,205,196,.10);border:1px solid rgba(78,205,196,.25);
+  color:var(--text-primary);font-size:13px
+}
+.small-note{font-size:12px;color:var(--text-secondary);margin-top:6px}
+
+.nav-bar{
+  position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+  display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+}
+.nav-bar .nav-item{text-align:center}
+.nav-bar .nav-item.center button{
+  width:50px;height:50px;font-size:24px;background:var(--accent);
+  box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+  color:#000
+}
+.nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+.explore-btn{
+  background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+  box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+  font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+}
+.explore-btn:active{
+  box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+  transform:scale(.98)
+}
+
+  </style>
+</head>
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+    
+<div class="top-bar neumorphic">
+  <button class="neumorphic-btn" onclick="history.back()">←</button>
+  <div class="header">CHEMISTRY</div>
+  <div class="right-icons">
+    <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+    <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="main-header">
+    <h1>⚡ Electrolysis (JAMB)</h1>
+    <p>Definition • electrolytes • Faraday’s laws • products at electrodes • discharge factors • uses • electrochemical series • corrosion</p>
+  </div>
+
+  <!-- Summary table for formulas -->
+  <div class="section-card">
+    <h2>📋 Summary Table (Formulas You Must Know)</h2>
+
+    <div class="table-container">
+      <table class="summary-table">
+        <tr>
+          <th>What you’re calculating</th>
+          <th>Formula</th>
+          <th>Symbols</th>
+          <th>Quick notes</th>
+        </tr>
+        <tr>
+          <td><strong>Quantity of electricity</strong></td>
+          <td>Q = I × t</td>
+          <td>I (A), t (s), Q (C)</td>
+          <td>Convert minutes to seconds</td>
+        </tr>
+        <tr>
+          <td><strong>Faraday 1st law (mass)</strong></td>
+          <td>m = ZQ = ZIt</td>
+          <td>Z (g/C)</td>
+          <td>Directly proportional to Q</td>
+        </tr>
+        <tr>
+          <td><strong>Mass deposited (using molar mass)</strong></td>
+          <td>m = (MIt) / (nF)</td>
+          <td>M (g/mol), n (e⁻), F = 96500 C/mol</td>
+          <td>Most common JAMB calculation</td>
+        </tr>
+        <tr>
+          <td><strong>Time required</strong></td>
+          <td>t = (m n F) / (M I)</td>
+          <td>t (s)</td>
+          <td>Rearrangement of m = (MIt)/(nF)</td>
+        </tr>
+        <tr>
+          <td><strong>Moles of electrons</strong></td>
+          <td>mol e⁻ = Q / F</td>
+          <td>F = 96500</td>
+          <td>1 Faraday deposits 1 mol e⁻</td>
+        </tr>
+        <tr>
+          <td><strong>Volume of gas at STP</strong></td>
+          <td>V = (Q × 22.4) / (nF)</td>
+          <td>V (dm³), n (e⁻ per mole gas)</td>
+          <td>At STP: 1 mol gas = 22.4 dm³</td>
+        </tr>
+        <tr>
+          <td><strong>Equivalent mass</strong></td>
+          <td>Eq = M / n</td>
+          <td>Eq (g)</td>
+          <td>“n” is electrons transferred</td>
+        </tr>
+        <tr>
+          <td><strong>Faraday 2nd law (ratio)</strong></td>
+          <td>m₁/Eq₁ = m₂/Eq₂</td>
+          <td>m (g), Eq (g)</td>
+          <td>Same Q passed through both</td>
+        </tr>
+        <tr>
+          <td><strong>Cell emf</strong></td>
+          <td>E°<sub>cell</sub> = E°<sub>cathode</sub> − E°<sub>anode</sub></td>
+          <td>Volts (V)</td>
+          <td>More positive electrode is cathode</td>
+        </tr>
+      </table>
+    </div>
+    <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+    <div class="memory-tip">
+      <strong>🧠 Fast memory</strong>
+      <p>Most questions are just: Q = It → then m = (MIt)/(nF).</p>
+    </div>
+  </div>
+
+  <!-- Definition -->
+  <div class="section-card">
+    <h2>1️⃣ Definition of Electrolysis</h2>
+    <p><strong>Electrolysis</strong> is the process by which an electric current is passed through an electrolyte (molten or aqueous) causing chemical decomposition of the electrolyte into its constituents at the electrodes.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4f/Electrolysis_setup.png" alt="Electrolysis setup diagram" class="diagram-img">
+    <div class="image-caption">Basic electrolysis setup: anode (+), cathode (−), electrolyte, DC supply</div>
+
+    <div class="jamb-alert">
+      <h4>Keyword check (definition)</h4>
+      <ul>
+        <li>Electric current + electrolyte + decomposition + electrodes</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Electrolytes -->
+  <div class="section-card">
+    <h2>2️⃣ Electrolytes vs Non-Electrolytes</h2>
+    <p><strong>Electrolyte:</strong> conducts electricity when molten or in aqueous solution and is decomposed by the current.</p>
+    <p><strong>Non-electrolyte:</strong> does not conduct electricity and is not decomposed.</p>
+
+    <div class="table-container">
+      <table class="summary-table">
+        <tr>
+          <th>Type</th>
+          <th>Meaning</th>
+          <th>Examples</th>
+        </tr>
+        <tr>
+          <td><strong>Strong electrolytes</strong></td>
+          <td>Complete ionisation</td>
+          <td>NaCl, HCl, H₂SO₄, NaOH</td>
+        </tr>
+        <tr>
+          <td><strong>Weak electrolytes</strong></td>
+          <td>Partial ionisation</td>
+          <td>CH₃COOH, NH₃(aq)</td>
+        </tr>
+        <tr>
+          <td><strong>Non-electrolytes</strong></td>
+          <td>No ions formed</td>
+          <td>Sugar, ethanol, urea, kerosene</td>
+        </tr>
+      </table>
+    </div>
+    <div class="table-scroll-hint">← Swipe table to see more →</div>
+  </div>
+
+  <!-- Faraday's laws -->
+  <div class="section-card">
+    <h2>3️⃣ Faraday’s Laws of Electrolysis</h2>
+
+    <h3>Faraday’s First Law</h3>
+    <p>The mass (<strong>m</strong>) of a substance liberated is directly proportional to the quantity of electricity (<strong>Q</strong>) passed.</p>
+    <div class="highlight-box">
+      <p>m ∝ Q  →  <strong>m = ZQ = ZIt</strong></p>
+      <p>Q = It</p>
+    </div>
+
+    <h3>Faraday’s Second Law</h3>
+    <p>For the same quantity of electricity passing through different electrolytes, masses liberated are proportional to their <strong>chemical equivalents</strong>.</p>
+    <div class="highlight-box">
+      <p><strong>m₁/Eq₁ = m₂/Eq₂</strong></p>
+      <p>Equivalent mass: <strong>Eq = M/n</strong></p>
+    </div>
+
+    <div class="jamb-alert">
+      <h4>F constant</h4>
+      <ul>
+        <li><strong>F = 96500 C mol⁻¹</strong> (Faraday constant)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Products -->
+  <div class="section-card">
+    <h2>4️⃣ Electrolysis of Common Solutions (Products Table)</h2>
+
+    <div class="table-container">
+      <table class="summary-table">
+        <tr>
+          <th>Electrolyte (solution)</th>
+          <th>Cathode (−) product</th>
+          <th>Anode (+) product</th>
+          <th>Extra note</th>
+        </tr>
+        <tr>
+          <td><strong>Dilute H₂SO₄</strong> (inert electrodes)</td>
+          <td>H₂ gas</td>
+          <td>O₂ gas</td>
+          <td>Volume ratio H₂:O₂ = 2:1</td>
+        </tr>
+        <tr>
+          <td><strong>Aqueous CuSO₄</strong> (inert electrodes)</td>
+          <td>Cu (pink deposit)</td>
+          <td>O₂ gas</td>
+          <td>Cu²⁺ is discharged at cathode</td>
+        </tr>
+        <tr>
+          <td><strong>Concentrated NaCl (brine)</strong></td>
+          <td>H₂ gas</td>
+          <td>Cl₂ gas (greenish-yellow)</td>
+          <td>Used in chlor-alkali process</td>
+        </tr>
+        <tr>
+          <td><strong>Molten NaCl</strong></td>
+          <td>Na metal</td>
+          <td>Cl₂ gas</td>
+          <td>No water present, so Na forms</td>
+        </tr>
+      </table>
+    </div>
+    <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2b/Electrolysis_of_water.svg" alt="Electrolysis of water diagram" class="diagram-img">
+    <div class="image-caption">Electrolysis of acidified water: H₂ at cathode, O₂ at anode (2:1 volume)</div>
+  </div>
+
+  <!-- Discharge factors -->
+  <div class="section-card">
+    <h2>5️⃣ Factors Affecting Discharge of Ions</h2>
+    <div class="quick-facts">
+      <ul>
+        <li><strong>Position in electrochemical series</strong> (easier ions discharge first)</li>
+        <li><strong>Concentration</strong> of ions (e.g., brine gives Cl₂, dilute NaCl gives O₂)</li>
+        <li><strong>Nature of electrode</strong> (inert vs reactive)</li>
+      </ul>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 Quick memory</strong>
+      <p>Series + concentration + electrode type.</p>
+    </div>
+  </div>
+
+  <!-- Uses -->
+  <div class="section-card">
+    <h2>6️⃣ Uses of Electrolysis</h2>
+    <div class="quick-facts">
+      <ul>
+        <li><strong>Purification of copper</strong> (electrolytic refining)</li>
+        <li><strong>Extraction of aluminium</strong> (Hall–Héroult process)</li>
+        <li><strong>Production of NaOH, Cl₂, H₂</strong> (chlor-alkali process)</li>
+        <li><strong>Electroplating</strong> (silver, gold, chromium)</li>
+      </ul>
+    </div>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2d/Electroplating_setup.svg" alt="Electroplating setup" class="diagram-img">
+    <div class="image-caption">Electroplating: object to be plated is usually the cathode</div>
+  </div>
+
+  <!-- Electrochemical series -->
+  <div class="section-card">
+    <h2>7️⃣ Electrochemical Series (Order)</h2>
+    <p><strong>Learn this order:</strong> K &gt; Na &gt; Ca &gt; Mg &gt; Al &gt; Zn &gt; Fe &gt; Sn &gt; Pb &gt; H &gt; Cu &gt; Ag &gt; Au</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Standard_electrode_potentials.png" alt="Electrochemical series" class="diagram-img">
+    <div class="image-caption">Electrochemical series helps predict discharge and reactivity</div>
+
+    <div class="jamb-alert">
+      <h4>How JAMB asks it</h4>
+      <ul>
+        <li>“Which metal displaces another from salt solution?”</li>
+        <li>“Which ion discharges first at cathode/anode?”</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Corrosion -->
+  <div class="section-card">
+    <h2>8️⃣ Corrosion of Iron & Prevention</h2>
+    <p>Corrosion of iron is an <strong>electrolytic</strong> process (anodic oxidation + cathodic reduction) in the presence of water and oxygen.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/0f/Rust_formation.svg" alt="Rusting process diagram" class="diagram-img">
+    <div class="image-caption">Rusting is an electrochemical process on iron surface</div>
+
+    <h3>Prevention methods</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Painting</li>
+        <li>Galvanising (coat with Zn)</li>
+        <li>Cathodic protection (Mg/Zn sacrificial anode)</li>
+        <li>Grease/oil coating</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 6 calculations -->
+  <div class="section-card">
+    <h2>🧮 6 JAMB Calculations (Worked)</h2>
+
+    <h3>Example 1: Mass deposited (Faraday 1st law)</h3>
+    <p><strong>0.5 A for 30 min deposits Cu (M=63.5, n=2). Find mass.</strong></p>
+    <div class="highlight-box">
+      <p>t = 30×60 = 1800 s</p>
+      <p>Q = It = 0.5×1800 = 900 C</p>
+      <p>m = (MIt)/(nF) = (63.5×900)/(2×96500) ≈ <strong>0.296 g</strong></p>
+    </div>
+
+    <h3>Example 2: Time required</h3>
+    <p><strong>2 A deposits 0.635 g Cu. Find time. (M=63.5, n=2)</strong></p>
+    <div class="highlight-box">
+      <p>t = (m n F)/(M I) = (0.635×2×96500)/(63.5×2) ≈ <strong>965 s</strong> ≈ 16.1 min</p>
+    </div>
+
+    <h3>Example 3: Volume of gas at STP</h3>
+    <p><strong>Find volume of H₂ at STP liberated by 96500 C (n=2 for H₂).</strong></p>
+    <div class="highlight-box">
+      <p>mol e⁻ = Q/F = 1 mol</p>
+      <p>mol H₂ = 1/2 = 0.5 mol</p>
+      <p>V = 0.5×22.4 = <strong>11.2 dm³</strong></p>
+    </div>
+
+    <h3>Example 4: E°cell calculation</h3>
+    <p><strong>Zn|Zn²⁺||Cu²⁺|Cu, E°Cu=+0.34 V, E°Zn=−0.76 V</strong></p>
+    <div class="highlight-box">
+      <p>E°cell = E°cathode − E°anode = 0.34 − (−0.76) = <strong>1.10 V</strong></p>
+    </div>
+
+    <h3>Example 5: Equivalent mass</h3>
+    <p><strong>Equivalent mass of Al (M=27, n=3)</strong></p>
+    <div class="highlight-box">
+      <p>Eq = M/n = 27/3 = <strong>9 g</strong></p>
+    </div>
+
+    <h3>Example 6: Faraday’s 2nd law (mass ratio)</h3>
+    <p><strong>Same Q deposits 1.08 g Ag (Eq=108) and x g Cu (Eq=31.75). Find x.</strong></p>
+    <div class="highlight-box">
+      <p>m₁/Eq₁ = m₂/Eq₂ → 1.08/108 = x/31.75</p>
+      <p>x = (1.08×31.75)/108 ≈ <strong>0.3175 g</strong></p>
+    </div>
+
+    <div class="jamb-alert">
+      <h4>Tip</h4>
+      <ul>
+        <li>Always write n correctly (Cu²⁺ needs 2e⁻; Al³⁺ needs 3e⁻; H₂ needs 2e⁻).</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Mini calculators -->
+  <div class="section-card">
+    <h2>🧰 Mini Calculators (Faraday)</h2>
+
+    <h3>Calculator 1: Mass deposited (m = MIt / nF)</h3>
+    <div class="calc-grid">
+      <div class="field">
+        <label>Molar mass, M (g/mol)</label>
+        <input id="M" type="number" placeholder="e.g., 63.5" />
+      </div>
+      <div class="field">
+        <label>Electrons, n</label>
+        <input id="n" type="number" placeholder="e.g., 2" />
+      </div>
+      <div class="field">
+        <label>Current, I (A)</label>
+        <input id="I" type="number" placeholder="e.g., 0.5" />
+      </div>
+      <div class="field">
+        <label>Time, t (s)</label>
+        <input id="t" type="number" placeholder="e.g., 1800" />
+      </div>
+    </div>
+    <button class="mini-btn" onclick="calcMass()">Calculate mass (g)</button>
+    <div class="result" id="massResult">Result will appear here…</div>
+
+    <h3 style="margin-top:18px">Calculator 2: Time needed (t = m n F / M I)</h3>
+    <div class="calc-grid">
+      <div class="field">
+        <label>Mass, m (g)</label>
+        <input id="m2" type="number" placeholder="e.g., 0.635" />
+      </div>
+      <div class="field">
+        <label>Molar mass, M (g/mol)</label>
+        <input id="M2" type="number" placeholder="e.g., 63.5" />
+      </div>
+      <div class="field">
+        <label>Electrons, n</label>
+        <input id="n2" type="number" placeholder="e.g., 2" />
+      </div>
+      <div class="field">
+        <label>Current, I (A)</label>
+        <input id="I2" type="number" placeholder="e.g., 2" />
+      </div>
+    </div>
+    <button class="mini-btn" onclick="calcTime()">Calculate time (s)</button>
+    <div class="result" id="timeResult">Result will appear here…</div>
+
+    <h3 style="margin-top:18px">Calculator 3: Gas volume at STP (V = Q×22.4 / nF)</h3>
+    <div class="calc-grid">
+      <div class="field">
+        <label>Charge, Q (C)</label>
+        <input id="Q3" type="number" placeholder="e.g., 96500" />
+      </div>
+      <div class="field">
+        <label>Electrons, n</label>
+        <input id="n3" type="number" placeholder="e.g., 2" />
+      </div>
+    </div>
+    <button class="mini-btn" onclick="calcGasVol()">Calculate volume (dm³)</button>
+    <div class="result" id="gasResult">Result will appear here…</div>
+  </div>
+
+  <!-- Checklist -->
+  <div class="section-card">
+    <h2>✅ Quick Revision Checklist</h2>
+    <div class="quick-facts">
+      <ul>
+        <li>Definition of electrolysis</li>
+        <li>Strong/weak/non-electrolytes examples</li>
+        <li>Faraday’s 1st & 2nd laws + formulas</li>
+        <li>Products table for dilute H₂SO₄, CuSO₄, brine, molten NaCl</li>
+        <li>Factors affecting discharge (series, concentration, electrode)</li>
+        <li>Uses (refining Cu, extracting Al, chlor-alkali, plating)</li>
+        <li>Electrochemical series order</li>
+        <li>Corrosion & prevention (galvanising, sacrificial anode)</li>
+      </ul>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 Final memory line</strong>
+      <p>Electrolysis questions = product prediction + Faraday calculations.</p>
+    </div>
+  </div>
+
+  <button class="explore-btn" onclick="alert('Practice: product prediction + Faraday calculations daily!')">Practice JAMB Questions</button>
+</div>
+</div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+
+    const F = 96500;
+
+    function calcMass(){
+      const M = parseFloat(document.getElementById('M').value || "0");
+      const n = parseFloat(document.getElementById('n').value || "0");
+      const I = parseFloat(document.getElementById('I').value || "0");
+      const t = parseFloat(document.getElementById('t').value || "0");
+      const out = document.getElementById('massResult');
+
+      if(M<=0 || n<=0 || I<=0 || t<=0){
+        out.textContent = "Enter valid M, n, I, and t values (>0).";
+        return;
+      }
+      const m = (M*I*t)/(n*F);
+      const Q = I*t;
+      out.textContent = `Q = It = ${I}×${t} = ${Q.toFixed(2)} C. m = (MIt)/(nF) = (${M}×${I}×${t})/(${n}×${F}) = ${m.toFixed(4)} g.`;
+    }
+
+    function calcTime(){
+      const m = parseFloat(document.getElementById('m2').value || "0");
+      const M = parseFloat(document.getElementById('M2').value || "0");
+      const n = parseFloat(document.getElementById('n2').value || "0");
+      const I = parseFloat(document.getElementById('I2').value || "0");
+      const out = document.getElementById('timeResult');
+
+      if(m<=0 || M<=0 || n<=0 || I<=0){
+        out.textContent = "Enter valid m, M, n, and I values (>0).";
+        return;
+      }
+      const t = (m*n*F)/(M*I);
+      out.textContent = `t = (m n F)/(M I) = (${m}×${n}×${F})/(${M}×${I}) = ${t.toFixed(2)} s (≈ ${(t/60).toFixed(2)} min).`;
+    }
+
+    function calcGasVol(){
+      const Q = parseFloat(document.getElementById('Q3').value || "0");
+      const n = parseFloat(document.getElementById('n3').value || "0");
+      const out = document.getElementById('gasResult');
+
+      if(Q<=0 || n<=0){
+        out.textContent = "Enter valid Q and n values (>0).";
+        return;
+      }
+      const V = (Q*22.4)/(n*F);
+      out.textContent = `V = (Q×22.4)/(nF) = (${Q}×22.4)/(${n}×${F}) = ${V.toFixed(4)} dm³ at STP.`;
+    }
+  </script>
+</body>
+</html>

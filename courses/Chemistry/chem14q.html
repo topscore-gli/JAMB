@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Chemistry - Non-metals and Their Compounds</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Chemistry</h1>
+      <p>Non-metals and Their Compounds<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Non-metals and Their Compounds</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 100:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration
+const CONFIG={TIME:6000,PASS:60}; // 100 minutes for 100 questions
+
+// Section mapping
+const SECTIONS={
+  0:"A: Hydrogen",
+  10:"B: Halogens",
+  25:"C: Oxygen & Sulphur",
+  60:"D: Nitrogen & Its Compounds",
+  80:"E: Carbon & Its Compounds"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 100 JAMB Non-metals and Their Compounds Questions
+const QUIZ_DATA=[
+  // Section A: Hydrogen (Questions 1-10)
+  {q:"The commercial production of hydrogen by the water gas method involves the reaction of steam with:",o:["Zinc metal","Red hot coke","Dilute sulphuric acid","Sodium hydroxide","Calcium metal"],a:1,e:"Steam is passed over red-hot coke (carbon) at 1000°C to produce water gas (CO + H₂)."},
+  {q:"In the laboratory preparation of hydrogen, the gas is collected by downward displacement of water because:",o:["It is soluble in water","It is lighter than air","It is denser than air","It is insoluble in water and lighter than air","It reacts with oxygen in air"],a:3,e:"Hydrogen is collected by downward displacement of water because it is insoluble in water and lighter than air (cannot be collected by upward displacement)."},
+  {q:"The chemical property of hydrogen that makes it suitable for use in the hydrogenation of vegetable oils is its ability to act as a:",o:["Reducing agent","Oxidizing agent","Dehydrating agent","Catalyst","Solvent"],a:0,e:"Hydrogen acts as a reducing agent, converting unsaturated oils to saturated fats (margarine) by adding across double bonds."},
+  {q:"When a burning splint is inserted into a test tube of hydrogen gas, the characteristic observation is:",o:["The gas burns with a blue flame","A 'pop' sound is produced","The splint is extinguished","The gas turns brown","White fumes are produced"],a:1,e:"The 'pop' sound test is the characteristic test for hydrogen due to its explosive reaction with oxygen when ignited."},
+  {q:"The water gas reaction is represented as:",o:["C + H₂O → CO + H₂","C + 2H₂O → CO₂ + 2H₂","CO + H₂O → CO₂ + H₂","CH₄ + H₂O → CO + 3H₂","C + 2H₂ → CH₄"],a:0,e:"Steam passed over red-hot carbon produces carbon monoxide and hydrogen (water gas): C + H₂O → CO + H₂."},
+  {q:"Hydrogen is NOT used for:",o:["Rocket fuel","Haber process","Manufacture of margarine","Water treatment","Fuel cells"],a:3,e:"Chlorine, not hydrogen, is used for water treatment/sterilization. Hydrogen is used for rocket fuel, Haber process, hydrogenation, and fuel cells."},
+  {q:"In the reaction CuO + H₂ → Cu + H₂O, hydrogen acts as a:",o:["Catalyst","Oxidizing agent","Reducing agent","Dehydrating agent","Acid"],a:2,e:"Hydrogen reduces copper(II) oxide to copper, gaining oxygen itself to form water, thus acting as a reducing agent."},
+  {q:"The lightest known gas is:",o:["Helium","Hydrogen","Methane","Ammonia","Nitrogen"],a:1,e:"Hydrogen has the lowest molar mass (2 g/mol) and is the lightest gas known."},
+  {q:"Hydrogen is produced industrially by cracking of petroleum fractions. This process involves:",o:["Distillation","Breaking large hydrocarbon molecules","Polymerization","Fermentation","Electrolysis"],a:1,e:"Cracking involves breaking down large hydrocarbon molecules into smaller ones using heat or catalysts, producing hydrogen as a byproduct."},
+  {q:"Which metal is commonly used in the laboratory preparation of hydrogen?",o:["Copper","Silver","Zinc","Gold","Mercury"],a:2,e:"Zinc is commonly used because it reacts at a moderate rate with dilute acids to produce hydrogen without the reaction being too violent."},
+  
+  // Section B: Halogens (Questions 11-25)
+  {q:"The halogen with the highest electronegativity is:",o:["Chlorine","Bromine","Fluorine","Iodine","Astatine"],a:2,e:"Electronegativity decreases down the group; fluorine is the most electronegative element in the periodic table."},
+  {q:"In the laboratory preparation of chlorine, manganese(IV) oxide acts as a:",o:["Catalyst","Reducing agent","Oxidizing agent","Dehydrating agent","Acid"],a:2,e:"MnO₂ oxidizes HCl to Cl₂; manganese is reduced from +4 to +2 oxidation state."},
+  {q:"The industrial preparation of chlorine is carried out by:",o:["Heating manganese dioxide with concentrated HCl","Electrolysis of brine","Fractional distillation of liquid air","Cracking of petroleum","Haber process"],a:1,e:"Chlorine is produced industrially by electrolysis of brine (concentrated NaCl solution) in the mercury cell or diaphragm cell."},
+  {q:"Chlorine water is a mixture of:",o:["Cl₂ and H₂O only","HCl and HOCl only","Cl₂, HCl, and HOCl","HCl and H₂O only","Cl₂ and HCl only"],a:2,e:"Chlorine dissolves in water and reacts partially: Cl₂ + H₂O ⇌ HCl + HOCl (hypochlorous acid)."},
+  {q:"The bleaching action of chlorine is due to the formation of:",o:["Hydrochloric acid","Hypochlorous acid","Chloric acid","Perchloric acid","Chlorous acid"],a:1,e:"Hypochlorous acid (HOCl) formed when chlorine dissolves in water is responsible for the bleaching action through oxidation."},
+  {q:"Chlorine is used in water treatment primarily to:",o:["Remove hardness","Kill bacteria","Remove suspended particles","Improve taste","Add nutrients"],a:1,e:"Chlorine is used to sterilize water by killing harmful bacteria and microorganisms."},
+  {q:"The reaction between hydrogen and chlorine is best described as:",o:["Decomposition","Displacement","Combination","Double decomposition","Neutralization"],a:2,e:"H₂ + Cl₂ → 2HCl is a direct combination (synthesis) reaction where two elements combine to form a compound."},
+  {q:"Hydrogen chloride gas is NOT dried using calcium oxide because:",o:["It is lighter than air","It reacts with calcium oxide","It is insoluble in water","It is colored","It is inert"],a:1,e:"HCl is acidic and reacts with basic drying agents like CaO; concentrated H₂SO₄ is used instead."},
+  {q:"The fountain experiment with hydrogen chloride demonstrates that the gas is:",o:["Colored","Extremely soluble in water","Lighter than air","Acidic","Basic"],a:1,e:"The fountain experiment shows HCl is extremely soluble in water, creating a vacuum that draws water up the tube."},
+  {q:"When silver nitrate solution is added to a chloride solution, the precipitate formed is:",o:["Brown","Yellow","White","Black","Blue"],a:2,e:"Ag⁺ + Cl⁻ → AgCl↓ (white precipitate), which dissolves in excess ammonia solution."},
+  {q:"The confirmatory test for chloride ions involves the addition of:",o:["Lead(II) nitrate only","Silver nitrate followed by ammonia","Barium chloride","Lime water","Sodium hydroxide"],a:1,e:"White precipitate with AgNO₃ that dissolves in dilute ammonia confirms Cl⁻ (AgCl dissolves, AgBr/AgI do not)."},
+  {q:"Chlorine is used in the manufacture of all EXCEPT:",o:["Hydrochloric acid","PVC plastics","DDT insecticide","Ammonia","Bleaching powder"],a:3,e:"Ammonia is manufactured by the Haber process using nitrogen and hydrogen, not chlorine."},
+  {q:"The halogen that exists as a liquid at room temperature is:",o:["Fluorine","Chlorine","Bromine","Iodine","Astatine"],a:2,e:"Bromine is a reddish-brown liquid at room temperature; others are gases (F₂, Cl₂) or solids (I₂, At)."},
+  {q:"In the electrolysis of brine, chlorine is produced at the:",o:["Cathode","Anode","Both electrodes","Neither electrode","Salt bridge"],a:1,e:"At the anode: 2Cl⁻ → Cl₂ + 2e⁻ (oxidation); at the cathode: 2H₂O + 2e⁻ → H₂ + 2OH⁻."},
+  {q:"The reaction of chlorine with cold dilute sodium hydroxide produces:",o:["NaCl only","NaCl and NaClO","NaClO₃ only","NaCl and NaClO₃","NaClO and NaClO₃"],a:1,e:"Cold dilute: Cl₂ + 2NaOH → NaCl + NaClO + H₂O (sodium chloride and sodium hypochlorite)."},
+  
+  // Section C: Oxygen & Sulphur (Questions 26-60)
+  {q:"The catalyst used in the laboratory preparation of oxygen from potassium chlorate is:",o:["Copper(II) oxide","Manganese(IV) oxide","Iron(III) oxide","Zinc oxide","Aluminium oxide"],a:1,e:"MnO₂ catalyzes the decomposition of KClO₃ to KCl and O₂ at a lower temperature."},
+  {q:"Commercially, oxygen is obtained by:",o:["Electrolysis of water","Fractional distillation of liquid air","Heating mercury(II) oxide","Photosynthesis","Decomposition of hydrogen peroxide"],a:1,e:"Liquid air is fractionally distilled; nitrogen (b.p. -196°C) distills first, leaving oxygen (b.p. -183°C)."},
+  {q:"An oxide that reacts with both acids and bases to form salts is described as:",o:["Acidic","Basic","Amphoteric","Neutral","Neutral"],a:2,e:"Amphoteric oxides (e.g., Al₂O₃, ZnO, PbO) exhibit both acidic and basic properties."},
+  {q:"Which of the following is a neutral oxide?",o:["CO₂","SO₂","NO","CaO","Na₂O"],a:2,e:"Carbon monoxide (CO) and nitrous oxide (N₂O) are neutral oxides; they do not react with acids or bases."},
+  {q:"Ozone in the atmosphere is important because it:",o:["Supports combustion","Absorbs harmful ultraviolet radiation","Causes acid rain","Is used for respiration","Produces oxygen by photosynthesis"],a:1,e:"The ozone layer absorbs harmful UV radiation, protecting living organisms from radiation damage."},
+  {q:"Ozone is produced from oxygen by:",o:["Heating","Silent electric discharge","Electrolysis","Photosynthesis","Combustion"],a:1,e:"3O₂ → 2O₃ occurs when silent electric discharge is passed through oxygen or air."},
+  {q:"The volume ratio of hydrogen to oxygen in water is:",o:["1:1","2:1","1:2","1:8","8:1"],a:1,e:"By volume, water contains 2 volumes of hydrogen to 1 volume of oxygen (H₂O)."},
+  {q:"Temporary hardness in water is caused by the presence of:",o:["Calcium sulphate","Calcium chloride","Calcium hydrogen trioxocarbonate(IV)","Sodium chloride","Magnesium sulphate"],a:2,e:"Ca(HCO₃)₂ and Mg(HCO₃)₂ cause temporary hardness, removable by boiling."},
+  {q:"Permanent hardness of water can be removed by:",o:["Boiling only","Addition of washing soda (Na₂CO₃)","Filtration","Sedimentation","Distillation only"],a:1,e:"Washing soda precipitates Ca²⁺ and Mg²⁺ as carbonates; boiling only removes temporary hardness."},
+  {q:"Water is said to be hard when it:",o:["Contains dissolved gases","Does not lather easily with soap","Has a high boiling point","Is colored","Contains suspended particles"],a:1,e:"Hard water contains Ca²⁺ and Mg²⁺ ions that react with soap to form insoluble scum instead of lather."},
+  {q:"The process of adding alum to water during treatment is called:",o:["Chlorination","Coagulation","Filtration","Sedimentation","Distillation"],a:1,e:"Alum (coagulant) causes fine particles to clump together (coagulate) for easier removal."},
+  {q:"Efflorescence is the phenomenon where a substance:",o:["Absorbs water from the atmosphere and dissolves","Loses water of crystallization to the atmosphere","Absorbs moisture without dissolving","Melts when exposed to air","Changes color in air"],a:1,e:"Efflorescent substances (e.g., Na₂CO₃·10H₂O) lose their water of crystallization when exposed to air."},
+  {q:"Which substance exhibits deliquescence?",o:["Concentrated H₂SO₄","Calcium chloride","Copper(II) sulphate crystals","Sodium chloride","Iron filings"],a:1,e:"Deliquescent substances (CaCl₂, NaOH, FeCl₃) absorb water from air to form solutions."},
+  {q:"A hygroscopic substance is one that:",o:["Loses water to the atmosphere","Absorbs moisture from the atmosphere without dissolving","Reacts with oxygen in air","Sublimes when exposed to air","Decomposes in moist air"],a:1,e:"Hygroscopic substances (conc. H₂SO₄, CaO, silica gel) absorb moisture but do not dissolve."},
+  {q:"The water of crystallization in copper(II) sulphate crystals is:",o:["2 molecules","3 molecules","4 molecules","5 molecules","10 molecules"],a:3,e:"Blue copper(II) sulphate crystals have the formula CuSO₄·5H₂O; they turn white (anhydrous) when heated."},
+  {q:"Which of the following is NOT an allotrope of sulphur?",o:["Rhombic sulphur","Monoclinic sulphur","Plastic sulphur","Colloidal sulphur","Sulphur dioxide"],a:4,e:"SO₂ is a compound of sulphur and oxygen, not an allotrope (different forms of the same element)."},
+  {q:"The stable form of sulphur at room temperature is:",o:["Monoclinic sulphur","Rhombic sulphur","Plastic sulphur","Amorphous sulphur","Colloidal sulphur"],a:1,e:"Rhombic sulphur (octahedral crystals) is stable below 96°C; monoclinic is stable above 96°C."},
+  {q:"Sulphur(IV) oxide is prepared in the laboratory by the action of dilute acid on:",o:["Sodium sulphate","Sodium sulphite","Sodium thiosulphate","Copper(II) sulphide","Iron(II) sulphide"],a:1,e:"Na₂SO₃ + 2HCl → 2NaCl + H₂O + SO₂↑"},
+  {q:"Sulphur(IV) oxide acts as a:",o:["Bleaching agent by oxidation","Bleaching agent by reduction","Dehydrating agent","Oxidizing agent only","Strong acid"],a:1,e:"SO₂ bleaches by reduction (removes oxygen from dyes); the bleaching is temporary as atmospheric oxygen restores color."},
+  {q:"The Contact Process is used for the manufacture of:",o:["Sulphuric acid","Nitric acid","Hydrochloric acid","Ammonia","Sodium hydroxide"],a:0,e:"The Contact Process produces H₂SO₄ using V₂O₅ catalyst to convert SO₂ to SO₃."},
+  {q:"In the Contact Process, the catalyst used is:",o:["Iron","Platinum","Vanadium(V) oxide","Nickel","Manganese(IV) oxide"],a:2,e:"Vanadium(V) oxide (V₂O₅) is the catalyst for 2SO₂ + O₂ ⇌ 2SO₃; it is cheaper and less easily poisoned than platinum."},
+  {q:"Concentrated sulphuric acid is NOT used to dry ammonia because:",o:["It is a strong acid","It reacts with ammonia","It is hygroscopic","It is oxidizing","It is dehydrating"],a:1,e:"H₂SO₄ + 2NH₃ → (NH₄)₂SO₄; calcium oxide (quicklime) is used to dry ammonia instead."},
+  {q:"The property of concentrated H₂SO₄ demonstrated when it turns sugar black is:",o:["Oxidizing property","Dehydrating property","Acidic property","Reducing property","Hygroscopic property"],a:1,e:"C₁₂H₂₂O₁₁ (sugar) → 12C + 11H₂O; the acid removes elements of water from the compound."},
+  {q:"To distinguish between SO₄²⁻ and SO₃²⁻, add:",o:["Dilute HCl only","BaCl₂ solution followed by dilute HCl","AgNO₃ solution","NaOH solution","KMnO₄ solution only"],a:1,e:"Both give white precipitates with BaCl₂, but BaSO₃ dissolves in dilute HCl while BaSO₄ does not."},
+  {q:"The test for sulphate ions involves the formation of a white precipitate with:",o:["Silver nitrate","Barium chloride in acidic medium","Lead(II) ethanoate","Calcium hydroxide","Sodium carbonate"],a:1,e:"Ba²⁺ + SO₄²⁻ → BaSO₄↓ (white, insoluble in dilute acids); acid prevents precipitation of other barium salts."},
+  {q:"Hydrogen sulphide gas has the characteristic smell of:",o:["Rotten eggs","Burning sulphur","Chlorine","Ammonia","Alcohol"],a:0,e:"H₂S has a characteristic rotten egg smell and is toxic."},
+  {q:"Hydrogen sulphide acts as a precipitating agent because it forms:",o:["Acidic solutions","Colored metal sulphides","Sulphur dioxide","Water","Sulphuric acid"],a:1,e:"H₂S precipitates metal sulphides of characteristic colors (e.g., black PbS, yellow CdS, brown CuS)."},
+  {q:"The black precipitate formed when H₂S is passed into a solution containing Pb²⁺ ions is:",o:["Lead(II) chloride","Lead(II) sulphide","Lead(II) sulphate","Lead(II) carbonate","Lead(II) oxide"],a:1,e:"Pb²⁺ + H₂S → PbS↓ (black) + 2H⁺; this is the confirmatory test for H₂S or S²⁻."},
+  {q:"In the reaction between SO₂ and H₂S, sulphur is produced. In this reaction, SO₂ acts as a(n):",o:["Acid","Base","Oxidizing agent","Reducing agent","Catalyst"],a:2,e:"SO₂ + 2H₂S → 3S + 2H₂O; SO₂ is reduced (gains hydrogen), thus acting as an oxidizing agent."},
+  {q:"The acid formed when sulphur(IV) oxide dissolves in water is:",o:["Sulphuric acid","Sulphurous acid","Hydrogen sulphide","Sulphuric(IV) acid","Thiosulphuric acid"],a:1,e:"SO₂ + H₂O → H₂SO₃ (sulphurous acid/trioxosulphate(IV) acid)."},
+  {q:"Which of the following is used to detect the presence of H₂S gas?",o:["Moist blue litmus paper","Lead(II) ethanoate paper","Lime water","Starch iodide paper","Phenolphthalein"],a:1,e:"Lead(II) ethanoate paper turns black in presence of H₂S due to formation of PbS."},
+  {q:"The oxidation state of sulphur in H₂SO₄ is:",o:["+4","+6","-2","+2","-6"],a:1,e:"2(+1) + x + 4(-2) = 0; x = +6 (sulphur in sulphuric acid is in +6 oxidation state)."},
+  {q:"Dilute sulphuric acid reacts with metals above hydrogen in the activity series to produce:",o:["Oxygen","Hydrogen","Sulphur dioxide","Nitrogen","Chlorine"],a:1,e:"Zn + H₂SO₄(dil) → ZnSO₄ + H₂↑; concentrated acid produces SO₂ instead."},
+  {q:"The dehydration of ethanol by concentrated H₂SO₄ produces:",o:["Ethane","Ethene","Ethyne","Methane","Propene"],a:1,e:"C₂H₅OH → C₂H₄ + H₂O (at 170°C); concentrated H₂SO₄ removes water from ethanol."},
+  {q:"Which gas turns acidified potassium dichromate(VI) solution from orange to green?",o:["CO₂","SO₂","NH₃","H₂","O₂"],a:1,e:"SO₂ reduces orange Cr₂O₇²⁻ to green Cr³⁺, acting as a reducing agent."},
+  
+  // Section D: Nitrogen & Its Compounds (Questions 61-80)
+  {q:"The most abundant gas in the atmosphere is:",o:["Oxygen","Carbon dioxide","Nitrogen","Argon","Water vapor"],a:2,e:"Nitrogen constitutes about 78% of the atmosphere by volume."},
+  {q:"In the Haber process for ammonia synthesis, the optimum temperature used is:",o:["100°C","250°C","450°C","1000°C","2000°C"],a:2,e:"450°C is a compromise between rate (favored by high temperature) and yield (favored by low temperature for this exothermic reaction)."},
+  {q:"The catalyst used in the Haber process is:",o:["Vanadium(V) oxide","Iron","Platinum","Nickel","Manganese(IV) oxide"],a:1,e:"Finely divided iron is used as the catalyst; promoters like Al₂O₃ and K₂O are added."},
+  {q:"Ammonia gas is collected by:",o:["Downward displacement of water","Upward displacement of air","Downward displacement of air","Over mercury","By condensation only"],a:2,e:"NH₃ is less dense than air (molar mass 17 g/mol) and highly soluble in water, so it's collected by downward displacement of air."},
+  {q:"Ammonia reacts with hydrogen chloride gas to form:",o:["Ammonium hydroxide","Ammonium chloride","Nitrogen gas","Nitrogen trichloride","Chloramine"],a:1,e:"NH₃ + HCl → NH₄Cl (white fumes of ammonium chloride)."},
+  {q:"Aqueous ammonia solution is a weak base because it:",o:["Is insoluble in water","Dissociates slightly in water","Does not conduct electricity","Reacts with acids only","Is colorless"],a:1,e:"NH₃ + H₂O ⇌ NH₄⁺ + OH⁻; the equilibrium lies to the left, producing few OH⁻ ions."},
+  {q:"The reagent used to test for ammonium ions is:",o:["Dilute HCl","Sodium hydroxide solution and heat","Silver nitrate solution","Barium chloride solution","Lead(II) nitrate solution"],a:1,e:"NH₄⁺ + OH⁻ → NH₃↑ + H₂O (on heating); ammonia gas turns moist red litmus blue."},
+  {q:"Ammonia is oxidized catalytically to nitrogen(II) oxide in the:",o:["Haber process","Contact process","Ostwald process","Solvay process","Bosch process"],a:2,e:"4NH₃ + 5O₂ → 4NO + 6H₂O (first step of Ostwald process for HNO₃ manufacture)."},
+  {q:"The brown gas obtained when ammonia is oxidized is:",o:["N₂O","NO","NO₂","N₂O₅","N₂O₄"],a:2,e:"NO (colorless) is oxidized by air to NO₂ (brown): 2NO + O₂ → 2NO₂."},
+  {q:"In the laboratory preparation of nitric acid, the reactants are:",o:["Sodium nitrate and concentrated hydrochloric acid","Sodium nitrate and concentrated sulphuric acid","Ammonium nitrate and dilute sulphuric acid","Potassium nitrate and nitric acid","Sodium nitrite and hydrochloric acid"],a:1,e:"NaNO₃ + H₂SO₄(conc) → NaHSO₄ + HNO₃ (distilled at <200°C to prevent decomposition)."},
+  {q:"Nitric acid turns yellow on standing due to:",o:["Dissolved nitrogen dioxide","Formation of nitrogen gas","Presence of iron impurities","Reaction with glass","Formation of nitrogen pentoxide"],a:0,e:"4HNO₃ → 4NO₂ + O₂ + 2H₂O (in sunlight); dissolved NO₂ gives yellow color."},
+  {q:"The brown ring test is used to detect:",o:["Nitrites","Nitrates","Ammonium ions","Nitrogen gas","Nitrogen dioxide"],a:1,e:"NO₃⁻ + FeSO₄ + conc. H₂SO₄ → brown ring of [Fe(H₂O)₅NO]²⁺ at the junction."},
+  {q:"When heated, potassium nitrate decomposes to give:",o:["Nitrogen and oxygen","Nitrogen dioxide and oxygen","Potassium nitrite and oxygen","Potassium oxide and nitrogen","Potassium oxide, nitrogen and oxygen"],a:2,e:"2KNO₃ → 2KNO₂ + O₂ (alkali metal nitrates give nitrites and oxygen)."},
+  {q:"Heavy metal nitrates such as lead(II) nitrate decompose on heating to give:",o:["Metal nitrites and oxygen","Metal oxides, nitrogen dioxide and oxygen","Metal, nitrogen and oxygen","Metal oxide and nitrogen only","Metal and nitrogen dioxide only"],a:1,e:"2Pb(NO₃)₂ → 2PbO + 4NO₂ + O₂ (brown fumes of NO₂ observed)."},
+  {q:"Laughing gas is chemically known as:",o:["Nitrogen dioxide","Nitrogen monoxide","Dinitrogen oxide","Dinitrogen trioxide","Dinitrogen pentoxide"],a:2,e:"N₂O (dinitrogen oxide/nitrogen(I) oxide) produces hysterical laughter when inhaled."},
+  {q:"The oxide of nitrogen that is colorless and supports combustion is:",o:["NO","NO₂","N₂O","N₂O₅","N₂O₃"],a:2,e:"N₂O is colorless and supports combustion (laughing gas); NO is colorless but does not support combustion strongly."},
+  {q:"The process by which atmospheric nitrogen is converted to ammonia by bacteria is called:",o:["Nitrification","Denitrification","Nitrogen fixation","Ammonification","Assimilation"],a:2,e:"Nitrogen fixation converts N₂ to NH₃/NH₄⁺ by nitrogen-fixing bacteria (e.g., Rhizobium in legumes)."},
+  {q:"The conversion of ammonium compounds to nitrites and then to nitrates is called:",o:["Nitrogen fixation","Nitrification","Denitrification","Ammonification","Putrefaction"],a:1,e:"Nitrification: NH₄⁺ → NO₂⁻ (Nitrosomonas) → NO₃⁻ (Nitrobacter)."},
+  {q:"Denitrification involves the conversion of:",o:["Nitrates to atmospheric nitrogen","Nitrogen to ammonia","Ammonia to nitrites","Proteins to ammonia","Nitrites to nitrates"],a:0,e:"Denitrifying bacteria reduce nitrates (NO₃⁻) back to nitrogen gas (N₂), completing the nitrogen cycle."},
+  
+  // Section E: Carbon & Its Compounds (Questions 81-100)
+  {q:"The allotrope of carbon used in making crucibles is:",o:["Diamond","Graphite","Charcoal","Lampblack","Coke"],a:1,e:"Graphite is used for crucibles and electrodes due to its high melting point and electrical conductivity."},
+  {q:"Diamond is hard because its carbon atoms are arranged in:",o:["Layers that slide over each other","A tetrahedral three-dimensional network","Hexagonal rings","Linear chains","Random arrangement"],a:1,e:"Each carbon in diamond is tetrahedrally bonded to four others in a rigid 3D network, making it extremely hard."},
+  {q:"Graphite conducts electricity because:",o:["It contains metallic bonds","It has mobile electrons in its layers","It is soft","It has a high melting point","It contains ions"],a:1,e:"Each carbon in graphite is bonded to three others, leaving one delocalized electron per atom that can move between layers."},
+  {q:"In the laboratory preparation of carbon(IV) oxide, the gas is collected by:",o:["Downward displacement of water","Upward displacement of air","Downward displacement of air","Over mercury","By freezing"],a:1,e:"CO₂ is denser than air (molar mass 44 g/mol) and moderately soluble in water, so upward displacement of air is used."},
+  {q:"The test for carbon(IV) oxide gas involves:",o:["A glowing splint","Lime water turning milky","A burning splint being extinguished","Red litmus paper turning blue","White fumes with ammonia"],a:1,e:"CO₂ + Ca(OH)₂ → CaCO₃↓ + H₂O (white precipitate/milkiness); excess CO₂ forms soluble Ca(HCO₃)₂."},
+  {q:"Carbon(II) oxide is poisonous because it:",o:["Irritates the lungs","Combines with hemoglobin to form carboxyhemoglobin","Causes acid rain","Is acidic","Reacts with oxygen in blood"],a:1,e:"CO binds irreversibly to hemoglobin (200× affinity of O₂), preventing oxygen transport, causing suffocation."},
+  {q:"The laboratory preparation of carbon(II) oxide involves the dehydration of:",o:["Ethanol","Methanoic acid","Ethanoic acid","Methanol","Propanol"],a:1,e:"HCOOH → H₂O + CO↑ (dehydrated by concentrated H₂SO₄ at 100-120°C)."},
+  {q:"Carbon(II) oxide acts as a reducing agent in the blast furnace by converting:",o:["Iron to iron(III) oxide","Iron(III) oxide to iron","Carbon to carbon dioxide","Calcium carbonate to calcium oxide","Silicon dioxide to silicon"],a:1,e:"Fe₂O₃ + 3CO → 2Fe + 3CO₂; CO is the main reducing agent in iron extraction."},
+  {q:"The type of coal with the highest carbon content is:",o:["Peat","Lignite","Bituminous coal","Anthracite","Wood charcoal"],a:3,e:"Coal ranking by carbon content: Peat < Lignite < Bituminous < Anthracite (highest carbon, 90%)."},
+  {q:"The destructive distillation of coal yields all EXCEPT:",o:["Coal gas","Coal tar","Ammoniacal liquor","Coke","Producer gas"],a:4,e:"Producer gas (CO + N₂) is made by passing air over hot coke, not by destructive distillation of coal."},
+  {q:"The main component of synthesis gas is:",o:["Carbon dioxide and nitrogen","Carbon monoxide and hydrogen","Carbon monoxide and nitrogen","Hydrogen and nitrogen","Methane and hydrogen"],a:1,e:"Synthesis gas (water gas) = CO + H₂, made by passing steam over hot coke: C + H₂O → CO + H₂."},
+  {q:"Synthesis gas is used in the manufacture of:",o:["Sulphuric acid","Methanol","Ammonia only","Nitric acid","Hydrochloric acid"],a:1,e:"CO + 2H₂ → CH₃OH (methanol); synthesis gas is also used for synthetic fuels (Fischer-Tropsch)."},
+  {q:"The gasification of coke involves the reaction of coke with:",o:["Air","Steam","Carbon dioxide","Hydrogen","Nitrogen"],a:1,e:"C + H₂O(g) → CO + H₂ (water gas/synthesis gas); C + air gives producer gas (CO + N₂)."},
+  {q:"Which of the following is NOT a product of the destructive distillation of wood?",o:["Charcoal","Wood tar","Pyroligneous acid","Wood gas","Coke"],a:4,e:"Coke is a product of coal distillation, not wood distillation. Wood gives charcoal, wood tar, pyroligneous acid, and wood gas."},
+  {q:"Carbon(IV) oxide is used in fire extinguishers because it:",o:["Supports combustion","Is denser than air and does not support combustion","Is lighter than air","Reacts with fire","Is easily liquefied"],a:1,e:"CO₂ blankets the fire, cutting off oxygen supply; it's denser than air and does not support combustion."},
+  {q:"The reagent used to distinguish between CO and CO₂ is:",o:["Lime water","Sodium hydroxide","Concentrated sulphuric acid","Calcium chloride","Potassium permanganate"],a:0,e:"CO₂ turns lime water milky (CaCO₃ precipitate); CO has no effect on lime water."},
+  {q:"In the reaction: C + 2H₂SO₄(conc) → CO₂ + 2SO₂ + 2H₂O, concentrated sulphuric acid acts as:",o:["An acid only","An oxidizing agent","A dehydrating agent","A reducing agent","A catalyst"],a:1,e:"H₂SO₄ is reduced to SO₂ (S changes from +6 to +4), thus acting as an oxidizing agent."},
+  {q:"The compound formed when carbon(IV) oxide is dissolved in water under pressure is:",o:["Carbonic acid","Carbon monoxide","Sodium carbonate","Calcium carbonate","Bicarbonate"],a:0,e:"CO₂ + H₂O ⇌ H₂CO₃ (carbonic acid), a weak unstable acid that decomposes easily."},
+  {q:"Which of the following statements about carbon(II) oxide is FALSE?",o:["It is a reducing agent","It burns with a blue flame","It is odorless and tasteless","It is less dense than air","It is toxic"],a:3,e:"CO (molar mass 28 g/mol) is slightly less dense than air (average 29 g/mol), but the difference is small; it is actually very slightly lighter, but the statement is often considered misleading as they have similar densities."},
+  {q:"The complete combustion of carbon in excess air produces:",o:["Carbon(II) oxide","Carbon(IV) oxide","Carbon suboxide","Carbon and oxygen only","A mixture of CO and CO₂"],a:1,e:"C + O₂(excess) → CO₂; limited air gives CO: 2C + O₂(limited) → 2CO."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('non_metals_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('non_metals_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/100`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('non_metals_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=80?'Outstanding! JAMB Ready!':pct>=70?'Excellent! Keep it up':pct>=60?'Good, review weak areas':pct>=45?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,10,25,60,80,100];
+  const sectionNames=["A: Hydrogen","B: Halogens","C: Oxygen & Sulphur","D: Nitrogen & Its Compounds","E: Carbon & Its Compounds"];
+  
+  for(let s=0;s<5;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`
+        <h4>Question ${i+1}</h4>
+        <div class="q-text">${q.q}</div>
+        <div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div>
+        <div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div>
+        <div class="exp">${q.e}</div>
+      `;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('non_metals_quiz_auth');
+  sessionStorage.removeItem('non_metals_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('non_metals_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('non_metals_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

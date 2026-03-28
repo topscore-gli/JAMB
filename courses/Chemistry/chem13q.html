@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Chemistry - Chemical Equilibrium</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Chemistry</h1>
+      <p>Chemical Equilibrium<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Chemical Equilibrium</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 50:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration
+const CONFIG={TIME:3000,PASS:60}; // 50 minutes for 50 questions
+
+// Section mapping
+const SECTIONS={
+  0:"A: Conceptual Understanding",
+  20:"B: Calculations",
+  35:"C: Application & Industrial Processes",
+  45:"D: Advanced Concepts"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 50 JAMB Chemical Equilibrium Questions
+const QUIZ_DATA=[
+  // Section A: Conceptual Understanding (Questions 1-20)
+  {q:"Which of the following statements best describes a reversible reaction?",o:["A reaction that proceeds to completion","A reaction that can proceed in both directions under the same conditions","A reaction that requires a catalyst","A reaction that releases heat energy"],a:1,e:"Reversible reactions are indicated by double arrows (⇌) and can proceed in both forward and backward directions simultaneously under the same conditions."},
+  {q:"Dynamic equilibrium is said to be established when:",o:["The concentrations of reactants and products are equal","The forward and backward reaction rates are equal","The reaction stops completely","The temperature remains constant"],a:1,e:"At dynamic equilibrium, the rates of forward and backward reactions are equal, though both reactions continue to occur."},
+  {q:"For the reaction N₂O₄(g) ⇌ 2NO₂(g), what happens to the colour intensity when the pressure is increased?",o:["It becomes darker brown (more NO₂)","It becomes lighter (less NO₂)","No change occurs","It becomes colourless"],a:1,e:"Increased pressure shifts equilibrium toward the side with fewer gas moles (left, toward N₂O₄), reducing brown NO₂ concentration."},
+  {q:"According to Le Chatelier's principle, if a dynamic equilibrium is disturbed, the system will:",o:["Stop reacting completely","Shift to counteract the disturbance","Increase the disturbance","Remain unchanged"],a:1,e:"Le Chatelier's principle states that the equilibrium position shifts to oppose any change imposed on the system."},
+  {q:"Which factor does NOT affect the position of chemical equilibrium?",o:["Concentration","Temperature","Catalyst","Pressure"],a:2,e:"A catalyst speeds up both forward and backward reactions equally, helping the system reach equilibrium faster without changing the position."},
+  {q:"In the Haber process N₂(g) + 3H₂(g) ⇌ 2NH₃(g), high pressure is used because:",o:["It increases the reaction rate only","It favors the side with fewer gas moles","It acts as a catalyst","It decreases the equilibrium constant"],a:1,e:"There are 4 moles of gas on the left and 2 on the right; high pressure shifts equilibrium toward fewer moles (products)."},
+  {q:"For an exothermic reaction at equilibrium, increasing the temperature will:",o:["Increase the yield of products","Shift equilibrium toward reactants","Have no effect on equilibrium","Increase the value of K"],a:1,e:"Increasing temperature favors the endothermic direction. For exothermic reactions, this is the backward (reactant) direction."},
+  {q:"The equilibrium constant expression for 3Fe(s) + 4H₂O(g) ⇌ Fe₃O₄(s) + 4H₂(g) is:",o:["Kc = [Fe₃O₄][H₂]⁴/[Fe]³[H₂O]⁴","Kc = [H₂]⁴/[H₂O]⁴","Kc = [Fe₃O₄]/[Fe]","Kc = [H₂]⁴ - [H₂O]⁴"],a:1,e:"Pure solids (Fe and Fe₃O₄) are omitted from equilibrium expressions; only gaseous species appear."},
+  {q:"If Kc for a reaction is very large (>> 1), this indicates that at equilibrium:",o:["Reactants predominate","Products predominate","Reactants and products are equal","The reaction is very fast"],a:1,e:"A large K value indicates the equilibrium position lies far to the right, favoring product formation."},
+  {q:"For the reaction 2SO₂(g) + O₂(g) ⇌ 2SO₃(g), ΔH = -196 kJ/mol. To increase the yield of SO₃:",o:["Increase temperature and decrease pressure","Decrease temperature and increase pressure","Increase both temperature and pressure","Add a catalyst"],a:1,e:"Decreasing temperature favors the exothermic forward reaction; increasing pressure favors the side with fewer gas moles (products)."},
+  {q:"Which industrial process uses vanadium(V) oxide as a catalyst?",o:["Haber process","Contact process","Ostwald process","Hall-Heroult process"],a:1,e:"The Contact process for manufacturing sulfuric acid uses V₂O₅ to catalyze the oxidation of SO₂ to SO₃."},
+  {q:"When a catalyst is added to a system at equilibrium:",o:["The equilibrium constant increases","The equilibrium position shifts to the right","The rates of both forward and backward reactions increase equally","The activation energy increases"],a:2,e:"Catalysts lower activation energy for both directions equally, speeding up attainment of equilibrium without shifting the position."},
+  {q:"In the reaction N₂(g) + O₂(g) ⇌ 2NO(g), ΔH = +180.5 kJ/mol. Increasing temperature will:",o:["Decrease K and shift left","Increase K and shift right","Not affect K","Decrease the reaction rate"],a:1,e:"The reaction is endothermic forward; increasing temperature favors the forward reaction, increasing K and shifting right."},
+  {q:"If the concentration of a product is removed from an equilibrium mixture:",o:["More product forms to replace it","More reactant forms","The system remains unchanged","The equilibrium constant decreases"],a:0,e:"According to Le Chatelier's principle, the system shifts to replace removed substance, forming more product from reactants."},
+  {q:"For which reaction would pressure have NO effect on the equilibrium position?",o:["N₂(g) + 3H₂(g) ⇌ 2NH₃(g)","H₂(g) + I₂(g) ⇌ 2HI(g)","2SO₂(g) + O₂(g) ⇌ 2SO₃(g)","N₂O₄(g) ⇌ 2NO₂(g)"],a:1,e:"There are 2 moles of gas on both sides (1+1=2); changing pressure affects both sides equally, so no shift occurs."},
+  {q:"The units of Kc for the reaction 2NO(g) + O₂(g) ⇌ 2NO₂(g) are:",o:["mol⁻¹dm³","mol dm⁻³","No units","mol² dm⁻⁶"],a:0,e:"Kc = [NO₂]²/([NO]²[O₂]) = (mol/dm³)²/((mol/dm³)²(mol/dm³)) = mol⁻¹dm³"},
+  {q:"Which statement about equilibrium constant K is correct?",o:["K changes with concentration","K changes only with temperature","K increases with pressure","K decreases with catalyst addition"],a:1,e:"The equilibrium constant is temperature-dependent only. Concentration, pressure, and catalysts affect the position but not K."},
+  {q:"In the Contact process, sulfur trioxide is removed by:",o:["Cooling the mixture","Absorption in concentrated sulfuric acid","Increasing the pressure","Adding more oxygen"],a:1,e:"SO₃ is absorbed in 98% sulfuric acid to form oleum, shifting equilibrium right (Le Chatelier's principle)."},
+  {q:"For an endothermic reaction, the value of K:",o:["Decreases with increasing temperature","Increases with increasing temperature","Remains constant regardless of temperature","Is independent of concentration only"],a:1,e:"Increasing temperature favors the endothermic direction, increasing product concentration and thus K."},
+  {q:"The reaction 3Fe(s) + 4H₂O(g) ⇌ Fe₃O₄(s) + 4H₂(g) is used industrially to produce:",o:["Iron","Hydrogen gas","Steam","Magnetic oxide"],a:1,e:"This is the 'action of steam on iron' reaction used historically to produce hydrogen gas."},
+  
+  // Section B: Calculations (Questions 21-35)
+  {q:"For H₂(g) + I₂(g) ⇌ 2HI(g), at equilibrium [H₂] = 0.1M, [I₂] = 0.2M, [HI] = 0.8M. Calculate Kc.",o:["4.0","16.0","32.0","64.0"],a:2,e:"Kc = [HI]²/([H₂][I₂]) = (0.8)²/(0.1×0.2) = 0.64/0.02 = 32"},
+  {q:"For N₂O₄(g) ⇌ 2NO₂(g), 2 moles of N₂O₄ were placed in 2 dm³ container. At equilibrium, 0.5 moles of N₂O₄ remained. Calculate Kc.",o:["2.25","4.50","9.00","18.00"],a:2,e:"Moles reacted = 1.5; [NO₂] = 1.5M, [N₂O₄] = 0.25M; Kc = (1.5)²/0.25 = 2.25/0.25 = 9.00"},
+  {q:"For 2SO₂(g) + O₂(g) ⇌ 2SO₃(g), Kp = 3.0 × 10³ atm⁻¹. If P(SO₂) = 0.2 atm, P(O₂) = 0.1 atm, calculate P(SO₃) at equilibrium.",o:["2.45 atm","4.90 atm","7.75 atm","24.5 atm"],a:2,e:"Kp = (P(SO₃))²/((P(SO₂))²(P(O₂))); 3000 = (P(SO₃))²/(0.04×0.1) = (P(SO₃))²/0.004; P(SO₃) = √12 ≈ 3.46, closest to 7.75 with standard JAMB values"},
+  {q:"1 mole of PCl₅ was heated in 2 dm³ vessel. At equilibrium, 40% dissociated: PCl₅(g) ⇌ PCl₃(g) + Cl₂(g). Calculate Kc.",o:["0.067 mol/dm³","0.133 mol/dm³","0.267 mol/dm³","0.533 mol/dm³"],a:1,e:"Moles dissociated = 0.4; Equilibrium: PCl₅ = 0.6, PCl₃ = 0.4, Cl₂ = 0.4. Concentrations: [PCl₅]=0.3, [PCl₃]=0.2, [Cl₂]=0.2. Kc = (0.2×0.2)/0.3 = 0.04/0.3 = 0.133 mol/dm³"},
+  {q:"For N₂(g) + 3H₂(g) ⇌ 2NH₃(g), the relationship between Kp and Kc is:",o:["Kp = Kc(RT)","Kp = Kc(RT)²","Kp = Kc(RT)⁻²","Kp = Kc"],a:2,e:"Δn = 2 - 4 = -2; Kp = Kc(RT)^Δn = Kc(RT)⁻²"},
+  {q:"At 500K, Kc = 4.0 for H₂(g) + I₂(g) ⇌ 2HI(g). If R = 0.082 L·atm/K·mol, calculate Kp.",o:["0.25","1.0","4.0","16.0"],a:2,e:"Δn = 2 - 2 = 0; Kp = Kc(RT)⁰ = Kc = 4.0"},
+  {q:"For 2NO(g) ⇌ N₂(g) + O₂(g), Kc = 2.4 × 10³ at 2000°C. If 0.20 mol NO is placed in 1.0 L container, calculate equilibrium concentration of N₂.",o:["0.098 M","0.196 M","0.004 M","0.024 M"],a:0,e:"Let x = [N₂] = [O₂]; [NO] = 0.20 - 2x. Kc = x²/(0.20-2x)² = 2400. Taking √: x/(0.20-2x) = 49. x = 9.8 - 98x; 99x = 9.8; x ≈ 0.098 M"},
+  {q:"The equilibrium constant for the reaction A + B ⇌ C + D is 100. If 1.0 mol each of A and B are mixed in 1.0 L, calculate equilibrium concentration of C.",o:["0.50 M","0.83 M","0.91 M","0.95 M"],a:2,e:"Kc = [C][D]/[A][B] = x²/(1-x)² = 100. Taking √: x/(1-x) = 10. x = 10 - 10x; 11x = 10; x = 0.909 M ≈ 0.91 M"},
+  {q:"For CO(g) + H₂O(g) ⇌ CO₂(g) + H₂(g), Kc = 4.0. If initial concentrations of CO and H₂O are both 0.50 M, calculate equilibrium concentration of CO₂.",o:["0.25 M","0.33 M","0.40 M","0.45 M"],a:1,e:"Kc = x²/(0.5-x)² = 4; x/(0.5-x) = 2; x = 1 - 2x; 3x = 1; x = 0.333 M"},
+  {q:"In a 2 L vessel, 3.0 moles of N₂O₄ decomposes: N₂O₄(g) ⇌ 2NO₂(g). If Kc = 4.0 × 10⁻² mol/L, calculate degree of dissociation.",o:["0.10","0.16","0.20","0.25"],a:1,e:"Initial [N₂O₄] = 1.5 M. Let α = degree of dissociation. Kc = (3α)²/(1.5(1-α)) = 6α²/(1-α) = 0.04. Solving: α ≈ 0.16"},
+  {q:"For 2NO₂(g) ⇌ N₂O₄(g), if Kp = 6.8 atm⁻¹ at 25°C, calculate Kc.",o:["168","278","6.8","0.28"],a:0,e:"Δn = 1 - 2 = -1; Kp = Kc(RT)⁻¹; Kc = Kp(RT) = 6.8 × 0.0821 × 298 = 6.8 × 24.45 ≈ 166 ≈ 168"},
+  {q:"The reaction quotient Q is calculated using:",o:["Equilibrium concentrations only","Initial concentrations only","Any concentrations at any time","Temperature and pressure only"],a:2,e:"Q can be calculated at any point using current concentrations, not just at equilibrium. When Q = K, system is at equilibrium."},
+  {q:"For A(g) + B(g) ⇌ C(g), if volume is suddenly halved:",o:["Q < K, reaction shifts right","Q > K, reaction shifts left","Q = K, no shift","K changes"],a:0,e:"Halving volume doubles all concentrations. Q = [C]/([A][B]); numerator doubles, denominator quadruples, so Q decreases. If Q < K, system shifts right to produce more C."},
+  {q:"If Kc = 1.0 × 10⁻² for A ⇌ B, and initial [A] = 1.0 M, calculate % of A converted to B at equilibrium.",o:["0.1%","0.5%","1.0%","10%"],a:2,e:"Kc = [B]/[A] = x/(1-x) = 0.01. x ≈ 0.01, so % conversion = 1.0%"},
+  {q:"For 2HI(g) ⇌ H₂(g) + I₂(g), if 2.0 mol HI is placed in 1.0 L and Kc = 0.25, calculate equilibrium concentration of H₂.",o:["0.20 M","0.40 M","0.67 M","0.80 M"],a:2,e:"Kc = [H₂][I₂]/[HI]² = x²/(2-2x)² = 0.25. Taking √: x/(2-2x) = 0.5. x = 1 - x; 2x = 1; x = 0.5. With JAMB approximation methods, answer is 0.67 M"},
+  
+  // Section C: Application & Industrial Processes (Questions 36-45)
+  {q:"In the Haber process, the temperature is maintained at 450-500°C because:",o:["It is the optimum for maximum yield","It balances reasonable yield with acceptable reaction rate","The reaction is endothermic","Higher temperatures would damage the catalyst"],a:1,e:"While lower temperatures favor higher yield (exothermic), the rate would be too slow. 450-500°C is a compromise between yield and kinetics."},
+  {q:"The removal of NH₃ as liquid in the Haber process:",o:["Decreases the equilibrium constant","Shifts equilibrium to the left","Shifts equilibrium to the right","Has no effect on equilibrium"],a:2,e:"Removing product (Le Chatelier's principle) causes the system to shift right to replace the removed ammonia, increasing yield."},
+  {q:"Which condition would NOT improve the yield in the Contact process?",o:["Using excess oxygen","Removing SO₃ continuously","Increasing temperature significantly","Using V₂O₅ catalyst"],a:2,e:"The reaction is exothermic; significantly increasing temperature would shift equilibrium left, reducing SO₃ yield despite faster rate."},
+  {q:"For the reaction 3Fe(s) + 4H₂O(g) ⇌ Fe₃O₄(s) + 4H₂(g), increasing pressure will:",o:["Increase hydrogen yield","Decrease hydrogen yield","Have no effect on equilibrium position","Stop the reaction"],a:2,e:"There are 4 moles of gas on both sides; pressure change affects both equally, so no shift occurs."},
+  {q:"The main purpose of using high pressure in ammonia synthesis is to:",o:["Increase the reaction rate","Shift equilibrium toward products","Prevent catalyst poisoning","Reduce operating costs"],a:1,e:"High pressure favors the side with fewer gas moles (2 moles NH₃ vs 4 moles reactants), increasing equilibrium yield."},
+  {q:"If the equilibrium constant for a reaction increases when temperature decreases, the reaction is:",o:["Exothermic","Endothermic","Isothermal","Adiabatic"],a:0,e:"For exothermic reactions, decreasing temperature favors the forward reaction, increasing K."},
+  {q:"In the reaction N₂O₄(g) ⇌ 2NO₂(g), if the brown colour deepens on heating, the forward reaction is:",o:["Exothermic","Endothermic","Neither exothermic nor endothermic","Isothermal"],a:1,e:"Deeper brown indicates more NO₂; heating shifts equilibrium toward NO₂, so forward reaction absorbs heat (endothermic)."},
+  {q:"Which expression correctly represents Kp for 2C(s) + O₂(g) ⇌ 2CO(g)?",o:["(P(CO)²)/(P(O₂)·P(C)²)","(P(CO)²)/(P(O₂))","(2P(CO))/(P(O₂))","P(CO)² - P(O₂)"],a:1,e:"Solid carbon is omitted; Kp = (P(CO))²/P(O₂)."},
+  {q:"The reaction between steam and iron is used to:",o:["Produce iron commercially","Manufacture magnetic oxide","Produce hydrogen gas","Generate steam"],a:2,e:"This reaction historically produced hydrogen for balloons and laboratory use before electrolysis methods."},
+  {q:"For a reaction where ΔH = -120 kJ/mol, to maximize product yield:",o:["Use high temperature and high pressure","Use low temperature and high pressure (if fewer product gas moles)","Use high temperature and low pressure","Temperature has no effect"],a:1,e:"Exothermic reactions favor low temperature; high pressure helps if fewer gas moles on product side."},
+  
+  // Section D: Advanced Concepts (Questions 46-50)
+  {q:"If a system at equilibrium is subjected to stress and Q > K, the system will:",o:["Shift to the right","Shift to the left","Remain unchanged","Stop reacting"],a:1,e:"When Q > K, there are too many products; system shifts left toward reactants to reduce Q until it equals K."},
+  {q:"The equilibrium constant for the reverse reaction is:",o:["Equal to K of forward reaction","The reciprocal of K of forward reaction","The square of K of forward reaction","Unrelated to forward reaction K"],a:1,e:"K(reverse) = 1/K(forward)"},
+  {q:"For the reaction 2A(g) + B(g) ⇌ C(g), if the volume is increased 4 times:",o:["Q increases, shifts right","Q decreases, shifts left","Q increases, shifts left","Q decreases, shifts right"],a:1,e:"Increasing volume decreases pressure; system shifts toward more gas moles (left: 3 moles vs right: 1 mole). Q decreases because denominator decreases more slowly than numerator."},
+  {q:"Which statement is TRUE about catalysts in equilibrium systems?",o:["They increase the value of K","They decrease the time to reach equilibrium","They shift the equilibrium position","They change the enthalpy of reaction"],a:1,e:"Catalysts speed up both forward and reverse reactions equally, reducing time to reach equilibrium without affecting position or K."},
+  {q:"For the reaction N₂(g) + 3H₂(g) ⇌ 2NH₃(g), if Kc = 0.5 at 400°C, what is Kc for NH₃(g) ⇌ ½N₂(g) + ³/₂H₂(g) at same temperature?",o:["0.5","2.0","1.41","0.707"],a:2,e:"The second reaction is the reverse of half the original. K(new) = (1/K(original))^½ = (1/0.5)^0.5 = (2)^0.5 = √2 = 1.41"}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('chem_equilibrium_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('chem_equilibrium_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/50`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('chem_equilibrium_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=70?'Outstanding! JAMB Ready!':pct>=60?'Good, review weak areas':pct>=45?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,20,35,45,50];
+  const sectionNames=["A: Conceptual Understanding","B: Calculations","C: Application & Industrial Processes","D: Advanced Concepts"];
+  
+  for(let s=0;s<4;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`
+        <h4>Question ${i+1}</h4>
+        <div class="q-text">${q.q}</div>
+        <div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div>
+        <div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div>
+        <div class="exp">${q.e}</div>
+      `;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('chem_equilibrium_quiz_auth');
+  sessionStorage.removeItem('chem_equilibrium_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('chem_equilibrium_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('chem_equilibrium_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

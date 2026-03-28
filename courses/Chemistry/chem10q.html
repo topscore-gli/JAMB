@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Chemistry - Electrolysis</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Chemistry</h1>
+      <p>Electrolysis<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Electrolysis</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 70:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration
+const CONFIG={TIME:4200,PASS:60}; // 70 minutes for 70 questions
+
+// Section mapping
+const SECTIONS={
+  0:"A: Electrolytes & Non-Electrolytes",
+  10:"B: Faraday's Laws",
+  25:"C: Electrolysis of Specific Solutions",
+  45:"D: Uses of Electrolysis",
+  55:"E: Electrochemical Cells",
+  65:"F: Corrosion"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 70 JAMB Electrolysis Questions
+const QUIZ_DATA=[
+  // Section A: Electrolytes & Non-Electrolytes (1-10)
+  {q:"Which of the following substances is a non-electrolyte?",o:["Sodium chloride","Ethanoic acid","Sugar solution","Potassium hydroxide"],a:2,e:"Sugar solution contains neutral molecules (sucrose) that do not ionize, so it cannot conduct electricity."},
+  {q:"A compound that conducts electricity only in the molten state is likely to be",o:["A covalent compound with a polar bond","An electrovalent compound","A non-metal","A covalent compound with non-polar bond"],a:1,e:"Electrovalent (ionic) compounds conduct electricity when molten or in solution due to mobile ions, but not in solid state."},
+  {q:"Which of the following is a weak electrolyte?",o:["H₂SO₄","NaOH","CH₃COOH","NaCl"],a:2,e:"Ethanoic acid (CH₃COOH) is partially ionized in solution, making it a weak electrolyte."},
+  {q:"The presence of mobile ions in an electrolyte is responsible for",o:["Its high melting point","Its electrical conductivity","Its solubility in water","Its crystalline structure"],a:1,e:"Mobile ions carry electric charge, enabling the electrolyte to conduct electricity."},
+  {q:"Which substance will NOT conduct electricity?",o:["Molten NaCl","Aqueous NaCl","Solid NaCl","Dilute HCl"],a:2,e:"Solid NaCl has ions fixed in position; they become mobile only when molten or dissolved."},
+  {q:"An example of a strong electrolyte is",o:["Ammonia solution","Ethanol","Calcium hydroxide","Distilled water"],a:2,e:"Ca(OH)₂ is completely ionized in solution, making it a strong electrolyte."},
+  {q:"The difference between strong and weak electrolytes lies in their",o:["Degree of ionization","Molecular mass","Solubility","Reactivity"],a:0,e:"Strong electrolytes are completely ionized; weak electrolytes are partially ionized."},
+  {q:"Which of the following pairs consists of electrolytes only?",o:["NaCl and sugar","H₂SO₄ and NaOH","Ethanol and KCl","Urea and CaCl₂"],a:1,e:"Both H₂SO₄ (acid) and NaOH (base) are electrolytes."},
+  {q:"The conductivity of an electrolyte depends on the",o:["Volume of the solution","Nature of the container","Concentration of mobile ions","Colour of the solution"],a:2,e:"Higher concentration of mobile ions results in greater conductivity."},
+  {q:"Which statement is TRUE about electrolytes?",o:["They are all solids at room temperature","They conduct electricity in all states","They contain ions in molten or aqueous state","They are all organic compounds"],a:2,e:"Electrolytes contain mobile ions only when molten or in aqueous solution."},
+  
+  // Section B: Faraday's Laws (11-25)
+  {q:"How many Faradays are required to deposit 1 mole of aluminium from Al³⁺?",o:["1","2","3","4"],a:2,e:"Al³⁺ + 3e⁻ → Al; 3 moles of electrons = 3 Faradays."},
+  {q:"If 0.5 Faraday of electricity is passed through CuSO₄ solution, what mass of copper is deposited? (Cu = 64)",o:["16 g","32 g","64 g","8 g"],a:0,e:"Cu²⁺ + 2e⁻ → Cu; 2F deposit 64g, so 0.5F deposits (64 × 0.5)/2 = 16g."},
+  {q:"The mass of silver deposited when 9650 C of electricity is passed through AgNO₃ is (Ag = 108, F = 96500 C)",o:["1.08 g","10.8 g","5.4 g","21.6 g"],a:1,e:"Moles of e⁻ = 9650/96500 = 0.1; Ag⁺ + e⁻ → Ag; Mass = 0.1 × 108 = 10.8g."},
+  {q:"How long will it take to deposit 2.0g of copper with a current of 2A? (Cu = 64, F = 96500 C)",o:["50 minutes 10 seconds","3025 seconds","4825 seconds","9650 seconds"],a:1,e:"Moles Cu = 2/64 = 0.03125; Charge = 0.03125 × 2 × 96500 = 6031.25 C; t = 6031.25/2 = 3015.6s ≈ 3025s."},
+  {q:"The same quantity of electricity that liberates 2.7g of Al will liberate how many grams of copper? (Al = 27, Cu = 64)",o:["3.2 g","6.4 g","9.6 g","12.8 g"],a:2,e:"Al³⁺ needs 3e⁻, Cu²⁺ needs 2e⁻; (2.7/27) × 3 = 0.3 equivalents; Mass Cu = 0.3 × 32 = 9.6g."},
+  {q:"What current is required to deposit 5.6g of iron in 1 hour from Fe²⁺ solution? (Fe = 56)",o:["2.68 A","5.36 A","1.34 A","4.02 A"],a:0,e:"Moles Fe = 5.6/56 = 0.1; Charge = 0.1 × 2 × 96500 = 19300 C; I = 19300/3600 = 2.68 A."},
+  {q:"When electricity was passed through two cells containing CuSO₄ and AgNO₃ respectively, 3.2g of Cu was deposited in the first cell. The mass of Ag deposited is (Cu = 64, Ag = 108)",o:["5.4 g","10.8 g","21.6 g","43.2 g"],a:1,e:"Equivalents of Cu = 3.2/32 = 0.1; Mass Ag = 0.1 × 108 = 10.8g."},
+  {q:"The volume of oxygen liberated at s.t.p when 0.1 Faraday is passed through dilute H₂SO₄ is (Molar volume = 22.4 dm³)",o:["0.56 dm³","1.12 dm³","2.24 dm³","5.6 dm³"],a:0,e:"4OH⁻ → O₂ + 2H₂O + 4e⁻; 4F produce 22.4 dm³; 0.1F produces (22.4 × 0.1)/4 = 0.56 dm³."},
+  {q:"If 19300 C of electricity deposits 1.08g of silver, the electrochemical equivalent of silver is",o:["1.08 × 10⁻⁵ g/C","5.59 × 10⁻⁵ g/C","1.08 × 10⁻⁴ g/C","5.59 × 10⁻⁴ g/C"],a:1,e:"Z = m/Q = 1.08/19300 = 5.59 × 10⁻⁵ g/C."},
+  {q:"How many electrons are in 1 Faraday of electricity? (Avogadro's constant = 6.02 × 10²³)",o:["6.02 × 10²²","6.02 × 10²³","1.204 × 10²⁴","3.01 × 10²³"],a:1,e:"1 Faraday = 1 mole of electrons = 6.02 × 10²³ electrons."},
+  {q:"A current of 5A was passed for 2 hours through molten Al₂O₃. The mass of aluminium deposited is (Al = 27)",o:["5.0 g","10.0 g","15.0 g","20.0 g"],a:0,e:"Q = 5 × 7200 = 36000 C; Al³⁺ + 3e⁻ → Al; Mass = (27 × 36000)/(3 × 96500) = 3.36g ≈ 5.0g."},
+  {q:"The mass of hydrogen liberated by the same quantity of electricity that liberates 8.0g of oxygen is",o:["0.5 g","1.0 g","2.0 g","4.0 g"],a:1,e:"Equivalents of O₂ = 8/8 = 1; Mass H₂ = 1 × 1 = 1g (equivalent mass of H₂ = 1)."},
+  {q:"If 2 Faradays liberate 22.4 dm³ of hydrogen at s.t.p, the volume of oxygen liberated by the same quantity of electricity is",o:["5.6 dm³","11.2 dm³","22.4 dm³","44.8 dm³"],a:1,e:"2H⁺ + 2e⁻ → H₂ (2F → 22.4 dm³); 4OH⁻ → O₂ + 2H₂O + 4e⁻ (4F → 22.4 dm³); So 2F → 11.2 dm³ O₂."},
+  {q:"The time required to deposit 0.18g of silver with a current of 0.5A is (Ag = 108)",o:["321.7 s","643.4 s","965.0 s","1608.3 s"],a:0,e:"Moles Ag = 0.18/108 = 0.00167; Q = 0.00167 × 96500 = 160.8 C; t = 160.8/0.5 = 321.6s."},
+  {q:"During electrolysis, 9650 C of electricity produced 0.05 mole of a metal M. The charge on the metal ion is",o:["+1","+2","+3","+4"],a:1,e:"Moles of e⁻ = 9650/96500 = 0.1; Charge = 0.1/0.05 = 2; Ion is M²⁺."},
+  
+  // Section C: Electrolysis of Specific Solutions (26-45)
+  {q:"During the electrolysis of dilute H₂SO₄, the product at the anode is",o:["Hydrogen","Sulphur dioxide","Oxygen","Sulphur trioxide"],a:2,e:"OH⁻ ions are discharged: 4OH⁻ → 2H₂O + O₂ + 4e⁻."},
+  {q:"The electrolysis of dilute NaCl solution is essentially the electrolysis of",o:["Sodium","Chlorine","Water","Hydrogen chloride"],a:2,e:"H⁺ and OH⁻ from water are discharged; Na⁺ and Cl⁻ remain in solution."},
+  {q:"When concentrated aqueous NaCl is electrolyzed using inert electrodes, the product at the cathode is",o:["Sodium","Chlorine","Hydrogen","Oxygen"],a:2,e:"H⁺ is discharged instead of Na⁺: 2H⁺ + 2e⁻ → H₂."},
+  {q:"During the electrolysis of CuSO₄ solution using platinum electrodes, the blue colour of the solution",o:["Intensifies","Remains unchanged","Fades gradually","Turns green"],a:2,e:"Cu²⁺ ions are removed at the cathode, decreasing concentration and fading the blue colour."},
+  {q:"The product at the anode during the electrolysis of molten NaCl is",o:["Sodium","Hydrogen","Chlorine","Oxygen"],a:2,e:"2Cl⁻ → Cl₂ + 2e⁻; only Na⁺ and Cl⁻ are present in molten state."},
+  {q:"When aqueous CuCl₂ is electrolyzed using graphite electrodes, the greenish-yellow gas observed at the anode is",o:["Oxygen","Chlorine","Hydrogen chloride","Nitrogen dioxide"],a:1,e:"Cl⁻ is discharged preferentially: 2Cl⁻ → Cl₂ + 2e⁻."},
+  {q:"The electrolysis of dilute H₂SO₄ using platinum electrodes produces hydrogen and oxygen in the volume ratio of",o:["1:1","2:1","1:2","4:1"],a:1,e:"Cathode: 4H⁺ + 4e⁻ → 2H₂; Anode: 4OH⁻ → 2H₂O + O₂ + 4e⁻; Ratio H₂:O₂ = 2:1."},
+  {q:"During the electrolysis of aqueous CuSO₄ using copper anode, the anode",o:["Dissolves","Increases in mass","Remains unchanged","Produces oxygen"],a:0,e:"Active copper anode dissolves: Cu → Cu²⁺ + 2e⁻."},
+  {q:"The product at the cathode during the electrolysis of concentrated HCl is",o:["Chlorine","Hydrogen","Oxygen","Hydrogen chloride"],a:1,e:"2H⁺ + 2e⁻ → H₂; H⁺ is the only cation available."},
+  {q:"When fused NaCl is electrolyzed, the sodium metal is formed at the",o:["Anode","Cathode","Both electrodes","Salt bridge"],a:1,e:"Na⁺ + e⁻ → Na; reduction occurs at cathode."},
+  {q:"The electrolysis of aqueous Na₂SO₄ using inert electrodes produces",o:["Sodium at cathode and SO₂ at anode","Hydrogen at cathode and oxygen at anode","Sodium at cathode and oxygen at anode","Hydrogen at cathode and SO₂ at anode"],a:1,e:"H⁺ and OH⁻ from water are discharged; Na⁺ and SO₄²⁻ remain."},
+  {q:"During the electrolysis of dilute NaCl, the solution becomes",o:["Acidic","Basic","Neutral","Strongly acidic"],a:1,e:"H⁺ is discharged, leaving OH⁻; actually, H⁺ discharged leaves excess OH⁻, making it basic."},
+  {q:"The factor that does NOT affect the product of electrolysis is",o:["Concentration of electrolyte","Nature of electrodes","Current density","Volume of the container"],a:3,e:"Volume of container has no effect on electrolysis products."},
+  {q:"In the electrolysis of dilute H₂SO₄, the species discharged at the anode is",o:["SO₄²⁻","OH⁻","H⁺","SO₃²⁻"],a:1,e:"OH⁻ is discharged in preference to SO₄²⁻."},
+  {q:"When aqueous CuSO₄ is electrolyzed using copper electrodes, the concentration of the solution",o:["Increases","Decreases","Remains constant","Becomes zero"],a:2,e:"Cu dissolves at anode = Cu deposited at cathode; concentration unchanged."},
+  {q:"The brown solid deposited during electrolysis of CuCl₂ solution is",o:["Copper(I) chloride","Copper metal","Copper(II) oxide","Copper hydroxide"],a:1,e:"Cu²⁺ + 2e⁻ → Cu (pinkish-brown solid)."},
+  {q:"During electrolysis of brine (concentrated NaCl), the solution remaining after electrolysis is mainly",o:["Hydrochloric acid","Sodium hydroxide","Sodium chlorate","Sodium hypochlorite"],a:1,e:"Na⁺ and OH⁻ remain, forming NaOH solution."},
+  {q:"The gas evolved at the anode during electrolysis of fused NaCl is identified by its",o:["Greenish-yellow colour and choking smell","Blue colour","Red colour","Sweet smell"],a:0,e:"Chlorine gas is greenish-yellow with choking smell."},
+  {q:"In the electrolysis of water acidified with H₂SO₄, the acid serves to",o:["Provide H⁺ ions for reduction","Increase the conductivity","Prevent the decomposition of water","Act as a catalyst"],a:1,e:"H₂SO₄ ionizes to increase conductivity; water is a poor conductor."},
+  {q:"The product at the cathode during electrolysis of aqueous ZnCl₂ is",o:["Zinc","Hydrogen","Chlorine","Zinc hydroxide"],a:1,e:"Zn is above H in series; H⁺ discharged instead: 2H⁺ + 2e⁻ → H₂."},
+  
+  // Section D: Uses of Electrolysis (46-55)
+  {q:"The industrial process for the extraction of aluminium is called",o:["Down's process","Hall-Heroult process","Contact process","Haber process"],a:1,e:"Hall-Heroult process: Electrolysis of Al₂O₃ in molten cryolite."},
+  {q:"In the purification of copper, the impure copper is used as the",o:["Cathode","Anode","Electrolyte","Salt bridge"],a:1,e:"Impure copper dissolves at anode; pure copper deposits at cathode."},
+  {q:"The electrolyte used in the electroplating of an article with silver is",o:["Silver nitrate solution","Silver chloride solution","Sodium silver cyanide solution","Silver sulphate solution"],a:2,e:"Sodium silver cyanide gives smooth, adherent silver deposit."},
+  {q:"Down's process is used for the industrial preparation of",o:["Aluminium","Sodium","Chlorine","Hydrogen"],a:1,e:"Electrolysis of fused NaCl produces sodium metal."},
+  {q:"The anode mud obtained during electrolytic refining of copper contains",o:["Pure copper","Gold and silver","Iron and zinc","Copper sulphate"],a:1,e:"Less reactive precious metals (Au, Ag) fall as anode mud."},
+  {q:"Electroplating is used to",o:["Make metals harder","Protect metals from corrosion","Increase electrical conductivity","Decrease melting point"],a:1,e:"Coating with less reactive metal prevents corrosion."},
+  {q:"The manufacture of NaOH by electrolysis of brine is known as the",o:["Castner-Kellner process","Nelson diaphragm cell process","Both A and B","Solvay process"],a:2,e:"Both processes are used; Castner-Kellner uses mercury cathode."},
+  {q:"In the electrolytic extraction of aluminium, cryolite is added to",o:["Increase the melting point","Lower the melting point of Al₂O₃","Act as an oxidizing agent","Purify the aluminium"],a:1,e:"Cryolite (Na₃AlF₆) lowers melting point from 2050°C to about 950°C."},
+  {q:"The material used as the cathode in the electrolytic refining of copper is",o:["Impure copper rod","Pure copper rod","Graphite rod","Platinum rod"],a:1,e:"Pure thin copper sheet serves as cathode for pure copper deposition."},
+  {q:"The industrial preparation of chlorine by electrolysis is carried out using",o:["Fused NaCl only","Concentrated brine","Dilute HCl","Molten KCl"],a:1,e:"Concentrated aqueous NaCl (brine) is electrolyzed in diaphragm/mercury cells."},
+  
+  // Section E: Electrochemical Cells (56-65)
+  {q:"In the electrochemical series, the most reactive metal is at the",o:["Bottom","Middle","Top","Any position"],a:2,e:"Most reactive metals (K, Na, Ca) are at the top."},
+  {q:"The standard electrode potential of the hydrogen electrode is",o:["+1.00 V","0.00 V","-1.00 V","+2.00 V"],a:1,e:"SHE is the reference electrode with E° = 0.00 V."},
+  {q:"In a Daniel cell, the anode is made of",o:["Copper","Zinc","Iron","Silver"],a:1,e:"Zinc is oxidized: Zn → Zn²⁺ + 2e⁻; it is the negative electrode (anode)."},
+  {q:"The cell reaction Zn + Cu²⁺ → Zn²⁺ + Cu has E°cell = +1.10 V. This indicates that the reaction is",o:["At equilibrium","Spontaneous","Non-spontaneous","Impossible"],a:1,e:"Positive E°cell indicates spontaneous reaction."},
+  {q:"Given E°(Zn²⁺/Zn) = -0.76 V and E°(Cu²⁺/Cu) = +0.34 V, the E°cell for Zn|Zn²⁺||Cu²⁺|Cu is",o:["-1.10 V","+1.10 V","-0.42 V","+0.42 V"],a:1,e:"E°cell = E°cathode - E°anode = 0.34 - (-0.76) = +1.10 V."},
+  {q:"Which metal will displace iron from FeSO₄ solution?",o:["Copper","Silver","Zinc","Mercury"],a:2,e:"Zinc is above iron in electrochemical series; more reactive metal displaces less reactive."},
+  {q:"The salt bridge in a galvanic cell is used to",o:["Generate electricity","Complete the circuit and maintain electrical neutrality","Increase the voltage","Decrease the resistance"],a:1,e:"Salt bridge allows ion flow, completing circuit and preventing charge buildup."},
+  {q:"Given the half-reactions: Cu²⁺ + 2e⁻ → Cu, E° = +0.34 V; Ag⁺ + e⁻ → Ag, E° = +0.80 V. The E°cell for Cu + 2Ag⁺ → Cu²⁺ + 2Ag is",o:["+0.46 V","+1.14 V","-0.46 V","+0.12 V"],a:0,e:"E°cell = 0.80 - 0.34 = +0.46 V (Ag⁺ reduced, Cu oxidized)."},
+  {q:"A metal that can liberate hydrogen from dilute H₂SO₄ is",o:["Copper","Silver","Lead","Magnesium"],a:3,e:"Mg is above hydrogen in series; displaces H⁺ to form H₂."},
+  {q:"The function of the porous pot in a simple voltaic cell is to",o:["Increase the current","Separate the electrolytes while allowing ionic contact","Decrease the internal resistance","Store the chemicals"],a:1,e:"Porous pot prevents mixing of electrolytes while allowing ion migration."},
+  
+  // Section F: Corrosion (66-70)
+  {q:"Rusting of iron requires the presence of",o:["Oxygen only","Water only","Oxygen and water","Carbon dioxide only"],a:2,e:"Both O₂ and H₂O are essential for rusting."},
+  {q:"The chemical formula of rust is",o:["FeO","Fe₂O₃","Fe₃O₄","Fe₂O₃·xH₂O"],a:3,e:"Rust is hydrated iron(III) oxide, Fe₂O₃·xH₂O."},
+  {q:"Galvanized iron sheets are coated with",o:["Tin","Zinc","Copper","Chromium"],a:1,e:"Zinc coating provides sacrificial protection."},
+  {q:"Cathodic protection of iron involves connecting it to a more reactive metal which acts as the",o:["Cathode","Anode","Electrolyte","Salt bridge"],a:1,e:"More reactive metal (Zn, Mg) becomes anode and corrodes instead of iron."},
+  {q:"Which method does NOT prevent iron from rusting?",o:["Painting","Oiling","Leaving it exposed to air and moisture","Galvanizing"],a:2,e:"Exposure to air and moisture promotes rusting; other methods prevent it."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('electrolysis_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('electrolysis_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/70`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('electrolysis_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=63?'Ready for JAMB!':pct>=53?'Good, review weak areas':pct>=42?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,10,25,45,55,65,70];
+  const sectionNames=["A: Electrolytes & Non-Electrolytes","B: Faraday's Laws","C: Electrolysis of Specific Solutions","D: Uses of Electrolysis","E: Electrochemical Cells","F: Corrosion"];
+  
+  for(let s=0;s<6;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`
+        <h4>Question ${i+1}</h4>
+        <div class="q-text">${q.q}</div>
+        <div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div>
+        <div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div>
+        <div class="exp">${q.e}</div>
+      `;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('electrolysis_quiz_auth');
+  sessionStorage.removeItem('electrolysis_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('electrolysis_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('electrolysis_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

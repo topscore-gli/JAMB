@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Chemistry - Non-metals (H, O, N, Halogens, C) + Tests</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:18px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+.progress-container{
+  position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+  background:var(--shadow-in);z-index:15
+}
+.progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+.content{padding:20px 16px;line-height:1.7}
+.main-header{
+  text-align:center;margin-bottom:28px;padding:20px;border-radius:20px;
+  background:rgba(29,185,84,.1)
+}
+.main-header h1{font-size:22px;margin-bottom:8px;color:var(--accent);font-weight:900}
+.main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+.section-card{
+  background:var(--card-bg);padding:24px 18px;border-radius:20px;
+  box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+  margin-bottom:24px;border-left:4px solid var(--accent)
+}
+.section-card h2{
+  font-size:19px;margin-bottom:14px;color:var(--accent);font-weight:900;
+  display:flex;align-items:center;gap:8px
+}
+.section-card h3{
+  font-size:16px;margin:18px 0 10px;color:var(--accent-tertiary);font-weight:800;
+  padding-left:12px;border-left:3px solid var(--accent-tertiary)
+}
+.section-card h4{font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800}
+.section-card p{margin-bottom:12px;font-size:14px;text-align:justify}
+.section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+.section-card li{margin-bottom:7px;font-size:14px}
+
+.diagram-img{
+  width:100%;max-height:280px;object-fit:contain;border-radius:12px;
+  margin:12px 0 8px;
+  box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out);
+  background:#fff;padding:8px
+}
+.image-caption{
+  text-align:center;font-size:12px;color:var(--text-secondary);
+  font-style:italic;margin-bottom:10px;margin-top:-4px
+}
+
+.quick-facts{
+  background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+  padding:16px;border-radius:15px;margin:14px 0;border:1px solid rgba(29,185,84,.3)
+}
+.quick-facts h4{color:var(--accent);margin-bottom:8px;font-size:15px;font-weight:900}
+.quick-facts li{font-size:13px}
+
+.highlight-box{
+  background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+  border-left:3px solid var(--accent-tertiary)
+}
+.memory-tip{
+  background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+  border-left:4px solid var(--accent-secondary)
+}
+.memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+.memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+.jamb-alert{
+  background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+  border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:16px;margin:18px 0
+}
+.jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:15px;font-weight:900}
+.jamb-alert li{font-size:13px}
+
+.table-container{
+  width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+  box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+}
+.summary-table{
+  width:100%;min-width:1150px;border-collapse:separate;border-spacing:0;font-size:13px
+}
+.summary-table th{
+  background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+}
+.summary-table td{
+  padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);white-space:nowrap;vertical-align:top
+}
+.summary-table tr:last-child td{border-bottom:none}
+.summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+.table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+.nav-bar{
+  position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+  display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+}
+.nav-bar .nav-item{text-align:center}
+.nav-bar .nav-item.center button{
+  width:50px;height:50px;font-size:24px;background:var(--accent);
+  box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+  color:#000
+}
+.nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+.explore-btn{
+  background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+  box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+  font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+}
+.explore-btn:active{
+  box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+  transform:scale(.98)
+}
+
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+    
+<div class="top-bar neumorphic">
+  <button class="neumorphic-btn" onclick="history.back()">←</button>
+  <div class="header">CHEMISTRY</div>
+  <div class="right-icons">
+    <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+    <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="main-header">
+    <h1>🧩 Non-metals (JAMB)</h1>
+    <p>Intro & properties • Hydrogen • Halogens (Chlorine) • Oxygen • Nitrogen (Ammonia) • Carbon • Oxides • Water • Hard/soft water • Tests</p>
+  </div>
+
+  <!-- SUMMARY TABLE -->
+  <div class="section-card">
+    <h2>📋 Summary Table (Must-Know JAMB Facts & Tests)</h2>
+
+    <div class="table-container">
+      <table class="summary-table">
+        <tr>
+          <th>Item</th>
+          <th>Key fact</th>
+          <th>Preparation (lab/industrial)</th>
+          <th>Test / observation</th>
+        </tr>
+        <tr>
+          <td><strong>Hydrogen (H₂)</strong></td>
+          <td>Lightest gas; reducing agent; burns</td>
+          <td>Metal + dilute acid (lab)</td>
+          <td><strong>Pop</strong> with lighted splint</td>
+        </tr>
+        <tr>
+          <td><strong>Chlorine (Cl₂)</strong></td>
+          <td>Greenish-yellow poisonous gas</td>
+          <td>MnO₂ + conc. HCl (lab) • Brine electrolysis (industrial)</td>
+          <td>Chloride ion: AgNO₃ gives <strong>white ppt</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Oxygen (O₂)</strong></td>
+          <td>Supports combustion & respiration</td>
+          <td>KClO₃ + MnO₂ (lab) • Liquid air distillation (industrial)</td>
+          <td>Glowing splint relights (common test)</td>
+        </tr>
+        <tr>
+          <td><strong>Nitrogen (N₂)</strong></td>
+          <td>~78% of air</td>
+          <td>From air (fractional distillation)</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td><strong>Ammonia (NH₃)</strong></td>
+          <td>Basic gas; used for fertilizers</td>
+          <td>Haber process (industrial)</td>
+          <td>Turns <strong>moist red litmus blue</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Carbon(IV) oxide (CO₂)</strong></td>
+          <td>Acidic oxide</td>
+          <td>Carbonates + acids (common)</td>
+          <td><strong>Limewater milky</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Hydrogen sulphide (H₂S)</strong></td>
+          <td>Poisonous; smells like rotten egg</td>
+          <td>—</td>
+          <td>Blackens <strong>lead acetate paper</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Sulphate ion (SO₄²⁻)</strong></td>
+          <td>Common anion test</td>
+          <td>—</td>
+          <td>BaCl₂ gives <strong>white ppt</strong></td>
+        </tr>
+      </table>
+    </div>
+    <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+    <div class="memory-tip">
+      <strong>🧠 5 tests that win marks</strong>
+      <p>H₂ pop • CO₂ limewater milky • NH₃ red litmus blue • H₂S lead acetate black • Cl⁻ AgNO₃ white ppt.</p>
+    </div>
+  </div>
+
+  <!-- INTRO -->
+  <div class="section-card">
+    <h2>1️⃣ Introduction to Non-metals</h2>
+    <p><strong>Non-metals</strong> are elements that do not easily form positive ions and are poor conductors of heat and electricity.</p>
+
+    <h3>Examples</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Hydrogen (H), Oxygen (O), Nitrogen (N), Carbon (C), Sulphur (S)</li>
+        <li>Halogens: F, Cl, Br, I</li>
+      </ul>
+    </div>
+
+    <h3>General properties of non-metals</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Usually gases or brittle solids</li>
+        <li>Low melting and boiling points (many of them)</li>
+        <li>Poor conductors of heat and electricity</li>
+        <li>Tend to gain electrons</li>
+        <li>Form <strong>acidic oxides</strong></li>
+      </ul>
+    </div>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7f/Periodic_table_large.svg" alt="Periodic table" class="diagram-img">
+    <div class="image-caption">Non-metals are mostly at the top-right of the periodic table (plus hydrogen)</div>
+  </div>
+
+  <!-- HYDROGEN -->
+  <div class="section-card">
+    <h2>2️⃣ (A) Hydrogen (H₂)</h2>
+    <p>Hydrogen is the lightest element and the most abundant element in the universe.</p>
+
+    <h3>Laboratory preparation</h3>
+    <div class="highlight-box">
+      <p><strong>Zinc + dilute HCl → hydrogen</strong></p>
+      <p><strong>Zinc + dilute H₂SO₄ → hydrogen</strong></p>
+    </div>
+    <p>Hydrogen is collected over water because it is <strong>insoluble</strong> (only slightly soluble) in water.</p>
+
+    <h3>Commercial production</h3>
+    <div class="quick-facts">
+      <ul>
+        <li><strong>Water gas method:</strong> steam passed over hot coke</li>
+        <li><strong>Cracking of petroleum:</strong> produced during refining</li>
+      </ul>
+    </div>
+
+    <h3>Properties</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Colourless, odourless, very light</li>
+        <li>Slightly soluble in water</li>
+        <li>Burns in air</li>
+        <li>Acts as a <strong>reducing agent</strong></li>
+      </ul>
+    </div>
+
+    <h3>Uses</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Manufacture of ammonia</li>
+        <li>Hydrogenation of vegetable oils</li>
+        <li>Rocket fuel</li>
+        <li>Production of methanol</li>
+      </ul>
+    </div>
+
+    <h3>Test for hydrogen</h3>
+    <div class="jamb-alert">
+      <h4>Lighted splint test</h4>
+      <ul>
+        <li>Bring a lighted splint near the gas → <strong>squeaky pop</strong> sound</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- HALOGENS + CHLORINE -->
+  <div class="section-card">
+    <h2>3️⃣ (B) Halogens (Group 17) + Chlorine</h2>
+    <p><strong>Halogens</strong> are elements in Group 17: fluorine, chlorine, bromine, iodine.</p>
+
+    <h3>Chlorine (Cl₂)</h3>
+    <p>Chlorine is a <strong>greenish-yellow poisonous gas</strong>.</p>
+
+    <h3>Laboratory preparation</h3>
+    <div class="highlight-box">
+      <p>Heat manganese(IV) oxide with concentrated hydrochloric acid:</p>
+      <p><strong>MnO₂ + 4HCl → MnCl₂ + Cl₂ + 2H₂O</strong></p>
+    </div>
+
+    <h3>Industrial preparation (very important)</h3>
+    <p>Produced by <strong>electrolysis of brine (NaCl solution)</strong>.</p>
+    <div class="quick-facts">
+      <h4>Products formed</h4>
+      <ul>
+        <li>Chlorine gas (Cl₂)</li>
+        <li>Hydrogen gas (H₂)</li>
+        <li>Sodium hydroxide (NaOH)</li>
+      </ul>
+    </div>
+
+    <h3>Uses of chlorine</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Water sterilization</li>
+        <li>Bleaching agent</li>
+        <li>Manufacture of plastics (PVC)</li>
+        <li>Production of hydrochloric acid</li>
+        <li>Insecticides</li>
+      </ul>
+    </div>
+
+    <h3>Test for chloride ion (Cl⁻)</h3>
+    <div class="jamb-alert">
+      <h4>Silver nitrate test</h4>
+      <ul>
+        <li>Add AgNO₃ → <strong>white precipitate</strong> (AgCl)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- OXYGEN -->
+  <div class="section-card">
+    <h2>4️⃣ (C) Oxygen (O₂)</h2>
+    <p>Oxygen supports <strong>combustion</strong> and <strong>respiration</strong>.</p>
+
+    <h3>Laboratory preparation</h3>
+    <div class="highlight-box">
+      <p>Heat potassium chlorate with MnO₂ catalyst:</p>
+      <p><strong>2KClO₃ → 2KCl + 3O₂</strong> (MnO₂ catalyst)</p>
+    </div>
+
+    <h3>Commercial production</h3>
+    <div class="quick-facts">
+      <ul>
+        <li><strong>Fractional distillation of liquid air</strong></li>
+      </ul>
+    </div>
+
+    <h3>Uses</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Respiration</li>
+        <li>Welding</li>
+        <li>Steel manufacture</li>
+        <li>Medical oxygen</li>
+      </ul>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 Quick test (often used)</strong>
+      <p>O₂ relights a glowing splint.</p>
+    </div>
+  </div>
+
+  <!-- OXIDES + WATER -->
+  <div class="section-card">
+    <h2>5️⃣ Types of Oxides + Water</h2>
+
+    <h3>Types of oxides</h3>
+    <div class="table-container">
+      <table class="summary-table">
+        <tr>
+          <th>Type</th>
+          <th>Meaning</th>
+          <th>Example</th>
+        </tr>
+        <tr>
+          <td><strong>Acidic oxide</strong></td>
+          <td>Usually non-metal oxide; forms acid in water</td>
+          <td>CO₂</td>
+        </tr>
+        <tr>
+          <td><strong>Basic oxide</strong></td>
+          <td>Usually metal oxide; forms base in water</td>
+          <td>CaO</td>
+        </tr>
+        <tr>
+          <td><strong>Amphoteric oxide</strong></td>
+          <td>Reacts with acids and bases</td>
+          <td>Al₂O₃</td>
+        </tr>
+        <tr>
+          <td><strong>Neutral oxide</strong></td>
+          <td>Neither acidic nor basic</td>
+          <td>CO</td>
+        </tr>
+      </table>
+    </div>
+    <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+    <h3>Water formation & composition</h3>
+    <p>Water forms when hydrogen burns in oxygen.</p>
+    <div class="highlight-box">
+      <p><strong>Composition by volume:</strong> Hydrogen : Oxygen = <strong>2 : 1</strong></p>
+    </div>
+
+    <h3>Hard and soft water</h3>
+    <div class="table-container">
+      <table class="summary-table">
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td><strong>Soft water</strong></td>
+          <td>Lathers easily with soap</td>
+        </tr>
+        <tr>
+          <td><strong>Hard water</strong></td>
+          <td>Does not lather easily</td>
+        </tr>
+      </table>
+    </div>
+    <div class="table-scroll-hint">← Swipe table to see more →</div>
+  </div>
+
+  <!-- NITROGEN + AMMONIA -->
+  <div class="section-card">
+    <h2>6️⃣ (D) Nitrogen (N₂) + Ammonia (NH₃)</h2>
+    <p><strong>Nitrogen</strong> makes about <strong>78%</strong> of air.</p>
+
+    <h3>Ammonia (NH₃) — industrial preparation</h3>
+    <p>Prepared by the <strong>Haber process</strong> (high pressure and temperature).</p>
+    <div class="highlight-box">
+      <p><strong>N₂ + 3H₂ ⇌ 2NH₃</strong></p>
+    </div>
+
+    <h3>Uses of ammonia</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Fertilizer production</li>
+        <li>Manufacture of nitric acid</li>
+        <li>Refrigeration</li>
+      </ul>
+    </div>
+
+    <h3>Test for ammonia</h3>
+    <div class="jamb-alert">
+      <h4>Litmus test</h4>
+      <ul>
+        <li>Turns <strong>moist red litmus paper blue</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- CARBON -->
+  <div class="section-card">
+    <h2>7️⃣ (E) Carbon (C) + Oxides of Carbon</h2>
+
+    <h3>Allotropes of carbon</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Diamond</li>
+        <li>Graphite</li>
+        <li>Charcoal</li>
+        <li>Coke</li>
+      </ul>
+    </div>
+
+    <h3>Carbon(IV) oxide (CO₂)</h3>
+    <div class="highlight-box">
+      <p><strong>Test:</strong> CO₂ turns limewater milky.</p>
+    </div>
+
+    <h3>Carbon(II) oxide (CO)</h3>
+    <div class="jamb-alert">
+      <h4>Danger note</h4>
+      <ul>
+        <li>CO is <strong>colourless</strong>, <strong>odourless</strong> and <strong>poisonous</strong>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- TESTS TABLE -->
+  <div class="section-card">
+    <h2>🧪 Important JAMB Tests (Table)</h2>
+
+    <div class="table-container">
+      <table class="summary-table">
+        <tr>
+          <th>Substance / ion</th>
+          <th>Test</th>
+          <th>Observation</th>
+        </tr>
+        <tr>
+          <td><strong>Hydrogen (H₂)</strong></td>
+          <td>Lighted splint</td>
+          <td><strong>Pop sound</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Carbon(IV) oxide (CO₂)</strong></td>
+          <td>Limewater</td>
+          <td><strong>Turns milky</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Ammonia (NH₃)</strong></td>
+          <td>Moist red litmus paper</td>
+          <td><strong>Turns blue</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Hydrogen sulphide (H₂S)</strong></td>
+          <td>Lead acetate paper</td>
+          <td><strong>Blackens</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Chloride ion (Cl⁻)</strong></td>
+          <td>Add AgNO₃</td>
+          <td><strong>White precipitate</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Sulphate ion (SO₄²⁻)</strong></td>
+          <td>Add BaCl₂</td>
+          <td><strong>White precipitate</strong></td>
+        </tr>
+      </table>
+    </div>
+    <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+    <div class="memory-tip">
+      <strong>🧠 Two “white ppt” to not confuse</strong>
+      <p>Cl⁻ + AgNO₃ → white ppt • SO₄²⁻ + BaCl₂ → white ppt.</p>
+    </div>
+  </div>
+
+  <!-- Checklist -->
+  <div class="section-card">
+    <h2>✅ Quick Revision Checklist</h2>
+    <div class="quick-facts">
+      <ul>
+        <li>Definition + general properties of non-metals</li>
+        <li>Hydrogen: preparation, properties, uses, pop test</li>
+        <li>Chlorine: lab & industrial prep, uses, chloride test (AgNO₃)</li>
+        <li>Oxygen: KClO₃ + MnO₂; uses</li>
+        <li>Types of oxides: acidic/basic/amphoteric/neutral</li>
+        <li>Water composition by volume (H:O = 2:1) + hard/soft water</li>
+        <li>Nitrogen = 78% air; ammonia Haber process + litmus test</li>
+        <li>Carbon allotropes; CO₂ limewater test; CO is poisonous</li>
+        <li>Important tests table (memorise)</li>
+      </ul>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 Final memory line</strong>
+      <p>If you can recall the tests table instantly, you’ve already secured many JAMB marks.</p>
+    </div>
+  </div>
+
+  <button class="explore-btn" onclick="alert('Practice: tests table + preparation methods + oxide types (with examples)!')">Practice JAMB Questions</button>
+</div>
+</div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+  </script>
+</body>
+</html>

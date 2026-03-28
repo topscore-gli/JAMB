@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Chemistry - Metals and Their Compounds</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Chemistry</h1>
+      <p>Metals and Their Compounds<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Metals and Their Compounds</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 100:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration
+const CONFIG={TIME:6000,PASS:60}; // 100 minutes for 100 questions
+
+// Section mapping
+const SECTIONS={
+  0:"A: General Properties of Metals",
+  10:"B: Alkali Metals - Sodium",
+  35:"C: Alkaline-Earth Metals - Calcium",
+  50:"D: Aluminium",
+  65:"E: Tin",
+  75:"F: Transition Metals & Iron",
+  90:"G: Copper & Comprehensive"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 100 JAMB Metals and Their Compounds Questions
+const QUIZ_DATA=[
+  // Section A: General Properties of Metals (Questions 1-10)
+  {q:"Which property is NOT generally characteristic of metals?",o:["Ductility","Brittleness","Malleability","Electrical conductivity"],a:1,e:"Metals are malleable (can be hammered into sheets) and ductile (can be drawn into wires), not brittle. Brittleness is characteristic of non-metals."},
+  {q:"The ability of a metal to be drawn into wires is called:",o:["Malleability","Ductility","Tenacity","Elasticity"],a:1,e:"Ductility is the property that allows metals to be drawn into wires. Malleability allows hammering into sheets."},
+  {q:"Which metal is liquid at room temperature?",o:["Sodium","Aluminium","Mercury","Iron"],a:2,e:"Mercury (Hg) is the only metal that exists as a liquid at standard room temperature and pressure."},
+  {q:"Metals are good conductors of electricity because they:",o:["Have high melting points","Contain free mobile electrons","Are malleable","Have high densities"],a:1,e:"Metallic bonding involves a 'sea' of delocalized electrons that are free to move and carry electric current."},
+  {q:"Which property of metals increases down a group in the periodic table?",o:["Melting point","Density","Ionization energy","Electronegativity"],a:1,e:"Density generally increases down a group as atomic mass increases more than atomic volume."},
+  {q:"The shiny appearance of metals is called:",o:["Conductivity","Sonority","Metallic lustre","Malleability"],a:2,e:"Metallic lustre refers to the shiny appearance of metals due to reflection of light by free electrons."},
+  {q:"Which metal produces a sound when struck?",o:["Lead","Gold","Iron","All of the above"],a:2,e:"Sonority (producing sound when struck) is characteristic of metals like iron, used in making bells. Lead and gold are not sonorous."},
+  {q:"The electropositive nature of metals means they:",o:["Accept electrons easily","Lose electrons easily","Share electrons equally","Form covalent bonds"],a:1,e:"Electropositivity is the tendency of an atom to donate electrons and form positive ions."},
+  {q:"Which of the following metals has the highest melting point?",o:["Sodium","Aluminium","Iron","Tungsten"],a:3,e:"Tungsten has the highest melting point of all metals (3422°C), used for lamp filaments."},
+  {q:"Metals generally have high melting points due to:",o:["Strong covalent bonds","Strong ionic bonds","Strong metallic bonds","Weak van der Waals forces"],a:2,e:"Strong metallic bonds between metal ions and the sea of delocalized electrons require much energy to break."},
+  
+  // Section B: Alkali Metals - Sodium (Questions 11-35)
+  {q:"Sodium hydroxide is commercially produced by:",o:["Solvay process","Contact process","Electrolysis of brine","Reduction of sodium oxide"],a:2,e:"NaOH is produced by electrolysis of concentrated NaCl solution (brine) in a mercury or diaphragm cell."},
+  {q:"During the electrolysis of brine, the product at the anode is:",o:["Hydrogen","Sodium","Chlorine","Oxygen"],a:2,e:"At the anode: 2Cl⁻ → Cl₂ + 2e⁻. Chloride ions are discharged preferentially over hydroxide ions."},
+  {q:"When sodium hydroxide is added to a solution containing Al³⁺ ions, the observation is:",o:["White precipitate insoluble in excess","White precipitate soluble in excess","No precipitate formed","Red-brown precipitate"],a:1,e:"Al³⁺ + 3OH⁻ → Al(OH)₃↓ (white), then Al(OH)₃ + OH⁻ → [Al(OH)₄]⁻ (soluble complex). Aluminium is amphoteric."},
+  {q:"Which metal ion forms a white precipitate with NaOH that dissolves in excess to give a colorless solution?",o:["Cu²⁺","Fe³⁺","Zn²⁺","Ca²⁺"],a:2,e:"Zn²⁺ shows amphoteric behavior: Zn²⁺ + 2OH⁻ → Zn(OH)₂↓, then Zn(OH)₂ + 2OH⁻ → [Zn(OH)₄]²⁻ (soluble)."},
+  {q:"The Solvay process is used to manufacture:",o:["Sodium hydroxide","Sodium carbonate","Sodium chloride","Sodium sulphate"],a:1,e:"The Solvay process produces sodium carbonate (Na₂CO₃) using ammonia, carbon dioxide, and brine."},
+  {q:"In the Solvay process, the raw materials include:",o:["Sodium chloride, limestone, and ammonia","Sodium hydroxide, limestone, and water","Sodium carbonate, quicklime, and ammonia","Sodium sulphate, coke, and nitrogen"],a:0,e:"Raw materials are brine (NaCl), limestone (CaCO₃ for CO₂), and ammonia (NH₃, which is recycled)."},
+  {q:"The by-product of the Solvay process is:",o:["Ammonium chloride","Calcium chloride","Sodium bicarbonate","Calcium carbonate"],a:1,e:"Ca(OH)₂ + 2NH₄Cl → 2NH₃ + CaCl₂ + 2H₂O. Calcium chloride is the main by-product."},
+  {q:"Sodium trioxocarbonate(IV) is important in the manufacture of:",o:["Soap","Glass","Paper","All of the above"],a:3,e:"Na₂CO₃ is used in glass manufacture, soap making, paper production, and water softening."},
+  {q:"Sodium hydrogen trioxocarbonate(IV) is commonly called:",o:["Washing soda","Baking soda","Caustic soda","Soda ash"],a:1,e:"NaHCO₃ is baking soda. Na₂CO₃ is washing soda/soda ash. NaOH is caustic soda."},
+  {q:"When heated, sodium hydrogen trioxocarbonate(IV) decomposes to give:",o:["Na₂CO₃ + CO₂ + H₂O","NaOH + CO₂","Na₂O + CO₂ + H₂O","Na + CO₂ + H₂O"],a:0,e:"2NaHCO₃ → Na₂CO₃ + CO₂ + H₂O. This reaction makes it useful as a baking powder."},
+  {q:"Sea water is a major source of:",o:["Sodium carbonate","Sodium chloride","Sodium hydroxide","Sodium metal"],a:1,e:"Sea water contains about 3.5% dissolved salts, with NaCl making up about 77% of these salts."},
+  {q:"The economic importance of sea water includes the recovery of:",o:["Only sodium chloride","Sodium chloride and magnesium","Sodium chloride, magnesium, and bromine","All metallic elements"],a:2,e:"From sea water, we obtain NaCl, Mg (from MgCl₂), and Br₂ (from bromides)."},
+  {q:"The flame color for sodium compounds is:",o:["Brick-red","Lilac","Golden-yellow","Apple-green"],a:2,e:"Sodium produces a persistent golden-yellow flame due to emission at 589 nm (D-lines)."},
+  {q:"Which compound is efflorescent?",o:["Na₂CO₃·10H₂O","NaOH","NaCl","NaHCO₃"],a:0,e:"Washing soda (Na₂CO₃·10H₂O) loses water of crystallization to the atmosphere, becoming powdery."},
+  {q:"Sodium hydroxide reacts with zinc to produce:",o:["Zn(OH)₂ + H₂","Na₂ZnO₂ + H₂","ZnO + Na + H₂","Zn + Na₂O + H₂"],a:1,e:"Zn + 2NaOH → Na₂ZnO₂ + H₂. Zinc, being amphoteric, reacts with both acids and bases."},
+  {q:"In the electrolysis of brine using a mercury cathode:",o:["Sodium metal is deposited","Sodium amalgam is formed","Hydrogen gas is evolved","Mercury is oxidized"],a:1,e:"Na⁺ + e⁻ → Na, then Na + Hg → Na/Hg (sodium amalgam). The amalgam is later reacted with water to produce NaOH."},
+  {q:"The precipitating agent for metallic hydroxides in water treatment is:",o:["NaCl","Na₂CO₃","NaOH","NaHCO₃"],a:2,e:"NaOH is used to precipitate heavy metal hydroxides (Fe³⁺, Al³⁺, etc.) in water purification."},
+  {q:"Which statement about alkali metals is correct?",o:["Reactivity decreases down the group","Melting points increase down the group","Atomic radius increases down the group","Ionization energy increases down the group"],a:2,e:"Atomic radius increases down Group 1 as additional electron shells are added. Reactivity increases and melting points decrease down the group."},
+  {q:"Sodium is stored under oil because it:",o:["Reacts with nitrogen","Reacts violently with water and air","Sublimes easily","Is radioactive"],a:1,e:"Sodium reacts vigorously with water (2Na + 2H₂O → 2NaOH + H₂) and tarnishes in air, so it's stored under oil."},
+  {q:"The product of the reaction between sodium and water is:",o:["Sodium oxide and hydrogen","Sodium hydroxide and hydrogen","Sodium hydride and oxygen","Sodium peroxide and hydrogen"],a:1,e:"2Na + 2H₂O → 2NaOH + H₂. The reaction is exothermic and the hydrogen may ignite."},
+  {q:"In the Solvay process, ammonia is recovered by reacting ammonium chloride with:",o:["Sodium hydroxide","Calcium hydroxide","Sodium carbonate","Calcium carbonate"],a:1,e:"2NH₄Cl + Ca(OH)₂ → 2NH₃ + CaCl₂ + 2H₂O. This makes the process economical by recycling NH₃."},
+  {q:"The chemical formula of sodium trioxocarbonate(IV) is:",o:["NaCO₃","Na₂CO₃","Na(CO₃)₂","Na₃CO₃"],a:1,e:"'Trioxocarbonate(IV)' means CO₃²⁻ (carbonate ion with oxidation state +4 for carbon). Sodium is Na⁺, so Na₂CO₃."},
+  {q:"Which is NOT a use of sodium chloride?",o:["Food seasoning","Manufacture of chlorine","Manufacture of glass","De-icing roads"],a:2,e:"Glass is made using Na₂CO₃ (soda ash), not NaCl directly. NaCl is used for seasoning, making Cl₂/NaOH, and de-icing."},
+  {q:"The reaction between lead ions and excess sodium hydroxide produces:",o:["Pb(OH)₂ precipitate only","Soluble [Pb(OH)₄]²⁻ complex","PbO and H₂O","No reaction"],a:1,e:"Pb²⁺ + 2OH⁻ → Pb(OH)₂↓, then Pb(OH)₂ + 2OH⁻ → [Pb(OH)₄]²⁻. Lead is amphoteric."},
+  
+  // Section C: Alkaline-Earth Metals - Calcium (Questions 36-50)
+  {q:"Calcium belongs to which group in the periodic table?",o:["Group 1","Group 2","Group 13","Group 14"],a:1,e:"Calcium is in Group 2 (Alkaline-earth metals) with configuration [Ar] 4s²."},
+  {q:"Calcium oxide is commonly prepared by heating:",o:["Calcium hydroxide","Calcium carbonate","Calcium sulphate","Calcium chloride"],a:1,e:"CaCO₃ → CaO + CO₂. This is done in a lime kiln using limestone or sea shells."},
+  {q:"The common name for calcium oxide is:",o:["Slaked lime","Quicklime","Limestone","Gypsum"],a:1,e:"CaO is quicklime. Ca(OH)₂ is slaked lime. CaCO₃ is limestone/gypsum is CaSO₄·2H₂O."},
+  {q:"When water is added to calcium oxide, the reaction is:",o:["Endothermic","Exothermic","Neither exothermic nor endothermic","Reversible"],a:1,e:"CaO + H₂O → Ca(OH)₂ + heat. This highly exothermic reaction is called 'slaking.'"},
+  {q:"Limewater is a solution of:",o:["CaCO₃ in water","Ca(OH)₂ in water","CaO in water","CaCl₂ in water"],a:1,e:"Limewater is a saturated solution of calcium hydroxide, used to test for CO₂."},
+  {q:"The test for carbon dioxide gas uses:",o:["Calcium oxide","Calcium hydroxide solution","Calcium carbonate","Calcium chloride"],a:1,e:"CO₂ turns limewater [Ca(OH)₂] milky due to CaCO₃ precipitation: Ca(OH)₂ + CO₂ → CaCO₃ + H₂O."},
+  {q:"The main constituent of cement is:",o:["Calcium carbonate","Calcium oxide","Calcium silicates and aluminates","Calcium sulphate"],a:2,e:"Cement contains tricalcium silicate (Ca₃SiO₅), dicalcium silicate (Ca₂SiO₄), and tricalcium aluminate (Ca₃Al₂O₆)."},
+  {q:"Mortar sets due to:",o:["Drying of water only","Crystallization of calcium carbonate","Hydration of calcium compounds forming hardened gel","Oxidation of calcium"],a:2,e:"Setting involves hydration of silicates to form calcium silicate hydrate gel that hardens."},
+  {q:"The flame color for calcium compounds is:",o:["Golden-yellow","Brick-red","Lilac","Apple-green"],a:1,e:"Calcium produces a brick-red (orange-red) flame color in flame tests."},
+  {q:"Calcium hydroxide is used in agriculture to:",o:["Provide calcium nutrition","Reduce soil acidity","Kill pests","Increase soil moisture"],a:1,e:"Ca(OH)₂ (slaked lime) is used to neutralize acidic soils (liming)."},
+  {q:"Sea shells are primarily composed of:",o:["Calcium oxide","Calcium hydroxide","Calcium carbonate","Calcium sulphate"],a:2,e:"Sea shells contain CaCO₃ (calcium carbonate), the same as limestone."},
+  {q:"Which compound is used to test for Ca²⁺ ions?",o:["Sodium hydroxide","Ammonium oxalate","Potassium permanganate","Silver nitrate"],a:1,e:"Ca²⁺ + C₂O₄²⁻ → CaC₂O₄↓ (white precipitate of calcium oxalate)."},
+  {q:"Gypsum is added to cement to:",o:["Increase strength","Slow down the setting process","Speed up the setting process","Reduce cost"],a:1,e:"Gypsum (CaSO₄·2H₂O) retards setting, allowing time for mixing, transporting, and placing concrete."},
+  {q:"Calcium carbonate reacts with dilute HCl to produce:",o:["CaCl₂ + H₂ + CO₂","CaCl₂ + H₂O + CO₂","CaO + HCl + CO₂","Ca + H₂O + Cl₂"],a:1,e:"CaCO₃ + 2HCl → CaCl₂ + H₂O + CO₂. This is the standard test for carbonates."},
+  {q:"The solubility of calcium hydroxide in water:",o:["Increases with temperature","Decreases with temperature","Is not affected by temperature","Is zero at all temperatures"],a:1,e:"Ca(OH)₂ shows retrograde solubility—it becomes less soluble as temperature increases (unusual behavior)."},
+  
+  // Section D: Aluminium (Questions 51-65)
+  {q:"The main ore of aluminium is:",o:["Cryolite","Bauxite","Corundum","Feldspar"],a:1,e:"Bauxite (Al₂O₃·nH₂O) is the principal aluminium ore. Cryolite (Na₃AlF₆) is used in electrolysis."},
+  {q:"Bauxite is purified by the:",o:["Hall-Héroult process","Bayer process","Solvay process","Bessemer process"],a:1,e:"The Bayer process uses NaOH to dissolve Al₂O₃ from bauxite, leaving Fe₂O₃ and SiO₂ impurities."},
+  {q:"In the Bayer process, the impurity removed by filtration is:",o:["Sodium aluminate","Iron(III) oxide","Aluminium hydroxide","Cryolite"],a:1,e:"Fe₂O₃ (red mud) and SiO₂ are insoluble and filtered out, while Al₂O₃ dissolves as Na[Al(OH)₄]."},
+  {q:"The electrolyte used in the extraction of aluminium is:",o:["Pure molten Al₂O₃","Molten Al₂O₃ dissolved in cryolite","Aqueous solution of Al₂O₃","Molten cryolite only"],a:1,e:"Pure Al₂O₃ melts at 2050°C. Dissolving in cryolite lowers the melting point to 950°C."},
+  {q:"During aluminium extraction, the anode reaction consumes:",o:["Aluminium","Carbon","Cryolite","Oxygen"],a:1,e:"At the anode: 2O²⁻ → O₂, then C + O₂ → CO₂. Carbon anodes burn away and need replacement."},
+  {q:"Aluminium is used in aircraft construction because it:",o:["Is very strong","Has low density","Is cheap","Is magnetic"],a:1,e:"Aluminium's low density (2.7 g/cm³) makes it ideal for lightweight structures like aircraft."},
+  {q:"The alloy duralumin contains aluminium and:",o:["Copper, manganese, and magnesium","Iron and carbon","Zinc and copper","Tin and lead"],a:0,e:"Duralumin = Al (95%) + Cu (4%) + Mn + Mg. It's used in aircraft due to strength and low weight."},
+  {q:"Aluminium appears resistant to corrosion because:",o:["It is less reactive than iron","It forms a protective oxide layer","It does not react with oxygen","It is coated with oil"],a:1,e:"A thin, impermeable Al₂O₃ layer forms on the surface, preventing further oxidation (anodizing)."},
+  {q:"In the test for Al³⁺ using NaOH, the precipitate dissolves in excess reagent to form:",o:["Al(OH)₃","[Al(OH)₄]⁻","AlO₂","Al₂O₃"],a:1,e:"Al(OH)₃ + OH⁻ → [Al(OH)₄]⁻ (tetrahydroxoaluminate(III) ion), showing amphoteric behavior."},
+  {q:"Which property makes aluminium useful for food packaging?",o:["High density","Non-toxic nature and malleability","Magnetic properties","Radioactivity"],a:1,e:"Aluminium is non-toxic, can be rolled into thin foil (malleable), and protects food from light and air."},
+  {q:"The IUPAC name of [Al(H₂O)₆]³⁺ is:",o:["Aluminium hexaaqua ion","Hexaaquaaluminium(III) ion","Aluminium(III) water complex","Aquaaluminium ion"],a:1,e:"Ligands (aqua = H₂O) come first with prefix, then metal with oxidation state in Roman numerals."},
+  {q:"Cryolite is added to aluminium oxide during electrolysis to:",o:["Increase the yield of aluminium","Lower the melting point and increase conductivity","Remove impurities","Act as a catalyst"],a:1,e:"Cryolite (Na₃AlF₆) dissolves Al₂O₃ and reduces the operating temperature from 2050°C to 950°C."},
+  {q:"Aluminium is more reactive than iron but corrodes less because:",o:["It forms a stable, protective oxide layer","It is a transition metal","It has a higher melting point","It is less electropositive"],a:0,e:"The Al₂O₃ layer is impermeable and adherent, unlike flaky Fe₂O₃·nH₂O (rust) on iron."},
+  {q:"Which is NOT a use of aluminium?",o:["Electrical cables","Cooking utensils","Making steel","Window frames"],a:2,e:"Steel is iron-carbon alloy. Aluminium is not used to make steel, though it's used in many other applications."},
+  {q:"The oxidation state of aluminium in Al₂O₃ is:",o:["+1","+2","+3","+6"],a:2,e:"Oxygen is -2, so 2Al + 3(-2) = 0 → Al = +3. Aluminium consistently shows +3 oxidation state."},
+  
+  // Section E: Tin (Questions 66-75)
+  {q:"The main ore of tin is:",o:["Cassiterite","Chalcopyrite","Galena","Magnetite"],a:0,e:"Cassiterite (SnO₂) is the principal tin ore. Chalcopyrite is CuFeS₂, galena is PbS, magnetite is Fe₃O₄."},
+  {q:"Tin is extracted from its oxide ore by reduction with:",o:["Hydrogen","Carbon","Aluminium","Electrolysis"],a:1,e:"SnO₂ + 2C → Sn + 2CO (at 1200-1300°C). Carbon is the reducing agent in a reverberatory furnace."},
+  {q:"Tin is used to coat steel cans because it:",o:["Increases strength","Prevents corrosion and is non-toxic","Makes them magnetic","Reduces weight"],a:1,e:"Tin plating prevents iron from rusting and is safe for food contact (non-toxic)."},
+  {q:"Bronze is an alloy of:",o:["Copper and zinc","Copper and tin","Tin and lead","Copper and aluminium"],a:1,e:"Bronze = Cu + Sn (typically 90% Cu, 10% Sn). Brass is Cu + Zn."},
+  {q:"Solder is an alloy of:",o:["Tin and copper","Tin and lead","Tin and aluminium","Tin and iron"],a:1,e:"Soft solder is typically 50% Sn + 50% Pb, used for electrical joints due to low melting point."},
+  {q:"Type metal contains:",o:["Tin, lead, and antimony","Tin and copper only","Lead and zinc only","Tin, aluminium, and copper"],a:0,e:"Type metal = Pb (75%) + Sb (15%) + Sn (10%). It expands on cooling for sharp printing details."},
+  {q:"Which property of tin makes it suitable for making type metal?",o:["High melting point","Expansion on solidification","Magnetic properties","Radioactivity"],a:1,e:"Type metal expands when solidifying, filling moulds completely for sharp, detailed type faces."},
+  {q:"The melting point of tin is relatively:",o:["Very high","Low (232°C)","Moderate (1000°C)","Variable"],a:1,e:"Tin melts at 232°C, which is low for a metal, making it useful for solder and fusible alloys."},
+  {q:"Pewter is an alloy containing mainly:",o:["Tin","Lead","Copper","Zinc"],a:0,e:"Pewter is traditionally >90% tin with small amounts of antimony and copper for hardness."},
+  {q:"Tin is NOT used for:",o:["Coating steel cans","Soldering electrical joints","High-temperature applications","Making bronze"],a:2,e:"Tin's low melting point (232°C) makes it unsuitable for high-temperature applications."},
+  
+  // Section F: Transition Metals & Iron (Questions 76-90)
+  {q:"Which electron configuration is characteristic of first transition series elements?",o:["ns¹","ns² np⁶","(n-1)d¹⁻¹⁰ ns¹⁻²","ns² np⁴"],a:2,e:"Transition metals have partially filled d-orbitals: configuration ends in (n-1)d¹⁻¹⁰ ns¹⁻²."},
+  {q:"Transition metals show variable oxidation states because:",o:["They have more protons","Both s and d electrons can be lost","They have high melting points","They form coloured compounds"],a:1,e:"Successive ionization energies are similar, allowing loss of different numbers of s and d electrons."},
+  {q:"The colour of transition metal compounds is due to:",o:["Reflection of light","d-d electron transitions","Radioactive decay","High density"],a:1,e:"d-orbitals split in ligand fields; electrons jumping between levels absorb specific wavelengths."},
+  {q:"Which ion is colourless?",o:["Cu²⁺","Fe²⁺","Zn²⁺","Ni²⁺"],a:2,e:"Zn²⁺ has d¹⁰ configuration (full d-subshell). No d-d transitions possible, so it's colourless."},
+  {q:"Transition metals form complex ions because:",o:["They have high density","They have empty d-orbitals to accept lone pairs","They are good conductors","They have high melting points"],a:1,e:"Empty or partially filled d-orbitals accept electron pairs from ligands (Lewis bases)."},
+  {q:"The main reducing agent in the blast furnace for iron extraction is:",o:["Carbon","Carbon monoxide","Hydrogen","Limestone"],a:1,e:"CO is the primary reducing agent: Fe₂O₃ + 3CO → 2Fe + 3CO₂. C → CO₂ → CO in the furnace."},
+  {q:"The function of limestone in the blast furnace is to:",o:["Reduce iron ore","Remove silica impurities as slag","Provide fuel","Increase temperature"],a:1,e:"CaCO₃ → CaO + CO₂, then CaO + SiO₂ → CaSiO₃ (slag). This removes acidic silica impurity."},
+  {q:"Pig iron contains about:",o:["0.1% carbon","0.5% carbon","3-4.5% carbon","10% carbon"],a:2,e:"Pig iron (cast iron) contains 3-4.5% carbon, making it hard but brittle."},
+  {q:"Wrought iron is produced by:",o:["Increasing carbon content","Decreasing carbon content to <0.2%","Adding more silicon","Electrolytic refining"],a:1,e:"Wrought iron is purified iron with <0.2% carbon, made by removing carbon from pig iron."},
+  {q:"Steel is preferred to pure iron because it:",o:["Is cheaper","Is stronger and more elastic","Corrodes faster","Is heavier"],a:1,e:"Steel (0.2-1.5% C) is stronger, tougher, and more elastic than pure iron or cast iron."},
+  {q:"Stainless steel contains:",o:["Iron and carbon only","Iron, chromium, and nickel","Iron and manganese","Iron and copper"],a:1,e:"Stainless steel ≈ 74% Fe + 18% Cr + 8% Ni. Chromium forms a protective oxide layer."},
+  {q:"The test for Fe²⁺ using potassium hexacyanoferrate(III) gives:",o:["Blood-red color","Dark blue precipitate (Turnbull's blue)","Green precipitate","Brown solution"],a:1,e:"Fe²⁺ + K₃[Fe(CN)₆] → Fe₃[Fe(CN)₆]₂ (Turnbull's blue). This distinguishes Fe²⁺ from Fe³⁺."},
+  {q:"Fe³⁺ gives a blood-red color with:",o:["Sodium hydroxide","Potassium thiocyanate (KSCN)","Potassium hexacyanoferrate(II)","Hydrochloric acid"],a:1,e:"Fe³⁺ + SCN⁻ → [Fe(SCN)]²⁺ (blood-red complex). This is a sensitive test for Fe³⁺."},
+  {q:"Rusting of iron requires:",o:["Oxygen only","Water only","Both oxygen and water","Carbon dioxide only"],a:2,e:"Rusting is electrochemical: 4Fe + 3O₂ + 6H₂O → 4Fe(OH)₃ (hydrated iron(III) oxide). Both O₂ and H₂O needed."},
+  {q:"The Haber process for ammonia uses:",o:["Iron catalyst","Nickel catalyst","Vanadium(V) oxide catalyst","Platinum catalyst"],a:0,e:"Finely divided iron with promoters (Al₂O₃, K₂O) catalyzes N₂ + 3H₂ ⇌ 2NH₃."},
+  
+  // Section G: Copper & Comprehensive (Questions 91-100)
+  {q:"The main ore of copper is:",o:["Chalcopyrite","Bauxite","Haematite","Cassiterite"],a:0,e:"Chalcopyrite (CuFeS₂) is the most important copper ore. Bauxite is Al, haematite is Fe, cassiterite is Sn."},
+  {q:"In the extraction of copper from copper(I) sulphide, the process is called:",o:["Roasting","Bessemerization","Reduction","Electrolysis"],a:1,e:"Bessemerization involves blowing air through molten Cu₂S: Cu₂S + O₂ → 2Cu + SO₂ (self-reduction)."},
+  {q:"Blister copper contains impurities of:",o:["Sulphur dioxide","Dissolved sulphur dioxide","Iron and sulphur","Air bubbles"],a:1,e:"SO₂ dissolved in molten copper forms blisters (bubbles) as it cools, giving 'blister copper' (98-99% pure)."},
+  {q:"Copper(II) sulphate crystals are:",o:["White","Blue","Green","Yellow"],a:1,e:"CuSO₄·5H₂O (blue vitriol) is blue due to [Cu(H₂O)₆]²⁺ ions. Anhydrous CuSO₄ is white."},
+  {q:"When NH₃(aq) is added dropwise to Cu²⁺ solution:",o:["Blue precipitate forms and dissolves in excess","White precipitate forms","No change occurs","Red precipitate forms"],a:0,e:"Cu²⁺ + 2OH⁻ → Cu(OH)₂↓ (blue), then Cu(OH)₂ + 4NH₃ → [Cu(NH₃)₄(H₂O)₂]²⁺ + 2OH⁻ (deep blue solution)."},
+  {q:"Bordeaux mixture used as fungicide contains:",o:["Copper sulphate and calcium hydroxide","Copper sulphate and sodium hydroxide","Copper oxide and water","Copper metal and sulphur"],a:0,e:"Bordeaux mixture = CuSO₄ + Ca(OH)₂ (slaked lime), used to control fungal diseases in vineyards."},
+  {q:"Permalloy is used for:",o:["Aircraft construction","Transformer cores","Cutlery","Electrical cables"],a:1,e:"Permalloy (78% Ni, 22% Fe) has high magnetic permeability, ideal for transformer cores and magnetic shielding."},
+  {q:"Alnico is an alloy used for making:",o:["Aircraft parts","Permanent magnets","Cutlery","Electrical wires"],a:1,e:"Alnico (Al + Ni + Co + Fe) is used for permanent magnets in loudspeakers and motors due to high coercivity."},
+  {q:"Which alloy is used for making coins and contains copper and zinc?",o:["Bronze","Brass","Duralumin","Steel"],a:1,e:"Brass (Cu + Zn) is used for coins, ornaments, and musical instruments due to its gold-like appearance and machinability."},
+  {q:"Which statement about alloys is CORRECT?",o:["Alloys are always harder than their constituent metals","Alloys have fixed compositions like compounds","Alloys generally have lower melting points than pure metals","Alloys cannot conduct electricity"],a:0,e:"Alloys are generally harder than constituent metals due to disrupted regular metallic structure (disruption of dislocation movement). While C can be true for eutectic mixtures, A is the most generally correct statement about alloys."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('metals_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('metals_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/100`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('metals_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=80?'Outstanding! JAMB Ready!':pct>=70?'Excellent! Keep it up':pct>=60?'Good, review weak areas':pct>=45?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,10,35,50,65,75,90,100];
+  const sectionNames=["A: General Properties of Metals","B: Alkali Metals - Sodium","C: Alkaline-Earth Metals - Calcium","D: Aluminium","E: Tin","F: Transition Metals & Iron","G: Copper & Comprehensive"];
+  
+  for(let s=0;s<7;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`
+        <h4>Question ${i+1}</h4>
+        <div class="q-text">${q.q}</div>
+        <div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div>
+        <div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div>
+        <div class="exp">${q.e}</div>
+      `;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('metals_quiz_auth');
+  sessionStorage.removeItem('metals_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('metals_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('metals_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Separation of Mixtures & Purification (Chemistry)</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; }
+    :root{
+      --background:#1e1e2f; --shadow-in:#171723; --shadow-out:#25253b;
+      --text-primary:#f0f0ff; --text-secondary:#c0c0e0;
+      --accent:#1db954; --accent-secondary:#ff6b6b; --accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f;
+    }
+    body.light{
+      --background:#e0e0e0; --shadow-in:#bebebe; --shadow-out:#ffffff;
+      --text-primary:#1a1a1a; --text-secondary:#444; --card-bg:#f8f8f8;
+    }
+    body{
+      background:var(--background); color:var(--text-primary);
+      display:flex; justify-content:center; align-items:center;
+      min-height:100vh; overflow-x:hidden;
+    }
+    .container{
+      width:100%; max-width:420px; height:750px; overflow-y:auto;
+      background:var(--background); border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in), -10px -10px 20px var(--shadow-out);
+      padding-top:70px; padding-bottom:80px; position:relative;
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in), -5px -5px 10px var(--shadow-out);
+      border-radius:15px;
+    }
+    .neumorphic-btn{
+      background:var(--background); border:none; border-radius:50%;
+      width:40px; height:40px; display:flex; align-items:center; justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out);
+      cursor:pointer; color:var(--text-primary); font-size:18px; transition:all .3s ease;
+    }
+    .neumorphic-btn:active{
+      box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95);
+    }
+    .top-bar{
+      position:fixed; top:0; width:100%; max-width:420px;
+      background:var(--background); padding:15px;
+      display:flex; align-items:center; justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in); z-index:20;
+    }
+    .top-bar .header{ font-size:18px; font-weight:800; color:var(--accent); }
+    .top-bar .right-icons{ display:flex; gap:10px; }
+.progress-container{
+  position:fixed; top:70px; left:0; width:100%; max-width:420px; height:4px;
+  background:var(--shadow-in); z-index:15;
+}
+.progress-bar{ height:100%; background:var(--accent); width:0%; transition:width .3s; }
+
+.content{ padding:20px 16px; line-height:1.7; }
+.main-header{
+  text-align:center; margin-bottom:28px; padding:20px; border-radius:20px;
+  background:rgba(29,185,84,.1);
+}
+.main-header h1{ font-size:24px; margin-bottom:8px; color:var(--accent); font-weight:900; }
+.main-header p{ font-size:13px; color:var(--text-secondary); font-weight:500; }
+
+.section-card{
+  background:var(--card-bg); padding:24px 18px; border-radius:20px;
+  box-shadow: inset 4px 4px 10px var(--shadow-in), inset -4px -4px 10px var(--shadow-out);
+  margin-bottom:24px; border-left:4px solid var(--accent);
+}
+.section-card h2{
+  font-size:19px; margin-bottom:14px; color:var(--accent); font-weight:800;
+  display:flex; align-items:center; gap:8px;
+}
+.section-card h3{
+  font-size:16px; margin:18px 0 10px; color:var(--accent-tertiary); font-weight:700;
+  padding-left:12px; border-left:3px solid var(--accent-tertiary);
+}
+.section-card p{ margin-bottom:12px; font-size:14px; text-align:justify; }
+.section-card ul, .section-card ol{ padding-left:20px; margin:10px 0; }
+.section-card li{ margin-bottom:7px; font-size:14px; }
+
+.quick-facts{
+  background:linear-gradient(135deg, rgba(29,185,84,.1), rgba(78,205,196,.1));
+  padding:16px; border-radius:15px; margin:14px 0;
+  border:1px solid rgba(29,185,84,.3);
+}
+.quick-facts h4{ color:var(--accent); margin-bottom:8px; font-size:15px; font-weight:800; }
+.quick-facts li{ font-size:13px; }
+
+.highlight-box{
+  background:rgba(78,205,196,.1);
+  padding:12px 16px; border-radius:10px; margin:12px 0;
+  border-left:3px solid var(--accent-tertiary);
+}
+
+.jamb-alert{
+  background:linear-gradient(135deg, rgba(255,193,7,.15), rgba(255,152,0,.1));
+  border:1px solid rgba(255,193,7,.4);
+  border-radius:12px; padding:16px; margin:18px 0;
+}
+.jamb-alert h4{ color:#ffc107; margin-bottom:8px; font-size:15px; font-weight:900; }
+.jamb-alert li{ font-size:13px; }
+
+.memory-tip{
+  background:rgba(255,107,107,.1);
+  padding:14px 16px; border-radius:12px; margin:14px 0;
+  border-left:4px solid var(--accent-secondary);
+}
+.memory-tip strong{ color:var(--accent-secondary); display:block; margin-bottom:6px; font-size:14px; }
+.memory-tip p{ margin:0; font-size:13px; font-style:italic; }
+
+.diagram-img{
+  width:100%; max-height:280px; object-fit:contain;
+  border-radius:12px; margin:12px 0 8px;
+  box-shadow:3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out);
+  background:#fff; padding:8px;
+}
+.image-caption{
+  text-align:center; font-size:12px; color:var(--text-secondary);
+  font-style:italic; margin-bottom:10px; margin-top:-4px;
+}
+
+.table-container{
+  width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch;
+  margin:14px 0; border-radius:12px;
+  box-shadow:3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out);
+}
+.table-container::-webkit-scrollbar{ height:6px; }
+.table-container::-webkit-scrollbar-thumb{ background:var(--accent); border-radius:3px; }
+.summary-table{
+  width:100%; min-width:780px; border-collapse:separate; border-spacing:0; font-size:13px;
+}
+.summary-table th{
+  background:var(--accent); color:#000; padding:12px 10px; text-align:left; font-weight:800; white-space:nowrap;
+}
+.summary-table td{
+  padding:10px; border-bottom:1px solid var(--shadow-in); background:var(--card-bg); white-space:nowrap;
+}
+.summary-table tr:last-child td{ border-bottom:none; }
+.summary-table tr:nth-child(even) td{ background:rgba(255,255,255,.03); }
+.table-scroll-hint{ font-size:11px; color:var(--text-secondary); text-align:center; margin-top:4px; font-style:italic; }
+
+.nav-bar{
+  position:fixed; bottom:0; width:100%; max-width:420px;
+  background:var(--background); padding:10px;
+  display:flex; justify-content:space-around; box-shadow:0 -5px 10px var(--shadow-in);
+  z-index:20;
+}
+.nav-bar .nav-item{ text-align:center; }
+.nav-bar .nav-item.center button{
+  width:50px; height:50px; font-size:24px; background:var(--accent);
+  box-shadow:0 0 15px var(--accent), 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out);
+  color:#000;
+}
+.nav-bar p{ display:none; font-size:11px; margin-top:4px; color:var(--text-primary); }
+
+.explore-btn{
+  background:var(--accent); border:none; padding:14px 28px; border-radius:25px;
+  color:#000; cursor:pointer;
+  box-shadow:4px 4px 8px var(--shadow-in), -4px -4px 8px var(--shadow-out);
+  font-size:16px; margin:22px auto; display:block; font-weight:900;
+  transition:all .3s ease;
+}
+.explore-btn:active{
+  box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out);
+  transform:scale(.98);
+}
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+<div class="top-bar neumorphic">
+  <button class="neumorphic-btn" onclick="history.back()">←</button>
+  <div class="header">CHEMISTRY</div>
+  <div class="right-icons">
+    <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+    <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">⭐</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="main-header">
+    <h1>🧪 Separation of Mixtures & Purification</h1>
+    <p>Elements vs compounds vs mixtures • Physical vs chemical changes • Purity tests • Separation methods (with diagrams)</p>
+  </div>
+
+  <!-- A -->
+  <div class="section-card">
+    <h2>🧱 (a) Elements, Compounds & Mixtures</h2>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3d/Mixture_compound_element.png" alt="Element compound mixture illustration" class="diagram-img">
+    <div class="image-caption">A quick visual: elements (one type), compounds (chemically joined), mixtures (physically mixed)</div>
+
+    <h3>Element</h3>
+    <p><strong>Definition:</strong> A pure substance that cannot be broken down into simpler substances by chemical means. It contains only one type of atom.</p>
+    <div class="quick-facts">
+      <h4>Examples</h4>
+      <ul>
+        <li>Oxygen (O), Iron (Fe), Gold (Au), Hydrogen (H), Carbon (C)</li>
+      </ul>
+    </div>
+
+    <h3>Compound</h3>
+    <p><strong>Definition:</strong> A pure substance formed when two or more elements combine <strong>chemically</strong> in a fixed ratio by mass. It can only be separated by <strong>chemical</strong> reactions.</p>
+    <div class="quick-facts">
+      <h4>Examples</h4>
+      <ul>
+        <li>Water (H₂O), Sodium chloride (NaCl), Carbon dioxide (CO₂), Glucose (C₆H₁₂O₆)</li>
+      </ul>
+    </div>
+
+    <h3>Mixture</h3>
+    <p><strong>Definition:</strong> A physical combination of two or more substances in any proportion. Components keep their properties and can be separated by <strong>physical</strong> methods.</p>
+
+    <div class="comparison-grid">
+      <div class="comparison-card">
+        <h5>Homogeneous</h5>
+        <ul>
+          <li>Uniform throughout</li>
+          <li>Examples: salt solution, air, brass</li>
+        </ul>
+      </div>
+      <div class="comparison-card">
+        <h5>Heterogeneous</h5>
+        <ul>
+          <li>Not uniform</li>
+          <li>Examples: sand + water, oil + water, soil</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 Easy Memory</strong>
+      <p>Element = one type of atom • Compound = fixed chemical ratio • Mixture = any ratio (physical mix)</p>
+    </div>
+  </div>
+
+  <!-- B -->
+  <div class="section-card">
+    <h2>🔁 (b) Physical vs Chemical Changes</h2>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Chemical_vs_physical_change.svg" alt="Physical vs chemical change" class="diagram-img">
+    <div class="image-caption">Physical change: no new substance • Chemical change: new substance formed</div>
+
+    <h3>Physical Change</h3>
+    <p><strong>No new substance</strong> is formed—only state/shape/size changes. Usually reversible.</p>
+    <div class="quick-facts">
+      <h4>Examples</h4>
+      <ul>
+        <li>Melting ice, boiling water, dissolving sugar, crushing chalk</li>
+      </ul>
+    </div>
+
+    <h3>Chemical Change</h3>
+    <p><strong>New substance(s)</strong> formed with new properties. Often irreversible and involves big energy change.</p>
+    <div class="quick-facts">
+      <h4>Examples</h4>
+      <ul>
+        <li>Burning paper, rusting iron, digestion, iron + sulphur reaction</li>
+      </ul>
+    </div>
+
+    <div class="highlight-box">
+      <p><strong>How to tell quickly:</strong> If a new substance forms (gas, colour change, precipitate, heat/light) → chemical change.</p>
+    </div>
+  </div>
+
+  <!-- C + D -->
+  <div class="section-card">
+    <h2>🧼 (c) Pure & Impure Substances</h2>
+    <p><strong>Pure substance:</strong> fixed composition (element/compound). Has <strong>sharp</strong> melting and boiling points.</p>
+    <p><strong>Impure substance:</strong> mixture. Melting point becomes <strong>lower and wider range</strong>; boiling point becomes <strong>higher and wider range</strong>.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/Melting_point_apparatus.jpg" alt="Melting point apparatus" class="diagram-img">
+    <div class="image-caption">Melting point determination is a common lab test for purity</div>
+
+    <div class="jamb-alert">
+      <h4>🔥 (d) Purity Criteria (mp, bp, density)</h4>
+      <ul>
+        <li><strong>Pure:</strong> fixed mp/bp (e.g., ice melts at 0°C; water boils at 100°C at 1 atm)</li>
+        <li><strong>Impure:</strong> mp depressed (lower + range), bp elevated (higher + range)</li>
+        <li><strong>Density:</strong> pure substances have constant density; impurities change it</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- E -->
+  <div class="section-card">
+    <h2>🧰 (e) Separation Processes (Big Topic)</h2>
+    <p>Separation depends on differences in physical properties like <strong>boiling point, solubility, particle size, density, magnetism,</strong> and <strong>sublimation</strong>.</p>
+
+    <div class="table-container">
+      <table class="summary-table">
+        <tr>
+          <th>Method</th>
+          <th>Property Used</th>
+          <th>Mixture Type</th>
+          <th>Example</th>
+        </tr>
+        <tr><td><strong>Evaporation</strong></td><td>Volatility</td><td>Solid in solution</td><td>Salt from seawater</td></tr>
+        <tr><td><strong>Simple distillation</strong></td><td>Boiling point (large Δ)</td><td>Miscible liquids</td><td>Water from ethanol (rough)</td></tr>
+        <tr><td><strong>Fractional distillation</strong></td><td>Boiling point (small Δ)</td><td>Miscible liquids</td><td>Crude oil fractions</td></tr>
+        <tr><td><strong>Sublimation</strong></td><td>Sublimes</td><td>Sublimable + non-sublimable</td><td>Iodine + sand</td></tr>
+        <tr><td><strong>Recrystallization</strong></td><td>Solubility vs temp</td><td>Impure soluble solid</td><td>CuSO₄ purification</td></tr>
+        <tr><td><strong>Paper chromatography</strong></td><td>Adsorption + solubility</td><td>Soluble mixtures</td><td>Ink pigments</td></tr>
+        <tr><td><strong>Magnetization</strong></td><td>Magnetism</td><td>Magnetic + non-magnetic</td><td>Iron + sulphur</td></tr>
+        <tr><td><strong>Decantation</strong></td><td>Density/settling</td><td>Immiscible / sediment</td><td>Oil + water</td></tr>
+        <tr><td><strong>Filtration</strong></td><td>Particle size</td><td>Insoluble solid + liquid</td><td>Sand + water</td></tr>
+        <tr><td><strong>Centrifugation</strong></td><td>Density (spinning)</td><td>Suspension/emulsion</td><td>Blood cells + plasma</td></tr>
+      </table>
+    </div>
+    <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+    <div class="memory-tip">
+      <strong>🧠 Quick Rule</strong>
+      <p>Always ask: “What physical property is different?” Then choose the method.</p>
+    </div>
+  </div>
+
+  <!-- EVAPORATION -->
+  <div class="section-card">
+    <h2>💨 Evaporation</h2>
+    <p><strong>Principle:</strong> solvent evaporates (volatile), leaving non-volatile solute behind.</p>
+    <div class="highlight-box">
+      <p><strong>Used for:</strong> getting soluble solid from solution (e.g., salt from brine).</p>
+    </div>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/1/1d/Salt_evaporation_ponds.jpg" alt="Salt evaporation ponds" class="diagram-img">
+    <div class="image-caption">Real-life evaporation: salt is obtained from seawater in evaporation ponds</div>
+  </div>
+
+  <!-- SIMPLE DISTILLATION -->
+  <div class="section-card">
+    <h2>🌡️ Simple Distillation</h2>
+    <p><strong>Principle:</strong> separates liquids with a <strong>large boiling point difference</strong> (about &gt;25–30°C).</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7a/Simple_distillation_apparatus.svg" alt="Simple distillation apparatus" class="diagram-img">
+    <div class="image-caption">Simple distillation setup (basic labelled diagram)</div>
+
+    <div class="quick-facts">
+      <h4>Parts (know these)</h4>
+      <ul>
+        <li><strong>Flask:</strong> holds mixture</li>
+        <li><strong>Thermometer:</strong> measures vapour temperature</li>
+        <li><strong>Liebig condenser:</strong> cools vapour to liquid</li>
+        <li><strong>Receiver:</strong> collects distillate</li>
+      </ul>
+    </div>
+
+    <div class="jamb-alert">
+      <h4>⚠️ Exam Tip</h4>
+      <ul>
+        <li>If boiling points are close, do <strong>NOT</strong> use simple distillation → use fractional distillation.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- FRACTIONAL DISTILLATION -->
+  <div class="section-card">
+    <h2>🏭 Fractional Distillation</h2>
+    <p><strong>Principle:</strong> separates miscible liquids with <strong>close boiling points</strong> using a <strong>fractionating column</strong> (many repeated vaporization-condensation steps).</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/1/1a/Fractional_distillation_apparatus.svg" alt="Fractional distillation apparatus" class="diagram-img">
+    <div class="image-caption">Fractional distillation: includes a fractionating column</div>
+
+    <div class="quick-facts">
+      <h4>Used for</h4>
+      <ul>
+        <li>Crude oil fractions (petrol, kerosene, diesel)</li>
+        <li>Liquid air separation (N₂, O₂)</li>
+      </ul>
+    </div>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/8/8d/Fractionating_column_crude_oil.svg" alt="Crude oil fractionating column" class="diagram-img">
+    <div class="image-caption">Crude oil is separated into fractions by boiling point</div>
+  </div>
+
+  <!-- SUBLIMATION -->
+  <div class="section-card">
+    <h2>🌫️ Sublimation</h2>
+    <p><strong>Principle:</strong> some solids change directly from <strong>solid → gas</strong> on heating, then condense back to solid on cooling.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/0c/Sublimation_setup.svg" alt="Sublimation setup" class="diagram-img">
+    <div class="image-caption">Sublimation separates sublimable solids (iodine, naphthalene) from non-sublimable solids</div>
+
+    <div class="highlight-box">
+      <p><strong>Example:</strong> iodine/naphthalene from sand.</p>
+    </div>
+  </div>
+
+  <!-- RECRYSTALLIZATION -->
+  <div class="section-card">
+    <h2>💎 Recrystallization</h2>
+    <p><strong>Principle:</strong> solubility increases with temperature. Dissolve impure solid in hot solvent → cool → pure crystals form.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Recrystallization_scheme.svg" alt="Recrystallization steps" class="diagram-img">
+    <div class="image-caption">Recrystallization steps: dissolve hot → filter → cool → crystals</div>
+
+    <div class="quick-facts">
+      <h4>Used for</h4>
+      <ul>
+        <li>Purifying solids like sugar, salts (e.g., copper(II) sulphate)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PAPER CHROMATOGRAPHY -->
+  <div class="section-card">
+    <h2>🖍️ Paper Chromatography</h2>
+    <p><strong>Principle:</strong> different components travel at different speeds due to different solubility in solvent (mobile phase) and adsorption on paper (stationary phase).</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Paper_chromatography.svg" alt="Paper chromatography setup" class="diagram-img">
+    <div class="image-caption">Paper chromatography separates dyes/pigments into different spots</div>
+
+    <div class="highlight-box">
+      <p><strong>Used for:</strong> dyes, inks, plant pigments, amino acids.</p>
+    </div>
+
+    <div class="jamb-alert">
+      <h4>Rf value (quick meaning)</h4>
+      <ul>
+        <li>Rf helps compare how far a spot moved compared to solvent front.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- COLUMN CHROMATOGRAPHY -->
+  <div class="section-card">
+    <h2>🧱 Column Chromatography</h2>
+    <p><strong>Principle:</strong> similar to paper chromatography but uses a packed column (silica/alumina) for larger-scale separation.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/0f/Column_chromatography_setup.png" alt="Column chromatography" class="diagram-img">
+    <div class="image-caption">Column chromatography: useful for complex mixtures and larger quantities</div>
+  </div>
+
+  <!-- MAGNETIZATION -->
+  <div class="section-card">
+    <h2>🧲 Magnetization</h2>
+    <p><strong>Principle:</strong> separates magnetic substances from non-magnetic substances.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Magnetic_separation.svg" alt="Magnetic separation" class="diagram-img">
+    <div class="image-caption">Magnetic separation: iron filings can be removed from sand/sulphur</div>
+
+    <div class="highlight-box">
+      <p><strong>Example:</strong> iron filings from sulphur or sand.</p>
+    </div>
+  </div>
+
+  <!-- DECANTATION + FILTRATION -->
+  <div class="section-card">
+    <h2>🫗 Decantation & 🧻 Filtration</h2>
+
+    <h3>Decantation</h3>
+    <p><strong>Principle:</strong> based on density/settling. Pour off the top liquid carefully.</p>
+    <div class="quick-facts">
+      <ul>
+        <li>Used for sediment + liquid (e.g., water from settled sand) or immiscible liquids</li>
+      </ul>
+    </div>
+
+    <h3>Filtration</h3>
+    <p><strong>Principle:</strong> particle size difference. Filter traps insoluble solid (residue); liquid passes (filtrate).</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/8/85/Filtration_diagram.svg" alt="Filtration setup" class="diagram-img">
+    <div class="image-caption">Filtration: residue stays on paper, filtrate passes through</div>
+
+    <div class="highlight-box">
+      <p><strong>Example:</strong> sand from water; coffee filtering.</p>
+    </div>
+  </div>
+
+  <!-- CENTRIFUGATION -->
+  <div class="section-card">
+    <h2>🌀 Centrifugation</h2>
+    <p><strong>Principle:</strong> rapid spinning creates a force that makes denser particles settle faster.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2b/Centrifuge_tubes_diagram.svg" alt="Centrifugation tubes" class="diagram-img">
+    <div class="image-caption">Centrifugation separates components by density (e.g., blood cells from plasma)</div>
+
+    <div class="quick-facts">
+      <h4>Used for</h4>
+      <ul>
+        <li>Separating cream from milk</li>
+        <li>Separating blood into plasma and cells</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- REAL LIFE -->
+  <div class="section-card">
+    <h2>🏠 Everyday / Real-Life Applications</h2>
+    <div class="quick-facts">
+      <ul>
+        <li><strong>Water purification:</strong> filtration + distillation</li>
+        <li><strong>Petrol/diesel:</strong> fractional distillation of crude oil</li>
+        <li><strong>Food colours/inks:</strong> paper chromatography</li>
+        <li><strong>Salt production:</strong> evaporation</li>
+        <li><strong>Recycling:</strong> magnetization to separate metals</li>
+      </ul>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 Fast Exam Strategy</strong>
+      <p>When asked “How would you separate…?”, write: property used → method → brief steps → example.</p>
+    </div>
+  </div>
+
+  <button class="explore-btn" onclick="alert('Try past questions: match mixture type to separation method!')">Practice Questions</button>
+</div>
+</div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+  </script>
+</body>
+</html>

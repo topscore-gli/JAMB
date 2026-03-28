@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Chemistry - Organic Compounds (Full Summary)</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:18px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+.progress-container{
+  position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+  background:var(--shadow-in);z-index:15
+}
+.progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+.content{padding:20px 16px;line-height:1.7}
+.main-header{
+  text-align:center;margin-bottom:28px;padding:20px;border-radius:20px;
+  background:rgba(29,185,84,.1)
+}
+.main-header h1{font-size:21px;margin-bottom:8px;color:var(--accent);font-weight:900}
+.main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+.section-card{
+  background:var(--card-bg);padding:24px 18px;border-radius:20px;
+  box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+  margin-bottom:24px;border-left:4px solid var(--accent)
+}
+.section-card h2{
+  font-size:19px;margin-bottom:14px;color:var(--accent);font-weight:900;
+  display:flex;align-items:center;gap:8px
+}
+.section-card h3{
+  font-size:16px;margin:18px 0 10px;color:var(--accent-tertiary);font-weight:800;
+  padding-left:12px;border-left:3px solid var(--accent-tertiary)
+}
+.section-card h4{font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800}
+.section-card p{margin-bottom:12px;font-size:14px;text-align:justify}
+.section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+.section-card li{margin-bottom:7px;font-size:14px}
+
+.diagram-img{
+  width:100%;max-height:280px;object-fit:contain;border-radius:12px;
+  margin:12px 0 8px;
+  box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out);
+  background:#fff;padding:8px
+}
+.image-caption{
+  text-align:center;font-size:12px;color:var(--text-secondary);
+  font-style:italic;margin-bottom:10px;margin-top:-4px
+}
+
+.quick-facts{
+  background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+  padding:16px;border-radius:15px;margin:14px 0;border:1px solid rgba(29,185,84,.3)
+}
+.quick-facts h4{color:var(--accent);margin-bottom:8px;font-size:15px;font-weight:900}
+.quick-facts li{font-size:13px}
+
+.highlight-box{
+  background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+  border-left:3px solid var(--accent-tertiary)
+}
+.memory-tip{
+  background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+  border-left:4px solid var(--accent-secondary)
+}
+.memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+.memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+.jamb-alert{
+  background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+  border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:16px;margin:18px 0
+}
+.jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:15px;font-weight:900}
+.jamb-alert li{font-size:13px}
+
+.table-container{
+  width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:6px 0;border-radius:12px;
+  box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+}
+.summary-table{
+  width:100%;min-width:1000px;border-collapse:separate;border-spacing:0;font-size:13px
+}
+.summary-table th{
+  background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+}
+.summary-table td{
+  padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);white-space:nowrap;vertical-align:top
+}
+.summary-table tr:last-child td{border-bottom:none}
+.summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+.table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+.nav-bar{
+  position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+  display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+}
+.nav-bar .nav-item{text-align:center}
+.nav-bar .nav-item.center button{
+  width:50px;height:50px;font-size:24px;background:var(--accent);
+  box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+  color:#000
+}
+.nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+.explore-btn{
+  background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+  box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+  font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+}
+.explore-btn:active{
+  box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+  transform:scale(.98)
+}
+
+  </style>
+</head>
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+    
+<div class="top-bar neumorphic">
+  <button class="neumorphic-btn" onclick="history.back()">←</button>
+  <div class="header">CHEMISTRY</div>
+  <div class="right-icons">
+    <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+    <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="main-header">
+    <h1>👩‍🔬 Organic Compounds (JAMB Full Note)</h1>
+    <p>Definition • classification • general formulae • IUPAC • hydrocarbons • alcohols • acids/esters • amines • carbohydrates • proteins • polymers • tests</p>
+  </div>
+
+  <!-- SUMMARY TABLE -->
+  <div class="section-card">
+    <h2>📋 Summary Table (Tables JAMB Loves)</h2>
+
+    <div class="table-container">
+      <table class="summary-table">
+        <tr>
+          <th>Area</th>
+          <th>Must-know fact</th>
+          <th>Example</th>
+          <th>Test / use clue</th>
+        </tr>
+        <tr>
+          <td><strong>Organic compounds</strong></td>
+          <td>Carbon compounds (except CO₂, CO, carbonates)</td>
+          <td>Methane, ethanol, benzene</td>
+          <td>“Except” list is important</td>
+        </tr>
+        <tr>
+          <td><strong>Why many compounds</strong></td>
+          <td>Tetravalency + catenation</td>
+          <td>CH₄ (4 bonds); chains/rings</td>
+          <td>“Millions of compounds”</td>
+        </tr>
+        <tr>
+          <td><strong>Alkanes</strong></td>
+          <td>CₙH₂ₙ₊₂ (saturated)</td>
+          <td>CH₄ methane</td>
+          <td>Substitution (chlorination)</td>
+        </tr>
+        <tr>
+          <td><strong>Alkenes</strong></td>
+          <td>CₙH₂ₙ (double bond)</td>
+          <td>C₂H₄ ethene</td>
+          <td>Bromine water decolourises</td>
+        </tr>
+        <tr>
+          <td><strong>Alkynes</strong></td>
+          <td>CₙH₂ₙ₋₂ (triple bond)</td>
+          <td>C₂H₂ ethyne</td>
+          <td>Oxy-acetylene welding</td>
+        </tr>
+        <tr>
+          <td><strong>Arenes</strong></td>
+          <td>Benzene ring; substitution</td>
+          <td>C₆H₆ benzene</td>
+          <td>Stable aromatic compound</td>
+        </tr>
+        <tr>
+          <td><strong>Alcohols</strong></td>
+          <td>–OH group</td>
+          <td>Ethanol</td>
+          <td>Fuel/solvent/antiseptic</td>
+        </tr>
+        <tr>
+          <td><strong>Aldehydes</strong></td>
+          <td>–CHO group</td>
+          <td>Ethanal</td>
+          <td>Tollens: silver mirror</td>
+        </tr>
+        <tr>
+          <td><strong>Ketones</strong></td>
+          <td>–CO– group</td>
+          <td>Propanone</td>
+          <td>Tollens: no reaction</td>
+        </tr>
+        <tr>
+          <td><strong>Carboxylic acids</strong></td>
+          <td>–COOH group</td>
+          <td>Ethanoic acid</td>
+          <td>Esterification with alcohol</td>
+        </tr>
+        <tr>
+          <td><strong>Carbohydrates</strong></td>
+          <td>Cₙ(H₂O)ₙ</td>
+          <td>Glucose</td>
+          <td>Benedict/Fehling brick-red</td>
+        </tr>
+        <tr>
+          <td><strong>Proteins</strong></td>
+          <td>From amino acids</td>
+          <td>Enzymes: amylase, pepsin</td>
+          <td>Biuret purple</td>
+        </tr>
+        <tr>
+          <td><strong>Polymers</strong></td>
+          <td>Addition vs condensation</td>
+          <td>Ethene → polythene; Nylon</td>
+          <td>Thermoplastic vs thermoset</td>
+        </tr>
+      </table>
+    </div>
+    <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+    <div class="memory-tip">
+      <strong>🧠 Super-short memory</strong>
+      <p>Unsaturated = decolourises bromine water. Aldehyde = silver mirror (Tollens).</p>
+    </div>
+  </div>
+
+  <!-- Definition -->
+  <div class="section-card">
+    <h2>1️⃣ What Are Organic Compounds?</h2>
+    <p><strong>Organic compounds</strong> are compounds of carbon (except a few like <strong>CO₂, CO, and carbonates</strong>).</p>
+
+    <h3>Examples</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Methane</li>
+        <li>Ethanol</li>
+        <li>Benzene</li>
+        <li>Glucose</li>
+        <li>Proteins</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Why carbon forms many -->
+  <div class="section-card">
+    <h2>2️⃣ Why Carbon Forms Many Compounds</h2>
+    <div class="quick-facts">
+      <ul>
+        <li><strong>Tetravalency:</strong> carbon forms 4 covalent bonds (e.g., CH₄)</li>
+        <li><strong>Catenation:</strong> carbon atoms form chains/rings (straight, branched, ring structures)</li>
+      </ul>
+    </div>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/8/8c/Methane-3D-balls.png" alt="Methane structure" class="diagram-img">
+    <div class="image-caption">Carbon tetravalency: CH₄ has four covalent bonds</div>
+  </div>
+
+  <!-- Classification by functional group -->
+  <div class="section-card">
+    <h2>3️⃣ Classification of Organic Compounds (Functional Groups)</h2>
+
+    <div class="table-container">
+      <table class="summary-table">
+        <tr>
+          <th>Class</th>
+          <th>Functional group</th>
+          <th>Example</th>
+        </tr>
+        <tr>
+          <td><strong>Hydrocarbons</strong></td>
+          <td>C and H only</td>
+          <td>Methane</td>
+        </tr>
+        <tr>
+          <td><strong>Alkanols (alcohols)</strong></td>
+          <td>–OH</td>
+          <td>Ethanol</td>
+        </tr>
+        <tr>
+          <td><strong>Alkanals (aldehydes)</strong></td>
+          <td>–CHO</td>
+          <td>Ethanal</td>
+        </tr>
+        <tr>
+          <td><strong>Alkanones (ketones)</strong></td>
+          <td>–CO–</td>
+          <td>Propanone</td>
+        </tr>
+        <tr>
+          <td><strong>Alkanoic acids</strong></td>
+          <td>–COOH</td>
+          <td>Ethanoic acid</td>
+        </tr>
+        <tr>
+          <td><strong>Amines</strong></td>
+          <td>–NH₂</td>
+          <td>Methylamine</td>
+        </tr>
+      </table>
+    </div>
+    <div class="table-scroll-hint">← Swipe table to see more →</div>
+  </div>
+
+  <!-- General formula -->
+  <div class="section-card">
+    <h2>4️⃣ General Formula (Very Important)</h2>
+
+    <div class="table-container">
+      <table class="summary-table">
+        <tr>
+          <th>Class</th>
+          <th>General formula</th>
+          <th>Key feature</th>
+        </tr>
+        <tr>
+          <td><strong>Alkanes</strong></td>
+          <td>CₙH₂ₙ₊₂</td>
+          <td>Saturated (single bonds)</td>
+        </tr>
+        <tr>
+          <td><strong>Alkenes</strong></td>
+          <td>CₙH₂ₙ</td>
+          <td>Double bond</td>
+        </tr>
+        <tr>
+          <td><strong>Alkynes</strong></td>
+          <td>CₙH₂ₙ₋₂</td>
+          <td>Triple bond</td>
+        </tr>
+        <tr>
+          <td><strong>Alkanols</strong></td>
+          <td>CₙH₂ₙ₊₁OH</td>
+          <td>Contains –OH</td>
+        </tr>
+        <tr>
+          <td><strong>Alkanoic acids</strong></td>
+          <td>CₙH₂ₙ₊₁COOH</td>
+          <td>Contains –COOH</td>
+        </tr>
+      </table>
+    </div>
+    <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+    <div class="memory-tip">
+      <strong>🧠 Quick pattern</strong>
+      <p>Alkane: +2 H • Alkene: same • Alkyne: −2 H (compared to alkene).</p>
+    </div>
+  </div>
+
+  <!-- IUPAC -->
+  <div class="section-card">
+    <h2>5️⃣ IUPAC Nomenclature (Naming Rules)</h2>
+    <div class="quick-facts">
+      <ul>
+        <li>Identify <strong>longest carbon chain</strong></li>
+        <li>Identify the <strong>functional group</strong></li>
+        <li>Add correct <strong>suffix</strong></li>
+      </ul>
+    </div>
+
+    <h3>Prefixes (number of carbons)</h3>
+    <div class="table-container">
+      <table class="summary-table">
+        <tr>
+          <th>Carbons</th>
+          <th>Prefix</th>
+          <th>Example name base</th>
+        </tr>
+        <tr><td><strong>1</strong></td><td>Meth-</td><td>Methane / methanol</td></tr>
+        <tr><td><strong>2</strong></td><td>Eth-</td><td>Ethane / ethanol</td></tr>
+        <tr><td><strong>3</strong></td><td>Prop-</td><td>Propane / propanoic acid</td></tr>
+        <tr><td><strong>4</strong></td><td>But-</td><td>Butane</td></tr>
+        <tr><td><strong>5</strong></td><td>Pent-</td><td>Pentane</td></tr>
+        <tr><td><strong>6</strong></td><td>Hex-</td><td>Hexane</td></tr>
+      </table>
+    </div>
+    <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+    <h3>Common formula → name examples</h3>
+    <div class="table-container">
+      <table class="summary-table">
+        <tr>
+          <th>Formula</th>
+          <th>Name</th>
+          <th>Class</th>
+        </tr>
+        <tr><td><strong>CH₄</strong></td><td>Methane</td><td>Alkane</td></tr>
+        <tr><td><strong>C₂H₆</strong></td><td>Ethane</td><td>Alkane</td></tr>
+        <tr><td><strong>C₃H₈</strong></td><td>Propane</td><td>Alkane</td></tr>
+        <tr><td><strong>C₂H₄</strong></td><td>Ethene</td><td>Alkene</td></tr>
+        <tr><td><strong>C₂H₂</strong></td><td>Ethyne</td><td>Alkyne</td></tr>
+      </table>
+    </div>
+    <div class="table-scroll-hint">← Swipe table to see more →</div>
+  </div>
+
+  <!-- Empirical vs molecular -->
+  <div class="section-card">
+    <h2>6️⃣ Empirical & Molecular Formula</h2>
+    <p><strong>Empirical formula</strong> = simplest whole-number ratio of atoms.</p>
+    <div class="highlight-box">
+      <p>Example empirical formula: <strong>CH₂O</strong></p>
+    </div>
+
+    <p><strong>Molecular formula</strong> = (empirical formula) × n</p>
+    <div class="highlight-box">
+      <p>(CH₂O) × 6 = <strong>C₆H₁₂O₆</strong></p>
+    </div>
+  </div>
+
+  <!-- Hydrocarbons aliphatic -->
+  <div class="section-card">
+    <h2>7️⃣ Aliphatic Hydrocarbons (Open-Chain)</h2>
+    <p>Open-chain hydrocarbons include <strong>alkanes, alkenes, alkynes</strong>.</p>
+
+    <h3>Alkanes</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Saturated hydrocarbons</li>
+        <li>General formula: <strong>CₙH₂ₙ₊₂</strong></li>
+        <li>Examples: CH₄, C₂H₆, C₃H₈, C₄H₁₀</li>
+      </ul>
+    </div>
+
+    <h4>Properties & reactions</h4>
+    <div class="quick-facts">
+      <ul>
+        <li>Low members: gases; medium: liquids; high: solids</li>
+        <li>Insoluble in water; low melting/boiling points</li>
+        <li>Substitution: CH₄ + Cl₂ → CH₃Cl (in sunlight)</li>
+        <li>Isomerism (structural) up to 6 carbons</li>
+      </ul>
+    </div>
+
+    <h3>Petroleum & Petrochemicals</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Fractional distillation: gas, petrol, kerosene, diesel, lubricating oil, bitumen</li>
+        <li>Cracking: heavy → light hydrocarbons</li>
+        <li>Reforming: straight → branched chains</li>
+        <li>Petrochemicals: plastics, fertilizers, detergents, synthetic fibres</li>
+        <li>Octane number: fuel quality indicator</li>
+      </ul>
+    </div>
+
+    <h3>Alkenes</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Unsaturated (double bond), formula: <strong>CₙH₂ₙ</strong></li>
+        <li>Addition reactions + polymerization</li>
+        <li><strong>Test:</strong> decolourises bromine water</li>
+      </ul>
+    </div>
+
+    <h3>Alkynes</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Triple bond, formula: <strong>CₙH₂ₙ₋₂</strong></li>
+        <li>Ethyne preparation: CaC₂ + H₂O → C₂H₂ + Ca(OH)₂</li>
+        <li>Burns with luminous flame; used in oxy-acetylene welding</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Aromatic -->
+  <div class="section-card">
+    <h2>8️⃣ Aromatic Hydrocarbons (Benzene)</h2>
+    <div class="quick-facts">
+      <ul>
+        <li>Benzene: <strong>C₆H₆</strong> (stable, aromatic smell)</li>
+        <li>Undergoes substitution reactions</li>
+        <li>Uses: plastics, dyes, drugs, detergents</li>
+      </ul>
+    </div>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Benzene-2D-skeletal.svg" alt="Benzene ring" class="diagram-img">
+    <div class="image-caption">Benzene ring (aromatic): stable structure, mainly substitution reactions</div>
+  </div>
+
+  <!-- Alcohols -->
+  <div class="section-card">
+    <h2>9️⃣ Alkanols (Alcohols)</h2>
+    <p>Alcohols contain the <strong>–OH</strong> functional group (example: ethanol).</p>
+
+    <div class="quick-facts">
+      <h4>Types</h4>
+      <ul>
+        <li>Primary, secondary, tertiary</li>
+      </ul>
+      <h4>Production</h4>
+      <ul>
+        <li>Fermentation</li>
+        <li>Hydration of ethene</li>
+      </ul>
+      <h4>Uses</h4>
+      <ul>
+        <li>Fuel, solvent, antiseptic, drinks</li>
+      </ul>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 Lucas test</strong>
+      <p>Lucas test distinguishes primary/secondary/tertiary alcohols (know the idea for theory questions).</p>
+    </div>
+  </div>
+
+  <!-- Aldehydes & ketones -->
+  <div class="section-card">
+    <h2>🔟 Alkanals & Alkanones (Aldehydes vs Ketones)</h2>
+    <div class="quick-facts">
+      <ul>
+        <li><strong>Alkanals (aldehydes):</strong> –CHO (e.g., ethanal)</li>
+        <li><strong>Alkanones (ketones):</strong> –CO– (e.g., propanone)</li>
+      </ul>
+    </div>
+
+    <h3>Tollens test (key difference)</h3>
+    <div class="jamb-alert">
+      <h4>Observation</h4>
+      <ul>
+        <li>Aldehyde → <strong>silver mirror</strong></li>
+        <li>Ketone → <strong>no reaction</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Acids & esters -->
+  <div class="section-card">
+    <h2>1️⃣1️⃣ Alkanoic Acids & Esters</h2>
+    <div class="quick-facts">
+      <ul>
+        <li>Carboxylic acids contain <strong>–COOH</strong> (e.g., ethanoic acid)</li>
+        <li>Neutralization: acid + base → salt + water</li>
+        <li>Esterification: acid + alcohol → ester + water (e.g., ethyl ethanoate)</li>
+        <li>Natural esters → fats/oils; saponification → soap + glycerol</li>
+        <li>Margarine: hydrogenated vegetable oils</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Amines -->
+  <div class="section-card">
+    <h2>1️⃣2️⃣ Amines</h2>
+    <p>Amines contain the <strong>–NH₂</strong> group.</p>
+    <div class="quick-facts">
+      <ul>
+        <li>Primary: CH₃NH₂</li>
+        <li>Secondary: (CH₃)₂NH</li>
+        <li>Tertiary: (CH₃)₃N</li>
+        <li>Uses: drugs, dyes, plastics</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Carbohydrates -->
+  <div class="section-card">
+    <h2>1️⃣3️⃣ Carbohydrates</h2>
+    <p>General formula: <strong>Cₙ(H₂O)ₙ</strong></p>
+
+    <div class="quick-facts">
+      <h4>Types</h4>
+      <ul>
+        <li>Monosaccharides: glucose, fructose</li>
+        <li>Disaccharides: sucrose, maltose</li>
+        <li>Polysaccharides: starch, cellulose</li>
+      </ul>
+    </div>
+
+    <h3>Tests (very common)</h3>
+    <div class="jamb-alert">
+      <h4>Observations</h4>
+      <ul>
+        <li>Benedict’s → <strong>red precipitate</strong></li>
+        <li>Fehling’s → <strong>brick red</strong></li>
+      </ul>
+    </div>
+
+    <div class="quick-facts">
+      <h4>Hydrolysis</h4>
+      <ul>
+        <li>Starch → glucose</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Proteins -->
+  <div class="section-card">
+    <h2>1️⃣4️⃣ Proteins</h2>
+    <div class="quick-facts">
+      <ul>
+        <li>Proteins are made from amino acids</li>
+        <li>Hydrolysis → amino acids</li>
+        <li>Enzymes are protein catalysts (amylase, pepsin)</li>
+      </ul>
+    </div>
+
+    <h3>Protein tests</h3>
+    <div class="table-container">
+      <table class="summary-table">
+        <tr>
+          <th>Test</th>
+          <th>Observation</th>
+        </tr>
+        <tr><td><strong>Biuret</strong></td><td>Purple</td></tr>
+        <tr><td><strong>Ninhydrin</strong></td><td>Blue/purple</td></tr>
+        <tr><td><strong>Millon</strong></td><td>Red</td></tr>
+        <tr><td><strong>Xanthoproteic</strong></td><td>Yellow</td></tr>
+      </table>
+    </div>
+    <div class="table-scroll-hint">← Swipe table to see more →</div>
+  </div>
+
+  <!-- Polymers -->
+  <div class="section-card">
+    <h2>1️⃣5️⃣ Polymers</h2>
+    <div class="quick-facts">
+      <h4>Natural polymers</h4>
+      <ul>
+        <li>Rubber, starch, cellulose, proteins</li>
+      </ul>
+      <h4>Synthetic polymers</h4>
+      <ul>
+        <li>Nylon, polythene, PVC</li>
+      </ul>
+      <h4>Polymerization</h4>
+      <ul>
+        <li><strong>Addition:</strong> ethene → polythene</li>
+        <li><strong>Condensation:</strong> nylon formation</li>
+      </ul>
+      <h4>Plastics</h4>
+      <ul>
+        <li><strong>Thermoplastics:</strong> remouldable (PVC)</li>
+        <li><strong>Thermosetting:</strong> cannot remould (Bakelite)</li>
+      </ul>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 Plastic memory</strong>
+      <p>Thermoplastic = soften again • Thermoset = set permanently.</p>
+    </div>
+  </div>
+
+  <!-- Final JAMB summary -->
+  <div class="section-card">
+    <h2>✅ JAMB Summary (What to Revise 3 Times)</h2>
+    <div class="quick-facts">
+      <ul>
+        <li>Hydrocarbon classes + general formulae (alkane/alkene/alkyne)</li>
+        <li>Functional groups table</li>
+        <li>IUPAC prefixes + simple names</li>
+        <li>Isomerism (basic idea)</li>
+        <li>Petroleum fractions + cracking/reforming + petrochemicals</li>
+        <li>Polymerization (addition vs condensation)</li>
+        <li>Alcohol types + Lucas test (idea)</li>
+        <li>Esterification + soap production (saponification)</li>
+        <li>Tests: bromine water (alkenes), Tollens (aldehydes), Benedict/Fehling (sugars), Biuret etc. (proteins)</li>
+      </ul>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 Final memory line</strong>
+      <p>If you know the functional groups + tests, you can answer most organic chemistry MCQs quickly.</p>
+    </div>
+  </div>
+
+  <button class="explore-btn" onclick="alert('Practice: functional group identification + general formulae + tests (bromine, Tollens, Benedict, Biuret)!')">Practice JAMB Questions</button>
+</div>
+</div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+  </script>
+</body>
+</html>

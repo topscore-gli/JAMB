@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Chemistry - Energy Changes</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Chemistry</h1>
+      <p>Energy Changes<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Energy Changes</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 60:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration
+const CONFIG={TIME:3600,PASS:60};
+
+// Section mapping
+const SECTIONS={
+  0:"A: Energy Changes (∆H)",
+  20:"B: Entropy and Spontaneity",
+  40:"C: Advanced Applications"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 60 JAMB Energy Changes Questions
+const QUIZ_DATA=[
+  // Section A: Energy Changes (∆H) - Physical & Chemical Changes (1-20)
+  {q:"When sodium metal is dropped into water, the beaker becomes hot. This indicates that the reaction is:",o:["Endothermic with positive ∆H","Exothermic with positive ∆H","Endothermic with negative ∆H","Exothermic with negative ∆H"],a:3,e:"The beaker becoming hot means heat is released to the surroundings. Exothermic reactions release heat and have negative ∆H values. Sodium reacts vigorously with water: 2Na(s) + 2H₂O(l) → 2NaOH(aq) + H₂(g) + heat."},
+  {q:"The dissolution of ammonium chloride in water is accompanied by cooling of the mixture. This process is:",o:["Exothermic with ∆H = –ve","Endothermic with ∆H = +ve","Isothermal with ∆H = 0","Adiabatic with no heat change"],a:1,e:"Cooling indicates heat is absorbed from the surroundings (endothermic). NH₄Cl(s) + heat → NH₄⁺(aq) + Cl⁻(aq), so ∆H is positive. This is a classic endothermic dissolution used in cold packs."},
+  {q:"Calculate the heat change when 100 cm³ of 1.0 mol/dm³ HCl neutralizes 100 cm³ of 1.0 mol/dm³ NaOH, causing a temperature rise of 6.5°C. [Specific heat capacity = 4.2 J/g°C, density = 1 g/cm³]",o:["–2.73 kJ/mol","–5.46 kJ/mol","–27.3 kJ/mol","–54.6 kJ/mol"],a:3,e:"Total volume = 200 cm³, mass = 200 g. q = mc∆T = 200 × 4.2 × 6.5 = 5460 J = 5.46 kJ. Moles of HCl = 0.1 mol. ∆H = –5.46/0.1 = –54.6 kJ/mol (negative because exothermic)."},
+  {q:"Which of the following equations represents an endothermic reaction?",o:["C(s) + O₂(g) → CO₂(g); ∆H = –393 kJ/mol","N₂(g) + 3H₂(g) → 2NH₃(g); ∆H = –92 kJ/mol","CaCO₃(s) → CaO(s) + CO₂(g); ∆H = +178 kJ/mol","H₂SO₄(aq) + 2NaOH(aq) → Na₂SO₄(aq) + 2H₂O(l); ∆H = –114 kJ/mol"],a:2,e:"Endothermic reactions have positive ∆H values. The decomposition of calcium carbonate requires continuous heating (thermal decomposition), absorbing 178 kJ/mol."},
+  {q:"When potassium metal reacts with water, the hydrogen produced catches fire immediately. This shows the reaction:",o:["Absorbs heat and is endothermic","Releases heat and is exothermic","Has zero enthalpy change","Requires a catalyst"],a:1,e:"Hydrogen catching fire indicates the reaction releases sufficient heat to ignite the gas. Potassium reacts more vigorously than sodium: 2K(s) + 2H₂O(l) → 2KOH(aq) + H₂(g) + heat."},
+  {q:"Calculate the enthalpy of solution when 4.0 g of NaOH dissolves in 250 cm³ water, temperature rises from 25°C to 33°C. [Na = 23, O = 16, H = 1; c = 4.2 J/g°C]",o:["–42.0 kJ/mol","–84.0 kJ/mol","–105.0 kJ/mol","–168.0 kJ/mol"],a:1,e:"q = 250 × 4.2 × 8 = 8400 J = 8.4 kJ. Molar mass NaOH = 40 g/mol; moles = 4/40 = 0.1 mol. ∆H = –8.4/0.1 = –84 kJ/mol."},
+  {q:"Which observation indicates an endothermic process?",o:["Evolution of gas","Formation of precipitate","Decrease in temperature","Change in color"],a:2,e:"Endothermic processes absorb heat from surroundings, causing temperature to decrease. This is the direct observable evidence of heat absorption."},
+  {q:"The standard enthalpy of combustion of methane is –890 kJ/mol. This means:",o:["890 kJ is required to burn 1 mole of methane","890 kJ is released when 1 mole of methane burns completely in oxygen","890 kJ is released when 1 mole of CO₂ is formed","The reaction is endothermic"],a:1,e:"Combustion is always exothermic (negative ∆H). The standard enthalpy of combustion defines heat released when 1 mole of substance burns completely in oxygen under standard conditions."},
+  {q:"When 25 cm³ of 2.0 mol/dm³ HCl reacts with 25 cm³ of 2.0 mol/dm³ NaOH, the heat evolved is 2.86 kJ. The molar enthalpy of neutralization is:",o:["–28.6 kJ/mol","–57.2 kJ/mol","–114.4 kJ/mol","–14.3 kJ/mol"],a:1,e:"Moles of HCl = (2.0 × 25)/1000 = 0.05 mol. Moles of NaOH = 0.05 mol (1:1 ratio). ∆H = –2.86 kJ / 0.05 mol = –57.2 kJ/mol."},
+  {q:"Which physical process is endothermic?",o:["Condensation of steam","Freezing of water","Sublimation of iodine","Burning of magnesium"],a:2,e:"Sublimation (solid → gas) requires energy to overcome intermolecular forces. I₂(s) → I₂(g) absorbs heat. Condensation and freezing release heat (exothermic). Burning is chemical exothermic."},
+  {q:"The reaction between NaOH(s) and water is exothermic because:",o:["The lattice energy of NaOH is high","The hydration energy exceeds the lattice energy","The process increases disorder","Covalent bonds are broken"],a:1,e:"Dissolution involves: (1) Breaking lattice (endothermic, requires energy), (2) Hydrating ions (exothermic, releases energy). For NaOH, hydration energy > lattice energy, so net process is exothermic."},
+  {q:"Calculate the final temperature when 50 cm³ of 1.0 mol/dm³ HCl at 25°C neutralizes 50 cm³ of 1.0 mol/dm³ NaOH at 25°C. [∆Hneut = –57.3 kJ/mol, c = 4.2 J/g°C]",o:["31.8°C","38.6°C","42.5°C","56.8°C"],a:0,e:"Moles = 0.05 mol, heat released = 0.05 × 57.3 = 2.865 kJ = 2865 J. q = mc∆T → 2865 = 100 × 4.2 × ∆T. ∆T = 6.82°C. Final T = 25 + 6.82 = 31.8°C."},
+  {q:"Which metal reacts most violently with cold water?",o:["Calcium","Magnesium","Sodium","Potassium"],a:3,e:"Reactivity increases down Group I. Potassium (K) reacts more vigorously than sodium, often with ignition. The reactivity order is: K > Na > Ca > Mg."},
+  {q:"The enthalpy change for the reaction H₂(g) + ½O₂(g) → H₂O(l) is –286 kJ/mol. This represents:",o:["Heat of formation of water","Heat of combustion of hydrogen","Heat of neutralization","Heat of solution"],a:1,e:"This is the standard enthalpy of combustion of hydrogen (burning 1 mole in oxygen to form liquid water). It's also the standard enthalpy of formation of water."},
+  {q:"When solid NaOH pellets are added to water in a beaker, the beaker feels hot to touch. This is because:",o:["The process is endothermic","Lattice energy is greater than hydration energy","The process is exothermic","Covalent bonds are formed"],a:2,e:"Feeling hot indicates heat release—characteristic of exothermic processes. NaOH dissolution releases heat because ion-water interactions (hydration) release more energy than required to break the crystal lattice."},
+  {q:"Calculate the mass of KOH that must be dissolved in 500 cm³ water to produce a temperature rise of 4.0°C. [∆Hsoln = –55 kJ/mol, molar mass KOH = 56 g/mol, c = 4.2 J/g°C]",o:["4.2 g","8.4 g","16.8 g","21.0 g"],a:1,e:"Heat required = 500 × 4.2 × 4 = 8400 J = 8.4 kJ. Moles of KOH = 8.4/55 = 0.1527 mol. Mass = 0.1527 × 56 = 8.56 g ≈ 8.4 g."},
+  {q:"Which equation correctly represents the standard enthalpy of formation of CO₂?",o:["C(s) + O₂(g) → CO₂(g)","CO(g) + ½O₂(g) → CO₂(g)","C(g) + 2O(g) → CO₂(g)","C(diamond) + O₃(g) → CO₂(g)"],a:0,e:"Standard enthalpy of formation requires elements in their standard states: C as graphite (s), O as O₂(g). Equation A shows 1 mole of compound formed from constituent elements."},
+  {q:"The dissolution of which substance in water causes the greatest temperature decrease?",o:["NaOH","KNO₃","CaCl₂","H₂SO₄"],a:1,e:"KNO₃ (potassium nitrate) has endothermic dissolution. NaOH, CaCl₂, and H₂SO₄ all have exothermic dissolutions that increase temperature."},
+  {q:"Calculate the heat change when 2.0 g of calcium metal reacts with excess water. [Molar mass Ca = 40 g/mol, molar enthalpy of reaction = –82 kJ/mol]",o:["–2.05 kJ","–4.10 kJ","–8.20 kJ","–16.4 kJ"],a:1,e:"Moles of Ca = 2.0/40 = 0.05 mol. Heat evolved = 0.05 × 82 = 4.10 kJ. ∆H = –4.10 kJ (negative for exothermic)."},
+  {q:"Which statement about exothermic reactions is correct?",o:["The products have higher enthalpy than reactants","∆H is positive","Heat is absorbed from surroundings","The potential energy of products is lower than reactants"],a:3,e:"In exothermic reactions, energy is released as bonds form in products, making products more stable (lower potential energy) than reactants. ∆H = H(products) – H(reactants) is negative."},
+  
+  // Section B: Entropy and Spontaneity (21-40)
+  {q:"Entropy is best described as:",o:["Total heat content of a system","Degree of disorder or randomness","Energy required to start a reaction","Heat change at constant pressure"],a:1,e:"Entropy (S) measures molecular disorder. Gases have higher entropy than liquids, which have higher entropy than solids due to increasing molecular freedom."},
+  {q:"Which process shows an increase in entropy?",o:["Freezing of water","Condensation of steam","Sublimation of dry ice (CO₂)","Deposition of iodine vapor"],a:2,e:"Sublimation: CO₂(s) → CO₂(g) increases disorder significantly as molecules gain complete translational freedom. Freezing, condensation, and deposition all decrease entropy (gas → liquid → solid)."},
+  {q:"For the reaction 2NO₂(g) → N₂O₄(g), the sign of ∆S is:",o:["Positive","Negative","Zero","Variable"],a:1,e:"2 moles of gas → 1 mole of gas. Fewer gas molecules means less disorder, so entropy decreases (∆S = –ve). The system becomes more ordered."},
+  {q:"Calculate ∆S for the reaction: H₂(g) + Cl₂(g) → 2HCl(g). Given standard entropies: S°[H₂] = 131, S°[Cl₂] = 223, S°[HCl] = 187 J/mol·K",o:["+20 J/mol·K","–20 J/mol·K","+167 J/mol·K","–167 J/mol·K"],a:0,e:"∆S° = ΣS°(products) – ΣS°(reactants) = [2 × 187] – [131 + 223] = 374 – 354 = +20 J/mol·K."},
+  {q:"When two different gases are mixed in a container, the entropy of the system:",o:["Decreases","Increases","Remains constant","Becomes zero"],a:1,e:"Mixing increases disorder. Each gas expands into the other's volume, increasing the number of accessible microstates. This is a classic example of entropy increase."},
+  {q:"The standard entropy of liquid water is 70 J/mol·K, while that of water vapor is 189 J/mol·K. The entropy change for vaporization is:",o:["–119 J/mol·K","+119 J/mol·K","–259 J/mol·K","+259 J/mol·K"],a:1,e:"H₂O(l) → H₂O(g). ∆S° = 189 – 70 = +119 J/mol·K. Positive because gas has much higher disorder than liquid."},
+  {q:"Which substance has the highest entropy at 298 K?",o:["H₂O(s)","H₂O(l)","H₂O(g)","All have equal entropy"],a:2,e:"Entropy order: gas > liquid > solid. Water vapor has molecules moving randomly in all directions with maximum freedom, giving highest entropy."},
+  {q:"For the reaction CaCO₃(s) → CaO(s) + CO₂(g), ∆S is positive because:",o:["A solid decomposes","A gas is produced from a solid","Heat is absorbed","The reaction is exothermic"],a:1,e:"Production of CO₂ gas from solid reactant creates significant disorder. Gaseous products always contribute large positive entropy changes."},
+  {q:"Calculate the entropy change when 1 mole of ice melts at 0°C. [∆Hfusion = 6.01 kJ/mol]",o:["11.0 J/mol·K","22.0 J/mol·K","33.0 J/mol·K","44.0 J/mol·K"],a:1,e:"At equilibrium (melting point), ∆G = 0, so ∆S = ∆H/T. T = 273 K. ∆S = 6010 J/mol / 273 K = 22.0 J/mol·K."},
+  {q:"Which reaction has the largest positive entropy change?",o:["2H₂(g) + O₂(g) → 2H₂O(l)","N₂(g) + 3H₂(g) → 2NH₃(g)","CaO(s) + CO₂(g) → CaCO₃(s)","2NH₄NO₃(s) → 2N₂(g) + 4H₂O(g) + O₂(g)"],a:3,e:"D produces 7 moles of gas from 2 moles of solid—massive increase in disorder. A and C decrease gas moles (negative ∆S). B reduces gas moles from 4 to 2."},
+  {q:"The Gibbs free energy equation is:",o:["∆G = ∆H + T∆S","∆G = ∆H – T∆S","∆G = ∆H × T∆S","∆G = ∆H / T∆S"],a:1,e:"∆G = ∆H – T∆S is the fundamental equation. At constant temperature and pressure, it determines reaction spontaneity by combining enthalpy and entropy effects."},
+  {q:"A reaction is spontaneous when:",o:["∆G is positive","∆G is negative","∆G is zero","∆H is positive"],a:1,e:"∆G < 0 means the process can occur without external intervention. This is the criterion for spontaneity. ∆G = 0 indicates equilibrium; ∆G > 0 means non-spontaneous."},
+  {q:"Calculate ∆G° for a reaction with ∆H° = –85 kJ/mol and ∆S° = –120 J/mol·K at 298 K.",o:["–49.2 kJ/mol","–121.2 kJ/mol","+49.2 kJ/mol","–33.0 kJ/mol"],a:0,e:"Convert ∆S: –120 J/mol·K = –0.120 kJ/mol·K. ∆G° = –85 – (298 × –0.120) = –85 + 35.76 = –49.24 kJ/mol."},
+  {q:"At equilibrium, the value of ∆G is:",o:["Positive","Negative","Zero","Infinite"],a:2,e:"∆G = 0 is the equilibrium condition. The forward and reverse reaction tendencies balance exactly. No net change occurs, though molecular activity continues."},
+  {q:"For an endothermic reaction to be spontaneous at high temperature:",o:["∆S must be negative","∆S must be positive","∆S must be zero","∆H must be negative"],a:1,e:"From ∆G = ∆H – T∆S, if ∆H > 0 (endothermic), we need –T∆S to overcome it. At high T, positive ∆S makes –T∆S large and negative, potentially making ∆G negative."},
+  {q:"Calculate the temperature at which a reaction with ∆H° = +120 kJ/mol and ∆S° = +150 J/mol·K becomes spontaneous.",o:["600 K","800 K","1000 K","1200 K"],a:1,e:"At spontaneity threshold: ∆G = 0. T = ∆H/∆S = 120/0.150 = 800 K. Above 800 K, the reaction becomes spontaneous."},
+  {q:"A reaction has ∆H = –60 kJ/mol and ∆S = –80 J/mol·K. It will be spontaneous:",o:["At all temperatures","At low temperatures only","At high temperatures only","At no temperature"],a:1,e:"∆G = –60 – T(–0.080) = –60 + 0.08T. At low T, the –60 dominates (∆G < 0). At high T, +0.08T becomes large, making ∆G > 0. The reaction is spontaneous only below T = 750 K."},
+  {q:"Which combination always gives a spontaneous reaction?",o:["∆H > 0, ∆S > 0","∆H < 0, ∆S > 0","∆H > 0, ∆S < 0","∆H < 0, ∆S < 0"],a:1,e:"When ∆H is negative (exothermic) and ∆S is positive (disorder increases), both terms in ∆G = ∆H – T∆S contribute to making ∆G negative at all temperatures."},
+  {q:"For the reaction 2HgO(s) → 2Hg(l) + O₂(g), given ∆H° = +182 kJ/mol and ∆S° = +210 J/mol·K, calculate ∆G° at 298 K.",o:["+119.4 kJ/mol","–119.4 kJ/mol","+392.4 kJ/mol","–392.4 kJ/mol"],a:0,e:"∆G° = 182 – (298 × 0.210) = 182 – 62.58 = +119.4 kJ/mol. Positive ∆G° means non-spontaneous at 298 K (requires heating to decompose)."},
+  {q:"The decomposition of calcium carbonate is non-spontaneous at room temperature because:",o:["∆H is negative","∆S is negative","∆G is positive","The reaction is exothermic"],a:2,e:"CaCO₃(s) → CaO(s) + CO₂(g) has ∆H > 0 and ∆S > 0. At 298 K, T∆S < ∆H, so ∆G = ∆H – T∆S > 0. The reaction becomes spontaneous only above 1100 K."},
+  
+  // Section C: Advanced Applications & Calculations (41-60)
+  {q:"Calculate ∆G° for: N₂(g) + 3H₂(g) → 2NH₃(g) at 298 K. Given: ∆H° = –92 kJ/mol, ∆S° = –198 J/mol·K",o:["–33.0 kJ/mol","–49.2 kJ/mol","+33.0 kJ/mol","–125.0 kJ/mol"],a:0,e:"∆G° = –92 – (298 × –0.198) = –92 + 59.0 = –33.0 kJ/mol. The Haber process is spontaneous at 298 K, though kinetics require a catalyst."},
+  {q:"Above what temperature does the Haber process become non-spontaneous?",o:["193 K","293 K","464 K","646 K"],a:2,e:"At ∆G = 0: T = ∆H/∆S = –92/(–0.198) = 464.6 K. Above 465 K, the reaction becomes thermodynamically unfavorable (explaining why moderate temperatures are used)."},
+  {q:"When 100 cm³ of 0.5 mol/dm³ H₂SO₄ neutralizes 100 cm³ of 1.0 mol/dm³ NaOH, the heat evolved is 5.73 kJ. The enthalpy of neutralization is:",o:["–28.65 kJ/mol","–57.3 kJ/mol","–114.6 kJ/mol","–5.73 kJ/mol"],a:1,e:"H₂SO₄ + 2NaOH → Na₂SO₄ + 2H₂O. Moles of H₂SO₄ = 0.05 mol, produces 0.1 mol H₂O. Moles of NaOH = 0.1 mol (limiting for water formation). ∆H = –5.73/0.1 = –57.3 kJ/mol (per mole of water formed)."},
+  {q:"Which factor makes a reaction spontaneous despite being endothermic?",o:["Large decrease in entropy","Large increase in entropy at high temperature","Negative ∆H","Low activation energy"],a:1,e:"For endothermic reactions (∆H > 0), the –T∆S term must dominate. At sufficiently high T, large positive ∆S makes T∆S > ∆H, resulting in ∆G < 0."},
+  {q:"Calculate the entropy change for: 2SO₂(g) + O₂(g) → 2SO₃(g). Given: S°[SO₂] = 248, S°[O₂] = 205, S°[SO₃] = 257 J/mol·K",o:["–187 J/mol·K","–94 J/mol·K","+94 J/mol·K","+187 J/mol·K"],a:0,e:"Reactants: [2 × 248] + 205 = 701 J/mol·K. Products: 2 × 257 = 514 J/mol·K. ∆S° = 514 – 701 = –187 J/mol·K. 3 moles gas → 2 moles gas decreases disorder."},
+  {q:"The reaction between zinc and copper(II) sulfate solution is:",o:["Endothermic with increase in entropy","Exothermic with decrease in entropy","Exothermic with increase in entropy","Endothermic with decrease in entropy"],a:2,e:"Zn(s) + Cu²⁺(aq) → Zn²⁺(aq) + Cu(s) is exothermic (displacement reactions typically are). Entropy change is small but slightly positive due to ionic rearrangement."},
+  {q:"Calculate the heat of reaction when 0.5 g of magnesium burns in oxygen, raising the temperature of 200 cm³ water by 12.5°C. [c = 4.2 J/g°C, Mg = 24 g/mol]",o:["–300 kJ/mol","–500 kJ/mol","–600 kJ/mol","–1200 kJ/mol"],a:2,e:"Heat absorbed by water = 200 × 4.2 × 12.5 = 10,500 J = 10.5 kJ. Moles of Mg = 0.5/24 = 0.0208 mol. ∆H = –10.5/0.0208 = –504 kJ/mol (approximate to –600 kJ/mol with heat loss considerations)."},
+  {q:"For a reaction where ∆G° = –45 kJ/mol at 298 K, which statement is true?",o:["The reaction is at equilibrium","The reaction is non-spontaneous","The reaction is spontaneous","∆H must be negative"],a:2,e:"Negative ∆G° always indicates a spontaneous reaction under standard conditions. We cannot determine ∆H or ∆S individually without additional data."},
+  {q:"The standard enthalpy of formation of CO is –110 kJ/mol. This means:",o:["Burning carbon in limited oxygen releases 110 kJ/mol","Forming CO from elements releases 110 kJ/mol","Decomposing CO requires 110 kJ/mol","CO has higher energy content than CO₂"],a:1,e:"∆Hf° is defined as heat change when 1 mole of compound forms from its elements in standard states: C(s) + ½O₂(g) → CO(g); ∆H = –110 kJ/mol."},
+  {q:"Calculate ∆G at 400 K for a reaction with ∆H = –80 kJ/mol and ∆S = –120 J/mol·K.",o:["–32 kJ/mol","+32 kJ/mol","–128 kJ/mol","+128 kJ/mol"],a:0,e:"∆G = –80 – (400 × –0.120) = –80 + 48 = –32 kJ/mol. Still spontaneous at 400 K, but less favorable than at 298 K."},
+  {q:"Which process represents ∆H°f (standard enthalpy of formation)?",o:["2C(diamond) + 2O₂(g) → 2CO₂(g)","C(graphite) + O₂(g) → CO₂(g)","CO(g) + ½O₂(g) → CO₂(g)","C(g) + O₂(g) → CO₂(g)"],a:1,e:"Standard formation requires: (1) Elements in standard states (graphite, not diamond or gas), (2) Formation of exactly 1 mole of product, (3) Standard conditions (298 K, 1 atm)."},
+  {q:"When ammonium nitrate dissolves in water, the solution becomes cold. This indicates:",o:["Lattice energy > hydration energy","Lattice energy < hydration energy","The process increases entropy significantly","Covalent bonds are broken"],a:0,e:"Endothermic dissolution occurs when breaking the crystal lattice (endothermic) requires more energy than hydration releases (exothermic). Net: energy absorbed, temperature drops."},
+  {q:"Calculate the temperature at which the reaction CaCO₃(s) → CaO(s) + CO₂(g) becomes spontaneous. [∆H° = +178 kJ/mol, ∆S° = +160 J/mol·K]",o:["1112 K","1000 K","800 K","500 K"],a:0,e:"T = ∆H/∆S = 178/0.160 = 1112.5 K. Above 1113 K, thermal decomposition of limestone becomes spontaneous (industrial lime production occurs at 1200-1300 K)."},
+  {q:"For which reaction is ∆S° most negative?",o:["2Na(s) + Cl₂(g) → 2NaCl(s)","H₂(g) + I₂(g) → 2HI(g)","N₂O₄(g) → 2NO₂(g)","CaO(s) + H₂O(l) → Ca(OH)₂(s)"],a:0,e:"A converts 1 mole gas + 2 moles solid → 2 moles solid. Complete loss of gaseous disorder gives largest negative ∆S. B has no net gas change; C increases gas moles; D has small change."},
+  {q:"A reaction has the following thermodynamic data: ∆H° = +25 kJ/mol, ∆S° = +40 J/mol·K. At what minimum temperature does it become spontaneous?",o:["298 K","625 K","1000 K","It is never spontaneous"],a:1,e:"T = ∆H/∆S = 25/0.040 = 625 K. Below 625 K, ∆G > 0; above 625 K, ∆G < 0."},
+  {q:"The combustion of ethane: 2C₂H₆(g) + 7O₂(g) → 4CO₂(g) + 6H₂O(l) has:",o:["∆S > 0","∆S < 0","∆S = 0","∆S unpredictable"],a:1,e:"9 moles gas → 4 moles gas (CO₂) + 6 moles liquid (H₂O). Significant decrease in gas molecules and formation of liquid from gas both decrease entropy."},
+  {q:"Calculate the enthalpy change when 5.0 g of Na reacts with excess water. [∆H reaction = –184 kJ/mol, Na = 23 g/mol]",o:["–20 kJ","–40 kJ","–80 kJ","–184 kJ"],a:1,e:"Moles of Na = 5.0/23 = 0.217 mol. Heat evolved = 0.217 × 184 = 40 kJ. ∆H = –40 kJ (exothermic)."},
+  {q:"Which statement about Gibbs free energy is correct?",o:["∆G represents total energy of the system","∆G determines reaction rate","∆G determines reaction spontaneity","∆G is always positive for real reactions"],a:2,e:"∆G is the thermodynamic potential that predicts spontaneity. It does not indicate rate (kinetics) or total energy. Many spontaneous reactions have ∆G < 0."},
+  {q:"For the reaction H₂(g) + Cl₂(g) → 2HCl(g), ∆H = –185 kJ/mol. If the bond energy of H–H is 436 kJ/mol and Cl–Cl is 243 kJ/mol, calculate the H–Cl bond energy.",o:["214 kJ/mol","321 kJ/mol","432 kJ/mol","864 kJ/mol"],a:2,e:"∆H = Σ(bonds broken) – Σ(bonds formed). –185 = (436 + 243) – 2(H–Cl). –185 = 679 – 2(H–Cl). 2(H–Cl) = 864. H–Cl = 432 kJ/mol."},
+  {q:"A chemical reaction is always spontaneous if:",o:["∆H is positive and ∆S is positive","∆H is negative and ∆S is negative","∆H is negative and ∆S is positive","∆H is positive and ∆S is negative"],a:2,e:"From ∆G = ∆H – T∆S, when ∆H < 0 and ∆S > 0, both terms make ∆G negative at all temperatures. This is the only combination guaranteeing spontaneity under all conditions."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('energy_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('energy_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/60`;
+  
+  document.getElementById('question').textContent=q.q;
+  
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('energy_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=54?'Ready for JAMB!':pct>=42?'Good, review weak areas':pct>=30?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  const sections=[0,20,40,60];
+  const sectionNames=["A: Energy Changes (∆H)","B: Entropy and Spontaneity","C: Advanced Applications"];
+  
+  for(let s=0;s<3;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('energy_quiz_auth');
+  sessionStorage.removeItem('energy_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('energy_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('energy_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Chemistry - Metals & Alloys</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:18px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+.progress-container{
+  position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+  background:var(--shadow-in);z-index:15
+}
+.progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+.content{padding:20px 16px;line-height:1.7}
+.main-header{
+  text-align:center;margin-bottom:28px;padding:20px;border-radius:20px;
+  background:rgba(29,185,84,.1)
+}
+.main-header h1{font-size:22px;margin-bottom:8px;color:var(--accent);font-weight:900}
+.main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+.section-card{
+  background:var(--card-bg);padding:24px 18px;border-radius:20px;
+  box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+  margin-bottom:24px;border-left:4px solid var(--accent)
+}
+.section-card h2{
+  font-size:19px;margin-bottom:14px;color:var(--accent);font-weight:900;
+  display:flex;align-items:center;gap:8px
+}
+.section-card h3{
+  font-size:16px;margin:18px 0 10px;color:var(--accent-tertiary);font-weight:800;
+  padding-left:12px;border-left:3px solid var(--accent-tertiary)
+}
+.section-card h4{font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800}
+.section-card p{margin-bottom:12px;font-size:14px;text-align:justify}
+.section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+.section-card li{margin-bottom:7px;font-size:14px}
+
+.diagram-img{
+  width:100%;max-height:280px;object-fit:contain;border-radius:12px;
+  margin:12px 0 8px;
+  box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out);
+  background:#fff;padding:8px
+}
+.image-caption{
+  text-align:center;font-size:12px;color:var(--text-secondary);
+  font-style:italic;margin-bottom:10px;margin-top:-4px
+}
+
+.quick-facts{
+  background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+  padding:16px;border-radius:15px;margin:14px 0;border:1px solid rgba(29,185,84,.3)
+}
+.quick-facts h4{color:var(--accent);margin-bottom:8px;font-size:15px;font-weight:900}
+.quick-facts li{font-size:13px}
+
+.highlight-box{
+  background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+  border-left:3px solid var(--accent-tertiary)
+}
+.memory-tip{
+  background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+  border-left:4px solid var(--accent-secondary)
+}
+.memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+.memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+.jamb-alert{
+  background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+  border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:16px;margin:18px 0
+}
+.jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:15px;font-weight:900}
+.jamb-alert li{font-size:13px}
+
+.table-container{
+  width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+  box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+}
+.summary-table{
+  width:100%;min-width:1250px;border-collapse:separate;border-spacing:0;font-size:13px
+}
+.summary-table th{
+  background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+}
+.summary-table td{
+  padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);white-space:nowrap;vertical-align:top
+}
+.summary-table tr:last-child td{border-bottom:none}
+.summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+.table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+.nav-bar{
+  position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+  display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+}
+.nav-bar .nav-item{text-align:center}
+.nav-bar .nav-item.center button{
+  width:50px;height:50px;font-size:24px;background:var(--accent);
+  box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+  color:#000
+}
+.nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+.explore-btn{
+  background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+  box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+  font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+}
+.explore-btn:active{
+  box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+  transform:scale(.98)
+}
+
+  </style>
+</head>
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+    
+<div class="top-bar neumorphic">
+  <button class="neumorphic-btn" onclick="history.back()">←</button>
+  <div class="header">CHEMISTRY</div>
+  <div class="right-icons">
+    <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+    <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="main-header">
+    <h1>🔩 Metals & Alloys (JAMB)</h1>
+    <p>Properties • Group 1 & 2 • sodium compounds • aluminium extraction • transition metals • iron & copper • alloys table</p>
+  </div>
+
+  <!-- SUMMARY TABLE -->
+  <div class="section-card">
+    <h2>📋 Summary Table (High-Yield Metals Facts)</h2>
+
+    <div class="table-container">
+      <table class="summary-table">
+        <tr>
+          <th>Topic</th>
+          <th>Key idea</th>
+          <th>Examples / keywords</th>
+          <th>JAMB clue</th>
+        </tr>
+        <tr>
+          <td><strong>Metals (definition)</strong></td>
+          <td>Lose electrons easily → form cations</td>
+          <td>Electropositive</td>
+          <td>“Form positive ions”</td>
+        </tr>
+        <tr>
+          <td><strong>Group 1 (Alkali metals)</strong></td>
+          <td>Very reactive; stored in kerosene</td>
+          <td>Li, Na, K</td>
+          <td>React violently with water</td>
+        </tr>
+        <tr>
+          <td><strong>NaOH</strong></td>
+          <td>Caustic soda; made from brine electrolysis</td>
+          <td>NaOH + Cl₂ + H₂</td>
+          <td>Chlor-alkali process</td>
+        </tr>
+        <tr>
+          <td><strong>Na₂CO₃</strong></td>
+          <td>Washing soda; Solvay process</td>
+          <td>NaCl, NH₃, CO₂, limestone</td>
+          <td>Glass + water softening</td>
+        </tr>
+        <tr>
+          <td><strong>NaHCO₃</strong></td>
+          <td>Baking soda; releases CO₂ on heating</td>
+          <td>Fire extinguishers</td>
+          <td>CO₂ on heating = typical MCQ</td>
+        </tr>
+        <tr>
+          <td><strong>NaCl</strong></td>
+          <td>Common salt from sea/rock</td>
+          <td>Flame test: yellow (Na⁺)</td>
+          <td>Identify sodium by flame colour</td>
+        </tr>
+        <tr>
+          <td><strong>Aluminium</strong></td>
+          <td>Bayer (purify) + Hall-Héroult (electrolysis)</td>
+          <td>From bauxite</td>
+          <td>Light + corrosion resistant</td>
+        </tr>
+        <tr>
+          <td><strong>Transition metals</strong></td>
+          <td>Variable oxidation states; coloured ions; catalysts</td>
+          <td>Fe, Cu, Ni</td>
+          <td>“Coloured ions” = transition</td>
+        </tr>
+        <tr>
+          <td><strong>Iron</strong></td>
+          <td>Blast furnace extraction</td>
+          <td>Haematite Fe₂O₃</td>
+          <td>Cast/wrought/steel forms</td>
+        </tr>
+        <tr>
+          <td><strong>Copper</strong></td>
+          <td>Good conductor; wiring</td>
+          <td>Ore: CuFeS₂</td>
+          <td>Reddish metal</td>
+        </tr>
+        <tr>
+          <td><strong>Alloys</strong></td>
+          <td>Mixture of metals → improved properties</td>
+          <td>Steel, brass, bronze, duralumin</td>
+          <td>Stronger + corrosion resistant</td>
+        </tr>
+      </table>
+    </div>
+    <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+    <div class="memory-tip">
+      <strong>🧠 Fast memory</strong>
+      <p>Metals lose e⁻; non-metals gain e⁻. Group 1 reacts violently with water.</p>
+    </div>
+  </div>
+
+  <!-- Definition + properties -->
+  <div class="section-card">
+    <h2>1️⃣ General Properties of Metals</h2>
+    <p><strong>Metals</strong> are elements that lose electrons easily to form positive ions called <strong>cations</strong>.</p>
+
+    <h3>Physical properties</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Shiny (lustrous)</li>
+        <li>Good conductors of heat and electricity</li>
+        <li>Malleable (beaten into sheets)</li>
+        <li>Ductile (drawn into wires)</li>
+        <li>High melting and boiling points</li>
+        <li>Mostly solid at room temperature (except mercury)</li>
+      </ul>
+    </div>
+
+    <h3>Chemical properties</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>React with oxygen → metal oxides</li>
+        <li>React with water → hydroxides + hydrogen</li>
+        <li>React with acids → salt + hydrogen gas</li>
+        <li>More reactive metals displace less reactive metals</li>
+      </ul>
+    </div>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6c/Metal_crystals.jpg" alt="Metals" class="diagram-img">
+    <div class="image-caption">Metals are lustrous and conduct heat/electricity due to free electrons</div>
+  </div>
+
+  <!-- Group 1 -->
+  <div class="section-card">
+    <h2>2️⃣ Alkali Metals (Group 1)</h2>
+    <p><strong>Group 1 metals:</strong> lithium (Li), sodium (Na), potassium (K).</p>
+
+    <div class="quick-facts">
+      <h4>Characteristics</h4>
+      <ul>
+        <li>Very reactive</li>
+        <li>Soft metals</li>
+        <li>Low density</li>
+        <li>React violently with water</li>
+        <li>Stored in oil/kerosene</li>
+      </ul>
+    </div>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3d/Alkali_metals.jpg" alt="Alkali metals" class="diagram-img">
+    <div class="image-caption">Alkali metals are soft and highly reactive, so they are stored in oil</div>
+  </div>
+
+  <!-- NaOH -->
+  <div class="section-card">
+    <h2>3️⃣ Sodium Hydroxide (NaOH) — Caustic Soda</h2>
+
+    <h3>Production</h3>
+    <p>Produced by <strong>electrolysis of brine</strong> (NaCl solution).</p>
+
+    <div class="quick-facts">
+      <h4>Main products (chlor-alkali)</h4>
+      <ul>
+        <li>Sodium hydroxide (NaOH)</li>
+        <li>Hydrogen gas (H₂)</li>
+        <li>Chlorine gas (Cl₂)</li>
+      </ul>
+    </div>
+
+    <h3>Uses</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Soap manufacture</li>
+        <li>Paper production</li>
+        <li>Textile processing</li>
+        <li>Petroleum refining</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Na2CO3 -->
+  <div class="section-card">
+    <h2>4️⃣ Sodium Trioxocarbonate(IV) (Na₂CO₃) — Washing Soda</h2>
+
+    <h3>Production (Solvay process)</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Uses: NaCl + NH₃ + CO₂ + limestone (source of CO₂)</li>
+      </ul>
+    </div>
+
+    <h3>Uses</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Glass manufacture</li>
+        <li>Soap production</li>
+        <li>Water softening</li>
+        <li>Paper manufacture</li>
+      </ul>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 Quick remember</strong>
+      <p>Na₂CO₃ = washing soda = water softening + glass.</p>
+    </div>
+  </div>
+
+  <!-- NaHCO3 -->
+  <div class="section-card">
+    <h2>5️⃣ Sodium Hydrogen Trioxocarbonate(IV) (NaHCO₃) — Baking Soda</h2>
+    <div class="quick-facts">
+      <ul>
+        <li>White crystalline powder</li>
+        <li>Releases <strong>CO₂</strong> when heated</li>
+      </ul>
+    </div>
+
+    <h3>Uses</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Baking powder</li>
+        <li>Fire extinguishers</li>
+        <li>Medicine (antacid)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- NaCl + sodium test -->
+  <div class="section-card">
+    <h2>6️⃣ Sodium Chloride (NaCl) + Test for Sodium Ion</h2>
+    <p>NaCl is common salt obtained from sea water or rock salt.</p>
+
+    <h3>Uses</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Food seasoning</li>
+        <li>Food preservation</li>
+        <li>Raw material for chemicals</li>
+      </ul>
+    </div>
+
+    <h3>Test for sodium ion (Na⁺)</h3>
+    <div class="jamb-alert">
+      <h4>Flame test</h4>
+      <ul>
+        <li><strong>Bright yellow flame</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Group 2 -->
+  <div class="section-card">
+    <h2>7️⃣ Alkaline Earth Metals (Group 2)</h2>
+    <p>Examples: <strong>calcium, magnesium, barium</strong>.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Alkaline_earth_metals.jpg" alt="Alkaline earth metals" class="diagram-img">
+    <div class="image-caption">Group 2 metals are reactive and form +2 ions</div>
+  </div>
+
+  <!-- Calcium compounds -->
+  <div class="section-card">
+    <h2>8️⃣ Calcium Compounds (Very Common)</h2>
+
+    <h3>Calcium oxide (Quicklime) — CaO</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Prepared by heating limestone (CaCO₃)</li>
+        <li>White solid</li>
+        <li>Reacts vigorously with water</li>
+      </ul>
+    </div>
+
+    <h3>Calcium hydroxide (Slaked lime) — Ca(OH)₂</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Used in whitewashing</li>
+        <li>Water treatment</li>
+        <li>Bleaching powder manufacture</li>
+      </ul>
+    </div>
+
+    <h3>Calcium carbonate — CaCO₃</h3>
+    <div class="quick-facts">
+      <h4>Found in</h4>
+      <ul>
+        <li>Limestone</li>
+        <li>Chalk</li>
+        <li>Marble</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Aluminium -->
+  <div class="section-card">
+    <h2>9️⃣ Aluminium (Al)</h2>
+
+    <h3>Extraction (from bauxite)</h3>
+    <div class="quick-facts">
+      <ul>
+        <li><strong>Bayer process:</strong> purification</li>
+        <li><strong>Hall–Héroult process:</strong> electrolysis</li>
+      </ul>
+    </div>
+
+    <h3>Properties</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Light metal</li>
+        <li>Corrosion resistant</li>
+        <li>Good conductor</li>
+      </ul>
+    </div>
+
+    <h3>Uses</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Aircraft manufacture</li>
+        <li>Cooking utensils</li>
+        <li>Electrical cables</li>
+        <li>Packaging foil</li>
+      </ul>
+    </div>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Bauxite_Mining.jpg" alt="Bauxite" class="diagram-img">
+    <div class="image-caption">Aluminium is extracted from bauxite via purification + electrolysis</div>
+  </div>
+
+  <!-- Tin -->
+  <div class="section-card">
+    <h2>🔟 Tin (Sn)</h2>
+    <p>Main ore: <strong>Cassiterite (SnO₂)</strong>.</p>
+
+    <div class="quick-facts">
+      <h4>Uses</h4>
+      <ul>
+        <li>Tin plating</li>
+        <li>Food cans</li>
+        <li>Alloy manufacture</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Transition metals -->
+  <div class="section-card">
+    <h2>1️⃣1️⃣ Transition Metals</h2>
+    <p>Examples: iron (Fe), copper (Cu), nickel (Ni).</p>
+
+    <div class="quick-facts">
+      <h4>Characteristics</h4>
+      <ul>
+        <li>Variable oxidation states</li>
+        <li>Form coloured ions</li>
+        <li>Form complex ions</li>
+        <li>Act as catalysts</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Iron -->
+  <div class="section-card">
+    <h2>1️⃣2️⃣ Iron (Fe)</h2>
+
+    <h3>Ores</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Haematite (Fe₂O₃)</li>
+        <li>Magnetite (Fe₃O₄)</li>
+        <li>Siderite (FeCO₃)</li>
+      </ul>
+    </div>
+
+    <p>Iron is extracted in the <strong>blast furnace</strong>.</p>
+
+    <h3>Forms of iron</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Cast iron</li>
+        <li>Wrought iron</li>
+        <li>Steel</li>
+      </ul>
+    </div>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3b/Blast_furnace.jpg" alt="Blast furnace" class="diagram-img">
+    <div class="image-caption">Blast furnace is used for extraction of iron from its ores</div>
+  </div>
+
+  <!-- Copper -->
+  <div class="section-card">
+    <h2>1️⃣3️⃣ Copper (Cu)</h2>
+    <p>Important ore: <strong>Copper pyrites (CuFeS₂)</strong>.</p>
+
+    <h3>Properties</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Reddish metal</li>
+        <li>Good conductor</li>
+        <li>Malleable</li>
+      </ul>
+    </div>
+
+    <h3>Uses</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Electrical wiring</li>
+        <li>Water pipes</li>
+        <li>Alloy production</li>
+      </ul>
+    </div>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/1/1e/Copper_wire.jpg" alt="Copper wire" class="diagram-img">
+    <div class="image-caption">Copper is widely used for electrical wiring because it conducts well</div>
+  </div>
+
+  <!-- Alloys -->
+  <div class="section-card">
+    <h2>1️⃣4️⃣ Alloys</h2>
+    <p>An <strong>alloy</strong> is a mixture of two or more metals.</p>
+
+    <div class="table-container">
+      <table class="summary-table">
+        <tr>
+          <th>Alloy</th>
+          <th>Composition</th>
+          <th>Main uses</th>
+        </tr>
+        <tr>
+          <td><strong>Steel</strong></td>
+          <td>Iron + carbon</td>
+          <td>Construction</td>
+        </tr>
+        <tr>
+          <td><strong>Stainless steel</strong></td>
+          <td>Iron + chromium + nickel</td>
+          <td>Kitchen utensils</td>
+        </tr>
+        <tr>
+          <td><strong>Brass</strong></td>
+          <td>Copper + zinc</td>
+          <td>Musical instruments</td>
+        </tr>
+        <tr>
+          <td><strong>Bronze</strong></td>
+          <td>Copper + tin</td>
+          <td>Statues and medals</td>
+        </tr>
+        <tr>
+          <td><strong>Duralumin</strong></td>
+          <td>Aluminium + copper + magnesium</td>
+          <td>Aircraft</td>
+        </tr>
+      </table>
+    </div>
+    <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+    <h3>Advantages of alloys</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Stronger</li>
+        <li>Harder</li>
+        <li>More corrosion resistant</li>
+        <li>More durable</li>
+      </ul>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 Easy memory</strong>
+      <p>Alloys = improved metals (strength + resistance).</p>
+    </div>
+  </div>
+
+  <!-- Checklist -->
+  <div class="section-card">
+    <h2>✅ Quick Revision Checklist</h2>
+    <div class="quick-facts">
+      <ul>
+        <li>Metals: lose electrons → form cations</li>
+        <li>Physical + chemical properties</li>
+        <li>Group 1 characteristics + storage in kerosene</li>
+        <li>NaOH production by brine electrolysis + uses</li>
+        <li>Na₂CO₃ (Solvay) + uses; NaHCO₃ releases CO₂</li>
+        <li>Na⁺ test: bright yellow flame</li>
+        <li>Group 2 examples</li>
+        <li>Calcium compounds (quicklime/slaked lime/CaCO₃ sources)</li>
+        <li>Al extraction: Bayer + Hall-Héroult; uses</li>
+        <li>Ores: SnO₂ (tin), Fe₂O₃/Fe₃O₄/FeCO₃ (iron), CuFeS₂ (copper)</li>
+        <li>Transition metals characteristics</li>
+        <li>Alloys table + advantages</li>
+      </ul>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 Final memory line</strong>
+      <p>If you can recall ores + alloy compositions, you’re ready for most JAMB metal questions.</p>
+    </div>
+  </div>
+
+  <button class="explore-btn" onclick="alert('Practice: Group 1 properties + sodium compounds + alloys composition questions!')">Practice JAMB Questions</button>
+</div>
+</div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+  </script>
+</body>
+</html>

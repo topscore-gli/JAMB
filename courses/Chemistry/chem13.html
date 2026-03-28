@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Chemistry - Chemical Equilibrium (Le Chatelier + Kc)</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:18px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+.progress-container{
+  position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+  background:var(--shadow-in);z-index:15
+}
+.progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+.content{padding:20px 16px;line-height:1.7}
+.main-header{
+  text-align:center;margin-bottom:28px;padding:20px;border-radius:20px;
+  background:rgba(29,185,84,.1)
+}
+.main-header h1{font-size:22px;margin-bottom:8px;color:var(--accent);font-weight:900}
+.main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+.section-card{
+  background:var(--card-bg);padding:24px 18px;border-radius:20px;
+  box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+  margin-bottom:24px;border-left:4px solid var(--accent)
+}
+.section-card h2{
+  font-size:19px;margin-bottom:14px;color:var(--accent);font-weight:900;
+  display:flex;align-items:center;gap:8px
+}
+.section-card h3{
+  font-size:16px;margin:18px 0 10px;color:var(--accent-tertiary);font-weight:800;
+  padding-left:12px;border-left:3px solid var(--accent-tertiary)
+}
+.section-card h4{font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800}
+.section-card p{margin-bottom:12px;font-size:14px;text-align:justify}
+.section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+.section-card li{margin-bottom:7px;font-size:14px}
+
+.diagram-img{
+  width:100%;max-height:280px;object-fit:contain;border-radius:12px;
+  margin:12px 0 8px;
+  box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out);
+  background:#fff;padding:8px
+}
+.image-caption{
+  text-align:center;font-size:12px;color:var(--text-secondary);
+  font-style:italic;margin-bottom:10px;margin-top:-4px
+}
+
+.quick-facts{
+  background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+  padding:16px;border-radius:15px;margin:14px 0;border:1px solid rgba(29,185,84,.3)
+}
+.quick-facts h4{color:var(--accent);margin-bottom:8px;font-size:15px;font-weight:900}
+.quick-facts li{font-size:13px}
+
+.highlight-box{
+  background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+  border-left:3px solid var(--accent-tertiary)
+}
+.memory-tip{
+  background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+  border-left:4px solid var(--accent-secondary)
+}
+.memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+.memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+.jamb-alert{
+  background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+  border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:16px;margin:18px 0
+}
+.jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:15px;font-weight:900}
+.jamb-alert li{font-size:13px}
+
+.table-container{
+  width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+  box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+}
+.summary-table{
+  width:100%;min-width:1350px;border-collapse:separate;border-spacing:0;font-size:13px
+}
+.summary-table th{
+  background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+}
+.summary-table td{
+  padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);white-space:nowrap;vertical-align:top
+}
+.summary-table tr:last-child td{border-bottom:none}
+.summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+.table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.field{
+  background:var(--background);
+  box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+  border-radius:12px;padding:12px
+}
+.field label{display:block;font-size:12px;color:var(--text-secondary);margin-bottom:6px}
+.field input, .field select{
+  width:100%;border:none;outline:none;background:transparent;color:var(--text-primary);
+  font-size:16px;font-weight:800
+}
+.mini-btn{
+  width:100%;border:none;border-radius:12px;padding:12px 14px;font-weight:900;cursor:pointer;
+  background:var(--accent);color:#000;
+  box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out)
+}
+.result{
+  margin-top:10px;padding:12px 14px;border-radius:12px;
+  background:rgba(78,205,196,.10);border:1px solid rgba(78,205,196,.25);
+  color:var(--text-primary);font-size:13px
+}
+.small-note{font-size:12px;color:var(--text-secondary);margin-top:6px}
+
+.nav-bar{
+  position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+  display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+}
+.nav-bar .nav-item{text-align:center}
+.nav-bar .nav-item.center button{
+  width:50px;height:50px;font-size:24px;background:var(--accent);
+  box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+  color:#000
+}
+.nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+.explore-btn{
+  background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+  box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+  font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+}
+.explore-btn:active{
+  box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+  transform:scale(.98)
+}
+
+  </style>
+</head>
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+    
+<div class="top-bar neumorphic">
+  <button class="neumorphic-btn" onclick="history.back()">←</button>
+  <div class="header">CHEMISTRY</div>
+  <div class="right-icons">
+    <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+    <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="main-header">
+    <h1>⚖️ Chemical Equilibrium (JAMB)</h1>
+    <p>Reversible reactions • dynamic equilibrium • Le Chatelier • industrial applications • equilibrium constant (Kc/Kp) • calculations</p>
+  </div>
+
+  <!-- SUMMARY TABLE -->
+  <div class="section-card">
+    <h2>📋 Summary Table (Fast Answers)</h2>
+
+    <div class="table-container">
+      <table class="summary-table">
+        <tr>
+          <th>Concept</th>
+          <th>Key statement</th>
+          <th>Exam clue</th>
+          <th>What changes?</th>
+        </tr>
+        <tr>
+          <td><strong>Reversible reaction</strong></td>
+          <td>Proceeds forward and backward</td>
+          <td>⇌ sign</td>
+          <td>Both directions occur</td>
+        </tr>
+        <tr>
+          <td><strong>Dynamic equilibrium</strong></td>
+          <td>Forward rate = backward rate (closed system)</td>
+          <td>Concentrations constant</td>
+          <td>Rates equal, not zero</td>
+        </tr>
+        <tr>
+          <td><strong>Le Chatelier</strong></td>
+          <td>System shifts to oppose change</td>
+          <td>Stress = change in T, P, concentration</td>
+          <td>Equilibrium position shifts</td>
+        </tr>
+        <tr>
+          <td><strong>Kc</strong></td>
+          <td>Kc = [products]^coeff / [reactants]^coeff</td>
+          <td>Use equilibrium concentrations</td>
+          <td>Changes with temperature only</td>
+        </tr>
+        <tr>
+          <td><strong>Catalyst</strong></td>
+          <td>Speeds attainment of equilibrium</td>
+          <td>Does not shift position</td>
+          <td>Does not change K</td>
+        </tr>
+      </table>
+    </div>
+    <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+    <div class="memory-tip">
+      <strong>🧠 Golden line</strong>
+      <p>K changes only with temperature (not concentration/pressure/catalyst).</p>
+    </div>
+  </div>
+
+  <!-- Core definitions -->
+  <div class="section-card">
+    <h2>1️⃣ Reversible Reactions & Dynamic Equilibrium</h2>
+    <p><strong>Reversible reaction:</strong> a reaction that can go forward and backward (shown by ⇌).</p>
+    <p><strong>Dynamic equilibrium:</strong> in a closed system, the rate of forward reaction equals the rate of backward reaction, so concentrations stay constant.</p>
+
+    <div class="jamb-alert">
+      <h4>Key words JAMB expects</h4>
+      <ul>
+        <li>Closed system</li>
+        <li>Forward rate = backward rate</li>
+        <li>Concentrations remain constant</li>
+      </ul>
+    </div>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/68/Chemical_equilibrium.svg" alt="Dynamic equilibrium illustration" class="diagram-img">
+    <div class="image-caption">Dynamic equilibrium: both reactions continue, but at equal rates</div>
+  </div>
+
+  <!-- Factors -->
+  <div class="section-card">
+    <h2>2️⃣ Factors Governing Equilibrium Position (Le Chatelier)</h2>
+    <p><strong>Le Chatelier’s principle:</strong> if a system at equilibrium is disturbed, it shifts in the direction that reduces the disturbance.</p>
+
+    <h3>(i) Concentration</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Add reactant → equilibrium shifts to products (right)</li>
+        <li>Add product → equilibrium shifts to reactants (left)</li>
+        <li>Remove reactant → shifts left; remove product → shifts right</li>
+      </ul>
+    </div>
+
+    <h3>(ii) Pressure (gases only)</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Increase pressure → shifts to side with <strong>fewer moles of gas</strong></li>
+        <li>Decrease pressure → shifts to side with <strong>more moles of gas</strong></li>
+        <li>If equal moles of gas on both sides → pressure change has no effect</li>
+      </ul>
+    </div>
+
+    <h3>(iii) Temperature</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Increase temperature → favours <strong>endothermic</strong> direction</li>
+        <li>Decrease temperature → favours <strong>exothermic</strong> direction</li>
+      </ul>
+    </div>
+
+    <h3>(iv) Catalyst</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Speeds forward and backward reactions equally</li>
+        <li>Does <strong>not</strong> change equilibrium position</li>
+        <li>Does <strong>not</strong> change K</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Equilibrium constant -->
+  <div class="section-card">
+    <h2>3️⃣ Equilibrium Constant (Kc) + What Affects It</h2>
+    <p>For: aA + bB ⇌ cC + dD</p>
+    <div class="highlight-box">
+      <p><strong>Kc = [C]<sup>c</sup>[D]<sup>d</sup> / ([A]<sup>a</sup>[B]<sup>b</sup>)</strong></p>
+    </div>
+
+    <div class="jamb-alert">
+      <h4>Important rules</h4>
+      <ul>
+        <li>Use <strong>equilibrium</strong> concentrations only</li>
+        <li>Pure solids and pure liquids are <strong>not included</strong> in Kc expression</li>
+        <li><strong>Kc changes only with temperature</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Required examples -->
+  <div class="section-card">
+    <h2>4️⃣ Simple Required Examples</h2>
+
+    <h3>(A) Action of steam on iron</h3>
+    <div class="highlight-box">
+      <p><strong>3Fe(s) + 4H₂O(g) ⇌ Fe₃O₄(s) + 4H₂(g)</strong></p>
+    </div>
+    <div class="quick-facts">
+      <ul>
+        <li>Only gases appear in Kc: water vapour and hydrogen gas</li>
+        <li>Kc = [H₂]<sup>4</sup> / [H₂O]<sup>4</sup></li>
+      </ul>
+    </div>
+
+    <h3>(B) Nitrogen(IV) oxide / dinitrogen tetroxide equilibrium</h3>
+    <div class="highlight-box">
+      <p><strong>N₂O₄(g) ⇌ 2NO₂(g)</strong></p>
+    </div>
+    <div class="quick-facts">
+      <ul>
+        <li>Kc = [NO₂]<sup>2</sup> / [N₂O₄]</li>
+        <li>Pressure increase shifts to fewer moles (left, N₂O₄ side)</li>
+      </ul>
+    </div>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Nitrogen_dioxide_dimerization.svg" alt="N2O4 and NO2 equilibrium" class="diagram-img">
+    <div class="image-caption">N₂O₄ ⇌ 2NO₂: more pressure favours N₂O₄ (fewer gas moles)</div>
+  </div>
+
+  <!-- Industrial applications -->
+  <div class="section-card">
+    <h2>5️⃣ Industrial Applications of Le Chatelier</h2>
+
+    <div class="table-container">
+      <table class="summary-table">
+        <tr>
+          <th>Process</th>
+          <th>Equation</th>
+          <th>How Le Chatelier is used</th>
+        </tr>
+        <tr>
+          <td><strong>Haber process (ammonia)</strong></td>
+          <td>N₂ + 3H₂ ⇌ 2NH₃</td>
+          <td>High pressure (fewer moles on right), moderate T, catalyst</td>
+        </tr>
+        <tr>
+          <td><strong>Contact process (H₂SO₄)</strong></td>
+          <td>2SO₂ + O₂ ⇌ 2SO₃</td>
+          <td>Moderate T (exothermic), catalyst, increased pressure</td>
+        </tr>
+        <tr>
+          <td><strong>Methanol synthesis</strong></td>
+          <td>CO + 2H₂ ⇌ CH₃OH</td>
+          <td>High pressure favours fewer moles</td>
+        </tr>
+      </table>
+    </div>
+    <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+    <div class="memory-tip">
+      <strong>🧠 Industry trick</strong>
+      <p>Factories choose conditions that give good yield AND reasonable rate (so they compromise).</p>
+    </div>
+  </div>
+
+  <!-- Calculations -->
+  <div class="section-card">
+    <h2>🧮 6 JAMB-Style Calculations (Step-by-Step)</h2>
+
+    <h3>Example 1: Write Kc expression</h3>
+    <p><strong>N₂O₄(g) ⇌ 2NO₂(g)</strong></p>
+    <div class="highlight-box">
+      <p>Kc = [NO₂]² / [N₂O₄]</p>
+    </div>
+
+    <h3>Example 2: Calculate Kc from equilibrium concentrations</h3>
+    <p>If at equilibrium: [NO₂] = 0.40 mol/dm³, [N₂O₄] = 0.20 mol/dm³</p>
+    <div class="highlight-box">
+      <p>Kc = (0.40)² / 0.20 = 0.16 / 0.20 = <strong>0.80</strong></p>
+    </div>
+
+    <h3>Example 3: Find an equilibrium concentration (rearrange)</h3>
+    <p>For N₂O₄ ⇌ 2NO₂, if Kc = 4.0 and [N₂O₄] = 0.50, find [NO₂]</p>
+    <div class="highlight-box">
+      <p>Kc = [NO₂]² / [N₂O₄]</p>
+      <p>[NO₂]² = Kc × [N₂O₄] = 4.0 × 0.50 = 2.0</p>
+      <p>[NO₂] = √2.0 = <strong>1.41 mol/dm³</strong></p>
+    </div>
+
+    <h3>Example 4: Effect of pressure on N₂O₄ ⇌ 2NO₂</h3>
+    <div class="highlight-box">
+      <p>Increase pressure → shifts to fewer moles of gas → <strong>left</strong> (towards N₂O₄)</p>
+    </div>
+
+    <h3>Example 5: Effect of temperature on Kc</h3>
+    <p>For an exothermic forward reaction:</p>
+    <div class="highlight-box">
+      <p>Increase temperature → shifts backward → less products at equilibrium → <strong>Kc decreases</strong></p>
+    </div>
+
+    <h3>Example 6: Steam on iron Kc expression</h3>
+    <p>3Fe(s) + 4H₂O(g) ⇌ Fe₃O₄(s) + 4H₂(g)</p>
+    <div class="highlight-box">
+      <p>Solids not included → Kc = [H₂]⁴ / [H₂O]⁴</p>
+    </div>
+  </div>
+
+  <!-- Mini calculators -->
+  <div class="section-card">
+    <h2>🧰 Mini Calculator (Kc for N₂O₄ ⇌ 2NO₂)</h2>
+    <p>Enter equilibrium concentrations and the page computes Kc.</p>
+
+    <div class="calc-grid">
+      <div class="field">
+        <label>[NO₂] at equilibrium (mol/dm³)</label>
+        <input id="no2" type="number" placeholder="e.g., 0.40" step="0.01" />
+      </div>
+      <div class="field">
+        <label>[N₂O₄] at equilibrium (mol/dm³)</label>
+        <input id="n2o4" type="number" placeholder="e.g., 0.20" step="0.01" />
+      </div>
+    </div>
+
+    <button class="mini-btn" onclick="calcKc()">Calculate Kc</button>
+    <div class="result" id="kcResult">Result will appear here…</div>
+
+    <div class="small-note">Formula used: Kc = [NO₂]² / [N₂O₄]</div>
+  </div>
+
+  <!-- Checklist -->
+  <div class="section-card">
+    <h2>✅ What Candidates Must Be Able To Do (JAMB Checklist)</h2>
+    <div class="quick-facts">
+      <ul>
+        <li>Identify factors that affect equilibrium position (concentration, pressure, temperature, catalyst)</li>
+        <li>Predict shift in position using Le Chatelier</li>
+        <li>Name industrial processes where Le Chatelier is applied (Haber, Contact, etc.)</li>
+        <li>Know that equilibrium constant changes only with temperature</li>
+        <li>Write Kc expressions and do simple Kc calculations (especially N₂O₄ ⇌ 2NO₂)</li>
+      </ul>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 Final memory line</strong>
+      <p>Shift changes equilibrium composition; K changes only with temperature.</p>
+    </div>
+  </div>
+
+  <button class="explore-btn" onclick="alert('Practice: write Kc expression + Le Chatelier shifts + simple Kc calculations daily!')">Practice JAMB Questions</button>
+</div>
+</div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+
+    function calcKc(){
+      const no2 = parseFloat(document.getElementById('no2').value || "0");
+      const n2o4 = parseFloat(document.getElementById('n2o4').value || "0");
+      const out = document.getElementById('kcResult');
+
+      if(no2<=0 || n2o4<=0){
+        out.textContent = "Enter valid equilibrium concentrations (>0) for both NO₂ and N₂O₄.";
+        return;
+      }
+      const kc = (no2*no2)/n2o4;
+      out.textContent = `Kc = [NO₂]² / [N₂O₄] = (${no2})² / (${n2o4}) = ${kc.toFixed(4)}.`;
+    }
+  </script>
+</body>
+</html>
