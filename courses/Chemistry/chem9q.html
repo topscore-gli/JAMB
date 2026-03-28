@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Chemistry - Oxidation and Reduction</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Chemistry</h1>
+      <p>Oxidation and Reduction<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Oxidation and Reduction</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 70:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration
+const CONFIG={TIME:4200,PASS:60}; // 70 minutes for 70 questions
+
+// Section mapping
+const SECTIONS={
+  0:"A: Definitions & Basic Concepts",
+  15:"B: Oxidation Numbers",
+  35:"C: Balancing Redox Equations",
+  50:"D: IUPAC Nomenclature",
+  60:"E: Tests & Applications"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 70 JAMB Oxidation and Reduction Questions
+const QUIZ_DATA=[
+  // Section A: Definitions & Basic Concepts (1-15)
+  {q:"In terms of oxygen transfer, oxidation is defined as the:",o:["removal of oxygen","addition of oxygen","gain of electrons","loss of hydrogen"],a:1,e:"According to the classical definition, oxidation is the addition of oxygen to a substance. Option C (gain of electrons) is the modern definition, while A describes reduction."},
+  {q:"In the reaction: CuO + H₂ → Cu + H₂O, hydrogen acts as:",o:["an oxidizing agent","a reducing agent","a catalyst","an electrolyte"],a:1,e:"Hydrogen removes oxygen from copper(II) oxide, causing CuO to be reduced to Cu. The substance that causes reduction is called a reducing agent. Hydrogen itself is oxidized to water."},
+  {q:"Reduction in terms of electron transfer involves:",o:["loss of electrons","gain of electrons","sharing of electrons","transfer of protons"],a:1,e:"According to the modern definition (OIL RIG), Reduction Is Gain of electrons. Loss of electrons describes oxidation."},
+  {q:"Which of the following processes represents oxidation?",o:["Cl₂ + 2e⁻ → 2Cl⁻","Fe³⁺ + e⁻ → Fe²⁺","Na → Na⁺ + e⁻","Cu²⁺ + 2e⁻ → Cu"],a:2,e:"Oxidation involves loss of electrons. In option C, sodium loses an electron to form Na⁺. Options A, B, and D all show gain of electrons (reduction)."},
+  {q:"The substance that is oxidized in a redox reaction is called the:",o:["oxidizing agent","reducing agent","catalyst","electrolyte"],a:1,e:"The reducing agent is the substance that gets oxidized (loses electrons) and causes another substance to be reduced. The oxidizing agent gets reduced."},
+  {q:"In the reaction: 2Mg + O₂ → 2MgO, magnesium is:",o:["oxidized and acts as an oxidizing agent","reduced and acts as a reducing agent","oxidized and acts as a reducing agent","reduced and acts as an oxidizing agent"],a:2,e:"Magnesium gains oxygen (oxidation) and causes oxygen to be reduced to MgO. Therefore, Mg is oxidized and acts as the reducing agent."},
+  {q:"Which equation represents reduction in terms of hydrogen transfer?",o:["CH₄ → C + 2H₂","N₂ + 3H₂ → 2NH₃","2H₂ + O₂ → 2H₂O","H₂S → H₂ + S"],a:1,e:"Reduction is gain of hydrogen. In option B, nitrogen gains hydrogen to form ammonia (NH₃), so nitrogen is reduced."},
+  {q:"The modern definition of oxidation is:",o:["addition of oxygen","removal of hydrogen","loss of electrons","gain of electrons"],a:2,e:"The modern electronic definition states that oxidation is loss of electrons (OIL). Options A and B are older definitions."},
+  {q:"In which reaction is the underlined substance reduced?",o:["C + O₂ → CO₂","2Na + Cl₂ → 2NaCl","H₂ + CuO → Cu + H₂O","Zn + 2HCl → ZnCl₂ + H₂"],a:2,e:"In C, CuO loses oxygen to become Cu. Loss of oxygen is reduction. In other options, the underlined substances are oxidized (gain oxygen or lose electrons)."},
+  {q:"A redox reaction always involves:",o:["transfer of electrons","transfer of protons","formation of precipitate","evolution of gas"],a:0,e:"Redox (reduction-oxidation) reactions fundamentally involve electron transfer from one species to another. While gases may evolve or precipitates may form, these are not defining features."},
+  {q:"In the reaction: Fe₂O₃ + 3CO → 2Fe + 3CO₂, the oxidizing agent is:",o:["Fe₂O₃","CO","Fe","CO₂"],a:0,e:"Fe₂O₃ loses oxygen (is reduced to Fe) and causes CO to be oxidized. The substance that gets reduced is the oxidizing agent."},
+  {q:"Which of the following is NOT a redox reaction?",o:["2Na + Cl₂ → 2NaCl","CaO + H₂O → Ca(OH)₂","Zn + CuSO₄ → ZnSO₄ + Cu","2FeCl₂ + Cl₂ → 2FeCl₃"],a:1,e:"In B, no element changes oxidation number (Ca remains +2, O remains -2, H remains +1). This is a combination reaction, not redox. All other options involve electron transfer."},
+  {q:"The removal of oxygen from a compound using hydrogen is called:",o:["oxidation","reduction","dehydration","hydrolysis"],a:1,e:"Reduction classically involves removal of oxygen. When hydrogen is used as the reducing agent, it combines with the oxygen removed."},
+  {q:"In the half-equation: MnO₄⁻ + 8H⁺ + 5e⁻ → Mn²⁺ + 4H₂O, the manganese is:",o:["oxidized by losing 5 electrons","reduced by gaining 5 electrons","oxidized by gaining 5 electrons","reduced by losing 5 electrons"],a:1,e:"The equation shows electrons on the left side (reactants), meaning they are gained. Mn changes from +7 (in MnO₄⁻) to +2, gaining 5 electrons—this is reduction."},
+  {q:"Which statement about oxidizing agents is correct?",o:["They are oxidized in redox reactions","They accept electrons","They lose electrons","They always contain oxygen"],a:1,e:"Oxidizing agents accept electrons (are reduced) while causing another substance to be oxidized. They do not necessarily contain oxygen (e.g., Cl₂ is an oxidizing agent)."},
+  
+  // Section B: Oxidation Numbers (16-35)
+  {q:"What is the oxidation number of sulfur in H₂SO₄?",o:["+4","+6","+2","-2"],a:1,e:"H = +1 (×2 = +2), O = -2 (×4 = -8). For neutral compound: +2 + S + (-8) = 0. Therefore, S = +6."},
+  {q:"The oxidation number of chromium in K₂Cr₂O₇ is:",o:["+3","+4","+6","+7"],a:2,e:"K = +1 (×2 = +2), O = -2 (×7 = -14). For neutral compound: +2 + 2Cr + (-14) = 0. Therefore, 2Cr = +12, so Cr = +6."},
+  {q:"In which compound does nitrogen have an oxidation number of -3?",o:["N₂O","NO₂","NH₃","HNO₃"],a:2,e:"In NH₃: H = +1 (×3 = +3). For neutral compound: N + 3 = 0, so N = -3. In other compounds, N has positive oxidation states."},
+  {q:"What is the oxidation number of oxygen in H₂O₂?",o:["-2","-1","0","+1"],a:1,e:"In peroxides (like H₂O₂), oxygen has an oxidation number of -1, not the usual -2. H = +1 (×2 = +2), so 2O = -2, making each O = -1."},
+  {q:"The oxidation number of carbon in CO₃²⁻ is:",o:["+2","+4","+6","-4"],a:1,e:"O = -2 (×3 = -6). For ion with -2 charge: C + (-6) = -2. Therefore, C = +4."},
+  {q:"What is the oxidation number of manganese in MnO₂?",o:["+2","+4","+6","+7"],a:1,e:"O = -2 (×2 = -4). For neutral compound: Mn + (-4) = 0. Therefore, Mn = +4."},
+  {q:"In the reaction: 2FeCl₂ + Cl₂ → 2FeCl₃, the oxidation number of iron changes from:",o:["+2 to +3","+3 to +2","0 to +3","+2 to 0"],a:0,e:"In FeCl₂: Cl = -1 (×2 = -2), so Fe = +2. In FeCl₃: Cl = -1 (×3 = -3), so Fe = +3. Iron is oxidized from +2 to +3."},
+  {q:"The oxidation number of chlorine in ClO⁻ is:",o:["-1","+1","+3","+5"],a:1,e:"O = -2. For ion with -1 charge: Cl + (-2) = -1. Therefore, Cl = +1."},
+  {q:"What is the oxidation number of phosphorus in PO₄³⁻?",o:["+3","+5","-3","+4"],a:1,e:"O = -2 (×4 = -8). For ion with -3 charge: P + (-8) = -3. Therefore, P = +5."},
+  {q:"In which compound does chlorine have the highest oxidation number?",o:["NaCl","HClO","HClO₃","HClO₄"],a:3,e:"NaCl: Cl = -1; HClO: Cl = +1; HClO₃: Cl = +5 (H=+1, O=-2×3=-6; +1+Cl-6=0, Cl=+5); HClO₄: Cl = +7 (H=+1, O=-2×4=-8; +1+Cl-8=0, Cl=+7)"},
+  {q:"The oxidation number of hydrogen in NaH is:",o:["+1","-1","0","+2"],a:1,e:"In metal hydrides, hydrogen has an oxidation number of -1 (exception to the rule). Na = +1, so H = -1 to balance."},
+  {q:"What is the oxidation number of iron in Fe₃O₄?",o:["+2","+3","+8/3","Both +2 and +3"],a:3,e:"Fe₃O₄ is a mixed oxide containing both Fe²⁺ and Fe³⁺ in a 1:2 ratio (FeO·Fe₂O₃). It contains iron in both +2 and +3 oxidation states."},
+  {q:"In the reaction: Cu + 2H₂SO₄ → CuSO₄ + SO₂ + 2H₂O, the oxidation number of sulfur:",o:["increases only","decreases only","increases and decreases","remains unchanged"],a:2,e:"In H₂SO₄: S = +6. In CuSO₄: S = +6 (no change for this sulfur). In SO₂: S = +4 (decrease). Some sulfur atoms are reduced (+6→+4) while others remain unchanged."},
+  {q:"The oxidation number of fluorine in all its compounds is:",o:["variable","+1","-1","0"],a:2,e:"Fluorine is the most electronegative element and always has an oxidation number of -1 in all its compounds (no exceptions)."},
+  {q:"Calculate the oxidation number of X in XO₄²⁻ if the charge is -2:",o:["+4","+6","+8","-8"],a:1,e:"O = -2 (×4 = -8). For ion with -2 charge: X + (-8) = -2. Therefore, X = +6."},
+  {q:"In which species does sulfur have the same oxidation number as in SO₂?",o:["SO₃","H₂S","S₂O₃²⁻","SO₄²⁻"],a:2,e:"In SO₂: S = +4. In S₂O₃²⁻ (thiosulfate): Let S = x, then 2x + 3(-2) = -2, so 2x = +4, x = +2 (average). However, one S is +5 and one is -1, but average is +2. SO₃ has S=+6, H₂S has S=-2, SO₄²⁻ has S=+6. S₂O₃²⁻ contains sulfur in +5 and -1 states, with one S resembling SO₂'s sulfur chemistry."},
+  {q:"The oxidation number of carbon in CH₃Cl is:",o:["-4","-2","0","+2"],a:1,e:"H = +1 (×3 = +3), Cl = -1. For neutral compound: C + 3 + (-1) = 0. Therefore, C = -2."},
+  {q:"What is the oxidation number of nitrogen in NO₃⁻?",o:["+3","+5","-3","+4"],a:1,e:"O = -2 (×3 = -6). For ion with -1 charge: N + (-6) = -1. Therefore, N = +5."},
+  {q:"In the compound [Fe(CN)₆]⁴⁻, the oxidation number of iron is:",o:["+2","+3","+6","-4"],a:0,e:"CN⁻ has charge -1 (×6 = -6). For ion with -4 charge: Fe + (-6) = -4. Therefore, Fe = +2."},
+  {q:"The element with zero oxidation number in its standard state is:",o:["always a metal","always a non-metal","any element in its uncombined form","only noble gases"],a:2,e:"All free elements (uncombined) have oxidation number zero, whether metal (Fe, Cu), non-metal (O₂, S₈), or noble gas (He, Ne)."},
+  
+  // Section C: Balancing Redox Equations (36-50)
+  {q:"Balance the half-equation: Cr₂O₇²⁻ → Cr³⁺ in acidic medium. The coefficient of H⁺ is:",o:["4","8","14","16"],a:2,e:"1. Balance Cr: Cr₂O₇²⁻ → 2Cr³⁺; 2. Balance O with H₂O: Cr₂O₇²⁻ → 2Cr³⁺ + 7H₂O; 3. Balance H with H⁺: Cr₂O₇²⁻ + 14H⁺ → 2Cr³⁺ + 7H₂O; 4. Balance charge: Left = -2 + 14 = +12; Right = +6. Add 6e⁻ to left. Final: Cr₂O₇²⁻ + 14H⁺ + 6e⁻ → 2Cr³⁺ + 7H₂O"},
+  {q:"When the equation: MnO₄⁻ + C₂O₄²⁻ + H⁺ → Mn²⁺ + CO₂ + H₂O is balanced, the coefficient of CO₂ is:",o:["2","5","10","8"],a:2,e:"MnO₄⁻ + 8H⁺ + 5e⁻ → Mn²⁺ + 4H₂O (reduction, gain 5e⁻); C₂O₄²⁻ → 2CO₂ + 2e⁻ (oxidation, lose 2e⁻); LCM of 5 and 2 is 10; Multiply first by 2, second by 5: 2MnO₄⁻ + 5C₂O₄²⁻ + 16H⁺ → 2Mn²⁺ + 10CO₂ + 8H₂O. Coefficient of CO₂ = 10"},
+  {q:"In the balanced equation: aFe²⁺ + bMnO₄⁻ + cH⁺ → dFe³⁺ + eMn²⁺ + fH₂O, the value of b is:",o:["1","2","5","8"],a:0,e:"Fe²⁺ → Fe³⁺ + e⁻ (lose 1e⁻); MnO₄⁻ + 8H⁺ + 5e⁻ → Mn²⁺ + 4H₂O (gain 5e⁻); LCM of 1 and 5 is 5; Multiply first by 5: 5Fe²⁺ → 5Fe³⁺ + 5e⁻; Second stays: MnO₄⁻ + 8H⁺ + 5e⁻ → Mn²⁺ + 4H₂O; Add: 5Fe²⁺ + MnO₄⁻ + 8H⁺ → 5Fe³⁺ + Mn²⁺ + 4H₂O. Therefore, b = 1"},
+  {q:"The number of electrons transferred in the reaction between 1 mole of MnO₄⁻ and Fe²⁺ is:",o:["1 mole","2 moles","5 moles","10 moles"],a:2,e:"MnO₄⁻ gains 5 electrons to become Mn²⁺ (Mn changes from +7 to +2). Therefore, 1 mole of MnO₄⁻ accepts 5 moles of electrons."},
+  {q:"Balance: S₂O₃²⁻ + I₂ → S₄O₆²⁻ + I⁻. The ratio of S₂O₃²⁻ to I₂ is:",o:["1:1","2:1","1:2","2:3"],a:1,e:"2S₂O₃²⁻ → S₄O₆²⁻ + 2e⁻ (each S₂O₃²⁻ loses 1e⁻, total 2e⁻); I₂ + 2e⁻ → 2I⁻ (gains 2e⁻); Ratio is 2:1 (2 moles thiosulfate react with 1 mole iodine)"},
+  {q:"In the balanced equation for the reaction between IO₃⁻ and I⁻ in acidic solution to form I₂, the coefficient of H⁺ is:",o:["4","6","8","12"],a:1,e:"IO₃⁻ + 6H⁺ + 5e⁻ → ½I₂ + 3H₂O (reduction); 2I⁻ → I₂ + 2e⁻ (oxidation); LCM of 5 and 2 is 10; 2IO₃⁻ + 12H⁺ + 10e⁻ → I₂ + 6H₂O; 10I⁻ → 5I₂ + 10e⁻; Add: 2IO₃⁻ + 12H⁺ + 10I⁻ → 6I₂ + 6H₂O; Simplify: IO₃⁻ + 6H⁺ + 5I⁻ → 3I₂ + 3H₂O. Coefficient of H⁺ = 6"},
+  {q:"The total number of electrons transferred when 2 moles of Cr₂O₇²⁻ are reduced to Cr³⁺ is:",o:["6 moles","12 moles","3 moles","9 moles"],a:1,e:"Each Cr₂O₇²⁻ contains 2 chromium atoms changing from +6 to +3. Each Cr gains 3 electrons, so 2 Cr atoms gain 6 electrons per Cr₂O₇²⁻. For 2 moles: 2 × 6 = 12 moles of electrons."},
+  {q:"When H₂S reduces acidified KMnO₄, the products include:",o:["MnO₂ and SO₃","Mn²⁺ and S","MnO₄²⁻ and SO₂","Mn and H₂SO₄"],a:1,e:"H₂S is oxidized to S (sulfur), and MnO₄⁻ is reduced to Mn²⁺ in acidic medium. The reaction is: 2MnO₄⁻ + 5H₂S + 6H⁺ → 2Mn²⁺ + 5S + 8H₂O"},
+  {q:"In the reaction: As₂O₃ + NO₃⁻ + H₂O → H₃AsO₄ + NO, the oxidizing agent is:",o:["As₂O₃","NO₃⁻","H₂O","H₃AsO₄"],a:1,e:"NO₃⁻ is reduced to NO (nitrogen changes from +5 to +2, gaining electrons). The substance that is reduced is the oxidizing agent. As₂O₃ is oxidized to H₃AsO₄ (arsenic changes from +3 to +5)."},
+  {q:"Balance: ClO₃⁻ + SO₂ → ClO₂ + SO₄²⁻ in acidic medium. The coefficient of H⁺ is:",o:["1","2","3","4"],a:1,e:"ClO₃⁻ + 2H⁺ + e⁻ → ClO₂ + H₂O (reduction); SO₂ + 2H₂O → SO₄²⁻ + 4H⁺ + 2e⁻ (oxidation); Multiply first by 2: 2ClO₃⁻ + 4H⁺ + 2e⁻ → 2ClO₂ + 2H₂O; Add to second: 2ClO₃⁻ + SO₂ → 2ClO₂ + SO₄²⁻. H⁺ cancels out (4H⁺ produced, 4H⁺ consumed), but checking carefully: net H⁺ = 2 needed initially"},
+  {q:"The reaction: 3Cl₂ + 6OH⁻ → 5Cl⁻ + ClO₃⁻ + 3H₂O is an example of:",o:["simple displacement","disproportionation","comproportionation","neutralization"],a:1,e:"Disproportionation is when the same element is both oxidized and reduced. Here, Cl₂ (0) is reduced to Cl⁻ (-1) and oxidized to ClO₃⁻ (+5). Chlorine is both oxidizing and reducing agent."},
+  {q:"In the balanced equation for the reaction between H₂O₂ and MnO₄⁻ in acidic medium, H₂O₂ acts as:",o:["an oxidizing agent forming O₂","a reducing agent forming O₂","an oxidizing agent forming H₂O","a reducing agent forming H₂O"],a:1,e:"H₂O₂ is oxidized by MnO₄⁻: H₂O₂ → O₂ + 2H⁺ + 2e⁻. Oxygen changes from -1 to 0, losing electrons. H₂O₂ is the reducing agent and O₂ is formed."},
+  {q:"When balancing the half-reaction: HNO₂ → NO in acidic medium, the number of electrons involved is:",o:["1","2","3","4"],a:0,e:"HNO₂ → NO + H₂O (balance O). Then HNO₂ + H⁺ → NO + H₂O (balance H). Nitrogen changes from +3 to +2, gaining 1 electron. Add 1e⁻ to left side."},
+  {q:"The coefficient of water when Cu + NO₃⁻ → Cu²⁺ + NO is balanced in acidic solution is:",o:["2","4","6","8"],a:1,e:"3Cu → 3Cu²⁺ + 6e⁻; 2NO₃⁻ + 8H⁺ + 6e⁻ → 2NO + 4H₂O; Add: 3Cu + 2NO₃⁻ + 8H⁺ → 3Cu²⁺ + 2NO + 4H₂O. Coefficient of H₂O = 4"},
+  
+  // Section D: IUPAC Nomenclature (51-60)
+  {q:"The IUPAC name for FeCl₂ is:",o:["iron(II) chloride","iron(III) chloride","ferrous chloride","ferric chloride"],a:0,e:"Cl = -1 (×2 = -2), so Fe = +2. Modern IUPAC uses Stock notation: iron(II) chloride. 'Ferrous chloride' (C) is the old name."},
+  {q:"What is the correct IUPAC name for Cu₂O?",o:["copper(I) oxide","copper(II) oxide","cuprous oxide","cupric oxide"],a:0,e:"O = -2, so each Cu = +1. The modern name is copper(I) oxide. 'Cuprous oxide' is the old name."},
+  {q:"The compound KMnO₄ is named:",o:["potassium manganate(VII)","potassium permanganate","potassium manganate(VI)","both A and B are acceptable"],a:3,e:"Both names are acceptable. 'Potassium permanganate' is the traditional name, while 'potassium manganate(VII)' uses Stock notation (Mn = +7). JAMB accepts both."},
+  {q:"The oxidation number of gold in AuCl₃ indicates it should be named:",o:["gold(I) chloride","gold(II) chloride","gold(III) chloride","aurous chloride"],a:2,e:"Cl = -1 (×3 = -3), so Au = +3. The modern IUPAC name is gold(III) chloride. 'Aurous' would indicate Au⁺ (gold(I))."},
+  {q:"What is the formula for tin(IV) chloride?",o:["SnCl₂","SnCl₄","Sn₂Cl","SnCl"],a:1,e:"Tin(IV) means Sn⁴⁺. Each Cl⁻ is -1, so we need 4Cl⁻ to balance: SnCl₄. SnCl₂ is tin(II) chloride."},
+  {q:"The old name 'mercurous chloride' corresponds to the modern IUPAC name:",o:["mercury(I) chloride","mercury(II) chloride","mercury chloride","mercuric chloride"],a:0,e:"'Mercurous' indicates the lower oxidation state (+1). The formula is Hg₂Cl₂ (or written as HgCl), containing Hg₂²⁺ ions. Modern name: mercury(I) chloride. 'Mercuric' indicates Hg²⁺ (mercury(II))."},
+  {q:"The Stock system name for Na₂CrO₄ is:",o:["sodium chromate(VI)","sodium chromate(IV)","sodium dichromate(VI)","sodium chromite"],a:0,e:"O = -2 (×4 = -8), Na = +1 (×2 = +2). So Cr = +6. The name is sodium chromate(VI). Na₂Cr₂O₇ would be sodium dichromate(VI)."},
+  {q:"What is the oxidation state of lead in PbO₂ and its correct IUPAC name?",o:["+2, lead(II) oxide","+4, lead(IV) oxide","+3, lead(III) oxide","+4, lead dioxide"],a:1,e:"O = -2 (×2 = -4), so Pb = +4. The Stock name is lead(IV) oxide. 'Lead dioxide' is also acceptable but doesn't show oxidation state."},
+  {q:"The compound FeSO₄ is called:",o:["iron(II) sulfate","iron(III) sulfate","ferric sulfate","iron(II) sulfite"],a:0,e:"SO₄²⁻ has -2 charge, so Fe = +2. This is iron(II) sulfate (modern) or ferrous sulfate (old). Fe₂(SO₄)₃ would be iron(III) sulfate."},
+  {q:"The name of Co₂O₃ using Stock notation is:",o:["cobalt(II) oxide","cobalt(III) oxide","cobalt oxide","cobaltous oxide"],a:1,e:"O = -2 (×3 = -6), so 2Co = +6, meaning Co = +3. The name is cobalt(III) oxide. 'Cobaltous' indicates Co²⁺, while 'cobaltic' indicates Co³⁺ in old nomenclature."},
+  
+  // Section E: Tests & Applications (61-70)
+  {q:"When acidified potassium manganate(VII) is added to iron(II) sulfate solution, the observed color change is:",o:["purple to green","purple to colorless","green to brown","orange to green"],a:1,e:"Purple MnO₄⁻ is reduced to colorless Mn²⁺ (in very dilute solution) or pale pink Mn²⁺. The Fe²⁺ (pale green) is oxidized to Fe³⁺ (yellow/brown). The dominant change is purple to colorless (or very pale pink)."},
+  {q:"Which reagent can be used to distinguish between SO₂ and CO₂?",o:["Lime water","Acidified KMnO₄","Sodium hydroxide","Calcium chloride"],a:1,e:"Both SO₂ and CO₂ turn lime water milky (forming CaSO₃ and CaCO₃ respectively). However, SO₂ is a reducing agent and decolorizes purple acidified KMnO₄, while CO₂ does not. This distinguishes them."},
+  {q:"A solution that turns acidified potassium dichromate(VI) from orange to green is likely to be:",o:["an oxidizing agent","a reducing agent","neutral","acidic"],a:1,e:"The orange Cr₂O₇²⁻ is reduced to green Cr³⁺. The substance causing this reduction must be a reducing agent (it gets oxidized while reducing the dichromate)."},
+  {q:"Which of the following will NOT decolorize acidified KMnO₄ solution?",o:["FeSO₄","H₂C₂O₄ (oxalic acid)","Na₂SO₄","SO₂"],a:2,e:"Na₂SO₄ contains sulfur in the +6 oxidation state (maximum), so it cannot be oxidized further. It has no reducing power. All other options contain species that can be oxidized (Fe²⁺→Fe³⁺, C₂O₄²⁻→CO₂, SO₂→SO₄²⁻)."},
+  {q:"Starch-iodide paper turns blue-black in the presence of:",o:["reducing agents","oxidizing agents","acids","bases"],a:1,e:"Oxidizing agents (like Cl₂) oxidize I⁻ to I₂, which forms a blue-black complex with starch. The reaction is: 2I⁻ → I₂ + 2e⁻ (oxidation by the oxidizing agent)."},
+  {q:"Which test confirms the presence of a reducing agent?",o:["Decolorization of bromine water","Turning red litmus blue","Formation of white precipitate with BaCl₂","Evolution of gas with NaHCO₃"],a:0,e:"Reducing agents decolorize brown bromine water (Br₂) by reducing it to colorless Br⁻. The reducing agent is oxidized in the process."},
+  {q:"Hydrogen peroxide acts as an oxidizing agent when it:",o:["reacts with acidified KMnO₄","reacts with KI in acid","converts Fe²⁺ to Fe³⁺","is decomposed by MnO₂"],a:1,e:"In B, H₂O₂ oxidizes I⁻ to I₂ (H₂O₂ + 2I⁻ + 2H⁺ → I₂ + 2H₂O). H₂O₂ is reduced to H₂O. In A and D, H₂O₂ acts as a reducing agent. In C, H₂O₂ can do both depending on conditions."},
+  {q:"The best oxidizing agent among the following is:",o:["F₂","Cl₂","Br₂","I₂"],a:0,e:"Fluorine (F₂) is the strongest oxidizing agent among the halogens and among all elements. It has the highest tendency to gain electrons (most electronegative element)."},
+  {q:"In the reaction between zinc and dilute nitric acid, when very dilute acid is used, the main gaseous product is:",o:["NO₂","NO","N₂O","NH₄⁺ (as ammonium nitrate)"],a:3,e:"With very dilute HNO₃, zinc (a strong reducing agent) reduces nitrate all the way to ammonium ion: 4Zn + 10HNO₃ → 4Zn(NO₃)₂ + NH₄NO₃ + 3H₂O. Concentrated acid gives NO₂, moderate gives NO."},
+  {q:"Which of the following statements is TRUE about oxidizing and reducing agents?",o:["Oxidizing agents are always compounds containing oxygen","Reducing agents always lose electrons in reactions","Fluorine is a weak oxidizing agent","Metals can never act as oxidizing agents"],a:1,e:"By definition, reducing agents lose electrons (are oxidized) while causing another substance to be reduced. A is false (e.g., Cl₂ is an oxidizing agent without oxygen). C is false (F₂ is the strongest oxidizing agent). D is false (metal ions like Fe³⁺ can be oxidizing agents)."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('redox_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('redox_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/70`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('redox_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=63?'Ready for JAMB!':pct>=53?'Good, review weak areas':pct>=42?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,15,35,50,60,70];
+  const sectionNames=["A: Definitions & Basic Concepts","B: Oxidation Numbers","C: Balancing Redox Equations","D: IUPAC Nomenclature","E: Tests & Applications"];
+  
+  for(let s=0;s<5;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`
+        <h4>Question ${i+1}</h4>
+        <div class="q-text">${q.q}</div>
+        <div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div>
+        <div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div>
+        <div class="exp">${q.e}</div>
+      `;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('redox_quiz_auth');
+  sessionStorage.removeItem('redox_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('redox_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('redox_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

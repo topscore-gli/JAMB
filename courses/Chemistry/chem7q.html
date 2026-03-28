@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Chemistry - Environmental Pollution</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Chemistry</h1>
+      <p>Environmental Pollution<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Environmental Pollution</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 70:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration
+const CONFIG={TIME:4200,PASS:60}; // 70 minutes for 70 questions
+
+// Section mapping
+const SECTIONS={
+  0:"A: Composition of Air & Noble Gases",
+  15:"B: Air Pollutants & Sources",
+  35:"C: Water Pollution",
+  50:"D: Soil Pollution & Biodegradability",
+  60:"E: Control Measures & General"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 70 JAMB Environmental Pollution Questions
+const QUIZ_DATA=[
+  // Section A: Composition of Air & Noble Gases (1-15)
+  {q:"The percentage of nitrogen in dry air by volume is approximately",o:["21%","78%","0.93%","0.04%"],a:1,e:"Nitrogen makes up approximately 78% of dry air by volume, making it the most abundant gas in the atmosphere. Oxygen is 21%, argon is 0.93%, and carbon (IV) oxide is 0.04%."},
+  {q:"Which of the following gases is the most abundant in the atmosphere?",o:["Oxygen","Carbon (IV) oxide","Nitrogen","Argon"],a:2,e:"Nitrogen (N₂) is the most abundant gas in the atmosphere at approximately 78% by volume, followed by oxygen at 21%."},
+  {q:"The gas used for filling electric light bulbs to prevent the oxidation of the filament is",o:["Neon","Argon","Helium","Krypton"],a:1,e:"Argon is used to fill electric light bulbs because it is chemically inert (unreactive) and prevents the hot tungsten filament from oxidizing and burning out quickly."},
+  {q:"Which property of noble gases makes them suitable for use in advertising signs?",o:["They are colorless","They emit characteristic colors when electrically discharged","They are lighter than air","They are soluble in water"],a:1,e:"Noble gases emit characteristic colors when an electric current passes through them. Neon produces red-orange light, argon produces blue light, making them ideal for advertising signs and lighting."},
+  {q:"Air is considered a mixture rather than a compound because",o:["It has a fixed boiling point","Its components are chemically combined","Its composition varies and it can be separated by physical means","It is colorless and odorless"],a:2,e:"Air is a mixture because its composition varies slightly depending on location and altitude, and its components can be separated by physical means such as fractional distillation without any chemical change occurring."},
+  {q:"The process used to separate the components of liquid air is",o:["Filtration","Fractional distillation","Chromatography","Crystallization"],a:1,e:"Fractional distillation is used to separate liquid air into its components (nitrogen, oxygen, argon) based on their different boiling points. Nitrogen boils off first at -196°C, followed by argon at -186°C, and oxygen at -183°C."},
+  {q:"Which of the following gases has the lowest boiling point?",o:["Oxygen","Argon","Nitrogen","Carbon (IV) oxide"],a:2,e:"Nitrogen has the lowest boiling point at -196°C (77K), which is why it boils off first during the fractional distillation of liquid air. Argon boils at -186°C and oxygen at -183°C."},
+  {q:"The noble gas used in high-speed photography and stroboscopic lamps is",o:["Helium","Neon","Argon","Krypton"],a:3,e:"Krypton is used in high-speed photography, stroboscopic lamps, and high-performance light bulbs because it produces a very bright white light when electrically discharged."},
+  {q:"Which factor is NOT responsible for the variation in the composition of air in the environment?",o:["Altitude","Human activities","Temperature","Chemical reactivity of nitrogen"],a:3,e:"While altitude, human activities, temperature, location, and biological activities cause variations in air composition, the chemical reactivity of nitrogen does not significantly affect atmospheric composition because nitrogen is relatively inert under normal conditions."},
+  {q:"Water vapor content in air is variable because it depends on",o:["The amount of nitrogen present","Temperature and geographical location","The pressure of oxygen","The presence of noble gases"],a:1,e:"Water vapor content varies from 0-4% depending on temperature (warm air holds more moisture) and geographical location (tropical areas have more humidity than deserts)."},
+  {q:"The gas used by deep-sea divers to prevent nitrogen narcosis is",o:["Neon","Helium","Argon","Krypton"],a:1,e:"Helium is mixed with oxygen for deep-sea diving because it is less soluble in blood than nitrogen, preventing 'the bends' (decompression sickness) and nitrogen narcosis at high pressures."},
+  {q:"Which of the following statements about air is correct?",o:["It has a fixed composition everywhere on Earth","It is a compound of nitrogen and oxygen","It can be separated into its components by physical means","It has a chemical formula"],a:2,e:"Air can be separated into its components (nitrogen, oxygen, argon, etc.) by physical means such as fractional distillation, confirming it is a mixture, not a compound."},
+  {q:"The percentage of oxygen in dry air is approximately",o:["1%","21%","78%","0.04%"],a:1,e:"Oxygen constitutes approximately 21% by volume of dry air. This percentage is vital for respiration and combustion processes."},
+  {q:"In the fractional distillation of liquid air, which gas is obtained at the bottom of the fractionating column?",o:["Nitrogen","Oxygen","Argon","Carbon (IV) oxide"],a:1,e:"Oxygen has the highest boiling point (-183°C) among the major components of air, so it remains liquid longest and is collected at the bottom of the fractionating column."},
+  {q:"The noble gas used in filling balloons for meteorological observations is",o:["Neon","Argon","Helium","Krypton"],a:2,e:"Helium is used to fill meteorological balloons because it is lighter than air (provides lift), non-flammable (safe), and inert."},
+  
+  // Section B: Air Pollutants & Sources (16-35)
+  {q:"Which of the following is NOT an air pollutant?",o:["Carbon (II) oxide","Sulphur (IV) oxide","Nitrogen","Hydrogen sulphide"],a:2,e:"Nitrogen is a natural component of air (78%) and is not considered a pollutant. The other options (CO, SO₂, H₂S) are harmful air pollutants."},
+  {q:"The gas with a characteristic rotten egg smell is",o:["Carbon monoxide","Hydrogen sulphide","Sulphur (IV) oxide","Methane"],a:1,e:"Hydrogen sulphide (H₂S) has a distinctive rotten egg smell even at very low concentrations. It is toxic, flammable, and produced by decaying organic matter and volcanic activity."},
+  {q:"Carbon monoxide is poisonous because it",o:["Irritates the lungs","Combines with hemoglobin to form carboxyhemoglobin","Causes acid rain","Depletes the ozone layer"],a:1,e:"CO binds preferentially with hemoglobin (about 200-250 times more strongly than oxygen) forming carboxyhemoglobin, which prevents oxygen transport in blood, leading to tissue suffocation and death."},
+  {q:"The main source of sulphur (IV) oxide in the atmosphere is",o:["Respiration","Burning of fossil fuels containing sulphur","Photosynthesis","Decay of organic matter"],a:1,e:"The primary source of SO₂ is the combustion of fossil fuels (coal and oil) that contain sulphur impurities. This occurs in power stations, industries, and vehicle engines."},
+  {q:"Photochemical smog is mainly caused by",o:["Carbon monoxide and carbon (IV) oxide","Oxides of nitrogen and hydrocarbons","Sulphur (IV) oxide and dust","CFCs and methane"],a:1,e:"Photochemical smog forms when oxides of nitrogen (NOₓ) and unburnt hydrocarbons from vehicle exhausts react in sunlight to produce ozone and other irritating compounds."},
+  {q:"Chlorofluorocarbons (CFCs) are harmful to the environment because they",o:["Cause global warming only","Deplete the ozone layer","Cause acid rain","Are toxic to plants only"],a:1,e:"CFCs rise to the stratosphere where UV radiation breaks them down, releasing chlorine atoms that catalytically destroy ozone molecules, leading to ozone layer depletion and increased UV radiation reaching Earth."},
+  {q:"Which pollutant is primarily responsible for acid rain formation?",o:["Carbon monoxide","Sulphur (IV) oxide and oxides of nitrogen","Methane","CFCs"],a:1,e:"SO₂ and NOₓ dissolve in atmospheric water to form sulphuric acid (H₂SO₄) and nitric acid (HNO₃) respectively, which fall as acid rain with pH below 5.6."},
+  {q:"The gas emitted from vehicle exhausts that contributes to the greenhouse effect is",o:["Carbon (II) oxide","Carbon (IV) oxide","Sulphur (IV) oxide","Nitrogen"],a:1,e:"Carbon (IV) oxide (CO₂) is the main greenhouse gas emitted from vehicle exhausts through the complete combustion of fossil fuels. It traps heat in the atmosphere, causing global warming."},
+  {q:"Which of the following is a natural source of air pollution?",o:["Industrial emissions","Volcanic eruptions","Vehicle exhaust","Burning of fossil fuels"],a:1,e:"Volcanic eruptions are natural sources of air pollutants including SO₂, H₂S, dust, and ash. The other options are human-made (anthropogenic) sources."},
+  {q:"The pollutant that causes respiratory problems and is produced by lightning is",o:["Carbon monoxide","Oxides of nitrogen","CFCs","Methane"],a:1,e:"Lightning produces high temperatures that combine nitrogen and oxygen in air to form oxides of nitrogen (NOₓ). These cause respiratory problems and contribute to acid rain."},
+  {q:"Dust particles in the atmosphere can cause",o:["Increased oxygen production","Reduced visibility and respiratory diseases","Ozone layer formation","Decreased atmospheric pressure"],a:1,e:"Dust particles reduce visibility (causing haze/smog) and when inhaled cause respiratory diseases such as silicosis, asbestosis, and aggravated asthma."},
+  {q:"Incomplete combustion of carbon-containing fuels produces",o:["Carbon (IV) oxide only","Carbon (II) oxide","Pure carbon only","Water vapor only"],a:1,e:"Incomplete combustion occurs when there is insufficient oxygen, producing carbon (II) oxide (CO) instead of carbon (IV) oxide (CO₂). CO is highly toxic."},
+  {q:"The use of catalytic converters in vehicles helps to reduce the emission of",o:["Oxygen and nitrogen","Carbon monoxide and oxides of nitrogen","Water vapor","Argon"],a:1,e:"Catalytic converters convert harmful pollutants into less harmful substances: CO → CO₂, NOₓ → N₂ + O₂, and unburnt hydrocarbons → CO₂ + H₂O."},
+  {q:"Which air pollutant is colorless, odorless, and tasteless?",o:["Sulphur (IV) oxide","Hydrogen sulphide","Carbon (II) oxide","Nitrogen dioxide"],a:2,e:"Carbon monoxide (CO) is particularly dangerous because it is colorless, odorless, and tasteless, making it undetectable without specialized equipment. Hence it's called the 'silent killer.'"},
+  {q:"The main anthropogenic source of oxides of nitrogen is",o:["Decay of organic matter","High-temperature combustion in vehicle engines","Photosynthesis","Evaporation of seawater"],a:1,e:"High temperatures in vehicle engines and power stations combine nitrogen and oxygen from air to form oxides of nitrogen (NOₓ). This is the main human-made source."},
+  {q:"Acid rain can cause the following EXCEPT",o:["Corrosion of metal structures","Damage to aquatic life","Increased soil fertility","Deterioration of building materials"],a:2,e:"Acid rain leaches nutrients from soil and increases acidity, reducing soil fertility rather than increasing it. It corrodes metals, harms aquatic life, and damages limestone/marble buildings."},
+  {q:"The pH of normal rainwater is slightly acidic (about 5.6) due to dissolved",o:["Oxygen","Carbon (IV) oxide","Nitrogen","Argon"],a:1,e:"Normal rainwater is slightly acidic (pH 5.6) due to dissolved CO₂ forming weak carbonic acid (H₂CO₃). Acid rain has pH < 5.6 due to stronger acids (H₂SO₄, HNO₃)."},
+  {q:"Which pollutant is associated with the depletion of the ozone layer?",o:["Carbon monoxide","Chlorofluorocarbons","Sulphur (IV) oxide","Ammonia"],a:1,e:"CFCs release chlorine atoms in the stratosphere that catalyze ozone destruction. One chlorine atom can destroy thousands of ozone molecules."},
+  {q:"The greenhouse effect is enhanced by increased atmospheric concentration of",o:["Oxygen and nitrogen","Carbon (IV) oxide and methane","Argon and neon","Nitrogen and helium"],a:1,e:"Greenhouse gases like CO₂, methane (CH₄), water vapor, and N₂O trap infrared radiation from Earth's surface, causing global warming. Oxygen and nitrogen are not greenhouse gases."},
+  {q:"Industrial emissions containing sulphur compounds are best controlled by",o:["Increasing chimney height","Using scrubbers to remove SO₂","Diluting with air","Releasing at night"],a:1,e:"Scrubbers (wet or dry) chemically remove SO₂ from industrial flue gases before release, converting it to calcium sulphate (gypsum) or other harmless compounds."},
+  
+  // Section C: Water Pollution (36-50)
+  {q:"Which of the following is a major cause of water pollution?",o:["Oxygen dissolution","Sewage discharge","Rainfall","Evaporation"],a:1,e:"Sewage discharge introduces organic matter, pathogens, and nutrients (nitrates, phosphates) into water bodies, causing eutrophication and spreading water-borne diseases."},
+  {q:"Eutrophication of water bodies is caused by excessive amounts of",o:["Oxygen and nitrogen","Nitrates and phosphates","Chlorides and carbonates","Sodium and potassium"],a:1,e:"Excessive nitrates and phosphates from sewage and fertilizers cause algal blooms. When algae die, their decomposition depletes oxygen, killing aquatic life."},
+  {q:"Oil spills in water bodies can cause the following EXCEPT",o:["Prevention of oxygen exchange across water surface","Death of marine birds and mammals","Increased photosynthesis in aquatic plants","Contamination of beaches"],a:2,e:"Oil spills form surface films that block sunlight and prevent photosynthesis, not increase it. They also prevent oxygen exchange, coat birds/mammals, and contaminate shorelines."},
+  {q:"The main source of oil pollution in marine environments is",o:["Natural seepage from ocean floor","Transportation and tanker accidents","Underwater volcanic eruptions","Precipitation"],a:1,e:"While natural seepage occurs, the majority of marine oil pollution comes from human activities: tanker accidents, offshore drilling, pipeline leaks, and urban runoff."},
+  {q:"Water-borne diseases that can result from sewage pollution include",o:["Malaria and yellow fever","Cholera, typhoid, and dysentery","Tuberculosis and influenza","Measles and chicken pox"],a:1,e:"Sewage-contaminated water spreads bacterial diseases like cholera (Vibrio cholerae), typhoid (Salmonella typhi), and dysentery (Shigella/E. coli)."},
+  {q:"The process of removing pollutants from wastewater before discharge is called",o:["Distillation","Sewage treatment","Filtration only","Evaporation"],a:1,e:"Sewage treatment involves physical, biological, and chemical processes to remove solids, organic matter, and pathogens from wastewater before safe discharge or reuse."},
+  {q:"Which method is used to clean up oil spills on water?",o:["Adding more oil to disperse it","Using booms and skimmers","Boiling the water","Adding concentrated acids"],a:1,e:"Booms (floating barriers) contain the spill while skimmers remove oil from the surface. Other methods include dispersants, absorbent materials, and bioremediation."},
+  {q:"The BOD (Biochemical Oxygen Demand) of water increases when",o:["The water is pure","Organic pollutants are present","Oxygen concentration is high","Temperature decreases"],a:1,e:"High BOD indicates high organic pollution. Microorganisms decomposing organic matter consume oxygen, leaving less for aquatic life. Clean water has low BOD."},
+  {q:"Thermal pollution of water occurs when",o:["Hot water from industrial processes is discharged into water bodies","Ice is added to water","Water is exposed to sunlight","Water flows rapidly"],a:0,e:"Industrial cooling water discharged at high temperatures reduces dissolved oxygen capacity and can kill temperature-sensitive aquatic organisms."},
+  {q:"Which of the following is NOT a method of controlling water pollution?",o:["Treating industrial effluents before discharge","Using biodegradable detergents","Dumping raw sewage directly into rivers","Implementing strict environmental regulations"],a:2,e:"Dumping raw sewage directly into rivers causes severe water pollution. All other options are valid control measures."},
+  {q:"The presence of coliform bacteria in water indicates",o:["The water is safe to drink","Fecal contamination from sewage","High oxygen content","Presence of minerals"],a:1,e:"Coliform bacteria (especially E. coli) are indicators of fecal contamination from sewage or animal waste, signaling potential presence of pathogens."},
+  {q:"Oil pollution can affect marine ecosystems by",o:["Increasing dissolved oxygen levels","Coating feathers of seabirds and gills of fish","Promoting coral reef growth","Reducing water salinity"],a:1,e:"Oil coats bird feathers (destroying waterproofing and insulation) and fish gills (suffocating them). It also toxic to marine life and habitats."},
+  {q:"The best way to prevent sewage pollution is to",o:["Discharge it during rainy seasons","Treat sewage in treatment plants before release","Dump it in deep oceans","Mix it with industrial waste"],a:1,e:"Proper sewage treatment removes solids, reduces organic matter, and kills pathogens, making the effluent safe for discharge or reuse."},
+  {q:"Excess nitrates in drinking water can cause",o:["Blue baby syndrome (methemoglobinemia) in infants","Increased intelligence","Stronger bones","Better vision"],a:0,e:"High nitrate levels in drinking water convert hemoglobin to methemoglobin which cannot carry oxygen, causing 'blue baby syndrome' (methemoglobinemia) in infants."},
+  {q:"Which is a physical method of removing oil from water surfaces?",o:["Bioremediation using bacteria","Using absorbent booms","Adding chemical dispersants","Using biological filters"],a:1,e:"Absorbent booms physically soak up oil from water surfaces. Bioremediation and biological filters are biological methods; dispersants are chemical methods."},
+  
+  // Section D: Soil Pollution & Biodegradability (51-60)
+  {q:"Which of the following is a biodegradable pollutant?",o:["Plastic bottle","Glass bottle","Paper","Aluminum can"],a:2,e:"Paper is biodegradable because microorganisms can decompose it into simple substances. Plastics, glass, and aluminum are non-biodegradable."},
+  {q:"Non-biodegradable pollutants are harmful because they",o:["Decompose quickly","Accumulate in the environment over long periods","Provide nutrients to soil","Are always non-toxic"],a:1,e:"Non-biodegradable materials persist for hundreds to thousands of years, accumulating in landfills and ecosystems, often releasing toxins or harming wildlife."},
+  {q:"Oil spillage on soil can cause",o:["Increased soil fertility","Death of soil microorganisms and reduced permeability","Faster plant growth","Better water retention"],a:1,e:"Oil is toxic to soil microorganisms, reduces soil permeability (preventing water infiltration), and inhibits plant growth by coating roots and reducing oxygen availability."},
+  {q:"Which material takes the longest time to decompose naturally?",o:["Orange peel","Cotton cloth","Plastic bag","Wood"],a:2,e:"Plastic bags can take 500-1000 years to decompose. Orange peels take weeks, cotton takes months, and wood takes years, but all are much faster than plastics."},
+  {q:"Biodegradable pollutants include all EXCEPT",o:["Food scraps","Human sewage","Polythene bags","Fallen leaves"],a:2,e:"Polythene (plastic) bags are synthetic polymers that microorganisms cannot break down, making them non-biodegradable. The others decompose naturally."},
+  {q:"The process of using microorganisms to clean up oil spills in soil is called",o:["Incineration","Bioremediation","Landfilling","Recycling"],a:1,e:"Bioremediation uses naturally occurring or introduced microorganisms (bacteria, fungi) to break down pollutants like oil into harmless substances (CO₂ and water)."},
+  {q:"Heavy metals like lead and mercury in soil are particularly dangerous because they",o:["Evaporate quickly","Bioaccumulate in the food chain","Improve crop yields","Are easily washed away by rain"],a:1,e:"Heavy metals bioaccumulate (concentrate up the food chain). Small organisms absorb them, fish eat many organisms, predators eat many fish – concentrations increase at each level, reaching toxic levels in top predators and humans."},
+  {q:"Which agricultural practice contributes to soil pollution?",o:["Crop rotation","Excessive use of pesticides and fertilizers","Organic farming","Contour plowing"],a:1,e:"Excessive pesticides persist in soil (some are non-biodegradable), while excess fertilizers can acidify soil and run off to pollute water. The other options are sustainable practices."},
+  {q:"Proper disposal of non-biodegradable waste should involve",o:["Burning in open air","Recycling and sanitary landfilling","Dumping in oceans","Burying in shallow pits"],a:1,e:"Recycling reduces waste volume and conserves resources. Sanitary landfills prevent leaching of toxins into soil and groundwater. Open burning releases toxic fumes."},
+  {q:"DDT is an example of a",o:["Biodegradable pesticide","Non-biodegradable pollutant that bioaccumulates","Natural fertilizer","Soil nutrient"],a:1,e:"DDT (dichlorodiphenyltrichloroethane) is a persistent organic pollutant that resists decomposition, accumulates in fatty tissues, and biomagnifies up food chains, reaching toxic levels in birds (causing eggshell thinning) and humans."},
+  
+  // Section E: Control Measures & General (61-70)
+  {q:"The Montreal Protocol (1987) was established to",o:["Reduce carbon emissions","Phase out the production of ozone-depleting substances","Control water pollution","Promote nuclear energy"],a:1,e:"The Montreal Protocol is an international treaty designed to protect the ozone layer by phasing out the production and use of CFCs and other ozone-depleting substances."},
+  {q:"Which measure is most effective for controlling air pollution from industries?",o:["Building taller chimneys","Installing electrostatic precipitators and scrubbers","Operating only at night","Releasing pollutants during windy days"],a:1,e:"Electrostatic precipitators remove particulate matter and scrubbers remove gaseous pollutants like SO₂. These treat pollution at source rather than dispersing it."},
+  {q:"The '3Rs' approach to waste management stands for",o:["React, Respond, Repair","Reduce, Reuse, Recycle","Remove, Replace, Restore","Refine, Reprocess, Resell"],a:1,e:"Reduce (minimize waste generation), Reuse (use items multiple times), and Recycle (process waste into new products) form the hierarchy of sustainable waste management."},
+  {q:"Using unleaded petrol in vehicles helps to reduce pollution by",o:["Eliminating carbon dioxide emissions","Preventting lead accumulation in the environment","Increasing oxygen content in air","Reducing water vapor emissions"],a:1,e:"Lead in petrol accumulates in soil, water, and organisms, causing neurological damage. Unleaded petrol eliminates this toxic metal pollution (though CO₂ emissions remain)."},
+  {q:"Afforestation (planting trees) helps control pollution by",o:["Increasing oxygen consumption","Absorbing CO₂ and releasing O₂, while trapping dust","Producing more pollutants","Reducing rainfall"],a:1,e:"Trees absorb CO₂ during photosynthesis, release oxygen, and their leaves trap particulate matter. They also prevent soil erosion and provide habitat for wildlife."},
+  {q:"The use of catalytic converters in cars converts harmful gases into less harmful ones. Carbon monoxide is converted to",o:["Carbon (II) sulphide","Carbon (IV) oxide","Methane","Sulphur (IV) oxide"],a:1,e:"Catalytic converters oxidize CO to CO₂ (less toxic), reduce NOₓ to N₂, and oxidize unburnt hydrocarbons to CO₂ and H₂O using platinum, palladium, and rhodium catalysts."},
+  {q:"Which renewable energy source does NOT produce air pollutants during operation?",o:["Coal power","Solar power","Diesel generator","Petrol engine"],a:1,e:"Solar power generates electricity without combustion, producing no air pollutants during operation. Fossil fuel sources (coal, diesel, petrol) all produce pollutants when burned."},
+  {q:"The pH of acid rain is typically",o:["7.0","Above 7.0","Below 5.6","Exactly 5.6"],a:2,e:"Normal rain has pH 5.6 due to dissolved CO₂. Acid rain has pH below 5.6 (often 4.0-5.0) due to stronger acids (H₂SO₄, HNO₃) from SO₂ and NOₓ pollution."},
+  {q:"Which international agreement aims to reduce greenhouse gas emissions to combat climate change?",o:["The Basel Convention","The Kyoto Protocol/Paris Agreement","The Montreal Protocol","The Geneva Convention"],a:1,e:"The Kyoto Protocol (1997) and Paris Agreement (2015) set binding targets for reducing greenhouse gas emissions. The Montreal Protocol addresses ozone depletion; Basel Convention addresses hazardous waste."},
+  {q:"The most sustainable approach to environmental pollution control is",o:["Treating pollution after it occurs","Preventing pollution at the source","Diluting pollutants with clean air/water","Exporting waste to other countries"],a:1,e:"Prevention at source (cleaner production, renewable energy, sustainable practices) is more effective and economical than end-of-pipe treatment or dilution, following the 'prevention is better than cure' principle."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('pollution_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('pollution_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/70`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('pollution_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=63?'Ready for JAMB!':pct>=53?'Good, review weak areas':pct>=42?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,15,35,50,60,70];
+  const sectionNames=["A: Composition of Air & Noble Gases","B: Air Pollutants & Sources","C: Water Pollution","D: Soil Pollution & Biodegradability","E: Control Measures & General"];
+  
+  for(let s=0;s<5;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`
+        <h4>Question ${i+1}</h4>
+        <div class="q-text">${q.q}</div>
+        <div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div>
+        <div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div>
+        <div class="exp">${q.e}</div>
+      `;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('pollution_quiz_auth');
+  sessionStorage.removeItem('pollution_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('pollution_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('pollution_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

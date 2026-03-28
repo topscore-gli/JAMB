@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Chemistry - Nuclear Chemistry</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:18px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+.progress-container{
+  position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+  background:var(--shadow-in);z-index:15
+}
+.progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+.content{padding:20px 16px;line-height:1.7}
+.main-header{
+  text-align:center;margin-bottom:28px;padding:20px;border-radius:20px;
+  background:rgba(29,185,84,.1)
+}
+.main-header h1{font-size:23px;margin-bottom:8px;color:var(--accent);font-weight:900}
+.main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+.section-card{
+  background:var(--card-bg);padding:24px 18px;border-radius:20px;
+  box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+  margin-bottom:24px;border-left:4px solid var(--accent)
+}
+.section-card h2{
+  font-size:19px;margin-bottom:14px;color:var(--accent);font-weight:900;
+  display:flex;align-items:center;gap:8px
+}
+.section-card h3{
+  font-size:16px;margin:18px 0 10px;color:var(--accent-tertiary);font-weight:800;
+  padding-left:12px;border-left:3px solid var(--accent-tertiary)
+}
+.section-card h4{font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800}
+.section-card p{margin-bottom:12px;font-size:14px;text-align:justify}
+.section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+.section-card li{margin-bottom:7px;font-size:14px}
+
+.diagram-img{
+  width:100%;max-height:280px;object-fit:contain;border-radius:12px;
+  margin:12px 0 8px;
+  box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out);
+  background:#fff;padding:8px
+}
+.image-caption{
+  text-align:center;font-size:12px;color:var(--text-secondary);
+  font-style:italic;margin-bottom:10px;margin-top:-4px
+}
+
+.quick-facts{
+  background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+  padding:16px;border-radius:15px;margin:14px 0;border:1px solid rgba(29,185,84,.3)
+}
+.quick-facts h4{color:var(--accent);margin-bottom:8px;font-size:15px;font-weight:900}
+.quick-facts li{font-size:13px}
+
+.highlight-box{
+  background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+  border-left:3px solid var(--accent-tertiary)
+}
+.memory-tip{
+  background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+  border-left:4px solid var(--accent-secondary)
+}
+.memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+.memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+.jamb-alert{
+  background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+  border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:16px;margin:18px 0
+}
+.jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:15px;font-weight:900}
+.jamb-alert li{font-size:13px}
+
+.table-container{
+  width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+  box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+}
+.summary-table{
+  width:100%;min-width:1100px;border-collapse:separate;border-spacing:0;font-size:13px
+}
+.summary-table th{
+  background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+}
+.summary-table td{
+  padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);white-space:nowrap;vertical-align:top
+}
+.summary-table tr:last-child td{border-bottom:none}
+.summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+.table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.field{
+  background:var(--background);
+  box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+  border-radius:12px;padding:12px
+}
+.field label{display:block;font-size:12px;color:var(--text-secondary);margin-bottom:6px}
+.field input{
+  width:100%;border:none;outline:none;background:transparent;color:var(--text-primary);
+  font-size:16px;font-weight:800
+}
+.mini-btn{
+  width:100%;border:none;border-radius:12px;padding:12px 14px;font-weight:900;cursor:pointer;
+  background:var(--accent);color:#000;
+  box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out)
+}
+.result{
+  margin-top:10px;padding:12px 14px;border-radius:12px;
+  background:rgba(78,205,196,.10);border:1px solid rgba(78,205,196,.25);
+  color:var(--text-primary);font-size:13px
+}
+.small-note{font-size:12px;color:var(--text-secondary);margin-top:6px}
+
+.nav-bar{
+  position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+  display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+}
+.nav-bar .nav-item{text-align:center}
+.nav-bar .nav-item.center button{
+  width:50px;height:50px;font-size:24px;background:var(--accent);
+  box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+  color:#000
+}
+.nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+.explore-btn{
+  background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+  box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+  font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+}
+.explore-btn:active{
+  box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+  transform:scale(.98)
+}
+  </style>
+</head>
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+<div class="top-bar neumorphic">
+  <button class="neumorphic-btn" onclick="history.back()">←</button>
+  <div class="header">CHEMISTRY</div>
+  <div class="right-icons">
+    <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+    <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="main-header">
+    <h1>☢️ Nuclear Chemistry (JAMB)</h1>
+    <p>Chemical vs nuclear • radioactivity (α β γ) • decay • fission & fusion • half-life • balancing • applications</p>
+  </div>
+
+  <!-- Big summary table -->
+  <div class="section-card">
+    <h2>📋 Summary Table (Must-Memorize)</h2>
+
+    <div class="table-container">
+      <table class="summary-table">
+        <tr>
+          <th>Topic</th>
+          <th>Key idea</th>
+          <th>Main formula / rule</th>
+          <th>Exam clue</th>
+        </tr>
+        <tr>
+          <td><strong>Chemical vs Nuclear</strong></td>
+          <td>Chemical: electrons only; Nuclear: nucleus changes</td>
+          <td>Chemical: element unchanged • Nuclear: transmutation possible</td>
+          <td>Huge energy + mass change → nuclear</td>
+        </tr>
+        <tr>
+          <td><strong>Alpha (α)</strong></td>
+          <td>Helium nucleus</td>
+          <td>⁴₂He (charge +2, mass 4)</td>
+          <td>Low penetration, high ionization</td>
+        </tr>
+        <tr>
+          <td><strong>Beta (β⁻)</strong></td>
+          <td>High-speed electron</td>
+          <td>⁰₋₁e (charge −1, mass ~0)</td>
+          <td>Medium penetration</td>
+        </tr>
+        <tr>
+          <td><strong>Gamma (γ)</strong></td>
+          <td>Electromagnetic wave</td>
+          <td>γ (charge 0, mass 0)</td>
+          <td>Highest penetration, least ionization</td>
+        </tr>
+        <tr>
+          <td><strong>Balancing nuclear eqn</strong></td>
+          <td>Conserve A and Z</td>
+          <td>Sum of mass numbers (A) and atomic numbers (Z) must match</td>
+          <td>Find missing nucleus by subtraction</td>
+        </tr>
+        <tr>
+          <td><strong>Half-life</strong></td>
+          <td>Time for half to decay</td>
+          <td>Fraction remaining = (1/2)<sup>n</sup>, where n = time/T½</td>
+          <td>Common JAMB calculation</td>
+        </tr>
+        <tr>
+          <td><strong>Fission</strong></td>
+          <td>Splitting heavy nucleus</td>
+          <td>²³⁵₉₂U + ¹₀n → products + neutrons + energy</td>
+          <td>Power stations, chain reaction</td>
+        </tr>
+        <tr>
+          <td><strong>Fusion</strong></td>
+          <td>Joining light nuclei</td>
+          <td>²₁H + ³₁H → ⁴₂He + ¹₀n + energy</td>
+          <td>Sun/stars; very high T needed</td>
+        </tr>
+        <tr>
+          <td><strong>Applications</strong></td>
+          <td>Medicine/industry/dating/energy/agric</td>
+          <td>I-131, Co-60, C-14 etc.</td>
+          <td>Know “which isotope for what”</td>
+        </tr>
+      </table>
+    </div>
+    <div class="table-scroll-hint">← Swipe table to see more →</div>
+  </div>
+
+  <!-- Step 1 -->
+  <div class="section-card">
+    <h2>1️⃣ Chemical Reaction vs Nuclear Reaction</h2>
+    <p><strong>Key point:</strong> In chemical reactions the nucleus stays the same. In nuclear reactions the nucleus itself changes.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/9/9c/Nuclear_vs_chemical_reactions.svg" alt="Nuclear vs chemical reactions" class="diagram-img">
+    <div class="image-caption">Chemical reactions rearrange electrons; nuclear reactions change the nucleus</div>
+
+    <div class="table-container">
+      <table class="summary-table">
+        <tr>
+          <th>Feature</th>
+          <th>Ordinary chemical reaction</th>
+          <th>Nuclear reaction</th>
+        </tr>
+        <tr>
+          <td><strong>What changes</strong></td>
+          <td>Electrons (outer shells)</td>
+          <td>Protons + neutrons (nucleus)</td>
+        </tr>
+        <tr>
+          <td><strong>Element changes?</strong></td>
+          <td>No (same element)</td>
+          <td>Yes (transmutation)</td>
+        </tr>
+        <tr>
+          <td><strong>Mass change</strong></td>
+          <td>Very tiny (not measurable)</td>
+          <td>Large (measurable)</td>
+        </tr>
+        <tr>
+          <td><strong>Energy</strong></td>
+          <td>Small</td>
+          <td>Extremely large</td>
+        </tr>
+        <tr>
+          <td><strong>Example</strong></td>
+          <td>2H₂ + O₂ → 2H₂O</td>
+          <td>²³⁵₉₂U + ¹₀n → fission products + energy</td>
+        </tr>
+      </table>
+    </div>
+    <div class="table-scroll-hint">← Swipe table to see more →</div>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="section-card">
+    <h2>2️⃣ Radioactivity (α, β, γ) + Detection</h2>
+    <p><strong>Radioactivity:</strong> unstable nuclei emit radiation spontaneously to become stable.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Alpha_beta_gamma_radiation_penetration.svg" alt="Penetration of alpha beta gamma" class="diagram-img">
+    <div class="image-caption">Penetration: α stopped by paper, β by aluminium, γ needs lead/concrete</div>
+
+    <h3>Properties of α, β, γ (very important table)</h3>
+    <div class="table-container">
+      <table class="summary-table">
+        <tr>
+          <th>Property</th>
+          <th>Alpha (α)</th>
+          <th>Beta (β⁻)</th>
+          <th>Gamma (γ)</th>
+        </tr>
+        <tr>
+          <td><strong>Nature</strong></td>
+          <td>Helium nucleus (⁴₂He)</td>
+          <td>Electron (⁰₋₁e)</td>
+          <td>Electromagnetic wave</td>
+        </tr>
+        <tr>
+          <td><strong>Charge</strong></td>
+          <td>+2</td>
+          <td>−1</td>
+          <td>0</td>
+        </tr>
+        <tr>
+          <td><strong>Mass</strong></td>
+          <td>4 u</td>
+          <td>~0</td>
+          <td>0</td>
+        </tr>
+        <tr>
+          <td><strong>Speed</strong></td>
+          <td>~10% of light</td>
+          <td>~90% of light</td>
+          <td>Speed of light</td>
+        </tr>
+        <tr>
+          <td><strong>Penetration</strong></td>
+          <td>Very low (paper/skin)</td>
+          <td>Medium (1 mm Al)</td>
+          <td>Very high (lead/concrete)</td>
+        </tr>
+        <tr>
+          <td><strong>Ionizing power</strong></td>
+          <td>Very high</td>
+          <td>Medium</td>
+          <td>Very low</td>
+        </tr>
+        <tr>
+          <td><strong>Deflection in field</strong></td>
+          <td>Deflected (+)</td>
+          <td>Deflected (opposite α)</td>
+          <td>Not deflected</td>
+        </tr>
+      </table>
+    </div>
+    <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+    <h3>Detection of radiation (know at least 3)</h3>
+    <div class="quick-facts">
+      <ul>
+        <li><strong>Geiger–Muller (G-M) counter:</strong> most tested (clicks/count rate)</li>
+        <li>Photographic film (blackens)</li>
+        <li>Cloud chamber (visible tracks)</li>
+        <li>Scintillation counter</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Step 3 -->
+  <div class="section-card">
+    <h2>3️⃣ Natural vs Artificial Radioactivity</h2>
+    <p><strong>Natural:</strong> spontaneous decay in nature (e.g., U-238 in rocks decays to Pb).</p>
+    <p><strong>Artificial (induced):</strong> made by bombarding a stable nucleus with particles (reactor/cyclotron).</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/Radioactive_decay_chain.svg" alt="Radioactive decay chain" class="diagram-img">
+    <div class="image-caption">Natural radioactivity often happens as decay series (chains)</div>
+
+    <div class="highlight-box">
+      <p><strong>Example (induced):</strong> ¹⁴₇N + ⁴₂He → ¹⁷₈O + ¹₁H</p>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 Easy memory</strong>
+      <p>Natural = spontaneous in nature • Artificial = induced by man (bombardment).</p>
+    </div>
+  </div>
+
+  <!-- Step 4 -->
+  <div class="section-card">
+    <h2>4️⃣ Nuclear Stability & Radioactive Decay</h2>
+    <p>Stability depends largely on neutron/proton ratio (n/p). If unstable, the nucleus decays.</p>
+
+    <h3>Common decay equations</h3>
+    <div class="quick-facts">
+      <ul>
+        <li><strong>Alpha decay (heavy nuclei):</strong> ²²⁶₈₈Ra → ²²²₈₆Rn + ⁴₂He</li>
+        <li><strong>Beta-minus (too many neutrons):</strong> ¹⁴₆C → ¹⁴₇N + ⁰₋₁e</li>
+        <li><strong>Gamma emission:</strong> no change in A or Z (only energy released)</li>
+      </ul>
+    </div>
+
+    <div class="jamb-alert">
+      <h4>Quick changes (memorize)</h4>
+      <ul>
+        <li>α emission: A decreases by 4, Z decreases by 2</li>
+        <li>β⁻ emission: A unchanged, Z increases by 1</li>
+        <li>γ emission: A and Z unchanged</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Step 5 -->
+  <div class="section-card">
+    <h2>5️⃣ Fission and Fusion</h2>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Nuclear_fission_and_fusion.svg" alt="Fission vs fusion diagram" class="diagram-img">
+    <div class="image-caption">Fission splits heavy nuclei; fusion joins light nuclei</div>
+
+    <h3>Nuclear fission (splitting)</h3>
+    <p>Heavy nucleus splits into smaller nuclei, releasing energy and more neutrons (can cause chain reaction).</p>
+    <div class="highlight-box">
+      <p><strong>Example:</strong> ²³⁵₉₂U + ¹₀n → fission products + 3¹₀n + energy</p>
+      <p><strong>Use:</strong> nuclear power stations</p>
+    </div>
+
+    <h3>Nuclear fusion (joining)</h3>
+    <p>Light nuclei combine to form a heavier nucleus, releasing a lot of energy (requires very high temperature).</p>
+    <div class="highlight-box">
+      <p><strong>Example:</strong> ²₁H + ³₁H → ⁴₂He + ¹₀n + energy</p>
+      <p><strong>Where:</strong> the sun/stars</p>
+    </div>
+
+    <div class="table-container">
+      <table class="summary-table">
+        <tr>
+          <th>Feature</th>
+          <th>Fission</th>
+          <th>Fusion</th>
+        </tr>
+        <tr>
+          <td><strong>What happens</strong></td>
+          <td>Splits heavy nucleus</td>
+          <td>Joins light nuclei</td>
+        </tr>
+        <tr>
+          <td><strong>Conditions</strong></td>
+          <td>Neutron bombardment (reactor)</td>
+          <td>Very high temperature/pressure</td>
+        </tr>
+        <tr>
+          <td><strong>Where seen</strong></td>
+          <td>Nuclear power plants</td>
+          <td>Sun and stars</td>
+        </tr>
+        <tr>
+          <td><strong>Waste</strong></td>
+          <td>Radioactive waste produced</td>
+          <td>Less long-lived waste (in theory)</td>
+        </tr>
+      </table>
+    </div>
+    <div class="table-scroll-hint">← Swipe table to see more →</div>
+  </div>
+
+  <!-- Step 6 half-life -->
+  <div class="section-card">
+    <h2>6️⃣ Half-Life (T½) Calculations</h2>
+    <p><strong>Half-life (T½):</strong> time taken for half of the radioactive atoms in a sample to decay.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4d/Half-life_graph.svg" alt="Half-life decay curve" class="diagram-img">
+    <div class="image-caption">Radioactive decay curve (exponential): decreases by half each half-life</div>
+
+    <div class="highlight-box">
+      <p><strong>Formula:</strong> Fraction remaining = (1/2)<sup>n</sup></p>
+      <p>where <strong>n = time / T½</strong></p>
+    </div>
+
+    <div class="quick-facts">
+      <h4>Fast examples</h4>
+      <ul>
+        <li>T½ = 4 days, after 12 days → n = 3 → fraction left = 1/8</li>
+        <li>16 g (T½ = 8 days), after 24 days → n = 3 → mass left = 2 g</li>
+      </ul>
+    </div>
+
+    <h3>Mini Calculator (Half-life)</h3>
+    <div class="calc-grid">
+      <div class="field">
+        <label>Initial amount (mass or activity)</label>
+        <input id="initAmt" type="number" placeholder="e.g., 16" />
+      </div>
+      <div class="field">
+        <label>Half-life T½ (same time unit)</label>
+        <input id="halfLife" type="number" placeholder="e.g., 8" />
+      </div>
+      <div class="field" style="grid-column:1 / -1">
+        <label>Time elapsed (same unit)</label>
+        <input id="timeElapsed" type="number" placeholder="e.g., 24" />
+      </div>
+    </div>
+    <button class="mini-btn" onclick="calcHalfLife()">Calculate remaining</button>
+    <div class="result" id="halfLifeResult">Result will appear here…</div>
+    <div class="small-note">Tip: If n is an integer, you can halve repeatedly. If not, use (1/2)<sup>n</sup>.</div>
+  </div>
+
+  <!-- Step 7 balancing -->
+  <div class="section-card">
+    <h2>7️⃣ Balancing Simple Nuclear Equations</h2>
+    <p><strong>Rule:</strong> total mass number (A) and atomic number (Z) must balance on both sides.</p>
+
+    <div class="quick-facts">
+      <h4>Examples</h4>
+      <ul>
+        <li>²³⁸₉₂U → ²³⁴₉₀Th + ⁴₂He</li>
+        <li>¹⁴₆C → ¹⁴₇N + ⁰₋₁e</li>
+      </ul>
+    </div>
+
+    <div class="jamb-alert">
+      <h4>How to complete a missing product (fast)</h4>
+      <ul>
+        <li>Missing A = (A on left) − (A of known particles)</li>
+        <li>Missing Z = (Z on left) − (Z of known particles)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Step 8 applications -->
+  <div class="section-card">
+    <h2>8️⃣ Applications of Radioactivity</h2>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Nuclear_medicine_scan.jpg" alt="Nuclear medicine scan" class="diagram-img">
+    <div class="image-caption">Radioisotopes are used in medicine for diagnosis and treatment</div>
+
+    <div class="table-container">
+      <table class="summary-table">
+        <tr>
+          <th>Area</th>
+          <th>Use</th>
+          <th>Common isotope (JAMB)</th>
+        </tr>
+        <tr>
+          <td><strong>Medicine</strong></td>
+          <td>Thyroid diagnosis/treatment</td>
+          <td>I-131</td>
+        </tr>
+        <tr>
+          <td><strong>Medicine</strong></td>
+          <td>Cancer radiotherapy (γ-rays)</td>
+          <td>Co-60</td>
+        </tr>
+        <tr>
+          <td><strong>Industry</strong></td>
+          <td>Thickness gauges / quality control</td>
+          <td>β sources (general)</td>
+        </tr>
+        <tr>
+          <td><strong>Industry</strong></td>
+          <td>Sterilisation of equipment/food</td>
+          <td>γ sources (general)</td>
+        </tr>
+        <tr>
+          <td><strong>Dating</strong></td>
+          <td>Archaeology (once-living things)</td>
+          <td>C-14</td>
+        </tr>
+        <tr>
+          <td><strong>Dating</strong></td>
+          <td>Rocks/very old materials</td>
+          <td>Uranium–lead</td>
+        </tr>
+        <tr>
+          <td><strong>Energy</strong></td>
+          <td>Electricity generation</td>
+          <td>U-235 (fission)</td>
+        </tr>
+        <tr>
+          <td><strong>Agriculture</strong></td>
+          <td>Tracers, mutation breeding</td>
+          <td>radioisotopes (general)</td>
+        </tr>
+      </table>
+    </div>
+    <div class="table-scroll-hint">← Swipe table to see more →</div>
+  </div>
+
+  <!-- JAMB examples -->
+  <div class="section-card">
+    <h2>📝 3 JAMB Examples (Solved)</h2>
+
+    <h3>Example 1: Half-life fraction</h3>
+    <p><strong>Question:</strong> T½ = 5 days. Fraction remaining after 20 days?</p>
+    <div class="highlight-box">
+      <p>n = 20/5 = 4</p>
+      <p>Fraction left = (1/2)⁴ = <strong>1/16</strong></p>
+    </div>
+
+    <h3>Example 2: Complete the equation</h3>
+    <p><strong>Question:</strong> ²²⁶₈₈Ra → ? + ⁴₂He</p>
+    <div class="highlight-box">
+      <p>Mass: 226 = A + 4 → A = 222</p>
+      <p>Atomic: 88 = Z + 2 → Z = 86</p>
+      <p>So product is <strong>²²²₈₆Rn</strong></p>
+    </div>
+
+    <h3>Example 3: Application</h3>
+    <p><strong>Question:</strong> Which radioisotope is used for cancer treatment?</p>
+    <div class="highlight-box">
+      <p><strong>Answer:</strong> Cobalt-60 (γ-rays)</p>
+    </div>
+  </div>
+
+  <!-- Checklist -->
+  <div class="section-card">
+    <h2>✅ Quick Revision Checklist</h2>
+    <div class="quick-facts">
+      <ul>
+        <li>Differences: chemical vs nuclear reactions</li>
+        <li>α, β, γ table (charge, mass, penetration, ionization, deflection)</li>
+        <li>Natural vs artificial radioactivity</li>
+        <li>Decay equations (α, β⁻, γ) + what changes in A and Z</li>
+        <li>Fission vs fusion</li>
+        <li>Half-life formula + practice</li>
+        <li>Balancing nuclear equations</li>
+        <li>Applications (I-131, Co-60, C-14, U-235)</li>
+      </ul>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 Final memory</strong>
+      <p>Balance A and Z • α = heavy & highly ionizing • γ = most penetrating • Half-life uses (1/2)<sup>n</sup>.</p>
+    </div>
+  </div>
+
+  <button class="explore-btn" onclick="alert('Practice: alpha/beta/gamma properties + half-life + balancing equations!')">Practice JAMB Questions</button>
+</div>
+</div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+
+    function calcHalfLife(){
+      const init = parseFloat(document.getElementById('initAmt').value || "0");
+      const t12 = parseFloat(document.getElementById('halfLife').value || "0");
+      const t = parseFloat(document.getElementById('timeElapsed').value || "0");
+
+      const out = document.getElementById('halfLifeResult');
+      if(init <= 0 || t12 <= 0 || t < 0){
+        out.textContent = "Please enter valid values (initial > 0, half-life > 0, time ≥ 0).";
+        return;
+      }
+      const n = t / t12;
+      const fraction = Math.pow(0.5, n);
+      const remaining = init * fraction;
+
+      out.textContent =
+        `n = time/T½ = ${t}/${t12} = ${n.toFixed(4)}. Fraction remaining = (1/2)^n = ${(fraction).toFixed(6)}. Remaining amount = ${remaining.toFixed(4)} (same unit as initial).`;
+    }
+  </script>
+</body>
+</html>

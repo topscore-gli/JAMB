@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Chemistry Quiz</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Chemistry</h1>
+      <p>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Separation of Mixtures & Purification</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 60:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration
+const CONFIG={TIME:3600,PASS:30}; // 60 minutes for 60 questions
+
+// Section mapping
+const SECTIONS={
+  0:"A: Elements, Compounds & Mixtures",
+  12:"B: Physical & Chemical Changes",
+  20:"C: Pure & Impure Substances",
+  28:"D: Physical Properties & Purity Testing",
+  35:"E: Separation Techniques",
+  50:"F: Applications & Everyday Life"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 60 JAMB Chemistry Questions
+const QUIZ_DATA=[
+  // Section A: Elements, Compounds & Mixtures (1-12)
+  {q:"Which of the following statements correctly distinguishes an element from a compound?",o:["An element can be decomposed by chemical means while a compound cannot","A compound consists of only one type of atom while an element consists of different atoms","An element consists of only one type of atom while a compound consists of two or more elements chemically combined","Elements are always solids while compounds are always liquids"],a:2,e:"An element contains one type of atom; a compound contains chemically combined elements."},
+  {q:"Air is considered a mixture rather than a compound because:",o:["It is colourless and odourless","Its components are chemically combined in fixed proportions","Its components can be separated by physical means and do not have fixed proportions","It contains only gases"],a:2,e:"Mixtures can be separated physically and have variable composition."},
+  {q:"Which of the following is NOT a characteristic of a compound?",o:["It has a definite chemical composition","It can be separated into its constituent elements by chemical methods","It retains the properties of its constituent elements","It has a fixed melting and boiling point"],a:2,e:"Compounds have properties different from their constituent elements."},
+  {q:"Brass is an alloy of copper and zinc. Brass is best classified as:",o:["An element","A compound","A homogeneous mixture","A heterogeneous mixture"],a:2,e:"Alloys are homogeneous mixtures (solid solutions)."},
+  {q:"Which of the following substances is a compound?",o:["Gold","Graphite","Diamond","Calcium oxide"],a:3,e:"CaO is a compound; gold, graphite and diamond are elements."},
+  {q:"The difference between a mixture and a compound is that:",o:["A mixture can be heterogeneous while a compound is always homogeneous","A mixture has components in fixed proportions while a compound has variable composition","Energy is always released when a mixture is formed but absorbed when a compound is formed","A mixture requires chemical methods for separation while a compound requires physical methods"],a:0,e:"Mixtures can be heterogeneous; compounds are always homogeneous."},
+  {q:"Which pair of substances represents a mixture rather than a compound?",o:["Hydrogen and oxygen in water (H₂O)","Iron and sulfur in iron(II) sulfide (FeS)","Sodium and chlorine in sodium chloride (NaCl)","Sand and salt mixed together"],a:3,e:"Sand and salt is a physical mixture; others are chemical compounds."},
+  {q:"Smoke is an example of:",o:["A true solution","A colloid (aerosol)","A suspension","A pure substance"],a:1,e:"Smoke is a colloidal dispersion (aerosol) of solid in gas."},
+  {q:"Which statement about elements is correct?",o:["All elements exist as single atoms","Elements cannot be broken down into simpler substances by chemical means","Elements always have the same number of neutrons and protons","Elements are always metallic"],a:1,e:"Elements are pure substances that cannot be chemically broken down."},
+  {q:"Which of the following is an example of a diatomic element?",o:["Sulphur","Phosphorus","Nitrogen","Sodium"],a:2,e:"Nitrogen exists as N₂ molecules; others are not diatomic."},
+  {q:"A sample of matter that cannot be separated into two or more substances by physical means is:",o:["A mixture","An element or a compound","A solution","A colloid"],a:1,e:"Elements and compounds are pure substances requiring chemical separation."},
+  {q:"Which property is common to both mixtures and compounds?",o:["They have fixed melting points","They are homogeneous throughout","They contain two or more substances","They can only be separated by chemical methods"],a:2,e:"Both contain multiple substances, but differ in bonding and separation methods."},
+  
+  // Section B: Physical & Chemical Changes (13-20)
+  {q:"Which of the following is a chemical change?",o:["Dissolving sugar in water","Melting of ice","Rusting of iron","Magnetizing a piece of iron"],a:2,e:"Rusting forms new substance (iron oxide); others are physical changes."},
+  {q:"The process of boiling water to dryness and collecting the vapour is:",o:["A chemical change because water is destroyed","A physical change because water can be recovered by condensation","A chemical change because heat is absorbed","A physical change only if salt is added"],a:1,e:"Phase changes are physical; water is recovered unchanged."},
+  {q:"Which observation indicates that a chemical change has occurred?",o:["Change in state from solid to liquid","Formation of a precipitate with different properties from the original solutions","Change in colour due to grinding a substance into powder","Dissolution of a solid in a liquid to form a clear solution"],a:1,e:"New substance formation indicates chemical change."},
+  {q:"Burning of magnesium ribbon in air produces a white powder. This is a chemical change because:",o:["Heat and light are produced","The white powder formed is magnesium oxide with different properties from magnesium","The ribbon becomes shorter","A gas is evolved"],a:1,e:"New compound (MgO) forms with different properties."},
+  {q:"Which process represents both a physical change and a reversible change?",o:["Electrolysis of water","Sublimation of iodine","Fermentation of glucose","Combustion of wood"],a:1,e:"Sublimation is physical and reversible (deposition)."},
+  {q:"The reaction between iron filings and sulfur powder upon heating produces iron(II) sulfide. This is classified as a chemical change because:",o:["Heat is required to start the reaction","The product is a compound with properties different from both iron and sulfur","The mixture becomes hotter during the reaction","The color changes from gray-yellow to black"],a:1,e:"New substance forms with distinct properties."},
+  {q:"Which observation is NOT evidence of a chemical change?",o:["Evolution of a gas that turns limewater milky","Formation of a blue solution when a white solid dissolves in water","Change in temperature without formation of new substances","Precipitation of an insoluble solid when two clear solutions are mixed"],a:2,e:"Temperature change alone doesn't indicate new substance formation."},
+  {q:"Dissolving sodium chloride in water is a physical change because:",o:["No energy change occurs during the process","The sodium chloride can be recovered by evaporation of the water","The solution conducts electricity","The ions formed are different from atoms"],a:1,e:"Recovery of original substance by physical means confirms physical change."},
+  
+  // Section C: Pure & Impure Substances (21-28)
+  {q:"A pure substance is characterized by:",o:["Variable melting point depending on the amount of substance","Sharp, definite melting and boiling points","Ability to be separated into components by filtration","Presence of impurities in trace amounts"],a:1,e:"Pure substances have definite, sharp melting/boiling points."},
+  {q:"An impure sample of naphthalene was found to melt between 76°C and 79°C. Pure naphthalene melts at 80°C. The depression of melting point is caused by:",o:["The impurities disrupting the crystal lattice structure","The impurities raising the melting point","The sample being too small","The heating being too rapid"],a:0,e:"Impurities disrupt crystal lattice, causing melting point depression."},
+  {q:"Which of the following indicates that a sample of water is impure?",o:["It boils at 100°C at sea level","It boils at 102°C at sea level","It freezes at 0°C","It has a density of 1.0 g/cm³ at 4°C"],a:1,e:"Impurities cause boiling point elevation (elevation, not depression)."},
+  {q:"The purity of a solid organic compound is best confirmed by:",o:["Its colour","Its melting point","Its solubility in water","Its density"],a:1,e:"Sharp melting point indicates purity for organic solids."},
+  {q:"A liquid was distilled and the temperature remained constant at 78°C throughout the distillation. This indicates:",o:["The liquid is a mixture of alcohols","The liquid is pure ethanol","The thermometer is faulty","The atmospheric pressure is changing"],a:1,e:"Constant boiling point indicates pure substance (ethanol boils at 78°C)."},
+  {q:"Which statement about pure and impure substances is correct?",o:["Pure substances are always elements, never compounds","Impure substances have higher melting points than pure substances","Pure substances have definite boiling points while impure substances boil over a range","All mixtures are heterogeneous"],a:2,e:"Impurities cause boiling over a range; pure substances have definite bp."},
+  {q:"During fractional distillation of crude oil, the fraction collected at the lowest temperature is:",o:["Bitumen","Diesel oil","Petrol (gasoline)","Refinery gases"],a:3,e:"Lower boiling point fractions distill first; refinery gases have lowest bp."},
+  {q:"The presence of impurities in a solvent generally:",o:["Raises its boiling point and lowers its freezing point","Lowers its boiling point and raises its freezing point","Has no effect on its boiling and freezing points","Raises both its boiling and freezing points"],a:0,e:"Colligative properties: impurities elevate bp and depress fp."},
+  
+  // Section D: Physical Properties & Purity Testing (29-35)
+  {q:"The density of a pure substance is:",o:["Dependent on the amount of substance present","A constant characteristic property at a given temperature and pressure","Always greater than 1.0 g/cm³","Different for different samples of the same substance"],a:1,e:"Density is intensive property, constant at given T and P."},
+  {q:"Which property is NOT suitable as a criterion for purity?",o:["Boiling point","Density","Colour","Melting point"],a:2,e:"Colour is subjective and can vary; bp, mp, density are quantitative."},
+  {q:"A student measured the melting point of a solid and obtained a value of 115-120°C. The same solid, when pure, melts at 122°C. The most likely explanation is:",o:["The thermometer was not calibrated properly","The sample contains impurities","The heating rate was too slow","The sample was too large"],a:1,e:"Melting range indicates impurities (melting point depression)."},
+  {q:"The freezing point of a pure substance is:",o:["Higher than its melting point","Lower than its melting point","The same as its melting point","Variable depending on cooling rate"],a:2,e:"For pure substances, freezing point = melting point."},
+  {q:"Which measurement would best distinguish between pure water and a salt solution?",o:["Colour","Density at 25°C","Volume","Mass"],a:1,e:"Salt solution has higher density than pure water."},
+  {q:"The boiling point of a liquid is defined as the temperature at which:",o:["All the liquid turns to vapour","The vapour pressure equals atmospheric pressure","Bubbles first appear in the liquid","The liquid starts to decompose"],a:1,e:"Definition: vapour pressure = external pressure."},
+  {q:"A solid has a sharp melting point of 114°C and density of 1.98 g/cm³. These data suggest:",o:["The substance is definitely an element","The substance is impure","The substance is likely a pure compound","The substance is a mixture"],a:2,e:"Sharp melting point suggests pure compound."},
+  
+  // Section E: Separation Techniques (36-50)
+  {q:"Which method is most appropriate for separating a mixture of iodine and sand?",o:["Filtration","Sublimation","Evaporation","Decantation"],a:1,e:"Iodine sublimes; sand does not."},
+  {q:"Fractional distillation is preferred over simple distillation when:",o:["Separating a solid from a liquid","Separating two miscible liquids with boiling points differing by less than 25°C","Separating two immiscible liquids","The mixture contains a dissolved gas"],a:1,e:"Fractional distillation separates liquids with close boiling points."},
+  {q:"In paper chromatography, the Rf value is calculated as:",o:["Distance moved by solvent ÷ Distance moved by component","Distance moved by component ÷ Distance moved by solvent front","Mass of component ÷ Total mass of mixture","Concentration of component ÷ Concentration of solvent"],a:1,e:"Rf = distance traveled by component / distance traveled by solvent."},
+  {q:"Iron filings can be separated from sulfur powder using:",o:["A magnet","Adding water and filtering","Heating the mixture","Dissolving in acid"],a:0,e:"Iron is magnetic; sulfur is not."},
+  {q:"Which technique separates cream from milk?",o:["Filtration","Centrifugation","Evaporation","Sublimation"],a:1,e:"Centrifugation separates based on density differences."},
+  {q:"Recrystallization is used to purify solids based on the principle that:",o:["Impurities are more soluble in the cold solvent than the hot solvent","The pure compound has different solubility at different temperatures","Impurities sublime more readily than the desired compound","The compound decomposes at high temperatures"],a:1,e:"Solubility differences at different temperatures enable purification."},
+  {q:"Which method would separate a mixture of two immiscible liquids, oil and water?",o:["Fractional distillation","Using a separating funnel","Paper chromatography","Sublimation"],a:1,e:"Separating funnel exploits density difference of immiscible liquids."},
+  {q:"Simple distillation is most suitable for:",o:["Separating ethanol and water","Separating water from dissolved salt","Separating the pigments in green leaves","Separating nitrogen and oxygen from liquid air"],a:1,e:"Simple distillation separates liquid from non-volatile solid."},
+  {q:"In column chromatography, components separate because they:",o:["Have different boiling points","Are adsorbed to different extents on the stationary phase","Have different magnetic properties","React chemically with the solvent"],a:1,e:"Different adsorption affinities cause separation."},
+  {q:"Which separation method does NOT involve a change of state?",o:["Sublimation","Distillation","Filtration","Evaporation"],a:2,e:"Filtration is mechanical separation without phase change."},
+  {q:"A mixture of ammonium chloride and sodium chloride can be separated by:",o:["Adding water and filtering","Sublimation","Using a magnet","Fractional distillation"],a:1,e:"NH₄Cl sublimes; NaCl does not."},
+  {q:"The principle behind centrifugation is:",o:["Different boiling points of components","Different densities of components subjected to centrifugal force","Different solubilities in a solvent","Different magnetic properties"],a:1,e:"Centrifugal force separates components by density."},
+  {q:"Which technique would you use to obtain pure copper(II) sulfate crystals from a solution?",o:["Simple distillation","Evaporation to dryness","Crystallization by cooling a hot saturated solution","Sublimation"],a:2,e:"Crystallization produces pure crystals from solution."},
+  {q:"Decantation is best described as:",o:["Heating a mixture until one component vaporizes","Carefully pouring off a liquid from above a settled solid","Using a filter to separate solid from liquid","Spinning a mixture at high speed to separate components"],a:1,e:"Decantation pours off liquid leaving settled solid."},
+  {q:"Which separation technique is based on the principle that different substances have different affinities for the stationary and mobile phases?",o:["Distillation","Chromatography","Crystallization","Magnetic separation"],a:1,e:"Chromatography relies on differential partitioning between phases."},
+  
+  // Section F: Applications & Everyday Life (51-60)
+  {q:"The process of obtaining salt from seawater in coastal areas involves:",o:["Filtration followed by sublimation","Evaporation of water leaving salt crystals","Fractional distillation of seawater","Adding chemicals to precipitate the salt"],a:1,e:"Solar evaporation removes water, leaving salt."},
+  {q:"The purification of local gin (ogogoro) from fermented palm wine utilizes:",o:["Simple distillation","Fractional distillation","Filtration","Chromatography"],a:0,e:"Simple distillation separates ethanol from fermentation mixture."},
+  {q:"In petroleum refining, the separation of crude oil into useful fractions is based on:",o:["Different densities of the hydrocarbons","Different boiling points of the hydrocarbons","Different colours of the fractions","Different viscosities at room temperature"],a:1,e:"Fractional distillation separates by boiling point differences."},
+  {q:"A student wants to separate the coloured pigments in a leaf extract. The best method is:",o:["Simple distillation","Paper chromatography","Evaporation","Using a separating funnel"],a:1,e:"Chromatography separates mixtures of colored compounds."},
+  {q:"The use of a centrifuge in a medical laboratory to separate blood components demonstrates the principle of:",o:["Different boiling points","Different densities under centrifugal force","Different magnetic properties","Different solubilities"],a:1,e:"Blood components separate by density in centrifuge."},
+  {q:"Winnowing, a traditional method of separating chaff from grain, is based on the principle of:",o:["Magnetic separation","Density difference and air movement","Sublimation","Filtration"],a:1,e:"Lighter chaff is blown away by air; heavier grain falls."},
+  {q:"The process of obtaining pure water from sea water on ships uses:",o:["Filtration","Simple distillation with condensation","Crystallization","Sublimation"],a:1,e:"Desalination by distillation produces fresh water."},
+  {q:"Which household activity represents crystallization?",o:["Brewing tea","Making sugar crystals from sugar solution","Filtering coffee","Whisking egg whites"],a:1,e:"Sugar crystallization from saturated solution."},
+  {q:"The removal of iron contaminants from crushed ore in mining uses:",o:["Fractional distillation","Magnetic separation","Chromatography","Evaporation"],a:1,e:"Magnetic separation removes iron from non-magnetic ore."},
+  {q:"Which statement correctly applies separation principles to everyday life?",o:["Boiling point elevation is used to separate cream from milk","Chromatography is used to test for purity of gold jewelry","Filtration is used in water treatment plants to remove suspended solids","Sublimation is used to separate alcohol from water in breweries"],a:2,e:"Water treatment uses filtration to remove suspended particles."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('chem_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('chem_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/60`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('chem_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,12,20,28,35,50,60];
+  const sectionNames=["A: Elements, Compounds & Mixtures","B: Physical & Chemical Changes","C: Pure & Impure Substances","D: Physical Properties & Purity Testing","E: Separation Techniques","F: Applications & Everyday Life"];
+  
+  for(let s=0;s<6;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`
+        <h4>Question ${i+1}</h4>
+        <div class="q-text">${q.q}</div>
+        <div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div>
+        <div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div>
+        <div class="exp">${q.e}</div>
+      `;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('chem_quiz_auth');
+  sessionStorage.removeItem('chem_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('chem_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('chem_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

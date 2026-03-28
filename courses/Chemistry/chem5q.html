@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Chemistry - Nuclear Chemistry</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Chemistry</h1>
+      <p>Nuclear Chemistry<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Nuclear Chemistry</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 70:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration
+const CONFIG={TIME:4200,PASS:60}; // 70 minutes for 70 questions
+
+// Section mapping
+const SECTIONS={
+  0:"A: Radioactivity - Types & Properties",
+  15:"B: Natural & Artificial Radioactivity",
+  25:"C: Nuclear Stability & Decay",
+  45:"D: Nuclear Reactions - Fission & Fusion",
+  60:"E: Applications & Comprehensive"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 70 JAMB Nuclear Chemistry Questions
+const QUIZ_DATA=[
+  // Section A: Radioactivity - Types & Properties (1-15)
+  {q:"Which of the following statements about alpha particles is correct?",o:["They are electrons","They have a charge of -1","They are helium nuclei with charge +2","They travel at the speed of light","They have the highest penetrating power"],a:2,e:"Alpha particles are helium nuclei (₂⁴He) with 2 protons and 2 neutrons, giving them a +2 charge."},
+  {q:"Which radiation is most easily stopped by a sheet of paper?",o:["Gamma rays","Beta particles","X-rays","Alpha particles","Neutrons"],a:3,e:"Alpha particles have the lowest penetrating power and are stopped by paper or a few cm of air."},
+  {q:"The radiation that is not deflected by electric or magnetic fields is:",o:["Alpha rays","Beta rays","Gamma rays","Cathode rays","Canal rays"],a:2,e:"Gamma rays are uncharged electromagnetic waves, so they are not deflected by electric or magnetic fields."},
+  {q:"Which property distinguishes beta particles from alpha particles?",o:["Beta particles are heavier","Beta particles have lower ionizing power","Beta particles are positively charged","Beta particles cannot penetrate aluminum","Beta particles are helium nuclei"],a:1,e:"Beta particles have lower ionizing power than alpha particles due to their smaller mass and single charge."},
+  {q:"The speed of gamma radiation in vacuum is:",o:["3 × 10⁴ m/s","3 × 10⁶ m/s","3 × 10⁸ m/s","3 × 10¹⁰ m/s","Zero"],a:2,e:"Gamma rays are electromagnetic waves and travel at the speed of light (3 × 10⁸ m/s)."},
+  {q:"Which radiation produces the highest ionization in air?",o:["Gamma rays","X-rays","Beta particles","Alpha particles","Ultraviolet rays"],a:3,e:"Alpha particles produce intense ionization due to their large mass and double positive charge."},
+  {q:"A radioactive substance emits a particle with mass number 4 and atomic number 2. The particle is:",o:["Beta particle","Gamma ray","Alpha particle","Neutron","Proton"],a:2,e:"Mass number 4 and atomic number 2 corresponds to a helium nucleus (alpha particle)."},
+  {q:"Which of the following has zero mass number?",o:["Alpha particle","Beta particle","Proton","Neutron","Gamma ray"],a:4,e:"Gamma rays are pure energy (electromagnetic radiation) with no mass."},
+  {q:"Beta particles are identified as:",o:["Electrons from the nucleus","Electrons from outer shells","Helium nuclei","Electromagnetic waves","Neutrons"],a:0,e:"Beta particles are electrons emitted from the nucleus when a neutron converts to a proton."},
+  {q:"In a magnetic field directed into the page, beta particles will be deflected:",o:["Upward","Downward","Into the page","Out of the page","Not deflected"],a:0,e:"Beta particles (negative) are deflected according to Fleming's left-hand rule; opposite to alpha particles."},
+  {q:"Which detector uses gas ionization to detect radiation?",o:["Photographic film","Cloud chamber","Geiger-Muller counter","Fluorescent screen","Scintillation counter"],a:2,e:"The Geiger-Muller counter detects radiation by ionizing gas in a tube, creating electrical pulses."},
+  {q:"The penetrating power of radiation depends on:",o:["Its ionizing power only","Its mass and velocity","Its energy and nature","The source material only","Temperature of the source"],a:2,e:"Penetrating power depends on the energy and nature (mass, charge) of the radiation."},
+  {q:"Which radiation causes most damage to living cells when inside the body?",o:["Gamma rays","Beta particles","Alpha particles","X-rays","Ultraviolet light"],a:2,e:"Alpha particles have high ionizing power and cause severe localized damage when ingested or inhaled."},
+  {q:"A radiation with high penetrating power and low ionizing power is:",o:["Alpha","Beta","Gamma","Proton","Neutron"],a:2,e:"Gamma rays have high penetration (need thick lead to stop) but low ionization due to no charge."},
+  {q:"The charge-to-mass ratio is highest for:",o:["Alpha particles","Beta particles","Gamma rays","Protons","Neutrons"],a:1,e:"Beta particles have very small mass (1/1840 amu) and unit charge, giving the highest charge-to-mass ratio."},
+  
+  // Section B: Natural & Artificial Radioactivity (16-25)
+  {q:"Natural radioactivity was discovered by:",o:["Marie Curie","Pierre Curie","Henri Becquerel","Ernest Rutherford","Albert Einstein"],a:2,e:"Henri Becquerel discovered natural radioactivity in uranium salts in 1896."},
+  {q:"Artificial radioactivity was first discovered by:",o:["The Curies","The Joliot-Curies","Rutherford and Soddy","Chadwick","Bohr"],a:1,e:"Irène and Frédéric Joliot-Curie discovered artificial radioactivity in 1934."},
+  {q:"Which statement distinguishes natural from artificial radioactivity?",o:["Natural radioactivity uses lighter elements","Artificial radioactivity is spontaneous","Natural radioactivity occurs without human intervention","Artificial radioactivity has longer half-lives","Natural radioactivity is induced by neutron bombardment"],a:2,e:"Natural radioactivity occurs spontaneously in nature, while artificial radioactivity is induced by human activities."},
+  {q:"An example of artificially produced radioisotope is:",o:["Uranium-238","Radium-226","Carbon-14","Cobalt-60","Thorium-232"],a:3,e:"Cobalt-60 is produced by neutron bombardment of Co-59 in nuclear reactors; it doesn't occur naturally."},
+  {q:"Which process can induce artificial radioactivity?",o:["Chemical reaction","Heating the element","Bombardment with neutrons","Dissolving in acid","Increasing pressure"],a:2,e:"Bombarding stable nuclei with neutrons or other particles can convert stable nuclei into radioactive ones."},
+  {q:"Phosphorus-30 is produced by bombarding aluminum-27 with alpha particles. The other product is:",o:["Proton","Neutron","Electron","Positron","Gamma ray"],a:1,e:"₁₃²⁷Al + ₂⁴He → ₁₅³⁰P + ₀¹n (neutron). Mass balance: 27+4=30+1; Atomic balance: 13+2=15+0."},
+  {q:"Elements with atomic number greater than 83 are:",o:["Always artificially radioactive","Always naturally radioactive","Always stable","Never radioactive","Only radioactive when heated"],a:1,e:"All elements with Z > 83 are unstable and exhibit natural radioactivity."},
+  {q:"The conversion of a stable nucleus to a radioactive nucleus is called:",o:["Nuclear fission","Nuclear fusion","Artificial transmutation","Natural decay","Radioactive equilibrium"],a:2,e:"Artificial transmutation converts one element to another, often creating radioactive isotopes."},
+  {q:"Which isotope is used in cancer therapy and is artificially produced?",o:["U-238","Ra-226","Co-60","C-14","K-40"],a:2,e:"Cobalt-60 is artificially produced and emits gamma rays used to treat cancer tumors."},
+  {q:"The main requirement for producing artificial radioactivity is:",o:["High temperature","High pressure","Particle bombardment","Chemical catalyst","Electric current"],a:2,e:"Bombarding stable nuclei with high-energy particles (neutrons, protons, alpha) induces radioactivity."},
+  
+  // Section C: Nuclear Stability & Decay (26-45)
+  {q:"A nucleus becomes radioactive when it has:",o:["Too many electrons","An unstable neutron-proton ratio","Too many chemical bonds","High electron energy","Low temperature"],a:1,e:"Nuclear instability arises from improper neutron-to-proton ratio or excessive size (Z > 83)."},
+  {q:"During alpha decay, the mass number of the parent nucleus:",o:["Increases by 4","Decreases by 4","Remains unchanged","Increases by 2","Decreases by 2"],a:1,e:"Alpha particle has mass number 4; parent loses 4 mass units."},
+  {q:"During beta decay, the atomic number of the nucleus:",o:["Decreases by 1","Increases by 1","Decreases by 2","Increases by 2","Remains unchanged"],a:1,e:"A neutron becomes a proton and electron; atomic number increases by 1, mass number unchanged."},
+  {q:"When ₉₂²³⁸U undergoes alpha decay, the product is:",o:["₉₀²³⁴Th","₉₃²³⁸Np","₉₂²³⁴U","₉₄²³⁸Pu","₉₁²³⁴Pa"],a:0,e:"₉₂²³⁸U → ₉₀²³⁴Th + ₂⁴He. Mass: 238-4=234; Atomic: 92-2=90."},
+  {q:"The decay of ₆¹⁴C to ₇¹⁴N involves emission of:",o:["Alpha particle","Beta particle","Gamma ray","Neutron","Proton"],a:1,e:"Mass constant (14), atomic number increases by 1 (6→7) indicates beta decay."},
+  {q:"Gamma emission occurs when:",o:["Nucleus loses a helium nucleus","Nucleus loses an electron","Excited nucleus drops to lower energy state","Nucleus captures an electron","Nucleus splits into two"],a:2,e:"Gamma emission is the release of excess energy when an excited nucleus returns to ground state."},
+  {q:"The half-life of a radioactive isotope is the time required for:",o:["Complete decay of the isotope","Half of the material to cool down","Half of the atoms to decay","The isotope to lose its radioactivity","Double the amount to form"],a:2,e:"Half-life is the time for half of the radioactive atoms present to undergo decay."},
+  {q:"A sample of radioactive material has half-life of 3 days. After 9 days, the fraction remaining is:",o:["1/2","1/3","1/6","1/8","1/9"],a:3,e:"9 days = 3 half-lives. Fraction remaining = (½)³ = 1/8."},
+  {q:"If 80g of a radioactive substance decays to 10g in 24 minutes, the half-life is:",o:["3 minutes","6 minutes","8 minutes","12 minutes","24 minutes"],a:2,e:"80→40→20→10 (3 half-lives). 24 min ÷ 3 = 8 minutes per half-life."},
+  {q:"After 4 half-lives, the amount of original radioactive material remaining is:",o:["6.25%","12.5%","25%","50%","93.75%"],a:0,e:"(½)⁴ = 1/16 = 0.0625 = 6.25%."},
+  {q:"The half-life of a radioisotope is 10 years. Starting with 200g, how much remains after 40 years?",o:["100g","50g","25g","12.5g","6.25g"],a:3,e:"40 years = 4 half-lives. 200 × (½)⁴ = 200 × 1/16 = 12.5g."},
+  {q:"Which graph correctly represents radioactive decay?",o:["Straight line through origin","Exponential decay curve","Parabolic curve","Sine wave","Step function"],a:1,e:"Radioactive decay follows first-order kinetics, showing exponential decrease."},
+  {q:"If the activity of a source is 1600 counts/min and drops to 100 counts/min in 40 minutes, the half-life is:",o:["5 minutes","8 minutes","10 minutes","20 minutes","40 minutes"],a:2,e:"1600→800→400→200→100 (4 half-lives in 40 min). 40÷4 = 10 minutes."},
+  {q:"Electron capture results in:",o:["Increase in atomic number by 1","Decrease in atomic number by 1","No change in atomic number","Increase in mass number by 1","Decrease in mass number by 4"],a:1,e:"Nucleus captures an inner electron; proton becomes neutron, decreasing atomic number by 1."},
+  {q:"The stability of a nucleus is favored by:",o:["Odd numbers of protons and neutrons","Even numbers of protons and neutrons","High neutron-proton ratio only","Low neutron-proton ratio only","Presence of magic numbers of nucleons"],a:1,e:"Even numbers of protons and neutrons (paired nucleons) generally create more stable nuclei."},
+  {q:"A radioactive isotope has half-life of 5 days. The time for 75% to decay is:",o:["5 days","7.5 days","10 days","15 days","20 days"],a:2,e:"75% decayed means 25% remains (½)². This requires 2 half-lives = 10 days."},
+  {q:"The decay constant (λ) is related to half-life (t½) by:",o:["λ = t½/0.693","λ = 0.693/t½","λ = 0.693 × t½","λ = t½/2","λ = 2/t½"],a:1,e:"λ = 0.693/t½. This comes from ln(2) ≈ 0.693 in the decay equation."},
+  {q:"Positron emission causes:",o:["No change in atomic number","Increase in atomic number by 1","Decrease in atomic number by 1","Decrease in mass number by 4","Increase in mass number by 1"],a:2,e:"Positron (β⁺) emission: proton → neutron + positron. Atomic number decreases by 1."},
+  {q:"The neutron-proton ratio for stable light nuclei is approximately:",o:["0.5","1.0","1.5","2.0","2.5"],a:1,e:"Light stable nuclei (Z < 20) have approximately equal numbers of protons and neutrons (n/p ≈ 1)."},
+  {q:"Which decay series starts with U-238 and ends with Pb-206?",o:["Thorium series","Neptunium series","Uranium series","Actinium series","Radium series"],a:2,e:"The uranium series (4n+2) begins with ₉₂²³⁸U and ends with stable ₈₂²⁰⁶Pb."},
+  
+  // Section D: Nuclear Reactions - Fission & Fusion (46-60)
+  {q:"Nuclear fission involves:",o:["Combining light nuclei","Splitting heavy nuclei","Emitting alpha particles only","Emitting beta particles only","Electron transfer"],a:1,e:"Fission is the splitting of a heavy nucleus into two lighter nuclei with energy release."},
+  {q:"Nuclear fusion is the process that:",o:["Occurs in nuclear power plants","Powers the sun and stars","Splits uranium atoms","Produces radioactive waste easily","Requires no activation energy"],a:1,e:"Fusion of hydrogen into helium is the energy source of stars including our sun."},
+  {q:"The energy released in nuclear reactions comes from:",o:["Electron excitation","Mass defect converted to energy (E=mc²)","Chemical bond breaking","Temperature increase","Pressure change"],a:1,e:"The mass of products is slightly less than reactants; this 'mass defect' becomes energy via E=mc²."},
+  {q:"In a nuclear reactor, control rods are made of:",o:["Uranium","Graphite","Cadmium or boron","Heavy water","Lead"],a:2,e:"Cadmium and boron absorb neutrons, controlling the rate of fission chain reactions."},
+  {q:"The function of a moderator in a nuclear reactor is to:",o:["Absorb neutrons","Slow down neutrons","Speed up neutrons","Generate electricity","Contain radiation"],a:1,e:"Moderators (graphite, heavy water) slow fast neutrons to thermal speeds for efficient U-235 fission."},
+  {q:"Which condition is necessary for nuclear fusion?",o:["Room temperature","Extremely high temperature (millions of degrees)","Presence of catalyst","High pressure only","Low temperature"],a:1,e:"Fusion requires extreme heat to overcome electrostatic repulsion between positively charged nuclei."},
+  {q:"The product of the fusion of hydrogen isotopes is:",o:["Uranium","Helium","Carbon","Oxygen","Iron"],a:1,e:"Fusion of hydrogen isotopes (deuterium and tritium) produces helium and releases energy."},
+  {q:"Which statement about fission and fusion is correct?",o:["Both produce radioactive waste equally","Fusion requires higher temperature than fission","Fission combines light nuclei","Fusion splits heavy nuclei","Both are uncontrollable"],a:1,e:"Fusion requires millions of degrees to initiate; fission can occur at room temperature with neutron bombardment."},
+  {q:"A typical fission reaction of U-235 produces:",o:["Only energy","Two smaller nuclei and neutrons","Helium nucleus","Hydrogen isotopes","Only gamma rays"],a:1,e:"U-235 splits into two fission fragments (like Ba and Kr) plus 2-3 neutrons and energy."},
+  {q:"Chain reactions in nuclear fission are possible because:",o:["Energy is released","Neutrons produced can trigger further fission","Gamma rays are emitted","The reactor is large","Water is used as coolant"],a:1,e:"Each fission produces neutrons that can cause other U-235 nuclei to split, creating a chain reaction."},
+  {q:"Heavy water (D₂O) is used in nuclear reactors as:",o:["Fuel","Moderator","Control rod","Shield","Coolant only"],a:1,e:"Heavy water slows neutrons effectively and has low neutron absorption compared to ordinary water."},
+  {q:"The main advantage of fusion over fission is:",o:["It produces more radioactive waste","It is easier to control","Fuel is abundant and waste is less harmful","It requires less temperature","It has been used longer"],a:2,e:"Fusion uses hydrogen (abundant in water) and produces mainly helium, not long-lived radioactive waste."},
+  {q:"Critical mass refers to:",o:["The total mass of the reactor","The minimum mass needed to sustain chain reaction","The mass of control rods","The mass of moderator","The maximum safe mass"],a:1,e:"Critical mass is the minimum fissile material needed to maintain a self-sustaining chain reaction."},
+  {q:"In the equation: ₉₂²³⁵U + ₀¹n → ₅₆¹⁴¹Ba + ₃₆⁹²Kr + 3₀¹n + energy, the process is:",o:["Alpha decay","Beta decay","Nuclear fission","Nuclear fusion","Gamma emission"],a:2,e:"Heavy nucleus (U-235) splits into two lighter nuclei (Ba and Kr) plus neutrons - characteristic of fission."},
+  {q:"Which is NOT a product of nuclear fission?",o:["Energy","Neutrons","Fission fragments","Helium nuclei","Gamma rays"],a:3,e:"Helium nuclei (alpha particles) are not typical products of fission; they result from alpha decay."},
+  
+  // Section E: Applications & Comprehensive (61-70)
+  {q:"Carbon-14 dating is used to determine the age of:",o:["Rocks millions of years old","Ancient organic materials up to 50,000 years","Metal artifacts","Water samples","All geological formations"],a:1,e:"C-14 dating works for organic materials up to about 50,000 years (10 half-lives of C-14)."},
+  {q:"Iodine-131 is used in medicine to:",o:["Treat cancer generally","Diagnose and treat thyroid disorders","Scan bones","Sterilize equipment","Image the brain"],a:1,e:"I-131 concentrates in the thyroid gland, making it useful for thyroid diagnosis and treatment."},
+  {q:"Which radioisotope is used for sterilizing medical equipment?",o:["I-131","Co-60","C-14","Na-24","P-32"],a:1,e:"Co-60 emits high-energy gamma rays that kill bacteria and sterilize medical supplies."},
+  {q:"The difference between chemical and nuclear reactions is that:",o:["Chemical reactions release more energy","Nuclear reactions involve only electron transfer","Chemical reactions involve electron rearrangement; nuclear involve nucleus changes","Nuclear reactions are faster","Chemical reactions produce new elements"],a:2,e:"Chemical reactions involve electron rearrangement; nuclear reactions involve changes in the nucleus (protons/neutrons)."},
+  {q:"In balancing the nuclear equation: ₁₃²⁷Al + ₂⁴He → ? + ₀¹n, the missing product is:",o:["₁₄²⁷Si","₁₅³⁰P","₁₆³¹S","₁₁²⁴Na","₁₂²⁶Mg"],a:1,e:"Mass: 27+4-1=30; Atomic: 13+2-0=15. Element 15 is Phosphorus (P)."},
+  {q:"A tracer isotope used to detect leaks in underground pipes is:",o:["Co-60","I-131","Na-24","C-14","U-238"],a:2,e:"Na-24 is used as a tracer because it emits gamma rays detectable above ground."},
+  {q:"The equation E = mc² explains:",o:["Chemical bonding","Mass-energy equivalence in nuclear reactions","Radioactive half-life","Electron configuration","Acid-base reactions"],a:1,e:"Einstein's equation shows that mass can be converted to energy in nuclear reactions."},
+  {q:"Which application uses the penetrating ability of gamma rays?",o:["Smoke detectors","Thickness gauging in industry","Battery production","Food flavoring","Water purification"],a:1,e:"Gamma rays penetrate materials and are used to measure thickness of metal sheets or paper."},
+  {q:"The decay of ₈₈²²⁶Ra to ₈₆²²²Rn involves emission of:",o:["Beta particle","Alpha particle","Gamma ray only","Neutron","Positron"],a:1,e:"Mass decreases by 4 (226-222), atomic number by 2 (88-86) - characteristic of alpha decay."},
+  {q:"If a radioactive sample has activity of 3200 cpm and half-life of 5 hours, after 15 hours the activity will be:",o:["1600 cpm","800 cpm","400 cpm","200 cpm","100 cpm"],a:2,e:"15 hours = 3 half-lives. 3200 → 1600 → 800 → 400 cpm."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('nuclear_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('nuclear_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/70`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options (5 options for this quiz)
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('nuclear_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=63?'Ready for JAMB!':pct>=53?'Good, review weak areas':pct>=42?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,15,25,45,60,70];
+  const sectionNames=["A: Radioactivity - Types & Properties","B: Natural & Artificial Radioactivity","C: Nuclear Stability & Decay","D: Nuclear Reactions - Fission & Fusion","E: Applications & Comprehensive"];
+  
+  for(let s=0;s<5;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`
+        <h4>Question ${i+1}</h4>
+        <div class="q-text">${q.q}</div>
+        <div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div>
+        <div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div>
+        <div class="exp">${q.e}</div>
+      `;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('nuclear_quiz_auth');
+  sessionStorage.removeItem('nuclear_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('nuclear_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('nuclear_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

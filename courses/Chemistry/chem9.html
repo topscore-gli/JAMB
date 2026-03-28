@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Chemistry - Oxidation & Reduction (Redox)</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:18px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+.progress-container{
+  position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+  background:var(--shadow-in);z-index:15
+}
+.progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+.content{padding:20px 16px;line-height:1.7}
+.main-header{
+  text-align:center;margin-bottom:28px;padding:20px;border-radius:20px;
+  background:rgba(29,185,84,.1)
+}
+.main-header h1{font-size:22px;margin-bottom:8px;color:var(--accent);font-weight:900}
+.main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+.section-card{
+  background:var(--card-bg);padding:24px 18px;border-radius:20px;
+  box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+  margin-bottom:24px;border-left:4px solid var(--accent)
+}
+.section-card h2{
+  font-size:19px;margin-bottom:14px;color:var(--accent);font-weight:900;
+  display:flex;align-items:center;gap:8px
+}
+.section-card h3{
+  font-size:16px;margin:18px 0 10px;color:var(--accent-tertiary);font-weight:800;
+  padding-left:12px;border-left:3px solid var(--accent-tertiary)
+}
+.section-card h4{font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800}
+.section-card p{margin-bottom:12px;font-size:14px;text-align:justify}
+.section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+.section-card li{margin-bottom:7px;font-size:14px}
+
+.diagram-img{
+  width:100%;max-height:280px;object-fit:contain;border-radius:12px;
+  margin:12px 0 8px;
+  box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out);
+  background:#fff;padding:8px
+}
+.image-caption{
+  text-align:center;font-size:12px;color:var(--text-secondary);
+  font-style:italic;margin-bottom:10px;margin-top:-4px
+}
+
+.quick-facts{
+  background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+  padding:16px;border-radius:15px;margin:14px 0;border:1px solid rgba(29,185,84,.3)
+}
+.quick-facts h4{color:var(--accent);margin-bottom:8px;font-size:15px;font-weight:900}
+.quick-facts li{font-size:13px}
+
+.highlight-box{
+  background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+  border-left:3px solid var(--accent-tertiary)
+}
+.memory-tip{
+  background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+  border-left:4px solid var(--accent-secondary)
+}
+.memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+.memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+.jamb-alert{
+  background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+  border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:16px;margin:18px 0
+}
+.jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:15px;font-weight:900}
+.jamb-alert li{font-size:13px}
+
+.table-container{
+  width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+  box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+}
+.summary-table{
+  width:100%;min-width:1200px;border-collapse:separate;border-spacing:0;font-size:13px
+}
+.summary-table th{
+  background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+}
+.summary-table td{
+  padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);white-space:nowrap;vertical-align:top
+}
+.summary-table tr:last-child td{border-bottom:none}
+.summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+.table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+.nav-bar{
+  position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+  display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+}
+.nav-bar .nav-item{text-align:center}
+.nav-bar .nav-item.center button{
+  width:50px;height:50px;font-size:24px;background:var(--accent);
+  box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+  color:#000
+}
+.nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+.explore-btn{
+  background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+  box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+  font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+}
+.explore-btn:active{
+  box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+  transform:scale(.98)
+}
+
+  </style>
+</head>
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+    
+<div class="top-bar neumorphic">
+  <button class="neumorphic-btn" onclick="history.back()">←</button>
+  <div class="header">CHEMISTRY</div>
+  <div class="right-icons">
+    <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+    <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="main-header">
+    <h1>🔁 Oxidation & Reduction (Redox) — JAMB</h1>
+    <p>Classical (Oxygen) • Modern (electrons) • Oxidation numbers • Balancing • IUPAC naming • Tests • 6 worked examples</p>
+  </div>
+
+  <!-- SUMMARY TABLE -->
+  <div class="section-card">
+    <h2>📋 Summary Table (Redox Formulas & Rules)</h2>
+
+    <div class="table-container">
+      <table class="summary-table">
+        <tr>
+          <th>Concept</th>
+          <th>Key definition / rule</th>
+          <th>What to look for in questions</th>
+          <th>Shortcut</th>
+        </tr>
+        <tr>
+          <td><strong>Oxidation (classical)</strong></td>
+          <td>Addition of oxygen</td>
+          <td>Substance gains O</td>
+          <td>“+O”</td>
+        </tr>
+        <tr>
+          <td><strong>Reduction (classical)</strong></td>
+          <td>Removal of oxygen</td>
+          <td>Compound loses O (often by H₂/CO)</td>
+          <td>“−O”</td>
+        </tr>
+        <tr>
+          <td><strong>Oxidation (modern)</strong></td>
+          <td>Loss of electrons</td>
+          <td>Electrons on product side in half-reaction</td>
+          <td><strong>OIL</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Reduction (modern)</strong></td>
+          <td>Gain of electrons</td>
+          <td>Electrons on reactant side in half-reaction</td>
+          <td><strong>RIG</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Oxidation</strong></td>
+          <td>Increase in oxidation number (ON)</td>
+          <td>ON becomes more positive</td>
+          <td>↑ ON</td>
+        </tr>
+        <tr>
+          <td><strong>Reduction</strong></td>
+          <td>Decrease in oxidation number (ON)</td>
+          <td>ON becomes more negative</td>
+          <td>↓ ON</td>
+        </tr>
+        <tr>
+          <td><strong>Balancing redox (ON method)</strong></td>
+          <td>Total increase in ON = total decrease in ON</td>
+          <td>Find atoms changing ON first</td>
+          <td>e⁻ lost = e⁻ gained</td>
+        </tr>
+        <tr>
+          <td><strong>Oxidising agent</strong></td>
+          <td>Gets reduced (accepts e⁻)</td>
+          <td>Its ON decreases</td>
+          <td>OA is reduced</td>
+        </tr>
+        <tr>
+          <td><strong>Reducing agent</strong></td>
+          <td>Gets oxidised (donates e⁻)</td>
+          <td>Its ON increases</td>
+          <td>RA is oxidised</td>
+        </tr>
+        <tr>
+          <td><strong>Test: acidified KMnO₄</strong></td>
+          <td>Purple → colourless (oxidising)</td>
+          <td>Decolourisation shows reducing agent present</td>
+          <td>KMnO₄ “goes clear”</td>
+        </tr>
+        <tr>
+          <td><strong>Test: acidified K₂Cr₂O₇</strong></td>
+          <td>Orange → green (oxidising)</td>
+          <td>Colour change shows reducing agent present</td>
+          <td>Dichromate turns green</td>
+        </tr>
+      </table>
+    </div>
+    <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+    <div class="memory-tip">
+      <strong>🧠 One-liner</strong>
+      <p>Oxidation = loss e⁻ = ON up • Reduction = gain e⁻ = ON down.</p>
+    </div>
+  </div>
+
+  <!-- Step 1 Classical -->
+  <div class="section-card">
+    <h2>1️⃣ Classical Definitions (Oxygen Method)</h2>
+    <p><strong>Oxidation</strong> is the <strong>addition of oxygen</strong> to a substance.</p>
+    <div class="highlight-box">
+      <p><strong>Example:</strong> 2Mg(s) + O₂(g) → 2MgO(s)</p>
+    </div>
+
+    <p><strong>Reduction</strong> is the <strong>removal of oxygen</strong> from a compound (often by hydrogen).</p>
+    <div class="highlight-box">
+      <p><strong>Example:</strong> CuO(s) + H₂(g) → Cu(s) + H₂O(l)</p>
+    </div>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Redox_reaction.svg" alt="Classical oxidation and reduction" class="diagram-img">
+    <div class="image-caption">Classical view: oxidation adds oxygen; reduction removes oxygen</div>
+  </div>
+
+  <!-- Step 2 Electrons -->
+  <div class="section-card">
+    <h2>2️⃣ Modern Definition (Electrons) — OIL RIG</h2>
+    <p><strong>Oxidation</strong> = loss of electrons (<strong>OIL</strong>).</p>
+    <p><strong>Reduction</strong> = gain of electrons (<strong>RIG</strong>).</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/8/8d/Redox_half_reactions.svg" alt="Electron transfer in redox" class="diagram-img">
+    <div class="image-caption">Redox happens by electron transfer (half-reactions)</div>
+
+    <h3>Step-by-step example: 2Na + Cl₂ → 2NaCl</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Oxidation half-reaction: Na → Na⁺ + e⁻</li>
+        <li>Reduction half-reaction: Cl₂ + 2e⁻ → 2Cl⁻</li>
+        <li>Balance electrons: multiply Na half by 2</li>
+        <li>Combine: 2Na + Cl₂ → 2NaCl</li>
+      </ul>
+    </div>
+
+    <h3>Another quick example: 2Mg + O₂ → 2MgO</h3>
+    <div class="highlight-box">
+      <p>Mg: 0 → +2 (loss of 2e⁻) → <strong>oxidised</strong></p>
+      <p>O: 0 → −2 (gain of 2e⁻) → <strong>reduced</strong></p>
+    </div>
+  </div>
+
+  <!-- Step 3 Oxidation numbers -->
+  <div class="section-card">
+    <h2>3️⃣ Oxidation Numbers (ON) + Changes</h2>
+    <p><strong>Oxidation</strong> = increase in ON. <strong>Reduction</strong> = decrease in ON.</p>
+
+    <h3>Oxidation number rules (6 rules)</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Free elements = 0</li>
+        <li>Group 1 = +1, Group 2 = +2</li>
+        <li>H = +1 (except hydrides = −1)</li>
+        <li>O = −2 (except peroxides = −1)</li>
+        <li>Sum of ON in neutral compound = 0</li>
+        <li>Sum of ON in an ion = charge on the ion</li>
+      </ul>
+    </div>
+
+    <div class="jamb-alert">
+      <h4>Example (very common)</h4>
+      <ul>
+        <li>In KMnO₄, Mn = <strong>+7</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Step 4 Balancing -->
+  <div class="section-card">
+    <h2>4️⃣ Balancing Redox Using Oxidation Numbers</h2>
+    <p><strong>Ababio method:</strong> assign ON → note total change → balance e⁻ lost/gained → balance remaining atoms.</p>
+
+    <h3>Worked example</h3>
+    <p><strong>Unbalanced:</strong> MnO₂ + HCl → MnCl₂ + Cl₂ + H₂O</p>
+    <div class="highlight-box">
+      <p><strong>Balanced:</strong> MnO₂ + 4HCl → MnCl₂ + Cl₂ + 2H₂O</p>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 Balancing tip</strong>
+      <p>Start by balancing the atoms that change ON (then H and O last).</p>
+    </div>
+  </div>
+
+  <!-- Step 5 IUPAC naming -->
+  <div class="section-card">
+    <h2>5️⃣ IUPAC Nomenclature Using Oxidation Number</h2>
+    <p>Find the oxidation state first, then name with Roman numerals and oxo- prefixes.</p>
+
+    <div class="table-container">
+      <table class="summary-table">
+        <tr>
+          <th>Formula</th>
+          <th>Oxidation state (central atom)</th>
+          <th>IUPAC name</th>
+        </tr>
+        <tr>
+          <td><strong>KMnO₄</strong></td>
+          <td>Mn = +7</td>
+          <td>Potassium tetraoxomanganate(VII)</td>
+        </tr>
+        <tr>
+          <td><strong>K₂Cr₂O₇</strong></td>
+          <td>Cr = +6</td>
+          <td>Potassium heptaoxodichromate(VI)</td>
+        </tr>
+        <tr>
+          <td><strong>FeCl₂</strong></td>
+          <td>Fe = +2</td>
+          <td>Iron(II) chloride</td>
+        </tr>
+      </table>
+    </div>
+    <div class="table-scroll-hint">← Swipe table to see more →</div>
+  </div>
+
+  <!-- Step 6 Tests -->
+  <div class="section-card">
+    <h2>6️⃣ Tests for Oxidising & Reducing Agents</h2>
+
+    <div class="table-container">
+      <table class="summary-table">
+        <tr>
+          <th>Reagent</th>
+          <th>Acts as</th>
+          <th>Observation</th>
+          <th>Meaning</th>
+        </tr>
+        <tr>
+          <td><strong>Acidified KMnO₄</strong></td>
+          <td>Oxidising agent</td>
+          <td>Purple → colourless</td>
+          <td>Reducing agent present</td>
+        </tr>
+        <tr>
+          <td><strong>Acidified K₂Cr₂O₇</strong></td>
+          <td>Oxidising agent</td>
+          <td>Orange → green</td>
+          <td>Reducing agent present</td>
+        </tr>
+        <tr>
+          <td><strong>H₂S</strong></td>
+          <td>Reducing agent</td>
+          <td>Blackens lead acetate paper</td>
+          <td>H₂S reduces Pb²⁺ to PbS</td>
+        </tr>
+        <tr>
+          <td><strong>SO₂</strong></td>
+          <td>Reducing agent</td>
+          <td>Decolourises KMnO₄</td>
+          <td>SO₂ is oxidised</td>
+        </tr>
+      </table>
+    </div>
+    <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Potassium_permanganate_solution.jpg" alt="Potassium permanganate purple solution" class="diagram-img">
+    <div class="image-caption">Acidified KMnO₄ is purple and gets decolourised by reducing agents</div>
+  </div>
+
+  <!-- 6 JAMB examples -->
+  <div class="section-card">
+    <h2>📝 6 JAMB Examples (Step-by-Step)</h2>
+
+    <h3>Example 1: Classical (oxygen)</h3>
+    <p><strong>CuO + H₂ → Cu + H₂O: which is oxidised?</strong></p>
+    <div class="highlight-box">
+      <p>CuO loses oxygen → reduced</p>
+      <p>H₂ gains oxygen → oxidised</p>
+      <p><strong>Answer:</strong> H₂ is oxidised</p>
+    </div>
+
+    <h3>Example 2: Electron transfer</h3>
+    <p><strong>Show electron transfer in 2Na + Cl₂ → 2NaCl</strong></p>
+    <div class="highlight-box">
+      <p>Na → Na⁺ + e⁻ (oxidation)</p>
+      <p>Cl₂ + 2e⁻ → 2Cl⁻ (reduction)</p>
+      <p>Multiply Na half by 2, then add</p>
+    </div>
+
+    <h3>Example 3: ON change</h3>
+    <p><strong>H₂S + Cl₂ → 2HCl + S: which element is oxidised?</strong></p>
+    <div class="highlight-box">
+      <p>S in H₂S: −2 → 0 (increase) → oxidised</p>
+      <p><strong>Answer:</strong> Sulphur is oxidised</p>
+    </div>
+
+    <h3>Example 4: Balance using ON method</h3>
+    <p><strong>Balance:</strong> MnO₂ + HCl → MnCl₂ + Cl₂ + H₂O</p>
+    <div class="highlight-box">
+      <p><strong>Balanced:</strong> MnO₂ + 4HCl → MnCl₂ + Cl₂ + 2H₂O</p>
+    </div>
+
+    <h3>Example 5: IUPAC naming</h3>
+    <p><strong>Give IUPAC name for K₂Cr₂O₇</strong></p>
+    <div class="highlight-box">
+      <p>Cr oxidation number = +6</p>
+      <p><strong>Answer:</strong> Potassium heptaoxodichromate(VI)</p>
+    </div>
+
+    <h3>Example 6: Identify oxidising agent</h3>
+    <p><strong>In 2KMnO₄ + 16HCl → products, which is oxidising agent?</strong></p>
+    <div class="highlight-box">
+      <p>Mn: +7 → +2 (decrease) → KMnO₄ is reduced</p>
+      <p>Oxidising agent is the substance reduced</p>
+      <p><strong>Answer:</strong> KMnO₄ is the oxidising agent</p>
+    </div>
+  </div>
+
+  <!-- Quick checklist -->
+  <div class="section-card">
+    <h2>✅ Quick Revision Checklist</h2>
+    <div class="quick-facts">
+      <ul>
+        <li>Classical definitions (oxygen addition/removal)</li>
+        <li>Modern definitions (OIL RIG) + half-reactions</li>
+        <li>Oxidation number rules (6)</li>
+        <li>Oxidation = ON up; reduction = ON down</li>
+        <li>Balancing redox using ON method</li>
+        <li>IUPAC naming with Roman numerals</li>
+        <li>Tests: KMnO₄ purple→colourless; K₂Cr₂O₇ orange→green</li>
+      </ul>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 Final memory line</strong>
+      <p>Oxidising agent is reduced; reducing agent is oxidised.</p>
+    </div>
+  </div>
+
+  <button class="explore-btn" onclick="alert('Practice: ON calculations + identify oxidising/reducing agents + balancing daily!')">Practice JAMB Questions</button>
+</div>
+</div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+  </script>
+</body>
+</html>

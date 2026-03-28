@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Chemistry - Atomic Structure & Bonding</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Chemistry</h1>
+      <p>Atomic Structure & Chemical Bonding<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Atomic Structure & Bonding</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 70:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration
+const CONFIG={TIME:4200,PASS:60}; // 70 minutes for 70 questions
+
+// Section mapping
+const SECTIONS={
+  0:"A: Atoms, Molecules, Ions & Atomic Models",
+  15:"B: Quantum Numbers & Electron Configuration",
+  30:"C: Isotopes & Atomic Structure Calculations",
+  40:"D: Periodic Table & Periodic Properties",
+  52:"E: Chemical Bonding",
+  62:"F: Molecular Shapes & Structures"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 70 JAMB Chemistry Questions
+const QUIZ_DATA=[
+  // Section A: Atoms, Molecules, Ions & Atomic Models (1-15)
+  {q:"Which scientist proposed that atoms are indivisible solid spheres and that atoms of the same element are identical?",o:["J.J. Thomson","Ernest Rutherford","John Dalton","Niels Bohr"],a:2,e:"Dalton's atomic theory (1803) stated atoms are indivisible, solid spheres with atoms of the same element being identical in mass and properties."},
+  {q:"The oil drop experiment was crucial in determining the:",o:["Mass of the proton","Charge of the electron","Existence of the nucleus","Wave nature of electrons"],a:1,e:"Robert Millikan's oil drop experiment (1909) determined the charge of an electron as 1.6 × 10⁻¹⁹ C and calculated its mass."},
+  {q:"Rutherford's gold foil experiment led to the conclusion that:",o:["Atoms are uniform spheres of positive charge","Electrons are embedded in a positive sphere","The atom contains a dense, positively charged nucleus","Electrons move in discrete energy levels"],a:2,e:"Most alpha particles passed through, but some bounced back, proving the existence of a small, dense, positive nucleus."},
+  {q:"Which scientist arranged elements by atomic number rather than atomic mass?",o:["Dmitri Mendeleev","Henry Moseley","Ernest Rutherford","J.J. Thomson"],a:1,e:"Moseley (1913) used X-ray spectroscopy to discover atomic number (Z) determines element identity, correcting Mendeleev's periodic table."},
+  {q:"Bohr's model of the atom was able to explain:",o:["The structure of all atoms","The spectrum of hydrogen atom only","The existence of isotopes","The wave-particle duality of electrons"],a:1,e:"Bohr's model successfully explained the line spectrum of hydrogen but failed for multi-electron atoms due to electron-electron repulsions."},
+  {q:"Which particle is NOT found in the nucleus of an atom?",o:["Proton","Neutron","Electron","Nucleon"],a:2,e:"Electrons are found in shells/orbitals surrounding the nucleus. Protons and neutrons (nucleons) constitute the nucleus."},
+  {q:"An atom has 17 protons, 18 neutrons, and 17 electrons. The mass number is:",o:["17","34","35","52"],a:2,e:"Mass number = protons + neutrons = 17 + 18 = 35. This is chlorine-35."},
+  {q:"The species ⁴⁰Ca²⁺ contains:",o:["20 protons, 20 neutrons, 22 electrons","20 protons, 20 neutrons, 18 electrons","22 protons, 18 neutrons, 20 electrons","40 protons, 20 neutrons, 38 electrons"],a:1,e:"Ca has Z=20, so 20 protons. Neutrons = 40-20 = 20. Ca²⁺ lost 2 electrons: 20-2 = 18 electrons."},
+  {q:"Which of the following is an anion?",o:["Na⁺","Mg²⁺","Cl⁻","H⁺"],a:2,e:"Anions are negatively charged ions formed by gaining electrons. Cl⁻ gained one electron. Others are cations (positive ions)."},
+  {q:"A molecule of sulphuric acid (H₂SO₄) contains:",o:["2 atoms","4 atoms","6 atoms","7 atoms"],a:3,e:"H₂SO₄ = 2 hydrogen + 1 sulfur + 4 oxygen = 7 atoms total."},
+  {q:"Which statement correctly describes an ion?",o:["It has equal numbers of protons and electrons","It is formed by sharing electrons","It is a charged species formed by electron loss or gain","It cannot exist independently"],a:2,e:"Ions are charged particles formed when atoms lose (cation) or gain (anion) electrons."},
+  {q:"The discovery of the electron was made by:",o:["Bombarding gold foil with alpha particles","Passing electricity through cathode ray tubes","Studying X-ray spectra of elements","Measuring oil drop charges"],a:1,e:"J.J. Thomson discovered electrons in 1897 by studying cathode rays in discharge tubes."},
+  {q:"Which of these contributed to the development of atomic structure by proving atoms contain smaller particles?",o:["Dalton and Bohr","Thomson and Rutherford","Moseley and Millikan","Rutherford and Bohr"],a:1,e:"Thomson discovered electrons; Rutherford discovered the nucleus—both proved atoms are divisible."},
+  {q:"An element X has 13 protons and 14 neutrons. Its correct symbol is:",o:["¹⁴₁₃X","¹³₁₄X","²⁷₁₃X","²⁷₁₄X"],a:2,e:"Mass number (A) = 13 + 14 = 27; Atomic number (Z) = 13. Standard notation: ᴬZX = ²⁷₁₃X."},
+  {q:"Which species has the same number of electrons as ²³₁₁Na⁺?",o:["²⁰₁₀Ne","²⁴₁₂Mg²⁺","¹⁹₉F⁻","²⁰₁₀Ne and ¹⁹₉F⁻"],a:3,e:"Na⁺ has 11-1 = 10 electrons. Ne has 10 electrons. F⁻ has 9+1 = 10 electrons. Both match."},
+  
+  // Section B: Quantum Numbers & Electron Configuration (16-30)
+  {q:"The principal quantum number (n) describes:",o:["The shape of an orbital","The energy level or shell of an electron","The orientation of an orbital","The spin of an electron"],a:1,e:"n indicates the main energy level (shell) and its relative distance from the nucleus (n = 1, 2, 3...)."},
+  {q:"For an electron in the 3p orbital, the values of n and l respectively are:",o:["3 and 0","3 and 1","3 and 2","1 and 3"],a:1,e:"n = 3 (third shell). For p subshell, l = 1 (s=0, p=1, d=2, f=3)."},
+  {q:"The maximum number of electrons that can occupy the n = 3 shell is:",o:["6","8","18","32"],a:2,e:"Maximum electrons = 2n² = 2(3)² = 18. Or: 3s² + 3p⁶ + 3d¹⁰ = 18."},
+  {q:"How many orbitals are in the d subshell?",o:["1","3","5","7"],a:2,e:"Number of orbitals = 2l + 1. For d, l=2, so 2(2)+1 = 5 orbitals (dxy, dxz, dyz, dx²-y², dz²)."},
+  {q:"The electron configuration of calcium (Z=20) is:",o:["1s² 2s² 2p⁶ 3s² 3p⁶ 3d²","1s² 2s² 2p⁶ 3s² 3p⁶ 4s²","1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰","1s² 2s² 2p⁶ 3s² 3p⁶ 4s¹ 3d¹"],a:1,e:"Following Aufbau principle: 4s fills before 3d. Configuration ends with 4s² for calcium."},
+  {q:"Which element has the configuration [Ar] 3d⁵ 4s²?",o:["Iron","Manganese","Chromium","Cobalt"],a:1,e:"[Ar] = 18 electrons. Total = 18 + 5 + 2 = 25. Element 25 is Manganese (Mn)."},
+  {q:"The ground state configuration of nitrogen (Z=7) violates:",o:["Aufbau principle","Pauli exclusion principle","Hund's rule","No principle is violated"],a:3,e:"Nitrogen (1s² 2s² 2p³) follows all rules. The three 2p electrons occupy separate orbitals with parallel spins (Hund's rule)."},
+  {q:"An impossible set of quantum numbers is:",o:["n=2, l=1, mₗ=0, mₛ=+½","n=3, l=2, mₗ=-2, mₛ=-½","n=1, l=1, mₗ=0, mₛ=+½","n=4, l=0, mₗ=0, mₛ=-½"],a:2,e:"When n=1, l can only be 0 (not 1). l ranges from 0 to (n-1)."},
+  {q:"The valence electrons of phosphorus (Z=15) are:",o:["2","3","5","15"],a:2,e:"Configuration: 1s² 2s² 2p⁶ 3s² 3p³. Valence shell is n=3 with 2+3 = 5 electrons."},
+  {q:"Which subshell has the highest energy in the ground state of scandium (Z=21)?",o:["3s","3p","3d","4s"],a:2,e:"Configuration: [Ar] 3d¹ 4s². Although 4s fills first, 3d has higher energy (n+l rule: 3d=5, 4s=4, but for same atom, 3d > 4s in energy)."},
+  {q:"The maximum number of electrons with n=3 and l=2 is:",o:["2","6","10","14"],a:2,e:"n=3, l=2 means 3d subshell. d subshell has 5 orbitals × 2 electrons = 10 electrons."},
+  {q:"Which element is represented by 1s² 2s² 2p⁶ 3s² 3p⁴?",o:["Silicon","Phosphorus","Sulphur","Chlorine"],a:2,e:"Total electrons = 16. Atomic number 16 is Sulphur (S)."},
+  {q:"The angular quantum number (l) determines:",o:["The size of the orbital","The shape of the orbital","The energy of the electron","The spin direction"],a:1,e:"l determines subshell shape: l=0 (spherical s), l=1 (dumbbell p), l=2 (cloverleaf d)."},
+  {q:"How many unpaired electrons are in the ground state of oxygen (Z=8)?",o:["0","2","4","6"],a:1,e:"Configuration: 1s² 2s² 2p⁴. In 2p: ↑↓ ↑ ↑ (two unpaired electrons following Hund's rule)."},
+  {q:"The magnetic quantum number (mₗ) for an electron in a d orbital can have values of:",o:["-1, 0, +1","-2, -1, 0, +1, +2","0 only","-3, -2, -1, 0, +1, +2, +3"],a:1,e:"For d orbital, l=2. mₗ ranges from -l to +l: -2, -1, 0, +1, +2 (5 values for 5 d orbitals)."},
+  
+  // Section C: Isotopes & Atomic Structure Calculations (31-40)
+  {q:"An element X has two isotopes with mass numbers 20 and 22. If the relative atomic mass is 20.2, the percentage abundance of the lighter isotope is:",o:["20%","80%","90%","10%"],a:2,e:"Let % of 20 be x: 20x + 22(100-x) = 20.2 × 100. Solving: 20x + 2200 - 22x = 2020. -2x = -180. x = 90%."},
+  {q:"Chlorine has two isotopes ³⁵Cl and ³⁷Cl in 3:1 ratio. The relative atomic mass is approximately:",o:["35.0","35.5","36.0","36.5"],a:1,e:"(35 × 3 + 37 × 1)/4 = (105 + 37)/4 = 142/4 = 35.5."},
+  {q:"Which elements are isotopes?",o:["⁴⁰₁₈Ar and ⁴⁰₂₀Ca","¹⁴₆C and ¹⁴₇N","¹H, ²H, and ³H","²³₁₁Na and ²⁴₁₂Mg"],a:2,e:"Isotopes have same atomic number but different mass numbers. ¹H, ²H, ³H all have Z=1."},
+  {q:"The number of neutrons in deuterium (²₁H) is:",o:["0","1","2","3"],a:1,e:"Deuterium: A=2, Z=1. Neutrons = 2-1 = 1."},
+  {q:"An element has three isotopes with masses 10, 11, and 12. If their abundances are 20%, 50%, and 30% respectively, the relative atomic mass is:",o:["11.0","11.1","11.2","11.3"],a:1,e:"(10×0.20) + (11×0.50) + (12×0.30) = 2.0 + 5.5 + 3.6 = 11.1."},
+  {q:"The species ⁵⁶Fe²⁺ and ⁵⁶Fe³⁺ have the same:",o:["Number of electrons","Number of protons","Chemical properties","Ionic radius"],a:1,e:"Both are iron isotopes with 26 protons. They differ in electrons (24 vs 23) and properties."},
+  {q:"If an element X forms X³⁺ ion with 10 electrons, the atomic number of X is:",o:["7","10","13","27"],a:2,e:"X³⁺ has 10 electrons, so neutral X has 10+3 = 13 electrons = 13 protons. Z = 13 (Aluminum)."},
+  {q:"The relative atomic mass of boron is 10.8. If it exists as ¹⁰B and ¹¹B, the ratio of ¹⁰B to ¹¹B is:",o:["1:1","1:2","1:4","4:1"],a:2,e:"Let fraction of ¹⁰B be x: 10x + 11(1-x) = 10.8. x = 0.2. Ratio 0.2:0.8 = 1:4."},
+  {q:"Which statement about isotopes is FALSE?",o:["They have the same chemical properties","They have different physical properties","They have different numbers of electrons","They occupy the same position in the periodic table"],a:2,e:"Isotopes have same atomic number, so same number of electrons and protons. They differ in neutrons."},
+  {q:"The mass number of an atom is equal to:",o:["Number of protons only","Number of protons and electrons","Number of nucleons","Number of neutrons only"],a:2,e:"Mass number = protons + neutrons = total number of nucleons (particles in the nucleus)."},
+  
+  // Section D: Periodic Table & Periodic Properties (41-52)
+  {q:"Which group contains the alkali metals?",o:["Group 1","Group 2","Group 7","Group 0"],a:0,e:"Group 1 (Li, Na, K, Rb, Cs, Fr) are alkali metals—soft, reactive metals forming +1 ions."},
+  {q:"The halogens are found in:",o:["Group 0","Group 1","Group 2","Group 7"],a:3,e:"Group 7 (F, Cl, Br, I, At) are halogens—reactive non-metals forming -1 ions."},
+  {q:"Which property increases down Group 1 but decreases across Period 3?",o:["Ionization energy","Atomic radius","Electronegativity","Electron affinity"],a:1,e:"Atomic radius increases down groups (more shells) and decreases across periods (increasing nuclear charge)."},
+  {q:"The first ionization energy of sodium is less than that of magnesium because:",o:["Sodium has fewer protons","Magnesium has a higher nuclear charge and smaller atomic radius","Sodium has a full outer shell","Magnesium is a transition metal"],a:1,e:"Mg has 12 protons vs Na's 11, with similar shielding. Stronger nuclear pull in Mg makes electron removal harder."},
+  {q:"Which element has the highest electronegativity?",o:["Fluorine","Chlorine","Oxygen","Nitrogen"],a:0,e:"Fluorine (top right of periodic table, excluding noble gases) has the highest electronegativity (4.0 on Pauling scale)."},
+  {q:"The noble gases are characterized by:",o:["High reactivity","Complete outer electron shells","Metallic luster","Variable oxidation states"],a:1,e:"Noble gases (Group 0) have full outer shells (ns²np⁶), making them chemically inert under normal conditions."},
+  {q:"Across a period from left to right, atomic radius decreases because:",o:["More electron shells are added","Nuclear charge increases while shielding remains relatively constant","Electrons are removed","The number of neutrons increases"],a:1,e:"Increasing nuclear charge pulls electrons closer, reducing radius. Shielding by inner electrons stays similar."},
+  {q:"Which property shows the greatest increase when moving from Group 1 to Group 7 across Period 3?",o:["Metallic character","Electrical conductivity","Electronegativity","Atomic radius"],a:2,e:"Electronegativity increases across a period as elements become more non-metallic."},
+  {q:"The transition metals are characterized by:",o:["Fixed oxidation states","Formation of colored compounds and variable oxidation states","Low melting points","Complete lack of magnetism"],a:1,e:"Transition metals exhibit variable oxidation states, colored compounds, catalytic activity, and paramagnetism due to partially filled d orbitals."},
+  {q:"Which sequence shows increasing ionic radius?",o:["Na⁺ < Mg²⁺ < Al³⁺","Al³⁺ < Mg²⁺ < Na⁺","F⁻ < O²⁻ < N³⁻","Both B and C"],a:3,e:"For isoelectronic species, radius decreases with increasing nuclear charge (Al³⁺ < Mg²⁺ < Na⁺ all have 10 electrons). For anions, more negative charge = larger radius."},
+  {q:"Elements in the same group of the periodic table have similar chemical properties because they have:",o:["The same atomic radius","The same number of electron shells","The same number of valence electrons","The same mass number"],a:2,e:"Valence electrons determine chemical behavior. Group members have identical valence configurations."},
+  {q:"The element with configuration [Ar] 3d³ 4s² belongs to:",o:["s-block","p-block","d-block","f-block"],a:2,e:"The last electron enters the d subshell (3d), characteristic of d-block (transition) elements."},
+  
+  // Section E: Chemical Bonding (53-62)
+  {q:"Which compound contains ionic bonding?",o:["H₂O","NH₃","NaCl","CH₄"],a:2,e:"NaCl forms by electron transfer from Na to Cl, creating Na⁺ and Cl⁻ ions held by electrostatic attraction."},
+  {q:"A covalent bond is formed by:",o:["Transfer of electrons from metal to non-metal","Sharing of electron pairs between atoms","Attraction between positive ions and delocalized electrons","Electrostatic attraction between ions"],a:1,e:"Covalent bonding involves sharing electron pairs, typically between non-metal atoms."},
+  {q:"Hydrogen bonding occurs in:",o:["HCl","H₂S","NH₃","CH₄"],a:2,e:"Hydrogen bonding requires H bonded to highly electronegative atoms (N, O, or F). NH₃ has N-H bonds."},
+  {q:"Metallic bonding is best described as:",o:["Sharing of electrons between metal atoms only","Attraction between positive metal ions and a sea of delocalized electrons","Transfer of electrons from metal to non-metal","Weak van der Waals forces between metal atoms"],a:1,e:"The 'electron sea' model explains metallic properties: conductivity, malleability, and luster."},
+  {q:"In the complex ion [Cu(NH₃)₄]²⁺, the bond between Cu²⁺ and NH₃ is:",o:["Ionic","Covalent","Coordinate covalent","Hydrogen bond"],a:2,e:"NH₃ donates its lone pair to Cu²⁺ (which has empty orbitals), forming a coordinate (dative) bond."},
+  {q:"Which species contains a dative bond?",o:["H₂O","NH₄⁺","CH₄","NaCl"],a:1,e:"In NH₄⁺, NH₃ donates its lone pair to H⁺, forming a coordinate bond. Three N-H bonds are regular covalent."},
+  {q:"The bond in HCl is best described as:",o:["Pure covalent","Pure ionic","Polar covalent","Metallic"],a:2,e:"H and Cl have different electronegativities, creating a polar bond with partial charges (Hδ⁺-Clδ⁻)."},
+  {q:"Van der Waals forces are:",o:["Strong intramolecular forces","Weak intermolecular forces","Types of covalent bonds","Types of ionic bonds"],a:1,e:"Van der Waals forces are weak attractions between molecules (intermolecular), not within molecules."},
+  {q:"Which complex ion contains iron in the +3 oxidation state?",o:["[Fe(CN)₆]⁴⁻","[Fe(CN)₆]³⁻","[Cu(NH₃)₄]²⁺","[Ag(NH₃)₂]⁺"],a:1,e:"In [Fe(CN)₆]³⁻: Fe + 6(-1) = -3, so Fe = +3. In [Fe(CN)₆]⁴⁻, Fe = +2."},
+  {q:"The tendency of atoms to attain noble gas configuration explains:",o:["Why noble gases are reactive","The octet rule in chemical bonding","Why metals form cations only","The existence of isotopes"],a:1,e:"Atoms gain, lose, or share electrons to achieve stable octet (or duplet for H and He) configurations."},
+  
+  // Section F: Molecular Shapes & Structures (63-70)
+  {q:"The shape of a methane (CH₄) molecule is:",o:["Linear","Trigonal planar","Tetrahedral","Octahedral"],a:2,e:"CH₄ has 4 bonding pairs around carbon with no lone pairs, giving tetrahedral geometry (109.5° bond angles)."},
+  {q:"Water (H₂O) has a bent shape because:",o:["Oxygen has 6 valence electrons","There are two lone pairs and two bonding pairs on oxygen","Hydrogen atoms repel each other","Oxygen is more electronegative than hydrogen"],a:1,e:"VSEPR theory: 2 bonding pairs + 2 lone pairs = 4 electron domains → tetrahedral electron geometry, bent molecular shape (104.5°)."},
+  {q:"The bond angle in ammonia (NH₃) is approximately:",o:["90°","104.5°","107°","109.5°"],a:2,e:"NH₃ has 3 bonding pairs and 1 lone pair. Lone pair-bond pair repulsion compresses the angle from 109.5° to 107°."},
+  {q:"Which molecule has a linear shape?",o:["H₂O","CO₂","SO₂","H₂S"],a:1,e:"CO₂ (O=C=O) has two double bonds (treated as two regions) with no lone pairs on carbon → linear (180°)."},
+  {q:"The shape of the ammonia molecule is best described as:",o:["Tetrahedral","Trigonal pyramidal","Trigonal planar","Bent"],a:1,e:"NH₃ has 3 bonds and 1 lone pair on nitrogen. The molecular shape is trigonal pyramidal (electron geometry is tetrahedral)."},
+  {q:"Which pair of molecules both have linear shapes?",o:["H₂O and CO₂","CO₂ and HCl","CH₄ and NH₃","H₂S and SO₂"],a:1,e:"CO₂ is linear (180°). HCl is diatomic and therefore linear by definition."},
+  {q:"The VSEPR theory is used to predict:",o:["Bond energies","Molecular shapes","Reaction rates","Oxidation states"],a:1,e:"Valence Shell Electron Pair Repulsion theory predicts molecular geometry based on electron pair repulsion around central atoms."},
+  {q:"A molecule with the formula AX₃E (where A is central atom, X is bonded atom, E is lone pair) has a shape of:",o:["Tetrahedral","Trigonal planar","Trigonal pyramidal","T-shaped"],a:2,e:"3 bonding pairs + 1 lone pair = trigonal pyramidal shape (like NH₃). AX₃ would be trigonal planar; AX₄ would be tetrahedral."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('atomic_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('atomic_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/70`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('atomic_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=63?'Ready for JAMB!':pct>=53?'Good, review weak areas':pct>=42?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,15,30,40,52,62,70];
+  const sectionNames=["A: Atoms, Molecules, Ions & Atomic Models","B: Quantum Numbers & Electron Configuration","C: Isotopes & Atomic Structure Calculations","D: Periodic Table & Periodic Properties","E: Chemical Bonding","F: Molecular Shapes & Structures"];
+  
+  for(let s=0;s<6;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`
+        <h4>Question ${i+1}</h4>
+        <div class="q-text">${q.q}</div>
+        <div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div>
+        <div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div>
+        <div class="exp">${q.e}</div>
+      `;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('atomic_quiz_auth');
+  sessionStorage.removeItem('atomic_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('atomic_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('atomic_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

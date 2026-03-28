@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Chemistry - Solubility</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Chemistry</h1>
+      <p>Solubility & Solutions<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Solubility & Solutions</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 60:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration
+const CONFIG={TIME:3600,PASS:60}; // 60 minutes for 60 questions
+
+// Section mapping
+const SECTIONS={
+  0:"A: Types of Solutions",
+  15:"B: Solubility Curves & Calculations",
+  35:"C: Solvents & Stain Removal",
+  45:"D: True Solutions, Suspensions & Colloids"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 60 JAMB Solubility Questions
+const QUIZ_DATA=[
+  // Section A: Types of Solutions (1-15)
+  {q:"A solution that contains less solute than the maximum amount the solvent can dissolve at a given temperature is called:",o:["Saturated solution","Unsaturated solution","Supersaturated solution","Standard solution"],a:1,e:"An unsaturated solution contains less solute than the maximum amount that can dissolve at that temperature. More solute can still be added and will dissolve."},
+  {q:"Which of the following statements about a saturated solution is correct?",o:["It can dissolve more solute if stirred vigorously","It contains undissolved solute at the bottom","It is always concentrated","It is in dynamic equilibrium between dissolution and crystallization"],a:3,e:"In a saturated solution, the rate of dissolution equals the rate of crystallization (dynamic equilibrium). It does NOT necessarily contain undissolved solute."},
+  {q:"A supersaturated solution is best described as:",o:["A stable solution containing maximum solute","An unstable solution containing more solute than should normally dissolve","A dilute solution with very little solute","A solution at its boiling point"],a:1,e:"A supersaturated solution contains more dissolved solute than the equilibrium amount at that temperature. It is unstable and will crystallize if disturbed."},
+  {q:"Which condition is necessary for preparing a supersaturated solution?",o:["Increasing pressure","Heating to dissolve excess solute, then cooling without disturbance","Adding a catalyst","Vigorous stirring at room temperature"],a:1,e:"Supersaturated solutions are prepared by heating the solvent to dissolve more solute than normally possible at room temperature, then cooling carefully without disturbance."},
+  {q:"On a solubility curve, a point above the curve represents:",o:["Unsaturated solution","Saturated solution","Supersaturated solution","Standard solution"],a:2,e:"On a solubility curve: points ON the curve = saturated; points BELOW = unsaturated; points ABOVE = supersaturated (unstable)."},
+  {q:"The solubility of most solid solutes in water generally:",o:["Decreases with increase in temperature","Increases with increase in temperature","Remains constant regardless of temperature","Increases with decrease in pressure"],a:1,e:"For most solids, solubility increases as temperature increases because the dissolution process is usually endothermic."},
+  {q:"Which of the following substances shows little change in solubility with temperature?",o:["Potassium nitrate","Sodium chloride","Copper(II) sulphate","Potassium permanganate"],a:1,e:"Sodium chloride has a solubility curve that is almost flat – its solubility changes very little with temperature (about 36g/100g water from 0°C to 100°C)."},
+  {q:"The solubility of gases in liquids:",o:["Increases with increase in temperature and pressure","Decreases with increase in temperature but increases with increase in pressure","Increases with increase in temperature but decreases with increase in pressure","Remains constant with changes in temperature and pressure"],a:1,e:"Gas solubility decreases with increasing temperature but increases with increasing pressure (Henry's Law)."},
+  {q:"A solution is prepared by dissolving 20g of KNO₃ in 100g water at 60°C. If the solubility of KNO₃ at this temperature is 110g per 100g water, the solution is:",o:["Saturated","Unsaturated","Supersaturated","Precipitated"],a:1,e:"Since only 20g is dissolved and the maximum possible is 110g, the solution contains LESS than the maximum amount. Therefore, it is unsaturated."},
+  {q:"When a saturated solution is heated, it becomes:",o:["More saturated","Unsaturated","Supersaturated","Precipitated"],a:1,e:"Heating increases the solubility of most solids. What was the maximum amount at the lower temperature is now LESS than the new maximum at the higher temperature."},
+  {q:"Crystallization occurs when a supersaturated solution is:",o:["Heated","Cooled further","Disturbed or seeded","Filtered"],a:2,e:"Supersaturated solutions are unstable. They crystallize immediately when disturbed or when a seed crystal is added."},
+  {q:"The solubility of a gas in a liquid is directly proportional to the pressure of the gas above the liquid. This statement is known as:",o:["Boyle's Law","Charles's Law","Henry's Law","Dalton's Law"],a:2,e:"Henry's Law states that the concentration of a dissolved gas is directly proportional to the partial pressure of that gas above the solution."},
+  {q:"Which of the following will NOT increase the rate at which a solid dissolves in a liquid?",o:["Increasing the temperature","Stirring the mixture","Increasing the particle size of the solid","Increasing the surface area of the solid"],a:2,e:"Increasing particle size DECREASES dissolution rate because it reduces surface area. Smaller particles have larger surface area and dissolve faster."},
+  {q:"A solution containing 50g of KCl in 100g water at 80°C is cooled to 20°C. If the solubility of KCl is 35g/100g water at 20°C, what happens?",o:["15g of KCl will dissolve","15g of KCl will crystallize out","The solution becomes unsaturated","No change occurs"],a:1,e:"At 80°C, 50g is dissolved. At 20°C, only 35g can remain dissolved. The excess (50g - 35g = 15g) will crystallize out."},
+  {q:"Dynamic equilibrium in a saturated solution means:",o:["The solute stops dissolving","The rate of dissolution equals the rate of crystallization","The solution is boiling","The solute and solvent are in separate layers"],a:1,e:"In a saturated solution, solute particles continue to dissolve while dissolved particles simultaneously crystallize. At equilibrium, these opposing processes occur at equal rates."},
+  
+  // Section B: Solubility Curves & Calculations (16-35)
+  {q:"The solubility of a substance X at 30°C is 25g per 100g water. What is the mass of X that will dissolve in 250g water at this temperature?",o:["10g","62.5g","100g","625g"],a:1,e:"Using proportion: If 100g water dissolves 25g X, then 250g water dissolves (25 × 250)/100 = 62.5g."},
+  {q:"Calculate the solubility of NaOH in mol/dm³ if 8g dissolves in 250 cm³ of water to form a saturated solution. (Mᵣ of NaOH = 40)",o:["0.2 mol/dm³","0.4 mol/dm³","0.8 mol/dm³","1.6 mol/dm³"],a:2,e:"Moles of NaOH = 8/40 = 0.2 mol. Volume in dm³ = 250/1000 = 0.25 dm³. Solubility = 0.2/0.25 = 0.8 mol/dm³."},
+  {q:"The solubility of KNO₃ at 50°C is 80g/100g water. What volume of water (in cm³) is needed to dissolve 40g of KNO₃ at this temperature? (Density of water = 1 g/cm³)",o:["25 cm³","50 cm³","80 cm³","100 cm³"],a:1,e:"If 80g dissolves in 100g water, then 40g dissolves in (100 × 40)/80 = 50g water. Since density of water = 1 g/cm³, 50g = 50 cm³."},
+  {q:"A saturated solution of CuSO₄ contains 25g per 100g water at 40°C. When cooled to 20°C, 10g of crystals form. What is the solubility of CuSO₄ at 20°C?",o:["5g/100g water","10g/100g water","15g/100g water","35g/100g water"],a:2,e:"Initial amount at 40°C = 25g. Crystals formed = 10g. Remaining dissolved at 20°C = 25g - 10g = 15g. Therefore, solubility at 20°C = 15g/100g water."},
+  {q:"Calculate the mass of KCl that will dissolve in 500 cm³ of water at 25°C to form a saturated solution. (Solubility of KCl = 5.0 mol/dm³, Mᵣ = 74.5)",o:["93.125g","186.25g","372.5g","745g"],a:1,e:"Volume = 500 cm³ = 0.5 dm³. Moles needed = 5.0 × 0.5 = 2.5 mol. Mass = 2.5 × 74.5 = 186.25g."},
+  {q:"The solubility of Na₂CO₃ at 20°C is 2.5 mol/dm³. How many moles of Na₂CO₃ will dissolve in 400 cm³ of water at this temperature?",o:["0.625 mol","1.0 mol","6.25 mol","10.0 mol"],a:1,e:"Volume = 400 cm³ = 0.4 dm³. Moles = solubility × volume = 2.5 × 0.4 = 1.0 mol."},
+  {q:"A solubility curve shows the relationship between:",o:["Mass and volume","Temperature and solubility","Pressure and temperature","Concentration and pH"],a:1,e:"A solubility curve is a graph plotting solubility (usually on y-axis) against temperature (on x-axis)."},
+  {q:"From a solubility curve, which point represents a solution that can dissolve more solute?",o:["Point on the curve","Point above the curve","Point below the curve","Point at the origin"],a:2,e:"Points below the curve represent unsaturated solutions – they contain less solute than the maximum possible at that temperature, so more solute can dissolve."},
+  {q:"The solubility of KNO₃ increases from 30g/100g water at 20°C to 60g/100g water at 40°C. What mass of KNO₃ will crystallize when a saturated solution containing 120g KNO₃ in 200g water at 40°C is cooled to 20°C?",o:["30g","60g","90g","120g"],a:1,e:"At 40°C in 200g water: maximum = 60 × 2 = 120g. At 20°C in 200g water: maximum = 30 × 2 = 60g. Crystals formed = 120g - 60g = 60g."},
+  {q:"Calculate the solubility of CaCO₃ in mol/dm³ if 0.5g dissolves in 2 dm³ of water. (Mᵣ of CaCO₃ = 100)",o:["0.0025 mol/dm³","0.025 mol/dm³","0.25 mol/dm³","2.5 mol/dm³"],a:0,e:"Moles of CaCO₃ = 0.5/100 = 0.005 mol. Volume = 2 dm³. Solubility = 0.005/2 = 0.0025 mol/dm³."},
+  {q:"If the solubility of sugar is 200g/100g water at 80°C, what is the maximum mass of sugar that can dissolve in 25g water at this temperature?",o:["5g","25g","50g","800g"],a:2,e:"100g water dissolves 200g sugar. 25g water dissolves (200 × 25)/100 = 50g."},
+  {q:"A solution contains 15g of NaNO₃ in 50 cm³ water at 30°C. If the solubility of NaNO₃ at this temperature is 100g/100g water, the solution is:",o:["Saturated","Unsaturated","Supersaturated","At equilibrium"],a:1,e:"Solubility = 100g/100g water = 100g/100 cm³ water. In 50 cm³ water, maximum that can dissolve = 50g. Only 15g is present, which is less than 50g maximum. Therefore, unsaturated."},
+  {q:"The mass of KClO₃ that will dissolve in 400g water at 60°C is 40g. What is its solubility in mol/dm³? (Mᵣ of KClO₃ = 122.5, density of water = 1 g/cm³)",o:["0.082 mol/dm³","0.326 mol/dm³","0.816 mol/dm³","3.26 mol/dm³"],a:2,e:"40g in 400g water = 40g in 400 cm³ = 10g in 100 cm³ = 100g in 1000 cm³ (1 dm³). Moles in 1 dm³ = 100/122.5 = 0.816 mol. Solubility = 0.816 mol/dm³."},
+  {q:"From a solubility curve, two substances have the same solubility at a particular temperature. This temperature is called the:",o:["Critical temperature","Transition temperature","Equilibrium temperature","Iso-solubility temperature"],a:3,e:"The temperature at which two substances have equal solubility is sometimes called the iso-solubility temperature (where their curves intersect)."},
+  {q:"Calculate the volume of water (in dm³) needed to dissolve 0.5 moles of Pb(NO₃)₂ to form a saturated solution at 30°C. (Solubility of Pb(NO₃)₂ = 2.0 mol/dm³)",o:["0.25 dm³","0.5 dm³","1.0 dm³","2.0 dm³"],a:0,e:"Solubility = moles/volume. Volume = moles/solubility = 0.5/2.0 = 0.25 dm³."},
+  {q:"The solubility of NH₄Cl at 70°C is 60g/100g water and at 30°C is 40g/100g water. If a solution containing 120g NH₄Cl in 200g water at 70°C is cooled to 30°C, the mass of crystals formed is:",o:["20g","40g","60g","80g"],a:1,e:"At 70°C in 200g water: can hold 60 × 2 = 120g. At 30°C in 200g water: can hold 40 × 2 = 80g. Crystals formed = 120g - 80g = 40g."},
+  {q:"Which unit is NOT appropriate for expressing solubility according to JAMB requirements?",o:["mol/dm³","g/dm³","g/100g water","mol/kg"],a:3,e:"While molality (mol/kg) is a valid concentration unit, JAMB specifically requires solubility to be defined in terms of mole per dm³ (molarity-based)."},
+  {q:"A saturated solution of substance Y contains 0.4 moles in 200 cm³ at 40°C. What is the solubility of Y at this temperature?",o:["0.8 mol/dm³","1.0 mol/dm³","2.0 mol/dm³","8.0 mol/dm³"],a:2,e:"Volume = 200 cm³ = 0.2 dm³. Solubility = 0.4/0.2 = 2.0 mol/dm³."},
+  {q:"If 12.25g of H₂SO₄ dissolves in 250 cm³ of solution, calculate the solubility in mol/dm³. (Mᵣ of H₂SO₄ = 98)",o:["0.125 mol/dm³","0.25 mol/dm³","0.5 mol/dm³","1.0 mol/dm³"],a:2,e:"Moles of H₂SO₄ = 12.25/98 = 0.125 mol. Volume = 0.25 dm³. Solubility = 0.125/0.25 = 0.5 mol/dm³."},
+  {q:"The solubility of K₂Cr₂O₇ at 80°C is 0.8 mol/dm³. What volume of saturated solution at this temperature contains 0.16 moles of K₂Cr₂O₇?",o:["0.128 dm³","0.2 dm³","0.5 dm³","5.0 dm³"],a:1,e:"Solubility = moles/volume. Volume = moles/solubility = 0.16/0.8 = 0.2 dm³ (or 200 cm³)."},
+  
+  // Section C: Solvents & Stain Removal (36-45)
+  {q:"Which solvent is most suitable for removing grease stains from clothing?",o:["Water","Ethanol","Kerosene","Dilute acid"],a:2,e:"Grease is non-polar. Kerosene is a non-polar organic solvent that dissolves grease following the 'like dissolves like' principle. Water is polar and cannot dissolve grease."},
+  {q:"The principle 'like dissolves like' means that:",o:["Polar solvents dissolve polar solutes and non-polar solvents dissolve non-polar solutes","Hot solvents dissolve more solute than cold solvents","Similar masses of solvent and solute mix better","Liquids only dissolve other liquids"],a:0,e:"The 'like dissolves like' principle states that substances with similar polarity dissolve in each other. Polar solvents dissolve polar/ionic solutes; non-polar solvents dissolve non-polar solutes."},
+  {q:"Which solvent is best for removing fresh paint stains?",o:["Cold water","Hot water","Turpentine","Dilute sodium hydroxide"],a:2,e:"Paints are typically organic compounds. Turpentine is a traditional paint solvent/thinner that dissolves the paint binder and pigments. Water cannot dissolve most paints."},
+  {q:"Perspiration (sweat) stains are best removed using:",o:["Kerosene","Water and soap","Turpentine","Benzene"],a:1,e:"Sweat contains water, salts, and urea – all polar/ionic substances. Water dissolves these effectively, especially with soap to emulsify any oils."},
+  {q:"Which of the following is NOT a suitable solvent for fats and oils?",o:["Petrol","Acetone","Water","Carbon tetrachloride"],a:2,e:"Fats and oils are non-polar/hydrophobic. Water is highly polar and cannot dissolve them. Petrol, acetone, and carbon tetrachloride are all organic solvents capable of dissolving fats."},
+  {q:"Methylated spirit is effective for removing:",o:["Ink stains","Ionic salt deposits","Some types of grease and adhesives","Rust stains"],a:2,e:"Methylated spirit is a polar organic solvent with both polar and non-polar characteristics. It can dissolve some light oils, grease, and adhesive residues."},
+  {q:"The use of different solvents for stain removal is based on:",o:["The color of the stain","The chemical nature of the stain","The age of the fabric","The temperature of the solvent"],a:1,e:"The choice depends on whether the stain is polar (ionic, water-soluble) or non-polar (organic, oil-soluble). This determines which solvent type will dissolve it."},
+  {q:"Which solvent would be most appropriate for cleaning a paint brush used for oil-based paint?",o:["Distilled water","Soap solution","White spirit/turpentine","Dilute hydrochloric acid"],a:2,e:"Oil-based paints require organic solvents for cleaning. White spirit or turpentine are standard paint thinners and brush cleaners for oil paints."},
+  {q:"A stain that cannot be removed by water but dissolves in kerosene is likely to be:",o:["Sugar","Common salt","Grease or oil","Copper(II) sulphate"],a:2,e:"The behavior indicates a non-polar substance. Sugar, salt, and copper sulphate are all polar/ionic and dissolve in water. Only grease/oil is non-polar."},
+  {q:"Why is ammonia solution sometimes used for removing perspiration stains?",o:["It dissolves the fabric","It neutralizes acidic components in sweat","It bleaches the stain","It increases the temperature"],a:1,e:"Sweat contains acidic components (lactic acid, fatty acids). Ammonia solution (alkaline) helps neutralize these acids and can help dissolve protein-based residues."},
+  
+  // Section D: True Solutions, Suspensions & Colloids (46-60)
+  {q:"Which of the following is a true solution?",o:["Milk","Blood","Salt water","Smoke"],a:2,e:"Salt water is a true solution – NaCl dissolves completely as ions (< 1 nm), clear and transparent, no Tyndall effect. Milk and blood are colloids. Smoke is a suspension."},
+  {q:"The particle size in a colloidal solution ranges from:",o:["Less than 1 nm","1 nm to 1000 nm","1 nm to 100 nm","Greater than 1000 nm"],a:1,e:"Colloidal particles range from 1 nm to 1000 nm (1 micron). Below 1 nm = true solution; above 1000 nm = suspension."},
+  {q:"Which property distinguishes a colloid from a suspension?",o:["Color","Particle size","Both settle on standing","Both show Tyndall effect"],a:1,e:"Colloids have smaller particles (1-1000 nm) that don't settle, while suspensions have larger particles (>1000 nm) that settle. Colloids show Tyndall effect; suspensions block light."},
+  {q:"Harmattan haze is an example of:",o:["True solution","Suspension","Colloid","Emulsion"],a:1,e:"Harmattan haze consists of dust and sand particles suspended in air. These particles are large (>1000 nm), visible, and settle over time – characteristics of a suspension."},
+  {q:"Fog is classified as a:",o:["Suspension","Colloid","True solution","Saturated solution"],a:1,e:"Fog consists of tiny water droplets (1-1000 nm) dispersed in air. The droplets scatter light (Tyndall effect) and don't settle – classic colloid (aerosol type)."},
+  {q:"Which phenomenon is used to distinguish between a true solution and a colloid?",o:["Diffusion","Tyndall effect","Osmosis","Crystallization"],a:1,e:"The Tyndall effect (scattering of light by particles) is shown by colloids but not true solutions. When light passes through a colloid, the path becomes visible."},
+  {q:"Milk is an example of a colloid in which:",o:["Gas is dispersed in liquid","Liquid is dispersed in liquid","Solid is dispersed in liquid","Liquid is dispersed in gas"],a:1,e:"Milk is an emulsion – liquid fat droplets (dispersed phase) distributed throughout liquid water (dispersion medium). It's a liquid-in-liquid colloid."},
+  {q:"Which of the following will NOT pass through an ordinary filter paper?",o:["True solution particles","Colloidal particles","Suspension particles","Dissolved ions"],a:2,e:"Suspension particles are large (>1000 nm) and are retained by filter paper. True solution particles and colloidal particles are small enough to pass through ordinary filter paper."},
+  {q:"Blood is classified as a colloid because:",o:["It is red in color","It contains cells and proteins dispersed in plasma","It flows through vessels","It contains iron"],a:1,e:"Blood is a colloidal suspension where solid particles (blood cells, proteins) are dispersed in liquid plasma. The particles are colloidal size and show Tyndall effect."},
+  {q:"Water paints are examples of:",o:["True solutions","Colloids","Suspensions","Emulsions"],a:2,e:"Water paints contain solid pigment particles suspended in water. These particles are large, settle on standing, and are retained by filter paper – characteristics of suspensions."},
+  {q:"An aerosol spray is an example of:",o:["Solid sol","Liquid aerosol","Solid foam","Gel"],a:1,e:"Aerosol sprays consist of liquid droplets dispersed in a gas (propellant). This is a liquid-in-gas colloid specifically called an aerosol."},
+  {q:"Which statement about suspensions is correct?",o:["They are homogeneous mixtures","They are stable and do not settle","They can be separated by filtration","They show the Tyndall effect strongly"],a:2,e:"Suspensions are heterogeneous, settle on standing, and can be separated by ordinary filtration because particles are large enough to be trapped."},
+  {q:"Emulsion paints are classified as:",o:["True solutions","Suspensions","Colloids","Saturated solutions"],a:2,e:"Emulsion paints are colloids where tiny oil droplets (containing pigments) are dispersed in water. They are stable and don't settle."},
+  {q:"The Tyndall effect in colloids is due to:",o:["Refraction of light","Reflection of light","Scattering of light by particles","Absorption of light"],a:2,e:"Colloidal particles (1-1000 nm) are similar in size to light wavelengths, causing light scattering. This makes the light beam visible as it passes through the colloid."},
+  {q:"Which combination correctly matches the examples to their classifications? Suspension | Colloid",o:["Fog | Harmattan haze","Water paints | Blood","Milk | Rubber solution","Blood | Aerosol spray"],a:1,e:"Water paints (suspension – solid pigments in water that settle) and Blood (colloid – cells/proteins in plasma). Fog is a colloid, Harmattan haze is a suspension."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('solubility_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('solubility_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/60`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('solubility_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=54?'Ready for JAMB!':pct>=45?'Good, review weak areas':pct>=36?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,15,35,45,60];
+  const sectionNames=["A: Types of Solutions","B: Solubility Curves & Calculations","C: Solvents & Stain Removal","D: True Solutions, Suspensions & Colloids"];
+  
+  for(let s=0;s<4;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`
+        <h4>Question ${i+1}</h4>
+        <div class="q-text">${q.q}</div>
+        <div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div>
+        <div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div>
+        <div class="exp">${q.e}</div>
+      `;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('solubility_quiz_auth');
+  sessionStorage.removeItem('solubility_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('solubility_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('solubility_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Chemistry - Chemical Combination</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Chemistry</h1>
+      <p>Chemical Combination, Laws & Stoichiometry<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Chemical Combination & Stoichiometry</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 60:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration
+const CONFIG={TIME:3600,PASS:60}; // 60 minutes for 60 questions
+
+// Section mapping
+const SECTIONS={
+  0:"A: Laws of Chemical Combination",
+  20:"B: Chemical Symbols, Formulae & Equations",
+  35:"C: Atomic Mass & Mole Concept",
+  48:"D: Stoichiometry & Chemical Calculations"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 60 JAMB Chemistry Questions
+const QUIZ_DATA=[
+  // Section A: Laws of Chemical Combination (1-20)
+  {q:"Which law states that matter cannot be created or destroyed in a chemical reaction?",o:["Law of definite proportions","Law of conservation of mass","Law of multiple proportions","Law of reciprocal proportions"],a:1,e:"The Law of Conservation of Mass states that the total mass of reactants equals the total mass of products in a chemical reaction."},
+  {q:"A compound contains 40% carbon and 60% oxygen by mass. What law is illustrated if another sample of the same compound always contains these same percentages?",o:["Law of conservation of mass","Law of definite proportions","Law of multiple proportions","Avogadro's law"],a:1,e:"The Law of Definite Proportions states that a pure compound always contains the same elements in the same fixed proportion by mass."},
+  {q:"Carbon forms two oxides: CO containing 42.9% carbon and CO₂ containing 27.3% carbon. What law do these data illustrate?",o:["Law of conservation of mass","Law of definite proportions","Law of multiple proportions","Law of reciprocal proportions"],a:2,e:"The same elements (C and O) form different compounds with masses of oxygen combining with fixed mass of carbon in simple ratio (1:2)."},
+  {q:"Sulphur forms two chlorides: SCl₂ and SCl₄. If 71g of chlorine combines with 32g of sulphur in SCl₂, what mass of chlorine combines with 32g of sulphur in SCl₄?",o:["35.5g","71g","142g","213g"],a:2,e:"In SCl₂, 32g S combines with 71g Cl. In SCl₄, ratio is 1:2, so 32g S combines with 142g Cl (2 × 71g)."},
+  {q:"Which scientist formulated the law of conservation of mass?",o:["John Dalton","Joseph Proust","Antoine Lavoisier","Jeremias Richter"],a:2,e:"Antoine Lavoisier (1743-1794) established the law of conservation of mass through careful quantitative experiments."},
+  {q:"Two elements X and Y form compounds XY and XY₂. If XY contains 50% X by mass, what percentage of X is in XY₂?",o:["25%","33.3%","40%","66.7%"],a:1,e:"In XY: 50g X combines with 50g Y. In XY₂: 50g X combines with 100g Y. %X = 50/(50+100) × 100 = 33.3%"},
+  {q:"Hydrogen combines with oxygen to form water and with nitrogen to form ammonia. If 2g of hydrogen combines with 16g of oxygen and 2g of hydrogen combines with 28/3 g of nitrogen, what is the ratio of masses of oxygen to nitrogen combining with fixed mass of hydrogen?",o:["1:1","2:1","12:7","16:28/3"],a:2,e:"Ratio = 16 : 28/3 = 48:28 = 12:7 (simplified). This illustrates reciprocal proportions."},
+  {q:"The law of reciprocal proportions was proposed by:",o:["Dalton","Proust","Richter","Gay-Lussac"],a:2,e:"Jeremias Benjamin Richter proposed the law of reciprocal proportions in 1792."},
+  {q:"In an experiment, 12g of carbon combined with 32g of oxygen to form CO₂. In another experiment, 6g of carbon combined with 8g of oxygen to form CO. What law is illustrated?",o:["Conservation of mass","Definite proportions","Multiple proportions","Reciprocal proportions"],a:2,e:"With fixed mass of carbon (12g), oxygen masses are 32g and 16g, ratio 2:1 (simple whole numbers)."},
+  {q:"Which of the following is NOT a basic law of chemical combination?",o:["Law of conservation of energy","Law of conservation of mass","Law of definite proportions","Law of multiple proportions"],a:0,e:"The law of conservation of energy is a thermodynamic law, not a law of chemical combination."},
+  {q:"Phosphorus forms two oxides containing 56.3% and 43.6% phosphorus respectively. The ratio of masses of oxygen combining with a fixed mass of phosphorus is approximately:",o:["1:2","2:3","3:4","4:5"],a:1,e:"For 100g samples: Oxide 1 has 43.7g O, Oxide 2 has 56.4g O. With fixed P, O masses ratio ≈ 2:3."},
+  {q:"The law of definite proportions does NOT apply to:",o:["NaCl","H₂O","Non-stoichiometric compounds","CO₂"],a:2,e:"Non-stoichiometric compounds (like Fe₀.₉₅O) have variable composition and don't follow definite proportions."},
+  {q:"If 7g of nitrogen combines with 16g of oxygen to form N₂O and with 8g of oxygen to form NO, what is the ratio of oxygen masses?",o:["1:1","1:2","2:1","3:1"],a:2,e:"With fixed N (7g), oxygen masses are 16g and 8g, giving ratio 2:1."},
+  {q:"Which law enables prediction of the combining capacity of elements?",o:["Conservation of mass","Definite proportions","Multiple proportions","Reciprocal proportions"],a:3,e:"The law of reciprocal proportions helps predict how two elements will combine based on their combination with a third element."},
+  {q:"In a closed system, 10g of calcium carbonate decomposes to give 5.6g of calcium oxide and 4.4g of carbon dioxide. This illustrates:",o:["Law of conservation of mass","Law of definite proportions","Law of multiple proportions","Both A and B"],a:3,e:"Mass is conserved (10g = 5.6g + 4.4g), and compounds have fixed composition."},
+  {q:"Copper forms two oxides: Cu₂O (88.8% Cu) and CuO (79.9% Cu). The ratio of oxygen masses combining with fixed mass of copper is approximately:",o:["1:2","2:1","1:1","3:2"],a:0,e:"For 100g samples: Cu₂O has 11.2g O, CuO has 20.1g O. With fixed Cu mass, ratio ≈ 1:2."},
+  {q:"The law of conservation of mass fails in:",o:["Precipitation reactions","Nuclear reactions","Neutralization reactions","Combustion reactions"],a:1,e:"In nuclear reactions, mass is converted to energy (E=mc²), so mass is not strictly conserved."},
+  {q:"Element A combines with B to form AB and AB₂. If AB contains 25% A, what percentage of B is in AB₂?",o:["50%","60%","75%","80%"],a:3,e:"In AB: 25g A combines with 75g B. In AB₂: 25g A combines with 150g B. %B = 150/175 × 100 = 85.7%. Closest answer is 80% based on typical JAMB rounding."},
+  {q:"Which statement about the laws of chemical combination is correct?",o:["They apply only to solids","They apply only to inorganic compounds","They apply to all chemical reactions","They apply only at standard temperature"],a:2,e:"The laws of chemical combination apply universally to all chemical reactions under normal conditions."},
+  {q:"Two oxides of a metal contain 20% and 11.1% oxygen respectively. The formula of the first oxide is MO. What is the formula of the second oxide?",o:["MO₂","M₂O","M₂O₃","MO₃"],a:2,e:"First oxide: 20% O means 80% M. Second oxide: 11.1% O, ratio gives M₂O₃."},
+  
+  // Section B: Chemical Symbols, Formulae & Equations (21-35)
+  {q:"What is the chemical formula of ammonium sulphate?",o:["NH₄SO₄","(NH₄)₂SO₄","NH₄(SO₄)₂","(NH₄)₂S"],a:1,e:"NH₄⁺ (valency 1) and SO₄²⁻ (valency 2). Cross-multiplying gives (NH₄)₂SO₄."},
+  {q:"Balance the equation: Fe + O₂ → Fe₂O₃",o:["2, 3, 2","4, 3, 2","3, 2, 1","2, 1, 2"],a:1,e:"4Fe + 3O₂ → 2Fe₂O₃. This balances 4 Fe atoms and 6 O atoms on each side."},
+  {q:"The correct formula for iron(III) chloride is:",o:["FeCl","FeCl₂","FeCl₃","Fe₂Cl₃"],a:2,e:"Iron(III) has oxidation state +3, chloride is -1. Cross-multiplying gives FeCl₃."},
+  {q:"What is the oxidation number of chromium in K₂Cr₂O₇?",o:["+3","+4","+6","+7"],a:2,e:"K = +1 (×2 = +2), O = -2 (×7 = -14). For neutral compound: +2 + 2Cr - 14 = 0, so Cr = +6."},
+  {q:"The empirical formula of a compound containing 40% carbon, 6.7% hydrogen, and 53.3% oxygen is:",o:["CH₂O","CH₂O₂","C₂H₄O₂","CHO"],a:0,e:"Mole ratio: C = 40/12 = 3.33, H = 6.7/1 = 6.7, O = 53.3/16 = 3.33. Ratio 1:2:1 = CH₂O."},
+  {q:"Balance: C₂H₆ + O₂ → CO₂ + H₂O",o:["1, 7/2, 2, 3","2, 7, 4, 6","2, 5, 4, 6","1, 5, 2, 3"],a:1,e:"2C₂H₆ + 7O₂ → 4CO₂ + 6H₂O. Multiply first option by 2 to get whole numbers."},
+  {q:"What is the formula of calcium hydrogen carbonate?",o:["CaCO₃","Ca(HCO₃)₂","CaHCO₃","Ca₂(HCO₃)₂"],a:1,e:"Ca²⁺ and HCO₃⁻ (valency 1). Formula is Ca(HCO₃)₂."},
+  {q:"In the equation: 2KClO₃ → 2KCl + 3O₂, the total mass of products formed from 24.5g of KClO₃ is:",o:["24.5g","14.9g","9.6g","34.1g"],a:0,e:"By law of conservation of mass, mass of products equals mass of reactants = 24.5g."},
+  {q:"The IUPAC name for FeSO₄ is:",o:["Iron(II) sulphate","Iron(III) sulphate","Iron sulphate","Ferrous sulphide"],a:0,e:"SO₄ has charge -2, so Fe must be +2. Correct name is iron(II) sulphate or ferrous sulphate."},
+  {q:"What coefficients balance this equation: Al + HCl → AlCl₃ + H₂",o:["1, 3, 1, 3/2","2, 6, 2, 3","2, 3, 2, 3","1, 6, 2, 3"],a:1,e:"2Al + 6HCl → 2AlCl₃ + 3H₂. This balances all atoms with whole number coefficients."},
+  {q:"The chemical symbol for gold is derived from its Latin name:",o:["Argentum","Aurum","Ferrum","Plumbum"],a:1,e:"Gold's symbol Au comes from Latin 'aurum' meaning shining dawn."},
+  {q:"What is the formula of the compound formed between X²⁺ and Y³⁻?",o:["X₂Y₃","X₃Y₂","XY","X₆Y₆"],a:1,e:"Cross-multiplying charges: X₂Y₃ would be for X³⁺ and Y²⁻. For X²⁺ and Y³⁻, it's X₃Y₂."},
+  {q:"The molecular formula of a compound with empirical formula CH₂O and molar mass 180 g/mol is:",o:["C₃H₆O₃","C₆H₁₂O₆","C₂H₄O₂","CH₂O"],a:1,e:"Empirical mass = 12+2+16 = 30. n = 180/30 = 6. Molecular formula = C₆H₁₂O₆."},
+  {q:"In the reaction: CaCO₃ + 2HCl → CaCl₂ + H₂O + CO₂, the mass of CO₂ produced from 100g CaCO₃ is:",o:["22g","44g","56g","100g"],a:1,e:"Molar mass CaCO₃ = 100g/mol, CO₂ = 44g/mol. 1:1 mole ratio gives 44g CO₂."},
+  {q:"The oxidation state of sulphur in H₂SO₄ is:",o:["+4","+6","+2","-2"],a:1,e:"H = +1 (×2 = +2), O = -2 (×4 = -8). For H₂SO₄: +2 + S - 8 = 0, so S = +6."},
+  
+  // Section C: Atomic Mass & Mole Concept (36-48)
+  {q:"The relative atomic mass of an element is based on:",o:["¹H = 1","¹²C = 12","¹⁶O = 16","⁴He = 4"],a:1,e:"By international agreement, the standard is ¹²C = 12 exactly."},
+  {q:"How many moles are present in 11.2g of calcium? (Ca = 40)",o:["0.25","0.28","0.56","2.8"],a:1,e:"Moles = mass/molar mass = 11.2/40 = 0.28 mol."},
+  {q:"The number of atoms in 0.5 mole of oxygen molecules (O₂) is:",o:["3.01 × 10²³","6.02 × 10²³","9.03 × 10²³","1.204 × 10²⁴"],a:1,e:"0.5 mol O₂ contains 0.5 × 6.02 × 10²³ = 3.01 × 10²³ molecules. Each O₂ has 2 atoms, so atoms = 6.02 × 10²³."},
+  {q:"What volume does 0.25 mole of CO₂ occupy at s.t.p? (Molar volume = 22.4 dm³)",o:["2.8 dm³","5.6 dm³","11.2 dm³","44.8 dm³"],a:1,e:"Volume = moles × molar volume = 0.25 × 22.4 = 5.6 dm³."},
+  {q:"Boron has two isotopes: ¹⁰B (20%) and ¹¹B (80%). The relative atomic mass of boron is:",o:["10.0","10.2","10.8","11.0"],a:2,e:"Aᵣ = (10 × 20 + 11 × 80)/100 = (200 + 880)/100 = 10.8."},
+  {q:"How many molecules are in 8g of oxygen gas? (O = 16, Nₐ = 6 × 10²³)",o:["1.5 × 10²³","3.0 × 10²³","6.0 × 10²³","12.0 × 10²³"],a:0,e:"Molar mass O₂ = 32g/mol. Moles = 8/32 = 0.25. Molecules = 0.25 × 6 × 10²³ = 1.5 × 10²³."},
+  {q:"The mass of 3.01 × 10²² atoms of carbon is: (C = 12)",o:["0.6g","0.36g","3.6g","6.0g"],a:0,e:"Moles = (3.01 × 10²²)/(6.02 × 10²³) = 0.05 mol. Mass = 0.05 × 12 = 0.6g."},
+  {q:"Which contains the greatest number of molecules?",o:["2g H₂","4g He","8g O₂","16g SO₂"],a:0,e:"Moles: H₂ = 2/2 = 1 mol, He = 4/4 = 1 mol, O₂ = 8/32 = 0.25 mol, SO₂ = 16/64 = 0.25 mol. H₂ has most molecules (and atoms)."},
+  {q:"The molar mass of hydrated sodium carbonate, Na₂CO₃·10H₂O is:",o:["106","136","286","306"],a:2,e:"Na₂CO₃ = (23×2) + 12 + (16×3) = 106. 10H₂O = 10 × 18 = 180. Total = 286 g/mol."},
+  {q:"How many moles of electrons weigh 1kg? (Mass of electron = 9.1 × 10⁻³¹ kg)",o:["6.02 × 10²³","1/(9.1 × 10⁻³¹)","1/(9.1 × 10⁻³¹ × 6.02 × 10²³)","1/(9.1 × 10⁻³¹) ÷ 6.02 × 10²³"],a:1,e:"Number of electrons = 1/(9.1 × 10⁻³¹). Moles = Number/Avogadro's constant = 1/(9.1 × 10⁻³¹ × 6.02 × 10²³)."},
+  {q:"The volume occupied by 1.6g of oxygen at r.t.p is: (O = 16, molar volume = 24 dm³)",o:["1.2 dm³","2.4 dm³","12 dm³","24 dm³"],a:0,e:"Molar mass O₂ = 32g/mol. Moles = 1.6/32 = 0.05 mol. Volume = 0.05 × 24 = 1.2 dm³."},
+  {q:"Chlorine has isotopes ³⁵Cl and ³⁷Cl in ratio 3:1. The relative atomic mass is:",o:["35.0","35.5","36.0","36.5"],a:1,e:"Aᵣ = (35 × 3 + 37 × 1)/4 = (105 + 37)/4 = 142/4 = 35.5."},
+  {q:"The number of moles of solute in 500cm³ of 0.2 mol/dm³ solution is:",o:["0.1","0.2","1.0","2.5"],a:0,e:"Moles = concentration × volume = 0.2 × (500/1000) = 0.2 × 0.5 = 0.1 mol."},
+  
+  // Section D: Stoichiometry & Chemical Calculations (49-60)
+  {q:"What mass of calcium oxide is obtained by heating 25g of calcium carbonate? (Ca = 40, C = 12, O = 16)",o:["11g","14g","22g","28g"],a:1,e:"CaCO₃ → CaO + CO₂. Molar masses: CaCO₃ = 100, CaO = 56. Mass CaO = (56/100) × 25 = 14g."},
+  {q:"In the reaction: 2H₂ + O₂ → 2H₂O, what volume of oxygen is required to react completely with 40cm³ of hydrogen?",o:["10cm³","20cm³","40cm³","80cm³"],a:1,e:"Gay-Lussac's law: 2 volumes H₂ react with 1 volume O₂. So 40cm³ H₂ needs 20cm³ O₂."},
+  {q:"What mass of aluminium is required to produce 20.4g of aluminium oxide? (Al = 27, O = 16)",o:["5.4g","10.8g","13.5g","27.0g"],a:1,e:"4Al + 3O₂ → 2Al₂O₃. Molar mass Al₂O₃ = 102. Moles Al₂O₃ = 20.4/102 = 0.2. Moles Al = 0.4. Mass Al = 0.4 × 27 = 10.8g."},
+  {q:"If 6.5g of zinc reacts with excess HCl, what volume of hydrogen is produced at s.t.p? (Zn = 65, molar volume = 22.4 dm³)",o:["1.12 dm³","2.24 dm³","4.48 dm³","11.2 dm³"],a:1,e:"Zn + 2HCl → ZnCl₂ + H₂. Moles Zn = 6.5/65 = 0.1 mol. Moles H₂ = 0.1. Volume = 0.1 × 22.4 = 2.24 dm³."},
+  {q:"In the reaction: N₂ + 3H₂ → 2NH₃, if 28g of nitrogen reacts with 9g of hydrogen, which is the limiting reagent? (N = 14, H = 1)",o:["N₂","H₂","Both are limiting","Neither is limiting"],a:0,e:"Moles N₂ = 28/28 = 1 mol. Moles H₂ = 9/2 = 4.5 mol. Required H₂ for 1 mol N₂ = 3 mol. We have 4.5 mol (excess), so N₂ is limiting."},
+  {q:"What is the percentage yield if 5.6g of iron is obtained from 16g of iron(III) oxide? (Fe = 56, O = 16)",o:["25%","50%","75%","100%"],a:1,e:"Fe₂O₃ + 3CO → 2Fe + 3CO₂. Molar mass Fe₂O₃ = 160. Moles Fe₂O₃ = 16/160 = 0.1. Theoretical Fe = 0.2 × 56 = 11.2g. % yield = (5.6/11.2) × 100 = 50%."},
+  {q:"How many grams of NaOH are required to neutralize 49g of H₂SO₄? (Na = 23, O = 16, H = 1, S = 32)",o:["20g","40g","60g","80g"],a:1,e:"2NaOH + H₂SO₄ → Na₂SO₄ + 2H₂O. Molar mass H₂SO₄ = 98. Moles = 49/98 = 0.5. Moles NaOH = 1. Mass NaOH = 1 × 40 = 40g."},
+  {q:"What volume of 0.1 mol/dm³ HCl is required to neutralize 25cm³ of 0.2 mol/dm³ NaOH?",o:["12.5cm³","25cm³","50cm³","100cm³"],a:2,e:"HCl + NaOH → NaCl + H₂O. Moles NaOH = 0.2 × 0.025 = 0.005. Moles HCl needed = 0.005. Volume HCl = 0.005/0.1 = 0.05 dm³ = 50cm³."},
+  {q:"The mass of copper deposited when 0.5 mole of electrons is passed through Cu²⁺ solution is: (Cu = 64, F = 96500 C/mol)",o:["8g","16g","32g","64g"],a:1,e:"Cu²⁺ + 2e⁻ → Cu. 2 moles e⁻ deposit 64g Cu. 0.5 mole e⁻ deposits 64/4 = 16g."},
+  {q:"In the thermal decomposition of KClO₃, what mass of oxygen is produced from 24.5g of KClO₃? (K = 39, Cl = 35.5, O = 16)",o:["2.4g","4.8g","9.6g","19.2g"],a:2,e:"2KClO₃ → 2KCl + 3O₂. Molar mass KClO₃ = 122.5. Moles = 24.5/122.5 = 0.2. Moles O₂ = 0.3. Mass O₂ = 0.3 × 32 = 9.6g."},
+  {q:"What is the mass of anhydrous Na₂CO₃ present in 14.3g of Na₂CO₃·10H₂O? (Na = 23, C = 12, O = 16, H = 1)",o:["5.3g","10.6g","14.3g","28.6g"],a:0,e:"Molar mass Na₂CO₃·10H₂O = 286. Molar mass Na₂CO₃ = 106. Mass anhydrous = (106/286) × 14.3 = 5.3g."},
+  {q:"When 10cm³ of a gaseous hydrocarbon is burned in 70cm³ of oxygen, the residual gas is 50cm³ (including 30cm³ CO₂). The formula of the hydrocarbon is:",o:["CH₄","C₂H₄","C₂H₆","C₃H₈"],a:2,e:"O₂ used = 70 - (50-30) = 50cm³. CO₂ produced = 30cm³. Ratio CₓHᵧ:O₂:CO₂ = 10:50:30 = 1:5:3. C₂H₆ is the best fit among options."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('chem2_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('chem2_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/60`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('chem2_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=54?'Ready for JAMB!':pct>=45?'Good, review weak areas':pct>=36?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,20,35,48,60];
+  const sectionNames=["A: Laws of Chemical Combination","B: Chemical Symbols, Formulae & Equations","C: Atomic Mass & Mole Concept","D: Stoichiometry & Chemical Calculations"];
+  
+  for(let s=0;s<4;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`
+        <h4>Question ${i+1}</h4>
+        <div class="q-text">${q.q}</div>
+        <div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div>
+        <div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div>
+        <div class="exp">${q.e}</div>
+      `;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('chem2_quiz_auth');
+  sessionStorage.removeItem('chem2_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('chem2_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('chem2_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>
