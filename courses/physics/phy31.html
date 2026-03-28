@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Physics - Current Electricity Mastery Guide</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f;--line:#8ea2ff;--grid:rgba(255,255,255,.08)
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8;--line:#2b59ff;--grid:rgba(0,0,0,.08)
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .formula-box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .formula-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .formula-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px
+    }
+    .example-box .answer{
+      margin-top:8px;font-size:13px;color:var(--accent-secondary);font-weight:800
+    }
+
+    .diagram-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:12px;
+      margin:14px 0
+    }
+    .diagram-title{
+      font-size:13px;
+      font-weight:900;
+      color:var(--accent-tertiary);
+      margin-bottom:8px
+    }
+    .diagram-caption{
+      font-size:12px;
+      color:var(--text-secondary);
+      margin-top:8px
+    }
+    svg{
+      width:100%;
+      height:auto;
+      display:block
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:800px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .math{font-weight:900;color:var(--accent-secondary)}
+    .label{fill:var(--text-primary);font-size:11px;font-weight:700}
+    .axis{stroke:var(--text-primary);stroke-width:2}
+    .grid{stroke:var(--grid);stroke-width:1}
+    .line{stroke:var(--line);stroke-width:3;fill:none}
+    .obj{fill:rgba(29,185,84,.18);stroke:var(--accent);stroke-width:2}
+    .tick{stroke:var(--text-primary);stroke-width:2}
+    .mark{fill:var(--accent-secondary)}
+    .pathline{stroke:var(--accent-tertiary);stroke-width:3;fill:none}
+    .curve{stroke:var(--line);stroke-width:3;fill:none}
+    .hot{fill:rgba(255,107,107,.35);stroke:none}
+    .cool{fill:rgba(78,205,196,.30);stroke:none}
+    .darkfill{fill:rgba(0,0,0,.35)}
+    .lightfill{fill:rgba(255,255,255,.15)}
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">PHYSICS</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>⚡ Current Electricity</h1>
+        <p>JAMB Physics • current • voltage • Ohm’s law • resistance • power • energy • circuits • emf • instruments</p>
+      </div>
+
+      <div class="section-card">
+        <h2>🎯 Learning Objective</h2>
+        <p>This chapter explains electric current, potential difference, Ohm’s law, resistance, electrical energy and power, resistor combinations, emf and internal resistance, and measuring instruments for JAMB success.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li>Current is the rate of flow of charge</li>
+            <li>Ohm’s law is <span class="math">V = IR</span></li>
+            <li>Power is <span class="math">P = VI</span></li>
+            <li>EMF and internal resistance are key JAMB topics</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Big idea</strong>
+          <p>Current electricity studies how charges move in circuits and how voltage, resistance, and power are related.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Electric Current</h2>
+
+        <p>Electric current is the rate of flow of electric charge through a conductor.</p>
+
+        <div class="formula-box">
+          <div class="title">Current formula</div>
+          <div class="line"><span class="math">I = Q/t</span></div>
+        </div>
+
+        <ul>
+          <li><span class="math">I</span> = current in amperes</li>
+          <li><span class="math">Q</span> = charge in coulombs</li>
+          <li><span class="math">t</span> = time in seconds</li>
+        </ul>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Type</th>
+              <th>Description</th>
+              <th>Example</th>
+            </tr>
+            <tr><td>Direct current (DC)</td><td>Flows in one direction only</td><td>Batteries</td></tr>
+            <tr><td>Alternating current (AC)</td><td>Changes direction periodically</td><td>Mains electricity</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="example-box">
+          <div class="title">Calculation 1: Current</div>
+          <p>A charge of 120 C flows through a conductor in 2 minutes. Find the current.</p>
+          <p><span class="math">I = Q/t = 120/(2 × 60) = 1 A</span></p>
+          <div class="answer">Answer: 1 A</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Potential Difference</h2>
+
+        <p>Potential difference is the work done in moving unit charge from one point to another.</p>
+
+        <div class="formula-box">
+          <div class="title">Potential difference formula</div>
+          <div class="line"><span class="math">V = W/Q</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 2: Voltage</div>
+          <p>If 500 J of work is done to move 25 C of charge, find the potential difference.</p>
+          <p><span class="math">V = 500/25 = 20 V</span></p>
+          <div class="answer">Answer: 20 V</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Ohm’s Law</h2>
+
+        <p>At constant temperature, the current through a metallic conductor is directly proportional to the potential difference across it.</p>
+
+        <div class="formula-box">
+          <div class="title">Ohm’s law</div>
+          <div class="line"><span class="math">V = IR</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 3: Resistance from Ohm’s Law</div>
+          <p>A resistor has a p.d. of 12 V across it when the current is 3 A. Find the resistance.</p>
+          <p><span class="math">R = V/I = 12/3 = 4 Ω</span></p>
+          <div class="answer">Answer: 4 Ω</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Electrical Resistance</h2>
+
+        <p>Resistance is the opposition to the flow of current.</p>
+
+        <h3>Factors affecting resistance</h3>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Factor</th>
+              <th>Relationship</th>
+              <th>Explanation</th>
+            </tr>
+            <tr><td>Length</td><td><span class="math">R ∝ L</span></td><td>Longer wire gives more resistance</td></tr>
+            <tr><td>Area</td><td><span class="math">R ∝ 1/A</span></td><td>Thicker wire gives less resistance</td></tr>
+            <tr><td>Resistivity</td><td><span class="math">R ∝ ρ</span></td><td>Depends on material</td></tr>
+            <tr><td>Temperature</td><td>Varies</td><td>Metals increase with temperature</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="formula-box">
+          <div class="title">Resistance formula</div>
+          <div class="line"><span class="math">R = ρL/A</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 4: Resistance of a Wire</div>
+          <p>A wire has length 2 m, area <span class="math">5 × 10⁻⁶ m²</span>, and resistivity <span class="math">1.1 × 10⁻⁶ Ωm</span>. Find its resistance.</p>
+          <p><span class="math">R = ρL/A = (1.1 × 10⁻⁶ × 2)/(5 × 10⁻⁶)</span></p>
+          <p><span class="math">R = 0.44 Ω</span></p>
+          <div class="answer">Answer: 0.44 Ω</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Resistivity and Conductivity</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Quantity</th>
+              <th>Symbol</th>
+              <th>Unit</th>
+              <th>Relationship</th>
+            </tr>
+            <tr><td>Resistivity</td><td><span class="math">ρ</span></td><td><span class="math">Ωm</span></td><td><span class="math">ρ = RA/L</span></td></tr>
+            <tr><td>Conductivity</td><td><span class="math">σ</span></td><td><span class="math">(Ωm)⁻¹</span> or <span class="math">S/m</span></td><td><span class="math">σ = 1/ρ</span></td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ Electrical Energy and Power</h2>
+
+        <h3>Electrical energy</h3>
+        <div class="formula-box">
+          <div class="title">Energy formulas</div>
+          <div class="line"><span class="math">E = VIt = I²Rt = V²t/R</span></div>
+        </div>
+
+        <p>Unit: joule (J) or kilowatt-hour (kWh)</p>
+        <p><span class="math">1 kWh = 3.6 × 10⁶ J</span></p>
+
+        <h3>Electrical power</h3>
+        <div class="formula-box">
+          <div class="title">Power formulas</div>
+          <div class="line"><span class="math">P = VI = I²R = V²/R</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 5: Energy Consumption</div>
+          <p>An electric heater rated 2000 W operates for 3 hours. Find the energy consumed and the cost at ₦50 per kWh.</p>
+          <p><span class="math">Energy = 2 kW × 3 h = 6 kWh</span></p>
+          <p><span class="math">Cost = 6 × 50 = ₦300</span></p>
+          <div class="answer">Answer: 6 kWh and ₦300</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 6: Power and Resistance</div>
+          <p>A 60 W bulb operates on 240 V. Find the current and resistance.</p>
+          <p><span class="math">I = P/V = 60/240 = 0.25 A</span></p>
+          <p><span class="math">R = V/I = 240/0.25 = 960 Ω</span></p>
+          <div class="answer">Answer: 0.25 A and 960 Ω</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>7️⃣ Resistors in Circuits</h2>
+
+        <h3>Series connection</h3>
+        <ul>
+          <li>Same current flows through all resistors</li>
+          <li>Total voltage is the sum of individual voltages</li>
+        </ul>
+
+        <div class="formula-box">
+          <div class="title">Series resistance</div>
+          <div class="line"><span class="math">Rtotal = R₁ + R₂ + R₃ + ...</span></div>
+        </div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Resistors in series</div>
+          <svg viewBox="0 0 340 120" aria-label="Series resistors diagram">
+            <line x1="20" y1="60" x2="60" y2="60" class="curve"/>
+            <rect x="60" y="45" width="50" height="30" class="obj"/>
+            <line x1="110" y1="60" x2="145" y2="60" class="curve"/>
+            <rect x="145" y="45" width="50" height="30" class="obj"/>
+            <line x1="195" y1="60" x2="230" y2="60" class="curve"/>
+            <rect x="230" y="45" width="50" height="30" class="obj"/>
+            <line x1="280" y1="60" x2="320" y2="60" class="curve"/>
+          </svg>
+          <div class="diagram-caption">Series resistors share the same current.</div>
+        </div>
+
+        <h3>Parallel connection</h3>
+        <ul>
+          <li>Same voltage across all resistors</li>
+          <li>Total current is the sum of branch currents</li>
+        </ul>
+
+        <div class="formula-box">
+          <div class="title">Parallel resistance</div>
+          <div class="line"><span class="math">1/Rtotal = 1/R₁ + 1/R₂ + 1/R₃ + ...</span></div>
+          <div class="line"><span class="math">R = R₁R₂/(R₁ + R₂)</span> for two resistors</div>
+        </div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Resistors in parallel</div>
+          <svg viewBox="0 0 340 180" aria-label="Parallel resistors diagram">
+            <line x1="55" y1="20" x2="55" y2="160" class="curve"/>
+            <line x1="285" y1="20" x2="285" y2="160" class="curve"/>
+
+            <line x1="55" y1="45" x2="120" y2="45" class="curve"/>
+            <rect x="120" y="30" width="80" height="30" class="obj"/>
+            <line x1="200" y1="45" x2="285" y2="45" class="curve"/>
+
+            <line x1="55" y1="90" x2="120" y2="90" class="curve"/>
+            <rect x="120" y="75" width="80" height="30" class="obj"/>
+            <line x1="200" y1="90" x2="285" y2="90" class="curve"/>
+
+            <line x1="55" y1="135" x2="120" y2="135" class="curve"/>
+            <rect x="120" y="120" width="80" height="30" class="obj"/>
+            <line x1="200" y1="135" x2="285" y2="135" class="curve"/>
+          </svg>
+          <div class="diagram-caption">Parallel resistors have the same potential difference across them.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 7: Series Circuit</div>
+          <p>Three resistors of 2 Ω, 4 Ω, and 6 Ω are in series across a 12 V battery. Find total resistance, circuit current, and voltage across the 4 Ω resistor.</p>
+          <p><span class="math">Rtotal = 2 + 4 + 6 = 12 Ω</span></p>
+          <p><span class="math">I = V/R = 12/12 = 1 A</span></p>
+          <p><span class="math">V₄ = IR = 1 × 4 = 4 V</span></p>
+          <div class="answer">Answer: 12 Ω, 1 A, 4 V</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 8: Parallel Circuit</div>
+          <p>Two resistors of 6 Ω and 12 Ω are in parallel across 12 V. Find total resistance, current in each branch, and total current.</p>
+          <p><span class="math">1/R = 1/6 + 1/12 = 1/4</span></p>
+          <p><span class="math">R = 4 Ω</span></p>
+          <p><span class="math">I₆ = 12/6 = 2 A</span>, <span class="math">I₁₂ = 12/12 = 1 A</span></p>
+          <p><span class="math">Itotal = 2 + 1 = 3 A</span></p>
+          <div class="answer">Answer: 4 Ω, 2 A and 1 A, 3 A</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 9: Combined Circuit</div>
+          <p>Find the total resistance when 4 Ω and 6 Ω are in series, and this combination is in parallel with 12 Ω.</p>
+          <p><span class="math">Rs = 4 + 6 = 10 Ω</span></p>
+          <p><span class="math">1/Rtotal = 1/10 + 1/12 = 11/60</span></p>
+          <p><span class="math">Rtotal = 60/11 = 5.45 Ω</span></p>
+          <div class="answer">Answer: 5.45 Ω</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>8️⃣ EMF and Internal Resistance</h2>
+
+        <p><strong>EMF</strong> is the total energy supplied per coulomb by a cell. <strong>Terminal p.d.</strong> is the voltage available when current flows. <strong>Internal resistance</strong> is the resistance inside the cell.</p>
+
+        <div class="formula-box">
+          <div class="title">Key formulas</div>
+          <div class="line"><span class="math">E = V + Ir</span></div>
+          <div class="line"><span class="math">E = I(R + r)</span></div>
+          <div class="line"><span class="math">V = IR</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 10: Internal Resistance</div>
+          <p>A cell has emf 12 V and internal resistance 2 Ω. It is connected to a 10 Ω resistor. Find the current and terminal p.d.</p>
+          <p><span class="math">I = E/(R + r) = 12/(10 + 2) = 1 A</span></p>
+          <p><span class="math">V = IR = 1 × 10 = 10 V</span></p>
+          <div class="answer">Answer: 1 A and 10 V</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>9️⃣ Cells in Combination</h2>
+
+        <h3>Series connection</h3>
+        <div class="formula-box">
+          <div class="title">Cells in series</div>
+          <div class="line"><span class="math">Etotal = E₁ + E₂ + E₃ + ...</span></div>
+          <div class="line"><span class="math">rtotal = r₁ + r₂ + r₃ + ...</span></div>
+        </div>
+
+        <h3>Parallel connection of identical cells</h3>
+        <div class="formula-box">
+          <div class="title">Cells in parallel</div>
+          <div class="line"><span class="math">Etotal = E</span></div>
+          <div class="line"><span class="math">rtotal = r/n</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 11: Cells in Series</div>
+          <p>Three identical cells each have emf 1.5 V and internal resistance 0.5 Ω. They are connected in series to a 4 Ω resistor. Find the current.</p>
+          <p><span class="math">Etotal = 3 × 1.5 = 4.5 V</span></p>
+          <p><span class="math">rtotal = 3 × 0.5 = 1.5 Ω</span></p>
+          <p><span class="math">I = 4.5/(4 + 1.5) = 0.818 A</span></p>
+          <div class="answer">Answer: 0.818 A</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>🔟 Electrical Measuring Instruments</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Instrument</th>
+              <th>Measures</th>
+              <th>Connection</th>
+              <th>Ideal Property</th>
+            </tr>
+            <tr><td>Ammeter</td><td>Current</td><td>Series</td><td>Very low resistance</td></tr>
+            <tr><td>Voltmeter</td><td>Voltage</td><td>Parallel</td><td>Very high resistance</td></tr>
+            <tr><td>Galvanometer</td><td>Small current</td><td>Series</td><td>Moderate resistance</td></tr>
+            <tr><td>Ohmmeter</td><td>Resistance</td><td>Across component</td><td>Has internal battery</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="highlight-box">
+          <p>To convert a galvanometer to an ammeter, add a low resistance shunt in parallel. To convert it to a voltmeter, add a high resistance in series.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣1️⃣ Kirchhoff’s Laws</h2>
+
+        <h3>First law: junction law</h3>
+        <p>At any junction, total current entering equals total current leaving.</p>
+        <div class="formula-box">
+          <div class="title">Current law</div>
+          <div class="line"><span class="math">ΣIin = ΣIout</span></div>
+        </div>
+
+        <h3>Second law: loop law</h3>
+        <p>Around any closed loop, total emf equals total potential drops.</p>
+        <div class="formula-box">
+          <div class="title">Voltage law</div>
+          <div class="line"><span class="math">ΣE = ΣIR</span></div>
+        </div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Kirchhoff junction idea</div>
+          <svg viewBox="0 0 340 180" aria-label="Kirchhoff junction diagram">
+            <circle cx="170" cy="90" r="8" class="hot"/>
+            <line x1="20" y1="90" x2="162" y2="90" class="curve"/>
+            <line x1="178" y1="90" x2="320" y2="90" class="curve"/>
+            <line x1="170" y1="82" x2="170" y2="20" class="curve"/>
+            <line x1="170" y1="98" x2="170" y2="160" class="curve"/>
+            <text x="40" y="80" class="label">I₁ in</text>
+            <text x="265" y="80" class="label">I₂ out</text>
+            <text x="180" y="30" class="label">I₃ in</text>
+            <text x="180" y="150" class="label">I₄ out</text>
+          </svg>
+          <div class="diagram-caption">Currents entering a junction equal currents leaving it.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣2️⃣ Wheatstone Bridge and Meter Bridge</h2>
+
+        <h3>Wheatstone bridge</h3>
+        <p>When the bridge is balanced, no current flows through the galvanometer.</p>
+
+        <div class="formula-box">
+          <div class="title">Balanced condition</div>
+          <div class="line"><span class="math">P/Q = R/S</span></div>
+        </div>
+
+        <h3>Meter bridge</h3>
+        <div class="formula-box">
+          <div class="title">Meter bridge relation</div>
+          <div class="line"><span class="math">R₁/R₂ = l₁/l₂</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 13: Meter Bridge</div>
+          <p>In a meter bridge, the balance point is 40 cm from the left end when <span class="math">R₁ = 6 Ω</span>. Find <span class="math">R₂</span>.</p>
+          <p><span class="math">R₁/R₂ = l₁/l₂</span></p>
+          <p><span class="math">6/R₂ = 40/60 = 2/3</span></p>
+          <p><span class="math">R₂ = 9 Ω</span></p>
+          <div class="answer">Answer: 9 Ω</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣3️⃣ Potentiometer</h2>
+
+        <p>A potentiometer compares potential differences without drawing current from the source being tested.</p>
+
+        <h3>Applications</h3>
+        <ul>
+          <li>Comparing emfs of two cells</li>
+          <li>Measuring internal resistance</li>
+          <li>Measuring small emfs accurately</li>
+        </ul>
+
+        <div class="formula-box">
+          <div class="title">Potentiometer relation</div>
+          <div class="line"><span class="math">E₁/E₂ = l₁/l₂</span></div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣4️⃣ Complete Formula Summary Table</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Concept</th>
+              <th>Formula</th>
+              <th>Unit</th>
+            </tr>
+            <tr><td>Current</td><td><span class="math">I = Q/t</span></td><td>A</td></tr>
+            <tr><td>Voltage</td><td><span class="math">V = W/Q</span></td><td>V</td></tr>
+            <tr><td>Ohm’s law</td><td><span class="math">V = IR</span></td><td>—</td></tr>
+            <tr><td>Resistance</td><td><span class="math">R = ρL/A</span></td><td>Ω</td></tr>
+            <tr><td>Conductivity</td><td><span class="math">σ = 1/ρ</span></td><td><span class="math">(Ωm)⁻¹</span></td></tr>
+            <tr><td>Power</td><td><span class="math">P = VI = I²R = V²/R</span></td><td>W</td></tr>
+            <tr><td>Energy</td><td><span class="math">E = Pt = VIt = I²Rt</span></td><td>J or kWh</td></tr>
+            <tr><td>Series resistance</td><td><span class="math">Rtotal = R₁ + R₂ + ...</span></td><td>Ω</td></tr>
+            <tr><td>Parallel resistance</td><td><span class="math">1/R = 1/R₁ + 1/R₂ + ...</span></td><td>Ω</td></tr>
+            <tr><td>Two resistors in parallel</td><td><span class="math">R = R₁R₂/(R₁ + R₂)</span></td><td>Ω</td></tr>
+            <tr><td>EMF relation</td><td><span class="math">E = V + Ir = I(R + r)</span></td><td>V</td></tr>
+            <tr><td>Cells in series</td><td><span class="math">Etotal = nE, rtotal = nr</span></td><td>V, Ω</td></tr>
+            <tr><td>Cells in parallel</td><td><span class="math">Etotal = E, rtotal = r/n</span></td><td>V, Ω</td></tr>
+            <tr><td>Wheatstone bridge</td><td><span class="math">P/Q = R/S</span></td><td>—</td></tr>
+            <tr><td>Meter bridge</td><td><span class="math">R₁/R₂ = l₁/l₂</span></td><td>—</td></tr>
+            <tr><td>Potentiometer</td><td><span class="math">E₁/E₂ = l₁/l₂</span></td><td>—</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣5️⃣ JAMB Exam Tips</h2>
+
+        <div class="jamb-alert">
+          <h4>High-score reminders</h4>
+          <ul>
+            <li>Always convert units correctly</li>
+            <li>Resistance of metals increases with temperature</li>
+            <li>A short circuit means very small external resistance</li>
+            <li>Ammeters have low resistance, voltmeters have high resistance</li>
+            <li>Maximum power transfer happens when <span class="math">R = r</span></li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>⚠️ Quick revision checklist</strong>
+          <p>Know the difference between emf and terminal p.d., be able to combine resistors, calculate power and energy, and apply meter bridge and potentiometer relations.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣6️⃣ Practice Questions for JAMB</h2>
+
+        <div class="example-box">
+          <div class="title">The unit of current is:</div>
+          <p>(a) Volt<br>(b) Coulomb<br>(c) Ampere<br>(d) Ohm</p>
+          <div class="answer">Answer: (c) Ampere</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">The resistance of two resistors 3 Ω and 6 Ω in parallel is:</div>
+          <p>(a) 9 Ω<br>(b) 3 Ω<br>(c) 2 Ω<br>(d) 18 Ω</p>
+          <div class="answer">Answer: (c) 2 Ω</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">An ideal voltmeter should have:</div>
+          <p>(a) Zero resistance<br>(b) Infinite resistance<br>(c) Low current<br>(d) High emf</p>
+          <div class="answer">Answer: (b) Infinite resistance</div>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🌟 Final line</strong>
+          <p>You now have a complete JAMB-style guide to Current Electricity. This chapter is one of the most important in Physics because it connects formulas, circuits, measurements, and real electrical applications.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Before your quiz, revise current, voltage, Ohm’s law, resistance, power, energy, series and parallel circuits, emf, internal resistance, Kirchhoff’s laws, and measuring instruments.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+  </script>
+</body>
+</html>

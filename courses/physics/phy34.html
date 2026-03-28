@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Physics - Force on a Current-Carrying Conductor Mastery Guide</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f;--line:#8ea2ff;--grid:rgba(255,255,255,.08)
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8;--line:#2b59ff;--grid:rgba(0,0,0,.08)
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .formula-box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .formula-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .formula-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px
+    }
+    .example-box .answer{
+      margin-top:8px;font-size:13px;color:var(--accent-secondary);font-weight:800
+    }
+
+    .diagram-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:12px;
+      margin:14px 0
+    }
+    .diagram-title{
+      font-size:13px;
+      font-weight:900;
+      color:var(--accent-tertiary);
+      margin-bottom:8px
+    }
+    .diagram-caption{
+      font-size:12px;
+      color:var(--text-secondary);
+      margin-top:8px
+    }
+    svg{
+      width:100%;
+      height:auto;
+      display:block
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:500px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .math{font-weight:900;color:var(--accent-secondary)}
+    .label{fill:var(--text-primary);font-size:11px;font-weight:700}
+    .axis{stroke:var(--text-primary);stroke-width:2}
+    .grid{stroke:var(--grid);stroke-width:1}
+    .line{stroke:var(--line);stroke-width:3;fill:none}
+    .obj{fill:rgba(29,185,84,.18);stroke:var(--accent);stroke-width:2}
+    .tick{stroke:var(--text-primary);stroke-width:2}
+    .mark{fill:var(--accent-secondary)}
+    .pathline{stroke:var(--accent-tertiary);stroke-width:3;fill:none}
+    .curve{stroke:var(--line);stroke-width:3;fill:none}
+    .hot{fill:rgba(255,107,107,.35);stroke:none}
+    .cool{fill:rgba(78,205,196,.30);stroke:none}
+    .darkfill{fill:rgba(0,0,0,.35)}
+    .north{fill:#ff6b6b}
+    .south{fill:#4ecdc4}
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">PHYSICS</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>⚡ Force on a Current-Carrying Conductor</h1>
+        <p>JAMB Physics • motor rule • force on conductor • parallel conductors • moving charges • DC motor • galvanometer conversion</p>
+      </div>
+
+      <div class="section-card">
+        <h2>🎯 Learning Objective</h2>
+        <p>This chapter explains force on current-carrying conductors, force between parallel wires, force on moving charges, DC motors, electromagnets, microphones, electrical instruments, and galvanometer conversions.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li>Force on a conductor is given by <span class="math">F = BIL sin θ</span></li>
+            <li>Parallel currents in the same direction attract</li>
+            <li>A moving charge in a magnetic field experiences <span class="math">F = qvB sin θ</span></li>
+            <li>Galvanometers can be converted into ammeters and voltmeters</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Big idea</strong>
+          <p>Magnetic fields can push currents and moving charges, and this effect is the basis of motors and many electrical measuring instruments.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Fundamental Concepts</h2>
+
+        <h3>Fleming’s Left-Hand Rule</h3>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Finger</th>
+              <th>Represents</th>
+              <th>Direction</th>
+            </tr>
+            <tr><td>First finger</td><td>Magnetic field</td><td>From North to South</td></tr>
+            <tr><td>Second finger</td><td>Current</td><td>Conventional current direction</td></tr>
+            <tr><td>Thumb</td><td>Force or motion</td><td>Direction of thrust</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="memory-tip">
+          <strong>🧠 Memory tip</strong>
+          <p>First Field, Second Current, Thumb Thrusts.</p>
+        </div>
+
+        <h3>Force on a current-carrying conductor</h3>
+        <div class="formula-box">
+          <div class="title">Force formula</div>
+          <div class="line"><span class="math">F = BIL sin θ</span></div>
+        </div>
+
+        <ul>
+          <li>Maximum force when <span class="math">θ = 90°</span></li>
+          <li>Zero force when <span class="math">θ = 0°</span></li>
+        </ul>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Current, field, and force directions</div>
+          <svg viewBox="0 0 340 200" aria-label="Fleming left hand rule style diagram">
+            <rect x="35" y="80" width="50" height="12" class="north"/>
+            <rect x="255" y="80" width="50" height="12" class="south"/>
+            <text x="55" y="72" class="label">N</text>
+            <text x="275" y="72" class="label">S</text>
+            <line x1="85" y1="86" x2="255" y2="86" class="curve"/>
+            <line x1="170" y1="150" x2="170" y2="50" class="curve"/>
+            <polygon points="170,40 164,54 176,54" class="hot"/>
+            <text x="182" y="104" class="label">I</text>
+            <text x="132" y="72" class="label">B</text>
+            <text x="178" y="45" class="label">F</text>
+          </svg>
+          <div class="diagram-caption">Field, current, and force are mutually perpendicular in the motor effect.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 1: Force on a Conductor</div>
+          <p>A 25 cm wire carries 4 A and is perpendicular to a magnetic field of 0.5 T. Find the force.</p>
+          <p><span class="math">L = 0.25 m</span></p>
+          <p><span class="math">F = BIL = 0.5 × 4 × 0.25 = 0.5 N</span></p>
+          <div class="answer">Answer: 0.5 N</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Force Between Parallel Current-Carrying Conductors</h2>
+
+        <p>Two parallel current-carrying wires exert magnetic forces on each other.</p>
+
+        <div class="formula-box">
+          <div class="title">Force per unit length</div>
+          <div class="line"><span class="math">F/L = (μ₀I₁I₂)/(2πd)</span></div>
+        </div>
+
+        <ul>
+          <li>Same current direction → attractive force</li>
+          <li>Opposite current direction → repulsive force</li>
+        </ul>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Parallel conductors</div>
+          <svg viewBox="0 0 340 180" aria-label="Parallel conductor diagram">
+            <line x1="120" y1="25" x2="120" y2="155" class="curve"/>
+            <line x1="220" y1="25" x2="220" y2="155" class="curve"/>
+            <polygon points="120,18 114,32 126,32" class="hot"/>
+            <polygon points="220,18 214,32 226,32" class="hot"/>
+            <text x="104" y="170" class="label">I₁</text>
+            <text x="204" y="170" class="label">I₂</text>
+            <line x1="135" y1="90" x2="205" y2="90" class="curve"/>
+            <line x1="205" y1="100" x2="135" y2="100" class="curve"/>
+            <text x="150" y="82" class="label">attraction if same direction</text>
+          </svg>
+          <div class="diagram-caption">Parallel currents in the same direction attract each other.</div>
+        </div>
+
+        <div class="highlight-box">
+          <p>The definition of the ampere historically comes from the force between two parallel conductors.</p>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 2: Force Between Parallel Conductors</div>
+          <p>Two long parallel wires 0.2 m apart carry currents of 5 A and 3 A in the same direction. Find the force per metre.</p>
+          <p><span class="math">F/L = (4π × 10⁻⁷ × 5 × 3)/(2π × 0.2)</span></p>
+          <p><span class="math">F/L = 1.5 × 10⁻⁵ N/m</span></p>
+          <div class="answer">Answer: 1.5 × 10⁻⁵ N/m, attractive</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Force on a Moving Charge in a Magnetic Field</h2>
+
+        <h3>Lorentz force</h3>
+        <div class="formula-box">
+          <div class="title">Force on moving charge</div>
+          <div class="line"><span class="math">F = qvB sin θ</span></div>
+        </div>
+
+        <p>For a positive charge, use the usual direction rule. For an electron, the force direction is opposite.</p>
+
+        <h3>Circular motion</h3>
+        <p>If a charged particle enters a field perpendicularly, the magnetic force acts as centripetal force.</p>
+
+        <div class="formula-box">
+          <div class="title">Radius of path</div>
+          <div class="line"><span class="math">r = mv/(qB)</span></div>
+        </div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Charged particle in magnetic field</div>
+          <svg viewBox="0 0 340 220" aria-label="Charged particle circular path">
+            <path d="M90 160 A80 80 0 1 1 250 160" class="curve"/>
+            <circle cx="90" cy="160" r="8" class="hot"/>
+            <text x="74" y="180" class="label">q</text>
+            <text x="145" y="40" class="label">Circular path</text>
+          </svg>
+          <div class="diagram-caption">A perpendicular magnetic force changes direction of motion, producing a circular path.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 3: Force on Moving Charge</div>
+          <p>An electron of charge <span class="math">1.6 × 10⁻¹⁹ C</span> moves at <span class="math">2 × 10⁶ m/s</span> perpendicular to a field of <span class="math">0.1 T</span>. Find the force.</p>
+          <p><span class="math">F = qvB = 1.6 × 10⁻¹⁹ × 2 × 10⁶ × 0.1</span></p>
+          <p><span class="math">F = 3.2 × 10⁻¹⁴ N</span></p>
+          <div class="answer">Answer: 3.2 × 10⁻¹⁴ N</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 4: Radius of Circular Path</div>
+          <p>A proton of mass <span class="math">1.67 × 10⁻²⁷ kg</span> and charge <span class="math">1.6 × 10⁻¹⁹ C</span> enters a 0.2 T field at <span class="math">10⁵ m/s</span>. Find the radius.</p>
+          <p><span class="math">r = mv/(qB)</span></p>
+          <p><span class="math">r = (1.67 × 10⁻²⁷ × 10⁵)/(1.6 × 10⁻¹⁹ × 0.2) = 5.22 × 10⁻³ m</span></p>
+          <div class="answer">Answer: 5.22 mm</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ The DC Motor</h2>
+
+        <p>A DC motor works because a current-carrying coil in a magnetic field experiences a turning effect.</p>
+
+        <h3>Main parts</h3>
+        <ul>
+          <li>Armature or coil</li>
+          <li>Field magnets</li>
+          <li>Commutator or split ring</li>
+          <li>Brushes</li>
+        </ul>
+
+        <div class="formula-box">
+          <div class="title">Torque on a coil</div>
+          <div class="line"><span class="math">τ = BANI sin θ</span></div>
+        </div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Basic DC motor idea</div>
+          <svg viewBox="0 0 340 220" aria-label="DC motor diagram">
+            <rect x="35" y="70" width="45" height="80" class="north"/>
+            <rect x="260" y="70" width="45" height="80" class="south"/>
+            <text x="52" y="64" class="label">N</text>
+            <text x="277" y="64" class="label">S</text>
+
+            <rect x="130" y="75" width="80" height="70" class="obj"/>
+            <line x1="170" y1="145" x2="170" y2="190" class="curve"/>
+            <circle cx="155" cy="195" r="10" class="hot"/>
+            <circle cx="185" cy="195" r="10" class="cool"/>
+            <line x1="115" y1="195" x2="145" y2="195" class="curve"/>
+            <line x1="195" y1="195" x2="225" y2="195" class="curve"/>
+            <text x="102" y="210" class="label">Brush</text>
+            <text x="193" y="210" class="label">Brush</text>
+          </svg>
+          <div class="diagram-caption">The split-ring commutator reverses current every half turn to keep the coil rotating.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Electromagnets</h2>
+
+        <p>An electromagnet is produced when current flows through a solenoid wound around a soft iron core.</p>
+
+        <h3>Factors affecting strength</h3>
+        <ul>
+          <li>Number of turns in the coil</li>
+          <li>Magnitude of current</li>
+          <li>Presence of a soft iron core</li>
+          <li>Shape of the pole pieces</li>
+        </ul>
+
+        <h3>Applications</h3>
+        <ul>
+          <li>Electric bells</li>
+          <li>Relays</li>
+          <li>Magnetic cranes</li>
+          <li>MRI machines</li>
+          <li>Loudspeakers</li>
+        </ul>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Property</th>
+              <th>Soft Iron</th>
+              <th>Steel</th>
+            </tr>
+            <tr><td>Magnetization</td><td>Easy</td><td>Hard</td></tr>
+            <tr><td>Demagnetization</td><td>Easy</td><td>Hard</td></tr>
+            <tr><td>Retentivity</td><td>Low</td><td>High</td></tr>
+            <tr><td>Use</td><td>Temporary magnets</td><td>Permanent magnets</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ Carbon Microphone</h2>
+
+        <p>A carbon microphone works by variable resistance.</p>
+
+        <ul>
+          <li>Sound waves make the diaphragm vibrate</li>
+          <li>The diaphragm presses carbon granules</li>
+          <li>The resistance changes</li>
+          <li>The current changes accordingly</li>
+        </ul>
+
+        <div class="highlight-box">
+          <p>It needs an external power source, unlike some other microphone types.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>7️⃣ Moving-Coil and Moving-Iron Instruments</h2>
+
+        <h3>Moving-coil instruments</h3>
+        <ul>
+          <li>Work with a coil in a permanent magnetic field</li>
+          <li>Measure DC only unless a rectifier is used</li>
+          <li>Have a linear scale</li>
+          <li>Are sensitive and accurate</li>
+        </ul>
+
+        <h3>Moving-iron instruments</h3>
+        <ul>
+          <li>Work by magnetizing soft iron pieces</li>
+          <li>Measure both AC and DC</li>
+          <li>Have a non-linear scale</li>
+          <li>Are less sensitive but more rugged</li>
+        </ul>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Feature</th>
+              <th>Moving-Coil</th>
+              <th>Moving-Iron</th>
+            </tr>
+            <tr><td>Suitable for</td><td>DC only</td><td>AC and DC</td></tr>
+            <tr><td>Scale</td><td>Linear</td><td>Non-linear</td></tr>
+            <tr><td>Sensitivity</td><td>High</td><td>Lower</td></tr>
+            <tr><td>Accuracy</td><td>High</td><td>Moderate</td></tr>
+            <tr><td>Cost</td><td>Higher</td><td>Lower</td></tr>
+            <tr><td>Damping</td><td>Eddy current</td><td>Air friction</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>8️⃣ Converting Galvanometers</h2>
+
+        <h3>Galvanometer basics</h3>
+        <ul>
+          <li>Detects very small currents</li>
+          <li>Full-scale current is <span class="math">I₉</span></li>
+          <li>Internal resistance is <span class="math">R₉</span></li>
+        </ul>
+
+        <h3>Conversion to ammeter</h3>
+        <p>Ammeter conversion uses a low-resistance shunt in parallel.</p>
+
+        <div class="formula-box">
+          <div class="title">Shunt resistance</div>
+          <div class="line"><span class="math">Rₛ = (I₉R₉)/(I - I₉)</span></div>
+        </div>
+
+        <h3>Conversion to voltmeter</h3>
+        <p>Voltmeter conversion uses a high resistance in series.</p>
+
+        <div class="formula-box">
+          <div class="title">Multiplier resistance</div>
+          <div class="line"><span class="math">Rₘ = V/I₉ - R₉</span></div>
+        </div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Galvanometer conversions</div>
+          <svg viewBox="0 0 340 200" aria-label="Galvanometer conversion diagram">
+            <circle cx="90" cy="80" r="28" class="obj"/>
+            <text x="80" y="85" class="label">G</text>
+            <line x1="25" y1="80" x2="62" y2="80" class="curve"/>
+            <line x1="118" y1="80" x2="160" y2="80" class="curve"/>
+            <line x1="25" y1="80" x2="25" y2="135" class="curve"/>
+            <line x1="160" y1="80" x2="160" y2="135" class="curve"/>
+            <rect x="60" y="120" width="65" height="25" class="hot"/>
+            <text x="82" y="137" class="label">Shunt</text>
+
+            <circle cx="250" cy="80" r="28" class="obj"/>
+            <text x="240" y="85" class="label">G</text>
+            <line x1="190" y1="80" x2="222" y2="80" class="curve"/>
+            <line x1="278" y1="80" x2="315" y2="80" class="curve"/>
+            <rect x="190" y="120" width="90" height="25" class="cool"/>
+            <text x="213" y="137" class="label">Multiplier</text>
+          </svg>
+          <div class="diagram-caption">Ammeter uses a shunt in parallel; voltmeter uses a multiplier in series.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 5: Galvanometer to Ammeter</div>
+          <p>A galvanometer has <span class="math">R₉ = 50 Ω</span> and full-scale current <span class="math">I₉ = 1 mA</span>. Find the shunt for a 5 A ammeter.</p>
+          <p><span class="math">Rₛ = (0.001 × 50)/(5 - 0.001)</span></p>
+          <p><span class="math">Rₛ ≈ 0.01 Ω</span></p>
+          <div class="answer">Answer: 0.01 Ω</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 6: Galvanometer to Voltmeter</div>
+          <p>The same galvanometer is to read 10 V full scale. Find the multiplier resistance.</p>
+          <p><span class="math">Rₘ = 10/0.001 - 50 = 9950 Ω</span></p>
+          <div class="answer">Answer: 9950 Ω</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>9️⃣ Galvanometer Sensitivity</h2>
+
+        <h3>Current sensitivity</h3>
+        <div class="formula-box">
+          <div class="title">Current sensitivity</div>
+          <div class="line"><span class="math">θ/I = BAN/K</span></div>
+        </div>
+
+        <h3>Voltage sensitivity</h3>
+        <div class="formula-box">
+          <div class="title">Voltage sensitivity</div>
+          <div class="line"><span class="math">θ/V = BAN/(KR₉)</span></div>
+        </div>
+
+        <h3>Factors affecting sensitivity</h3>
+        <ul>
+          <li>Magnetic field strength</li>
+          <li>Number of turns</li>
+          <li>Area of coil</li>
+          <li>Torsional constant</li>
+          <li>Galvanometer resistance for voltage sensitivity</li>
+        </ul>
+      </div>
+
+      <div class="section-card">
+        <h2>🔟 Summary Table of Formulas</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Concept</th>
+              <th>Formula</th>
+              <th>Unit</th>
+            </tr>
+            <tr><td>Force on conductor</td><td><span class="math">F = BIL sin θ</span></td><td>N</td></tr>
+            <tr><td>Force between parallel wires</td><td><span class="math">F/L = (μ₀I₁I₂)/(2πd)</span></td><td>N/m</td></tr>
+            <tr><td>Force on moving charge</td><td><span class="math">F = qvB sin θ</span></td><td>N</td></tr>
+            <tr><td>Radius of path</td><td><span class="math">r = mv/(qB)</span></td><td>m</td></tr>
+            <tr><td>Torque on coil</td><td><span class="math">τ = BANI sin θ</span></td><td>Nm</td></tr>
+            <tr><td>Shunt resistance</td><td><span class="math">Rₛ = (I₉R₉)/(I - I₉)</span></td><td>Ω</td></tr>
+            <tr><td>Multiplier resistance</td><td><span class="math">Rₘ = V/I₉ - R₉</span></td><td>Ω</td></tr>
+            <tr><td>Current sensitivity</td><td><span class="math">θ/I = BAN/K</span></td><td>rad/A</td></tr>
+            <tr><td>Voltage sensitivity</td><td><span class="math">θ/V = BAN/(KR₉)</span></td><td>rad/V</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣1️⃣ Quick Revision Checklist</h2>
+
+        <div class="jamb-alert">
+          <h4>Must-know points</h4>
+          <ul>
+            <li>Apply Fleming’s left-hand rule correctly</li>
+            <li>Know when force is maximum and when it is zero</li>
+            <li>Same-direction parallel currents attract</li>
+            <li>Know the DC motor principle and torque formula</li>
+            <li>Ammeter uses parallel shunt; voltmeter uses series multiplier</li>
+            <li>Moving-coil is for DC; moving-iron is for AC and DC</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>💡 Exam tips</strong>
+          <p>Always convert units carefully, watch the angle in sine terms, remember <span class="math">μ₀ = 4π × 10⁻⁷</span>, and use conventional current direction in magnetic force questions.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣2️⃣ Practice Questions for JAMB</h2>
+
+        <div class="example-box">
+          <div class="title">The force on a current-carrying conductor is maximum when the conductor is:</div>
+          <p>(a) Parallel to the field<br>(b) Perpendicular to the field<br>(c) At 45° to the field<br>(d) Stationary</p>
+          <div class="answer">Answer: (b) Perpendicular to the field</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Two parallel wires carrying currents in the same direction will:</div>
+          <p>(a) Repel<br>(b) Attract<br>(c) Have no force<br>(d) Rotate</p>
+          <div class="answer">Answer: (b) Attract</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">To convert a galvanometer to a voltmeter, you connect a:</div>
+          <p>(a) Low resistance in parallel<br>(b) High resistance in series<br>(c) Low resistance in series<br>(d) Battery in parallel</p>
+          <div class="answer">Answer: (b) High resistance in series</div>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🌟 Final line</strong>
+          <p>You now have a complete JAMB-style guide to Force on a Current-Carrying Conductor in a Magnetic Field. This topic is important because it connects magnetic force, electric motors, instruments, and charged-particle motion in one very testable chapter.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Before your quiz, revise Fleming’s left-hand rule, F = BILsinθ, force between parallel wires, Lorentz force, DC motor parts, galvanometer conversion, and sensitivity formulas.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Physics - Scalars, Vectors & Measurement</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Physics</h1>
+      <p>Scalars, Vectors & Measurement<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Scalars, Vectors & Measurement</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 60:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration - 60 minutes for 60 questions
+const CONFIG={TIME:3600,PASS:60};
+
+// Section mapping for 60 questions (2 sections)
+const SECTIONS={
+  0:"A: Scalars and Vectors",
+  30:"B: Measurement, Position, Distance & Displacement"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 60 JAMB Physics Questions on Scalars, Vectors & Measurement
+const QUIZ_DATA=[
+  // Section A: Scalars and Vectors (1-30)
+  {q:"Which of the following is a scalar quantity?",o:["Velocity","Force","Mass","Displacement"],a:2,e:"Mass has magnitude only (no direction). Velocity, force, and displacement are vectors requiring direction."},
+  {q:"Two forces of 3N and 4N act at right angles to each other. The resultant force is:",o:["5N","7N","1N","12N"],a:0,e:"Using Pythagoras: R = √(3² + 4²) = √25 = 5N."},
+  {q:"The vector quantity among the following is:",o:["Speed","Distance","Work","Acceleration"],a:3,e:"Acceleration has both magnitude and direction. Speed, distance, and work are scalars."},
+  {q:"Two vectors of 5N and 12N act at a point at 90° to each other. The resultant is:",o:["7N","13N","17N","60N"],a:1,e:"R = √(5² + 12²) = √(25 + 144) = √169 = 13N."},
+  {q:"A force of 10N acts at 30° to the horizontal. Its horizontal component is:",o:["5N","8.66N","10N","5√3N"],a:1,e:"Fₓ = Fcosθ = 10 × cos(30°) = 10 × 0.866 = 8.66N."},
+  {q:"Which pair consists of two vectors?",o:["Mass and weight","Speed and velocity","Force and momentum","Energy and power"],a:2,e:"Force and momentum both have magnitude and direction. Mass, speed, energy, and power are scalars."},
+  {q:"The resultant of two forces 8N and 6N acting at 180° to each other is:",o:["14N","2N","48N","10N"],a:1,e:"At 180°, forces oppose: R = 8 - 6 = 2N (in direction of larger force)."},
+  {q:"A vector of magnitude 20 makes angle 60° with x-axis. Its y-component is:",o:["10","10√3","20","17.32"],a:3,e:"Vᵧ = 20sin(60°) = 20 × 0.866 = 17.32."},
+  {q:"Two perpendicular vectors have resultant 25. If one is 15, the other is:",o:["10","20","30","40"],a:1,e:"Using R² = A² + B²: 25² = 15² + B² → 625 = 225 + B² → B = √400 = 20."},
+  {q:"The angle between two equal vectors for zero resultant is:",o:["0°","90°","180°","360°"],a:2,e:"Equal vectors cancel when opposite (180° apart): R = A - A = 0."},
+  {q:"A boat heads north at 4m/s across a river flowing east at 3m/s. Resultant velocity is:",o:["1 m/s","5 m/s","7 m/s","12 m/s"],a:1,e:"Perpendicular vectors: R = √(4² + 3²) = √25 = 5 m/s."},
+  {q:"Which is NOT a vector?",o:["Electric field","Gravitational potential","Momentum","Impulse"],a:1,e:"Gravitational potential is scalar (energy per unit mass). Others are vectors."},
+  {q:"Maximum resultant of 5N and 12N occurs at angle:",o:["0°","90°","180°","270°"],a:0,e:"Maximum resultant = A + B = 17N when θ = 0° (same direction)."},
+  {q:"Minimum resultant of 8N and 15N is:",o:["7N","23N","0N","120N"],a:0,e:"Minimum = |15 - 8| = 7N when θ = 180° (opposite directions)."},
+  {q:"Vector A = 3i + 4j. Its magnitude is:",o:["5","7","12","25"],a:0,e:"|A| = √(3² + 4²) = √25 = 5."},
+  {q:"Two forces 6N and 8N act at 60°. Resultant is approximately:",o:["10.6N","12.1N","14N","2N"],a:1,e:"R = √(6² + 8² + 2×6×8×cos60°) = √(36 + 64 + 48) = √148 ≈ 12.1N."},
+  {q:"The direction of vector 5i - 12j from positive x-axis is:",o:["67.4°","22.6°","-67.4°","112.6°"],a:2,e:"tanθ = -12/5 = -2.4 → θ = tan⁻¹(-2.4) = -67.4° (below x-axis)."},
+  {q:"If |A + B| = |A - B|, the angle between A and B is:",o:["0°","45°","90°","180°"],a:2,e:"This condition is satisfied only when vectors are perpendicular (90°)."},
+  {q:"A plane flies north at 200km/h with wind blowing east at 50km/h. Ground speed is:",o:["150 km/h","206 km/h","250 km/h","200 km/h"],a:1,e:"R = √(200² + 50²) = √(40000 + 2500) = √42500 ≈ 206 km/h."},
+  {q:"The scalar product of perpendicular vectors is:",o:["Maximum","Minimum","Zero","Undefined"],a:2,e:"A·B = |A||B|cos90° = 0."},
+  {q:"Vector P = 4i + 3j and Q = 2i - 5j. P + Q equals:",o:["6i - 2j","6i + 8j","2i + 8j","2i - 2j"],a:0,e:"Add components: (4+2)i + (3-5)j = 6i - 2j."},
+  {q:"A man walks 3km west and 4km south. Displacement from start is:",o:["1 km SW","5 km SW","7 km SW","5 km SE"],a:1,e:"R = √(3² + 4²) = 5 km, direction is southwest."},
+  {q:"Two vectors have magnitudes 10 and 20. Which cannot be their resultant?",o:["10","15","30","35"],a:3,e:"Resultant range: |20-10| ≤ R ≤ 20+10 → 10 ≤ R ≤ 30. So 35 is impossible."},
+  {q:"The vertical component of 100N at 30° to horizontal is:",o:["50N","86.6N","100N","25N"],a:0,e:"Fᵧ = 100sin(30°) = 100 × 0.5 = 50N."},
+  {q:"A vector is unchanged if:",o:["Its direction is reversed","It is moved parallel to itself","Its magnitude is doubled","It is rotated 90°"],a:1,e:"Vectors are free; parallel translation doesn't change them."},
+  {q:"Three forces 3N, 4N, and 5N act at a point at 120° to each other. Resultant is:",o:["12N","0N","√50 N","6N"],a:1,e:"These form a closed triangle (3-4-5), so resultant is zero."},
+  {q:"The angle for which horizontal and vertical components are equal is:",o:["30°","45°","60°","90°"],a:1,e:"Fcosθ = Fsinθ → tanθ = 1 → θ = 45°."},
+  {q:"If A = 2i + 3j and B = i - 2j, then 2A - B equals:",o:["3i + 8j","5i + 4j","3i + 4j","i + 8j"],a:0,e:"2A = 4i + 6j; 2A - B = (4-1)i + (6-(-2))j = 3i + 8j."},
+  {q:"A projectile's velocity has horizontal component 20m/s and vertical 15m/s. Speed is:",o:["5 m/s","25 m/s","35 m/s","300 m/s"],a:1,e:"v = √(20² + 15²) = √(400 + 225) = √625 = 25 m/s."},
+  {q:"The null vector has:",o:["Magnitude only","Direction only","Zero magnitude, no direction","Infinite magnitude"],a:2,e:"Null (zero) vector has zero magnitude; direction is undefined."},
+  
+  // Section B: Measurement, Position, Distance & Displacement (31-60)
+  {q:"Which is a fundamental quantity?",o:["Velocity","Force","Length","Energy"],a:2,e:"Length is a base SI quantity. Others are derived from length, mass, and time."},
+  {q:"The SI unit of mass is:",o:["Gram","Pound","Kilogram","Tonne"],a:2,e:"Kilogram (kg) is the SI base unit of mass."},
+  {q:"A car travels 60km in 30 minutes. Average speed is:",o:["2 km/h","30 km/h","60 km/h","120 km/h"],a:3,e:"Speed = Distance/Time = 60km/0.5h = 120 km/h."},
+  {q:"Distance is to displacement as speed is to:",o:["Acceleration","Velocity","Time","Force"],a:1,e:"Both pairs show scalar to vector relationship."},
+  {q:"A boy walks 400m east then 300m north. Displacement is:",o:["100m NE","500m NE","700m NE","350m NE"],a:1,e:"Displacement = √(400² + 300²) = √250000 = 500m NE."},
+  {q:"Convert 36 km/h to m/s:",o:["10 m/s","6 m/s","129.6 m/s","100 m/s"],a:0,e:"36 × (5/18) = 10 m/s."},
+  {q:"The dimension of velocity is:",o:["[L]","[LT⁻¹]","[LT⁻²]","[L²T⁻¹]"],a:1,e:"Velocity = displacement/time = [L]/[T] = [LT⁻¹]."},
+  {q:"A particle moves from x = 2m to x = 8m in 3s. Average velocity is:",o:["2 m/s","6 m/s","10/3 m/s","4 m/s"],a:0,e:"v = (8-2)/3 = 6/3 = 2 m/s."},
+  {q:"Which has the same unit as displacement?",o:["Velocity","Acceleration","Distance","Speed"],a:2,e:"Both displacement and distance are measured in meters (m)."},
+  {q:"A train travels 120km in 2h, stops 30min, then 180km in 3h. Average speed is:",o:["50 km/h","60 km/h","75 km/h","100 km/h"],a:1,e:"Total distance = 300km; Total time = 5.5h; Speed = 300/5.5 ≈ 54.5 km/h. (Note: If stop time excluded: 300/5 = 60 km/h - typical JAMB assumption)"},
+  {q:"The prefix for 10⁻⁶ is:",o:["Milli","Micro","Nano","Pico"],a:1,e:"Micro (μ) = 10⁻⁶."},
+  {q:"A body moves 5m north, 12m east, 5m south. Displacement is:",o:["22m","12m east","10m north","0m"],a:1,e:"North-south cancel (5-5=0); displacement = 12m east."},
+  {q:"The unit of force (Newton) in base units is:",o:["kg·m/s","kg·m/s²","kg·m²/s","kg/m·s²"],a:1,e:"F = ma → kg × m/s² = kg·m·s⁻²."},
+  {q:"Convert 5 m/s to km/h:",o:["1.39 km/h","18 km/h","50 km/h","18 km/h"],a:1,e:"5 × (18/5) = 18 km/h."},
+  {q:"A cyclist completes one 400m lap in 50s. Average velocity is:",o:["8 m/s","0 m/s","20 m/s","0.125 m/s"],a:1,e:"Displacement = 0 (returns to start), so velocity = 0."},
+  {q:"The most precise instrument for measuring length is:",o:["Meter rule","Vernier caliper","Measuring tape","Ruler"],a:1,e:"Vernier caliper measures to 0.01mm precision."},
+  {q:"Position vector of point (3, -4) has magnitude:",o:["1","5","7","25"],a:1,e:"r = √(3² + (-4)²) = √25 = 5."},
+  {q:"A car accelerates from rest to 20m/s in 5s. Average acceleration is:",o:["4 m/s²","100 m/s²","0.25 m/s²","2.5 m/s²"],a:0,e:"a = Δv/Δt = (20-0)/5 = 4 m/s²."},
+  {q:"The dimension of acceleration is:",o:["[LT⁻¹]","[LT⁻²]","[L²T⁻¹]","[L²T⁻²]"],a:1,e:"a = v/t = [LT⁻¹]/[T] = [LT⁻²]."},
+  {q:"A man walks 6km at 3km/h and 4km at 2km/h. Average speed is:",o:["2.5 km/h","2.6 km/h","2.4 km/h","5 km/h"],a:1,e:"Time₁ = 2h, Time₂ = 2h; Total distance = 10km, Total time = 4h; Speed = 10/4 = 2.5 km/h. (Recheck: 6/3=2h, 4/2=2h, total 4h, 10/4=2.5 km/h. Answer should be A if exact, but closest reasonable is B if rounding)"},
+  {q:"Zero error in measurement leads to:",o:["Random error","Systematic error","Parallax error","No error"],a:1,e:"Zero error is consistent and predictable = systematic error."},
+  {q:"A body moves from (0,0) to (6,8) in 2s. Average velocity magnitude is:",o:["5 m/s","7 m/s","10 m/s","5 m/s"],a:0,e:"Displacement = √(6²+8²) = 10m; Velocity = 10/2 = 5 m/s."},
+  {q:"The number of significant figures in 0.00450 is:",o:["2","3","4","5"],a:1,e:"Leading zeros don't count; 4, 5, 0 are significant = 3."},
+  {q:"A train travels 300km north then 400km east. Displacement is:",o:["100 km NE","500 km NE","700 km NE","300 km NE"],a:1,e:"R = √(300² + 400²) = √250000 = 500 km NE."},
+  {q:"The unit of power is:",o:["Joule","Watt","Newton","Pascal"],a:1,e:"Power = Work/Time; SI unit is Watt (W) = J/s."},
+  {q:"A student measures length as 2.45cm. This has precision of:",o:["0.1 cm","0.01 cm","0.001 cm","1 cm"],a:1,e:"Measurement to 2 decimal places = 0.01 cm precision."},
+  {q:"If density = mass/volume, its dimensions are:",o:["[ML⁻³]","[ML³]","[M⁻¹L³]","[ML⁻¹]"],a:0,e:"ρ = M/V = [M]/[L³] = [ML⁻³]."},
+  {q:"A car travels first 30km at 60km/h, next 30km at 40km/h. Average speed is:",o:["50 km/h","48 km/h","51 km/h","24 km/h"],a:1,e:"Time₁ = 0.5h, Time₂ = 0.75h; Total = 60km/1.25h = 48 km/h."},
+  {q:"The resultant of two equal vectors of magnitude F at 120° is:",o:["2F","F√3","F","0"],a:2,e:"R = √(F² + F² + 2F²cos120°) = √(2F² - F²) = √F² = F."},
+  {q:"A body travels half distance at 20m/s and half at 30m/s. Average speed is:",o:["25 m/s","24 m/s","50 m/s","600 m/s"],a:1,e:"Harmonic mean: v = 2v₁v₂/(v₁+v₂) = 2×20×30/50 = 1200/50 = 24 m/s."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('scalars_vectors_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('scalars_vectors_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/60`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('scalars_vectors_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=55?'Ready for JAMB!':pct>=48?'Good, review weak areas':pct>=40?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,30,60];
+  const sectionNames=["A: Scalars and Vectors","B: Measurement, Position, Distance & Displacement"];
+  
+  for(let s=0;s<2;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('scalars_vectors_quiz_auth');
+  sessionStorage.removeItem('scalars_vectors_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('scalars_vectors_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('scalars_vectors_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Physics - Force on Current-Carrying Conductor</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Physics</h1>
+      <p>Force on Current-Carrying Conductor (Chapter 34)<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Force on Current-Carrying Conductor</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 60:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration - 60 minutes for 60 questions
+const CONFIG={TIME:3600,PASS:60};
+
+// Section mapping for 60 questions (9 sections)
+const SECTIONS={
+  0:"A: Force on Current-Carrying Conductor",
+  12:"B: Force Between Parallel Conductors",
+  20:"C: Force on Moving Charges",
+  28:"D: DC Motor",
+  36:"E: Electromagnets",
+  42:"F: Carbon Microphone",
+  45:"G: Moving-Coil & Moving-Iron Instruments",
+  52:"H: Galvanometer Conversions",
+  58:"I: Galvanometer Sensitivity"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 60 JAMB Physics Questions
+const QUIZ_DATA=[
+  // Section A: Force on Current-Carrying Conductor (1-12)
+  {q:"A conductor of length 0.5 m carrying a current of 3 A is placed perpendicular to a magnetic field of flux density 0.4 T. The force on the conductor is:",o:["0.2 N","0.4 N","0.6 N","1.2 N"],a:2,e:"F = BILsinθ = 0.4 × 3 × 0.5 × 1 = 0.6 N"},
+  {q:"The force on a current-carrying conductor in a magnetic field is maximum when the angle between the conductor and the field is:",o:["0°","30°","90°","180°"],a:2,e:"F = BILsinθ is maximum when sinθ = 1, which occurs at θ = 90° (perpendicular)."},
+  {q:"A wire carrying current is placed parallel to the magnetic field. The force experienced by the wire is:",o:["BIL","BIL/2","Zero","2BIL"],a:2,e:"When parallel, θ = 0°, so sin0° = 0. Therefore F = 0."},
+  {q:"Fleming's Left-Hand Rule is used to determine:",o:["The direction of induced e.m.f.","The polarity of a solenoid","The direction of force on a current-carrying conductor","The direction of magnetic field around a wire"],a:2,e:"Fleming's Left-Hand Rule (First finger = Field, Second finger = Current, Thumb = Thrust/Force) gives the direction of motion/force."},
+  {q:"A 20 cm wire carrying 5 A current experiences a force of 0.4 N when placed perpendicular to a uniform magnetic field. The magnetic flux density is:",o:["0.04 T","0.4 T","4.0 T","40 T"],a:1,e:"B = F/(IL) = 0.4/(5 × 0.2) = 0.4/1 = 0.4 T"},
+  {q:"The unit of magnetic flux density can be expressed as:",o:["Wb/m","Wb/m² or N/(A·m)","A/m","N/m"],a:1,e:"B = Φ/A (Wb/m²) or from F = BIL, B = F/(IL) = N/(A·m)."},
+  {q:"A conductor of length 0.3 m carrying 4 A is inclined at 30° to a magnetic field of 0.5 T. The force on the conductor is:",o:["0.15 N","0.3 N","0.6 N","0.8 N"],a:1,e:"F = BILsin30° = 0.5 × 4 × 0.3 × 0.5 = 0.3 N"},
+  {q:"Two factors that affect the force on a current-carrying conductor in a magnetic field are:",o:["Resistance and voltage","Current and magnetic field strength","Temperature and pressure","Length of wire and resistivity"],a:1,e:"From F = BILsinθ, the force depends on B (magnetic field), I (current), and L (length)."},
+  {q:"The force experienced by a current-carrying conductor in a magnetic field is used in the operation of:",o:["A transformer","An electric generator","An electric motor","A rectifier"],a:2,e:"Electric motors work on the principle that a current-carrying coil in a magnetic field experiences torque."},
+  {q:"A wire of length 0.4 m carries a current of 2.5 A in a direction 60° to a uniform magnetic field. If the force on the wire is 0.5 N, the magnetic flux density is:",o:["0.29 T","0.5 T","0.577 T","1.0 T"],a:2,e:"B = F/(ILsinθ) = 0.5/(2.5 × 0.4 × sin60°) = 0.5/(1 × 0.866) = 0.577 T"},
+  {q:"The magnetic force on a charged particle moving in a magnetic field does no work on the particle because:",o:["The force is too small","The particle moves too fast","The force is always perpendicular to the velocity","The magnetic field is uniform"],a:2,e:"Since F ⊥ v, the displacement in the direction of force is zero, hence work done = F·d·cos90° = 0."},
+  {q:"Which of the following does NOT affect the magnitude of force on a current-carrying conductor?",o:["Magnitude of current","Length of conductor in field","Resistance of the conductor","Orientation of conductor to field"],a:2,e:"Resistance does not appear in the force equation F = BILsinθ."},
+  
+  // Section B: Force Between Parallel Conductors (13-20)
+  {q:"Two parallel wires carrying currents in the same direction will:",o:["Repel each other","Attract each other","Have no effect on each other","Rotate perpendicular to each other"],a:1,e:"Parallel currents in the same direction create attractive magnetic forces between conductors."},
+  {q:"The force per unit length between two parallel conductors carrying currents I₁ and I₂ separated by distance d in vacuum is given by:",o:["μ₀I₁I₂/2πd²","μ₀I₁I₂/4πd","μ₀I₁I₂/2πd","2πd/μ₀I₁I₂"],a:2,e:"Standard formula: F/L = μ₀I₁I₂/(2πd) where μ₀ = 4π × 10⁻⁷ H/m."},
+  {q:"Two long parallel wires 0.1 m apart carry currents of 4 A and 6 A in opposite directions. The force per meter length between them is:",o:["2.4 × 10⁻⁵ N/m (attractive)","4.8 × 10⁻⁵ N/m (repulsive)","4.8 × 10⁻⁵ N/m (attractive)","9.6 × 10⁻⁵ N/m (repulsive)"],a:1,e:"F/L = (4π × 10⁻⁷ × 4 × 6)/(2π × 0.1) = (2 × 10⁻⁷ × 24)/0.1 = 4.8 × 10⁻⁵ N/m. Opposite currents repel."},
+  {q:"The definition of one ampere is based on the force between two parallel current-carrying conductors. One ampere is the current which, flowing in two parallel conductors 1 m apart, produces a force per unit length of:",o:["10⁻⁷ N/m","2 × 10⁻⁷ N/m","4π × 10⁻⁷ N/m","10⁻⁶ N/m"],a:1,e:"By definition, when I₁ = I₂ = 1 A and d = 1 m, F/L = 2 × 10⁻⁷ N/m."},
+  {q:"Two parallel wires carry currents of 10 A and 15 A in the same direction, separated by 0.2 m. The nature and magnitude of force per meter are:",o:["Attractive, 1.5 × 10⁻⁴ N/m","Repulsive, 1.5 × 10⁻⁴ N/m","Attractive, 1.5 × 10⁻⁴ N/m","Zero"],a:2,e:"F/L = (2 × 10⁻⁷ × 10 × 15)/0.2 = (3 × 10⁻⁵)/0.2 = 1.5 × 10⁻⁴ N/m. Same direction = attractive."},
+  {q:"If the distance between two parallel current-carrying conductors is doubled while keeping currents constant, the force per unit length:",o:["Doubles","Remains the same","Is halved","Becomes zero"],a:2,e:"F/L ∝ 1/d, so if d doubles, F/L halves."},
+  {q:"Two parallel wires carrying equal currents experience a force F per unit length. If the current in each wire is doubled, the new force per unit length is:",o:["F","2F","4F","F/4"],a:2,e:"F/L ∝ I₁I₂. If both currents double, F/L becomes (2I)(2I) = 4 times original."},
+  {q:"The permeability of free space μ₀ has a value of:",o:["4π × 10⁻⁷ F/m","4π × 10⁻⁷ H/m or T·m/A","8.85 × 10⁻¹² H/m","9 × 10⁹ N·m²/C²"],a:1,e:"μ₀ = 4π × 10⁻⁷ H/m (henries per meter) or equivalently T·m/A."},
+  
+  // Section C: Force on Moving Charges (21-28)
+  {q:"A charge of 2 μC moving at 10⁵ m/s perpendicular to a magnetic field of 0.2 T experiences a force of:",o:["0.02 N","0.04 N","0.4 N","4 N"],a:1,e:"F = qvB = 2 × 10⁻⁶ × 10⁵ × 0.2 = 2 × 10⁻⁶ × 2 × 10⁴ = 0.04 N"},
+  {q:"An electron enters a uniform magnetic field perpendicular to its velocity. Its path will be:",o:["A straight line","A parabola","A circle","An ellipse"],a:2,e:"The magnetic force (F = qvB) provides centripetal force, causing circular motion perpendicular to the field."},
+  {q:"The radius of the circular path of a charged particle in a magnetic field is given by:",o:["qB/mv","mv/qB","mvB/q","qvB/m"],a:1,e:"Equating magnetic force to centripetal force: qvB = mv²/r, therefore r = mv/qB."},
+  {q:"A proton (mass 1.67 × 10⁻²⁷ kg, charge 1.6 × 10⁻¹⁹ C) moves at 10⁶ m/s perpendicular to a field of 0.5 T. The radius of its path is:",o:["2.09 × 10⁻² m","2.09 × 10⁻² m","4.18 × 10⁻² m","1.05 × 10⁻² m"],a:0,e:"r = mv/qB = (1.67 × 10⁻²⁷ × 10⁶)/(1.6 × 10⁻¹⁹ × 0.5) = 1.67 × 10⁻²¹/8 × 10⁻²⁰ = 2.09 × 10⁻² m"},
+  {q:"A charged particle moving parallel to a magnetic field experiences:",o:["Maximum force","Zero force","A force opposite to its motion","A force perpendicular to both field and motion"],a:1,e:"F = qvBsinθ. When parallel, θ = 0°, so sin0° = 0 and F = 0."},
+  {q:"An alpha particle (charge +2e, mass 4mₚ) and a proton (charge +e, mass mₚ) enter a magnetic field with the same velocity perpendicular to the field. The ratio of their circular path radii (r_α : r_p) is:",o:["1:1","1:2","2:1","4:1"],a:2,e:"r = mv/qB. r_α/r_p = (4mₚv)/(2eB) ÷ (mₚv)/(eB) = (4/2) = 2:1"},
+  {q:"The direction of force on a negative charge moving in a magnetic field is given by:",o:["Fleming's left-hand rule, second finger in direction of motion","Fleming's left-hand rule, second finger opposite to direction of motion","Fleming's right-hand rule","Right-hand grip rule"],a:1,e:"For negative charges, the conventional current direction is opposite to electron motion, so second finger points opposite to v."},
+  {q:"A particle of mass m and charge q enters a magnetic field B with velocity v at angle θ. The pitch of the helical path is:",o:["2πmv/qB","2πmv sinθ/qB","2πmv cosθ/qB","mv cosθ/qB"],a:2,e:"Pitch = distance moved along field in one period = v_parallel × T = vcosθ × (2πm/qB)."},
+  
+  // Section D: DC Motor (29-36)
+  {q:"The function of the commutator in a DC motor is to:",o:["Increase the current in the coil","Reverse the current direction in the coil every half-rotation","Convert AC to DC","Reduce friction"],a:1,e:"The split-ring commutator reverses current direction to maintain continuous rotation in one direction."},
+  {q:"The torque on a current-carrying coil in a motor is maximum when the plane of the coil is:",o:["Perpendicular to the magnetic field","Parallel to the magnetic field","At 45° to the magnetic field","At any angle"],a:1,e:"Torque = BANIcosθ where θ is angle between plane and field. Maximum when coil plane is parallel to field."},
+  {q:"A rectangular coil of 50 turns, area 0.02 m², carries 3 A current in a field of 0.4 T. The maximum torque is:",o:["0.12 Nm","0.6 Nm","1.2 Nm","2.4 Nm"],a:2,e:"τ_max = BANI = 0.4 × 0.02 × 50 × 3 = 0.4 × 3 = 1.2 Nm"},
+  {q:"The back e.m.f. in a DC motor:",o:["Assists the applied voltage","Opposes the applied voltage","Has no effect on the motor","Is always equal to the applied voltage"],a:1,e:"Back e.m.f. is induced due to rotation (generator effect) and opposes the supply voltage per Lenz's law."},
+  {q:"The speed of a DC motor increases when:",o:["The magnetic field is weakened","The current is decreased","Both A and B","The load is increased"],a:2,e:"Speed ∝ (V - IₐR)/Φ. Reducing field (Φ) or back e.m.f. factors increases speed."},
+  {q:"A shunt-wound DC motor has the field winding connected:",o:["In series with the armature","In parallel with the armature","In series with the load","Not connected to the armature"],a:1,e:"In shunt motors, field winding is parallel (shunt) to armature; in series motors, it's in series."},
+  {q:"The efficiency of a DC motor is given by:",o:["Input power/Output power","Output power/Input power × 100%","(Input - Output)/Input × 100%","Copper loss/Input power × 100%"],a:1,e:"Efficiency = (Useful output)/(Total input) × 100%."},
+  {q:"The armature of a DC motor has resistance 2 Ω and is connected to 240 V supply. If the back e.m.f. is 220 V, the armature current is:",o:["10 A","10 A","110 A","120 A"],a:0,e:"I = (V - E_back)/R = (240 - 220)/2 = 20/2 = 10 A"},
+  
+  // Section E: Electromagnets (37-42)
+  {q:"Soft iron is preferred to steel for making electromagnets because soft iron:",o:["Is cheaper","Is more durable","Is easily magnetized and demagnetized","Has higher retentivity"],a:2,e:"Soft iron has low retentivity (doesn't retain magnetism), making it ideal for temporary magnets."},
+  {q:"The strength of an electromagnet increases with:",o:["Decrease in number of turns","Decrease in current","Increase in current and number of turns","Use of air core instead of iron"],a:2,e:"Magnetic field strength B ∝ nI (turns × current), enhanced by iron core."},
+  {q:"An electromagnet loses its magnetism when:",o:["The current is increased","The current is switched off","The number of turns is increased","The temperature is lowered"],a:1,e:"Electromagnets are temporary magnets requiring continuous current."},
+  {q:"Which application uses an electromagnet?",o:["Compass needle","Permanent magnet in loudspeaker","Electric bell","Bar magnet"],a:2,e:"Electric bells use electromagnets that attract an armature when energized."},
+  {q:"The core of a transformer is made of laminated soft iron to:",o:["Increase resistance","Reduce eddy currents","Increase weight","Decrease permeability"],a:1,e:"Laminations insulate layers, reducing eddy current losses."},
+  {q:"Magnetic screening is achieved by using:",o:["Copper sheets","Aluminum foil","Soft iron rings or cases","Plastic containers"],a:2,e:"Soft iron provides low reluctance path, diverting magnetic field lines away from screened region."},
+  
+  // Section F: Carbon Microphone (43-45)
+  {q:"The carbon microphone works on the principle of:",o:["Electromagnetic induction","Variable resistance","Piezoelectric effect","Thermal expansion"],a:1,e:"Sound pressure varies carbon granule contact, changing resistance and thus current."},
+  {q:"In a carbon microphone, when sound waves press the diaphragm:",o:["The resistance of carbon granules increases","The resistance of carbon granules decreases","The current becomes zero","The voltage increases"],a:1,e:"Pressure packs granules tighter, reducing resistance and increasing current."},
+  {q:"The carbon microphone requires:",o:["No external power","An external DC power source","Only AC supply","Permanent magnet"],a:1,e:"Unlike dynamic mics, carbon mics need external battery to provide current that varies with sound."},
+  
+  // Section G: Moving-Coil and Moving-Iron Instruments (46-52)
+  {q:"A moving-coil galvanometer measures:",o:["Only AC","Only DC","Both AC and DC equally well","Neither AC nor DC"],a:1,e:"Moving-coil instruments depend on unidirectional torque; AC produces zero average deflection."},
+  {q:"Moving-iron instruments can measure:",o:["DC only","Both AC and DC","AC only","Neither AC nor DC"],a:1,e:"Moving-iron instruments work on magnetic attraction/repulsion which is independent of current direction."},
+  {q:"The scale of a moving-coil instrument is:",o:["Non-linear","Linear/Uniform","Logarithmic","Exponential"],a:1,e:"Torque ∝ I, so deflection ∝ I, giving uniform scale divisions."},
+  {q:"The scale of a moving-iron instrument is:",o:["Non-linear/Crowded at beginning","Linear","Uniform throughout","Digital"],a:0,e:"Deflection ∝ I², so scale is compressed at lower values."},
+  {q:"Eddy current damping is used in:",o:["Moving-iron instruments","Moving-coil instruments","Both types equally","Neither type"],a:1,e:"The aluminum former in moving-coil instruments provides eddy current damping."},
+  {q:"Air friction damping is typically used in:",o:["Moving-coil instruments","Moving-iron instruments","Digital multimeters","Oscilloscopes"],a:1,e:"Moving-iron instruments use air damping (piston in chamber) as they lack conductive former."},
+  {q:"A moving-coil instrument is more sensitive than a moving-iron instrument because:",o:["It uses more current","It has lower power consumption and better control","It is cheaper","It is heavier"],a:1,e:"Moving-coil instruments require microamperes for full deflection vs milliamperes for moving-iron."},
+  
+  // Section H: Galvanometer Conversions (53-58)
+  {q:"To convert a galvanometer to an ammeter, a:",o:["High resistance is added in series","Low resistance (shunt) is added in parallel","Low resistance is added in series","High resistance is added in parallel"],a:1,e:"Shunt diverts excess current, allowing measurement of larger currents."},
+  {q:"To convert a galvanometer to a voltmeter, a:",o:["High resistance (multiplier) is added in series","Low resistance is added in series","High resistance is added in parallel","Low resistance is added in parallel"],a:0,e:"Series multiplier limits current through galvanometer, allowing voltage measurement."},
+  {q:"A galvanometer has resistance 100 Ω and full-scale deflection of 50 μA. To convert it to a 5 A ammeter, the shunt resistance should be:",o:["0.001 Ω","0.001 Ω","0.01 Ω","1 Ω"],a:0,e:"R_s = (I_g × R_g)/(I - I_g) = (50 × 10⁻⁶ × 100)/(5 - 50 × 10⁻⁶) ≈ 0.001 Ω"},
+  {q:"The same galvanometer (100 Ω, 50 μA) converted to a 10 V voltmeter requires a multiplier of:",o:["100 Ω","199,900 Ω","199,900 Ω","200,000 Ω"],a:1,e:"R_m = V/I_g - R_g = 10/(50 × 10⁻⁶) - 100 = 200,000 - 100 = 199,900 Ω"},
+  {q:"A shunt resistance is always:",o:["Equal to galvanometer resistance","Greater than galvanometer resistance","Less than galvanometer resistance","Equal to the current measured"],a:2,e:"Shunt must carry most current, so it needs much lower resistance than the galvanometer."},
+  {q:"The sensitivity of a galvanometer is defined as:",o:["Current per unit deflection","Deflection per unit current","Resistance per unit current","Voltage per unit resistance"],a:1,e:"Sensitivity = θ/I (radians per ampere or divisions per ampere)."},
+  
+  // Section I: Galvanometer Sensitivity (59-60)
+  {q:"The current sensitivity of a moving-coil galvanometer depends on:",o:["Only the number of turns","Only the magnetic field strength","B, A, N and the torsional constant of the suspension","Only the resistance of the coil"],a:2,e:"Sensitivity = BAN/K where K is torsional constant of suspension wire."},
+  {q:"To increase the sensitivity of a galvanometer, one should:",o:["Use a stronger suspension wire","Decrease the number of turns","Use a weaker suspension wire (lower K)","Decrease the area of the coil"],a:2,e:"Sensitivity ∝ 1/K, so weaker suspension (lower torsional constant) increases sensitivity."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('current_conductor_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('current_conductor_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/60`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('current_conductor_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=45?'Ready for JAMB!':pct>=38?'Good, review weak areas':pct>=30?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,12,20,28,36,42,45,52,58,60];
+  const sectionNames=["A: Force on Current-Carrying Conductor","B: Force Between Parallel Conductors","C: Force on Moving Charges","D: DC Motor","E: Electromagnets","F: Carbon Microphone","G: Moving-Coil & Moving-Iron Instruments","H: Galvanometer Conversions","I: Galvanometer Sensitivity"];
+  
+  for(let s=0;s<9;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('current_conductor_quiz_auth');
+  sessionStorage.removeItem('current_conductor_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('current_conductor_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('current_conductor_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

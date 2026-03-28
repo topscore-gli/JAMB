@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Physics - Capacitors Mastery Guide</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f;--line:#8ea2ff;--grid:rgba(255,255,255,.08)
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8;--line:#2b59ff;--grid:rgba(0,0,0,.08)
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .formula-box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .formula-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .formula-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px
+    }
+    .example-box .answer{
+      margin-top:8px;font-size:13px;color:var(--accent-secondary);font-weight:800
+    }
+
+    .diagram-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:12px;
+      margin:14px 0
+    }
+    .diagram-title{
+      font-size:13px;
+      font-weight:900;
+      color:var(--accent-tertiary);
+      margin-bottom:8px
+    }
+    .diagram-caption{
+      font-size:12px;
+      color:var(--text-secondary);
+      margin-top:8px
+    }
+    svg{
+      width:100%;
+      height:auto;
+      display:block
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:800px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .math{font-weight:900;color:var(--accent-secondary)}
+    .label{fill:var(--text-primary);font-size:11px;font-weight:700}
+    .axis{stroke:var(--text-primary);stroke-width:2}
+    .grid{stroke:var(--grid);stroke-width:1}
+    .line{stroke:var(--line);stroke-width:3;fill:none}
+    .obj{fill:rgba(29,185,84,.18);stroke:var(--accent);stroke-width:2}
+    .tick{stroke:var(--text-primary);stroke-width:2}
+    .mark{fill:var(--accent-secondary)}
+    .pathline{stroke:var(--accent-tertiary);stroke-width:3;fill:none}
+    .curve{stroke:var(--line);stroke-width:3;fill:none}
+    .hot{fill:rgba(255,107,107,.35);stroke:none}
+    .cool{fill:rgba(78,205,196,.30);stroke:none}
+    .darkfill{fill:rgba(0,0,0,.35)}
+    .lightfill{fill:rgba(255,255,255,.15)}
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">PHYSICS</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>🔋 Capacitors</h1>
+        <p>JAMB Physics • capacitance • parallel plate capacitor • series and parallel combinations • dielectric • stored energy</p>
+      </div>
+
+      <div class="section-card">
+        <h2>🎯 Learning Objective</h2>
+        <p>This chapter explains what capacitors are, how capacitance is calculated, factors affecting capacitance, capacitor arrangements, and energy stored in capacitors.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li>A capacitor stores charge and electrical energy</li>
+            <li>Capacitance is defined by <span class="math">C = Q/V</span></li>
+            <li>Dielectrics increase capacitance</li>
+            <li>Energy is stored in the electric field between plates</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Big idea</strong>
+          <p>A capacitor is like a temporary store for charge, and the bigger the capacitance, the more charge it can hold per volt.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ What is a Capacitor?</h2>
+
+        <p>A capacitor is a device used to store electric charge and electrical energy in an electric field.</p>
+
+        <h3>Basic structure</h3>
+        <ul>
+          <li>Two conducting plates</li>
+          <li>An insulating material between them called the dielectric</li>
+          <li>One plate becomes positively charged and the other negatively charged when connected to a battery</li>
+        </ul>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Simple capacitor structure</div>
+          <svg viewBox="0 0 340 180" aria-label="Capacitor structure diagram">
+            <line x1="120" y1="35" x2="120" y2="145" class="tick"/>
+            <line x1="220" y1="35" x2="220" y2="145" class="tick"/>
+            <text x="105" y="25" class="label">+Q</text>
+            <text x="220" y="25" class="label">−Q</text>
+            <text x="134" y="95" class="label">Dielectric</text>
+            <line x1="40" y1="90" x2="120" y2="90" class="curve"/>
+            <line x1="220" y1="90" x2="300" y2="90" class="curve"/>
+          </svg>
+          <div class="diagram-caption">A capacitor consists of two plates separated by an insulating medium.</div>
+        </div>
+
+        <div class="formula-box">
+          <div class="title">Capacitor symbol</div>
+          <div class="line">│ │</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Capacitance</h2>
+
+        <p>Capacitance is the ability of a capacitor to store charge per unit potential difference.</p>
+
+        <div class="formula-box">
+          <div class="title">Basic capacitance formula</div>
+          <div class="line"><span class="math">C = Q/V</span></div>
+        </div>
+
+        <ul>
+          <li><span class="math">C</span> = capacitance in farads (F)</li>
+          <li><span class="math">Q</span> = charge in coulombs (C)</li>
+          <li><span class="math">V</span> = voltage in volts (V)</li>
+        </ul>
+
+        <h3>Common units</h3>
+        <ul>
+          <li><span class="math">1 μF = 10⁻⁶ F</span></li>
+          <li><span class="math">1 nF = 10⁻⁹ F</span></li>
+          <li><span class="math">1 pF = 10⁻¹² F</span></li>
+        </ul>
+
+        <div class="memory-tip">
+          <strong>💡 Quick note</strong>
+          <p>1 farad is very large, so most practical capacitors are in microfarads, nanofarads, or picofarads.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Parallel Plate Capacitor</h2>
+
+        <p>This is the most important capacitor type for JAMB. It has two large parallel plates separated by a distance <span class="math">d</span>.</p>
+
+        <div class="formula-box">
+          <div class="title">Parallel plate capacitor formula</div>
+          <div class="line"><span class="math">C = εA/d</span></div>
+        </div>
+
+        <p>Where:</p>
+        <ul>
+          <li><span class="math">ε = ε₀εᵣ</span></li>
+          <li><span class="math">ε₀ = 8.85 × 10⁻¹² F/m</span></li>
+          <li><span class="math">εᵣ</span> = relative permittivity</li>
+          <li><span class="math">A</span> = plate area</li>
+          <li><span class="math">d</span> = separation of plates</li>
+        </ul>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Medium</th>
+              <th>Formula</th>
+              <th>Note</th>
+            </tr>
+            <tr><td>Air/Vacuum</td><td><span class="math">C = ε₀A/d</span></td><td><span class="math">εᵣ = 1</span></td></tr>
+            <tr><td>With dielectric</td><td><span class="math">C = ε₀εᵣA/d</span></td><td><span class="math">εᵣ &gt; 1</span></td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <h3>Factors affecting capacitance</h3>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Factor</th>
+              <th>Relationship</th>
+              <th>Effect</th>
+            </tr>
+            <tr><td>Area</td><td><span class="math">C ∝ A</span></td><td>Larger area gives larger capacitance</td></tr>
+            <tr><td>Separation</td><td><span class="math">C ∝ 1/d</span></td><td>Smaller distance gives larger capacitance</td></tr>
+            <tr><td>Dielectric constant</td><td><span class="math">C ∝ εᵣ</span></td><td>Higher εᵣ gives larger capacitance</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="example-box">
+          <div class="title">Calculation 1: Basic Capacitance</div>
+          <p>A parallel plate capacitor has area <span class="math">0.04 m²</span> and plate separation <span class="math">2 mm</span> in air. Find the capacitance.</p>
+          <p><strong>Convert:</strong> <span class="math">2 mm = 0.002 m</span></p>
+          <p><span class="math">C = ε₀A/d = (8.85 × 10⁻¹² × 0.04)/0.002</span></p>
+          <p><span class="math">C = 1.77 × 10⁻¹⁰ F = 177 pF</span></p>
+          <div class="answer">Answer: 177 pF</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 2: Effect of Dielectric</div>
+          <p>A capacitor has capacitance 50 pF in air. What is its capacitance when filled with wax of relative permittivity 2.2?</p>
+          <p><span class="math">C<sub>new</sub> = C<sub>air</sub> × εᵣ = 50 × 2.2</span></p>
+          <p><span class="math">C<sub>new</sub> = 110 pF</span></p>
+          <div class="answer">Answer: 110 pF</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Capacitors in Series and Parallel</h2>
+
+        <h3>Series connection</h3>
+        <p>In series:</p>
+        <ul>
+          <li>Charge is the same on all capacitors</li>
+          <li>Total voltage is shared</li>
+        </ul>
+
+        <div class="formula-box">
+          <div class="title">Series formula</div>
+          <div class="line"><span class="math">1/Ceq = 1/C₁ + 1/C₂ + 1/C₃ + ...</span></div>
+        </div>
+
+        <div class="highlight-box">
+          <p>The equivalent capacitance in series is always less than the smallest individual capacitor.</p>
+        </div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Capacitors in series</div>
+          <svg viewBox="0 0 340 130" aria-label="Series capacitor diagram">
+            <line x1="20" y1="65" x2="75" y2="65" class="curve"/>
+            <line x1="85" y1="35" x2="85" y2="95" class="tick"/>
+            <line x1="100" y1="35" x2="100" y2="95" class="tick"/>
+            <line x1="100" y1="65" x2="155" y2="65" class="curve"/>
+            <line x1="165" y1="35" x2="165" y2="95" class="tick"/>
+            <line x1="180" y1="35" x2="180" y2="95" class="tick"/>
+            <line x1="180" y1="65" x2="235" y2="65" class="curve"/>
+            <line x1="245" y1="35" x2="245" y2="95" class="tick"/>
+            <line x1="260" y1="35" x2="260" y2="95" class="tick"/>
+            <line x1="260" y1="65" x2="320" y2="65" class="curve"/>
+          </svg>
+          <div class="diagram-caption">In series, the same charge flows onto each capacitor.</div>
+        </div>
+
+        <h3>Parallel connection</h3>
+        <p>In parallel:</p>
+        <ul>
+          <li>Voltage is the same across all capacitors</li>
+          <li>Total charge is the sum of charges on each capacitor</li>
+        </ul>
+
+        <div class="formula-box">
+          <div class="title">Parallel formula</div>
+          <div class="line"><span class="math">Ceq = C₁ + C₂ + C₃ + ...</span></div>
+        </div>
+
+        <div class="highlight-box">
+          <p>The equivalent capacitance in parallel is always greater than the largest individual capacitor.</p>
+        </div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Capacitors in parallel</div>
+          <svg viewBox="0 0 340 180" aria-label="Parallel capacitor diagram">
+            <line x1="60" y1="25" x2="60" y2="155" class="curve"/>
+            <line x1="280" y1="25" x2="280" y2="155" class="curve"/>
+            <line x1="60" y1="50" x2="140" y2="50" class="curve"/>
+            <line x1="155" y1="25" x2="155" y2="75" class="tick"/>
+            <line x1="170" y1="25" x2="170" y2="75" class="tick"/>
+            <line x1="170" y1="50" x2="280" y2="50" class="curve"/>
+
+            <line x1="60" y1="90" x2="140" y2="90" class="curve"/>
+            <line x1="155" y1="65" x2="155" y2="115" class="tick"/>
+            <line x1="170" y1="65" x2="170" y2="115" class="tick"/>
+            <line x1="170" y1="90" x2="280" y2="90" class="curve"/>
+
+            <line x1="60" y1="130" x2="140" y2="130" class="curve"/>
+            <line x1="155" y1="105" x2="155" y2="155" class="tick"/>
+            <line x1="170" y1="105" x2="170" y2="155" class="tick"/>
+            <line x1="170" y1="130" x2="280" y2="130" class="curve"/>
+          </svg>
+          <div class="diagram-caption">In parallel, each capacitor has the same potential difference across it.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 3: Series Combination</div>
+          <p>Three capacitors of <span class="math">2 μF</span>, <span class="math">4 μF</span>, and <span class="math">6 μF</span> are in series across 12 V. Find the equivalent capacitance and the charge on the 4 μF capacitor.</p>
+          <p><span class="math">1/Ceq = 1/2 + 1/4 + 1/6 = 11/12</span></p>
+          <p><span class="math">Ceq = 12/11 ≈ 1.09 μF</span></p>
+          <p><span class="math">Q = CeqV = 1.09 × 10⁻⁶ × 12 = 13.09 μC</span></p>
+          <p>In series, all capacitors have the same charge.</p>
+          <div class="answer">Answer: 1.09 μF and 13.09 μC</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 4: Parallel Combination</div>
+          <p>Two capacitors of <span class="math">3 μF</span> and <span class="math">6 μF</span> are connected in parallel across 9 V. Find the total energy stored.</p>
+          <p><span class="math">Ceq = 3 + 6 = 9 μF</span></p>
+          <p><span class="math">E = ½CV² = 0.5 × 9 × 10⁻⁶ × 9²</span></p>
+          <p><span class="math">E = 364.5 × 10⁻⁶ J</span></p>
+          <div class="answer">Answer: 364.5 μJ</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 5: Mixed Combination</div>
+          <p><span class="math">C₁ = 6 μF</span> and <span class="math">C₂ = 3 μF</span> are in series, and that combination is in parallel with <span class="math">C₃ = 4 μF</span>. Find the equivalent capacitance.</p>
+          <p><span class="math">1/Cseries = 1/6 + 1/3 = 1/2</span></p>
+          <p><span class="math">Cseries = 2 μF</span></p>
+          <p><span class="math">Ceq = 2 + 4 = 6 μF</span></p>
+          <div class="answer">Answer: 6 μF</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Energy Stored in a Capacitor</h2>
+
+        <p>A charged capacitor stores electrical potential energy in its electric field.</p>
+
+        <div class="formula-box">
+          <div class="title">Energy formulas</div>
+          <div class="line"><span class="math">E = ½QV</span></div>
+          <div class="line"><span class="math">E = ½CV²</span></div>
+          <div class="line"><span class="math">E = Q²/2C</span></div>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Quick trick</strong>
+          <p>Use the version that matches the quantities already given in the question.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ Types and Uses of Capacitors</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Type</th>
+              <th>Dielectric</th>
+              <th>Features</th>
+              <th>Uses</th>
+            </tr>
+            <tr><td>Paper</td><td>Oiled paper</td><td>Cheap, general purpose</td><td>Coupling circuits</td></tr>
+            <tr><td>Mica</td><td>Mica mineral</td><td>Stable, high voltage</td><td>Radio frequency</td></tr>
+            <tr><td>Ceramic</td><td>Ceramic</td><td>Small, cheap</td><td>High frequency, bypass</td></tr>
+            <tr><td>Electrolytic</td><td>Electrolyte</td><td>High capacitance, polarized</td><td>Power supply filtering</td></tr>
+            <tr><td>Variable</td><td>Air or plastic</td><td>Adjustable capacitance</td><td>Radio tuning</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <h3>Common uses</h3>
+        <ul>
+          <li>Energy storage in camera flashes and defibrillators</li>
+          <li>Smoothing or filtering in power supplies</li>
+          <li>Coupling AC signals between circuits</li>
+          <li>Tuning radio circuits</li>
+          <li>Timing circuits with resistors</li>
+          <li>Power factor correction</li>
+        </ul>
+      </div>
+
+      <div class="section-card">
+        <h2>7️⃣ Master Formula Table</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Concept</th>
+              <th>Formula</th>
+              <th>Unit</th>
+            </tr>
+            <tr><td>Basic capacitance</td><td><span class="math">C = Q/V</span></td><td>F</td></tr>
+            <tr><td>Parallel plate</td><td><span class="math">C = ε₀εᵣA/d</span></td><td>F</td></tr>
+            <tr><td>Permittivity</td><td><span class="math">ε = ε₀εᵣ</span></td><td>F/m</td></tr>
+            <tr><td>Series</td><td><span class="math">1/Ceq = Σ(1/Cᵢ)</span></td><td>F</td></tr>
+            <tr><td>Parallel</td><td><span class="math">Ceq = ΣCᵢ</span></td><td>F</td></tr>
+            <tr><td>Energy stored</td><td><span class="math">E = ½QV = ½CV² = Q²/2C</span></td><td>J</td></tr>
+            <tr><td>Voltage on a capacitor</td><td><span class="math">Vᵢ = Q/Cᵢ</span></td><td>V</td></tr>
+            <tr><td>Charge on branch</td><td><span class="math">Qᵢ = CᵢV</span></td><td>C</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>8️⃣ JAMB Exam Tips</h2>
+
+        <div class="jamb-alert">
+          <h4>High-score reminders</h4>
+          <ul>
+            <li>Series capacitors: same charge</li>
+            <li>Parallel capacitors: same voltage</li>
+            <li>Dielectric insertion increases capacitance</li>
+            <li>Series result is smaller than the smallest capacitor</li>
+            <li>Parallel result is greater than the biggest capacitor</li>
+          </ul>
+        </div>
+
+        <div class="highlight-box">
+          <p>If the battery stays connected, voltage remains constant. If disconnected, charge remains constant.</p>
+        </div>
+
+        <div class="memory-tip">
+          <strong>⚠️ Common mistakes</strong>
+          <p>Do not mix up series and parallel rules, and always convert mm to m and μF to F before calculating.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>9️⃣ Practice Questions for JAMB</h2>
+
+        <div class="example-box">
+          <div class="title">The unit of capacitance is:</div>
+          <p>(a) Volt<br>(b) Farad<br>(c) Ohm<br>(d) Coulomb</p>
+          <div class="answer">Answer: (b) Farad</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">For capacitors in parallel, the same quantity across each capacitor is:</div>
+          <p>(a) Charge<br>(b) Current<br>(c) Voltage<br>(d) Energy</p>
+          <div class="answer">Answer: (c) Voltage</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">In a parallel plate capacitor, increasing plate separation will:</div>
+          <p>(a) Increase capacitance<br>(b) Decrease capacitance<br>(c) Keep capacitance constant<br>(d) Double capacitance</p>
+          <div class="answer">Answer: (b) Decrease capacitance</div>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🌟 Final line</strong>
+          <p>You now have a complete JAMB-style guide to Capacitors. This topic is important because it connects electrostatics, circuit behavior, and energy storage in one very exam-friendly chapter.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Before your quiz, revise C = Q/V, C = εA/d, capacitor combinations, dielectric effects, and energy formulas.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+  </script>
+</body>
+</html>

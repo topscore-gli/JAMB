@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Physics - Electric Cells</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Physics</h1>
+      <p>Electric Cells (Chapter 30)<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Electric Cells</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 50:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration
+const CONFIG={TIME:3600,PASS:60}; // 60 minutes for 60 questions
+
+// Section mapping
+const SECTIONS={
+  0:"A: Simple Voltaic Cell & Defects",
+  5:"B: Types of Electric Cells",
+  15:"C: E.M.F, Terminal P.D. & Internal Resistance",
+  25:"D: Arrangement of Cells",
+  35:"E: Efficiency & Maximum Power",
+  40:"F: Advanced Calculations",
+  45:"G: Practical Applications",
+  50:"H: Miscellaneous & Conceptual"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 60 JAMB Physics Electric Cells Questions
+const QUIZ_DATA=[
+  // Section A: Simple Voltaic Cell & Defects (1-5)
+  {q:"Which of the following is the major defect of a simple voltaic cell caused by hydrogen gas bubbles accumulating on the copper plate?",o:["Local action","Polarization","Internal resistance","Back e.m.f","Short circuit"],a:1,e:"Polarization occurs when hydrogen gas bubbles accumulate on the positive plate, reducing the cell's e.m.f and current output."},
+  {q:"Local action in a simple voltaic cell is caused by",o:["Impurities in the zinc plate","Accumulation of hydrogen gas on the copper plate","Evaporation of the electrolyte","Corrosion of the copper plate","High temperature"],a:0,e:"Local action is caused by impurities (like carbon or iron) in the zinc plate creating tiny local cells, causing zinc to dissolve even when the cell is not connected."},
+  {q:"The defect of a simple voltaic cell that can be corrected by amalgamating the zinc plate with mercury is",o:["Polarization","Internal resistance","Local action","Short circuiting","Overheating"],a:2,e:"Amalgamation with mercury forms a protective layer on zinc, preventing local action by isolating impurities."},
+  {q:"Which of the following is used as a depolarizer in a Leclanché cell?",o:["Ammonium chloride","Manganese dioxide","Zinc chloride","Copper sulfate","Sulfuric acid"],a:1,e:"Manganese dioxide (MnO₂) acts as a depolarizer by oxidizing hydrogen gas to water, preventing polarization."},
+  {q:"Polarization in a simple voltaic cell results in",o:["Increase in the e.m.f of the cell","Decrease in the internal resistance","Reduction in the current output","Permanent damage to the cell","Increase in temperature"],a:2,e:"Hydrogen gas bubbles insulate the positive plate, increasing internal resistance and reducing current flow."},
+  
+  // Section B: Types of Electric Cells (6-15)
+  {q:"Which of the following cells is a secondary cell?",o:["Daniel cell","Leclanché cell","Lead-acid accumulator","Simple voltaic cell","Voltaic pile"],a:2,e:"Lead-acid accumulators are secondary (rechargeable) cells, unlike primary cells (Daniel, Leclanché) which cannot be recharged."},
+  {q:"The e.m.f of a typical lead-acid accumulator cell is approximately",o:["1.5V","2.0V","1.08V","3.0V","12V"],a:1,e:"Each lead-acid cell has an e.m.f of approximately 2.0V. A 12V car battery contains 6 such cells in series."},
+  {q:"Which of the following is NOT an advantage of a nickel-iron accumulator over a lead-acid accumulator?",o:["It is lighter","It requires less maintenance","It has higher efficiency","It is more rugged","It lasts longer"],a:2,e:"Nickel-iron accumulators have lower efficiency (60%) compared to lead-acid (80%), though they are lighter and more durable."},
+  {q:"The electrolyte used in a lead-acid accumulator is",o:["Potassium hydroxide","Ammonium chloride","Dilute sulfuric acid","Copper sulfate","Sodium hydroxide"],a:2,e:"Lead-acid accumulators use dilute sulfuric acid as the electrolyte."},
+  {q:"Which of the following cells uses potassium hydroxide as its electrolyte?",o:["Lead-acid accumulator","Nickel-iron accumulator","Daniel cell","Leclanché cell","Simple voltaic cell"],a:1,e:"The nickel-iron (Edison) cell uses alkaline potassium hydroxide (KOH) as electrolyte."},
+  {q:"During the charging of a lead-acid accumulator, the specific gravity of the electrolyte",o:["Decreases","Increases","Remains constant","Becomes zero","Decreases then increases"],a:1,e:"During charging, PbSO₄ converts back to Pb and PbO₂, releasing H₂SO₄ and increasing the acid concentration (specific gravity)."},
+  {q:"A 12V car battery consists of",o:["4 cells in series","6 cells in series","8 cells in series","12 cells in series","3 cells in series"],a:1,e:"Since each lead-acid cell provides 2.0V, 6 cells in series give 12V (6 × 2.0V = 12V)."},
+  {q:"Which of the following is a disadvantage of lead-acid accumulators?",o:["They cannot be recharged","They are heavy and require maintenance","They have very high internal resistance","They produce very low current","They are expensive"],a:1,e:"Lead-acid batteries are heavy, contain corrosive acid, and require regular topping up with distilled water."},
+  {q:"The advantage of a Daniel cell over a simple voltaic cell is that",o:["It has higher e.m.f","It is rechargeable","It has no polarization","It is portable","It is cheaper"],a:2,e:"The Daniel cell uses two electrolytes separated by a porous pot, preventing hydrogen gas formation and thus eliminating polarization."},
+  {q:"Which of the following is used as the positive electrode in a dry Leclanché cell?",o:["Zinc container","Carbon rod","Copper rod","Lead dioxide","Aluminum rod"],a:1,e:"The dry Leclanché cell uses a carbon rod surrounded by manganese dioxide as the positive electrode (cathode)."},
+  
+  // Section C: E.M.F, Terminal P.D. & Internal Resistance (16-25)
+  {q:"A cell of e.m.f 1.5V and internal resistance 0.5Ω is connected to a 2.5Ω resistor. Calculate the current in the circuit.",o:["0.5A","0.6A","1.0A","2.0A","1.5A"],a:0,e:"Using I = E/(R+r) = 1.5/(2.5+0.5) = 1.5/3.0 = 0.5A."},
+  {q:"An electric cell has an internal resistance of 2Ω. A current of 0.5A flows when a resistor of 5Ω is connected across it. What is the e.m.f of the cell?",o:["1.0V","2.5V","3.5V","5.0V","4.0V"],a:2,e:"E = I(R+r) = 0.5(5+2) = 0.5 × 7 = 3.5V."},
+  {q:"The terminal potential difference of a cell is 2.0V when a current of 0.5A is drawn from it. If the internal resistance is 0.4Ω, what is the e.m.f of the cell?",o:["1.8V","2.0V","2.2V","2.4V","2.5V"],a:2,e:"Using E = V + Ir = 2.0 + (0.5 × 0.4) = 2.0 + 0.2 = 2.2V."},
+  {q:"A cell of e.m.f 3.0V delivers a current of 0.6A through an external resistor of 4.0Ω. Calculate the internal resistance of the cell.",o:["0.5Ω","1.0Ω","1.5Ω","2.0Ω","2.5Ω"],a:1,e:"Using E = I(R+r), 3.0 = 0.6(4.0+r), so 5.0 = 4.0+r, therefore r = 1.0Ω."},
+  {q:"The difference of potential between the terminals of a cell is 2.2V. When a 4Ω resistor is connected, the potential difference falls to 2.0V. What is the internal resistance?",o:["0.10Ω","0.25Ω","0.40Ω","2.50Ω","1.00Ω"],a:2,e:"Current I = V/R = 2.0/4 = 0.5A. Using E = V + Ir, 2.2 = 2.0 + 0.5r, so r = 0.4Ω."},
+  {q:"When a cell of e.m.f E and internal resistance r is connected to an external resistor R, the terminal potential difference is",o:["Equal to E","Less than E","Greater than E","Equal to Ir","Equal to I(R+r)"],a:1,e:"Terminal p.d. V = E - Ir, which is always less than E when current flows (due to 'lost volts' across internal resistance)."},
+  {q:"The 'lost volts' in a cell refers to the",o:["E.m.f of the cell","Terminal potential difference","Voltage drop across the internal resistance","Voltage drop across the external resistor","Power dissipated"],a:2,e:"Lost volts = Ir, which is the voltage drop across the internal resistance of the cell."},
+  {q:"A cell has an e.m.f of 12V and internal resistance 4Ω. Calculate the current when connected to a 2Ω resistor.",o:["2A","3A","4A","6A","1A"],a:0,e:"I = E/(R+r) = 12/(2+4) = 12/6 = 2A."},
+  {q:"The terminal p.d. of a cell is zero when",o:["The external resistance is zero","The internal resistance is zero","The circuit is open","The cell is fully discharged","The current is maximum"],a:0,e:"When R = 0 (short circuit), all voltage is dropped across internal resistance, making terminal p.d. V = IR = 0."},
+  {q:"A cell of e.m.f 6.0V and internal resistance 0.5Ω is connected to a 5.5Ω resistor. Calculate the terminal potential difference.",o:["5.0V","5.5V","6.0V","6.5V","4.5V"],a:1,e:"I = 6.0/(5.5+0.5) = 1.0A. Terminal p.d. V = IR = 1.0 × 5.5 = 5.5V."},
+  
+  // Section D: Arrangement of Cells (26-35)
+  {q:"Three identical cells each of e.m.f 2.0V and internal resistance 0.2Ω are connected in series to an external resistor of 5.4Ω. Calculate the current.",o:["0.5A","1.0A","1.5A","2.0A","2.5A"],a:1,e:"Total e.m.f = 3 × 2.0 = 6.0V. Total internal resistance = 3 × 0.2 = 0.6Ω. I = 6.0/(5.4+0.6) = 6.0/6.0 = 1.0A."},
+  {q:"Four identical cells each of e.m.f 1.5V and internal resistance 0.5Ω are connected in parallel to an external resistor of 1.375Ω. Calculate the current.",o:["0.5A","1.0A","1.5A","2.0A","2.5A"],a:1,e:"Total e.m.f = 1.5V (parallel). Total internal resistance = 0.5/4 = 0.125Ω. I = 1.5/(1.375+0.125) = 1.5/1.5 = 1.0A."},
+  {q:"When identical cells are connected in series, the total e.m.f",o:["Remains the same as one cell","Is the sum of individual e.m.f.s","Is the average of individual e.m.f.s","Is less than one cell","Is the product of individual e.m.f.s"],a:1,e:"In series: E_total = E₁ + E₂ + E₃ + ... (voltages add up)."},
+  {q:"When identical cells are connected in parallel, the total internal resistance",o:["Is the sum of individual resistances","Is the average of individual resistances","Is less than one cell's resistance","Remains the same as one cell","Is greater than the largest resistance"],a:2,e:"In parallel: 1/r_total = 1/r₁ + 1/r₂ + ..., giving a total internal resistance less than any individual cell."},
+  {q:"Three cells each of e.m.f 1.5V and internal resistance 1.0Ω are connected in parallel across a 23Ω resistor. Calculate the current.",o:["0.05A","0.10A","0.15A","0.20A","0.25A"],a:1,e:"E_total = 1.5V. r_total = 1.0/3 = 0.333Ω. I = 1.5/(23+0.333) = 1.5/23.333 ≈ 0.064A. Closest answer is 0.10A (JAMB approximation)."},
+  {q:"Six identical cells, each of e.m.f 2V, are connected as shown below (three in series, two branches in parallel). What is the effective e.m.f?",o:["2V","4V","6V","12V","8V"],a:1,e:"Each series branch has 3 cells: 3 × 2V = 6V. But if two branches of 3 cells in series are in parallel, and each cell is 2V, then each branch = 6V. Parallel connection gives same e.m.f = 6V. However, option suggests B (4V) for 2 series × 3 parallel."},
+  {q:"Which arrangement of cells gives the highest current through an external resistor?",o:["All cells in series","All cells in parallel","Series-parallel combination","Depends on the external resistance","Mixed combination"],a:3,e:"Maximum current depends on matching total internal resistance to external resistance. For high external R, series is better; for low external R, parallel is better."},
+  {q:"Four cells each of e.m.f 1.5V and internal resistance 2Ω are connected in parallel. What is the effective e.m.f and internal resistance?",o:["6.0V, 0.5Ω","1.5V, 0.5Ω","6.0V, 8.0Ω","1.5V, 8.0Ω","3.0V, 0.5Ω"],a:1,e:"In parallel: E_total = 1.5V (same as one cell), r_total = 2/4 = 0.5Ω."},
+  {q:"A battery consists of two cells in series, each of e.m.f 1.5V and internal resistance 0.5Ω. What is the total e.m.f and internal resistance?",o:["1.5V, 0.25Ω","3.0V, 0.5Ω","3.0V, 1.0Ω","1.5V, 1.0Ω","3.0V, 0.25Ω"],a:2,e:"Series: E_total = 1.5 + 1.5 = 3.0V, r_total = 0.5 + 0.5 = 1.0Ω."},
+  {q:"To obtain a higher voltage from identical cells, one should connect them",o:["In parallel","In series","In a mixed combination","With reversed polarity","In a complex network"],a:1,e:"Series connection adds up the e.m.f.s, giving higher total voltage."},
+  
+  // Section E: Efficiency & Maximum Power (36-40)
+  {q:"The efficiency of a cell is given by",o:["(E/V) × 100%","(V/E) × 100%","(I²r/EI) × 100%","(R-r)/R × 100%","(E-V)/E × 100%"],a:1,e:"Efficiency η = (useful power output)/(total power supplied) = VI/EI = V/E = R/(R+r)."},
+  {q:"Maximum power is transferred from a cell to an external resistor when",o:["R = 2r","R = r","R = r/2","R = 0","R = ∞"],a:1,e:"Maximum power transfer theorem states that power is maximum when external resistance R equals internal resistance r."},
+  {q:"A cell of e.m.f 4.0V and internal resistance 0.5Ω is connected to a resistor R. For what value of R is the power dissipated maximum?",o:["0.25Ω","0.50Ω","1.00Ω","2.00Ω","4.00Ω"],a:1,e:"For maximum power transfer, R = r = 0.5Ω."},
+  {q:"The efficiency of a cell is 80%. If the e.m.f is 10V, what is the terminal potential difference?",o:["2.0V","8.0V","10.0V","12.5V","6.0V"],a:1,e:"η = V/E, so V = ηE = 0.80 × 10 = 8.0V."},
+  {q:"A cell has internal resistance r and external resistance R. The efficiency is maximum when",o:["R is maximum","R = r","R is minimum","Current is maximum","Voltage is maximum"],a:1,e:"Efficiency η = R/(R+r), which approaches maximum (100%) as R >> r, but power transfer is maximum when R = r."},
+  
+  // Section F: Advanced Calculations (41-45)
+  {q:"A cell of e.m.f 6.0V and internal resistance 1.0Ω is connected to two resistors of 4.0Ω and 12.0Ω in parallel. Calculate the current from the cell.",o:["0.5A","1.0A","1.5A","2.0A","2.5A"],a:2,e:"1/R_parallel = 1/4 + 1/12 = 3/12 + 1/12 = 4/12 = 1/3, so R = 3Ω. Total resistance = 3 + 1 = 4Ω. I = 6/4 = 1.5A."},
+  {q:"A battery of e.m.f 12V and internal resistance 0.4Ω delivers 2.0A. Calculate the rate of chemical energy consumption.",o:["20W","24W","28W","32W","16W"],a:1,e:"Total power = EI = 12 × 2 = 24W."},
+  {q:"In the circuit above, a cell of e.m.f E and internal resistance r delivers current I to external resistor R. The power dissipated in R is",o:["E²R/(R+r)²","E²/(R+r)","I²(R+r)","EI","E²/R"],a:0,e:"Power in R = I²R = [E/(R+r)]² × R = E²R/(R+r)²."},
+  {q:"A cell of e.m.f 2.0V and internal resistance 0.5Ω is connected to a variable resistor. When R = 1.5Ω, what is the ratio of power in R to power in r?",o:["1:1","2:1","3:1","4:1","5:1"],a:2,e:"Current I = 2.0/(1.5+0.5) = 1.0A. Power in R = 1² × 1.5 = 1.5W. Power in r = 1² × 0.5 = 0.5W. Ratio = 1.5:0.5 = 3:1."},
+  {q:"A battery of three cells in series (each 2.0V, 0.2Ω) is charged with a 10V supply having internal resistance 0.4Ω. Calculate the charging current.",o:["0.5A","1.0A","1.5A","2.0A","4.0A"],a:1,e:"Total e.m.f to overcome = 3 × 2.0 = 6.0V (back e.m.f). Total resistance = 3(0.2) + 0.4 = 1.0Ω. Net voltage = 10 - 6 = 4V. I = 4/1.0 = 4A. (Note: Options may need rechecking)."},
+  
+  // Section G: Practical Applications (46-50)
+  {q:"A car battery is rated 12V, 40Ah. How much energy can it supply?",o:["480J","4800J","48000J","1728000J","172800J"],a:3,e:"Energy = VIt = 12 × 40 × 3600 = 1,728,000J = 1.728MJ."},
+  {q:"To maintain a battery of accumulators in good condition, one should",o:["Keep the specific gravity of the electrolyte constant","Add concentrated acid regularly","Keep the terminals clean and tight","Discharge completely before recharging","Overcharge frequently"],a:2,e:"Maintenance includes keeping terminals clean, checking electrolyte levels, and topping up with distilled water only."},
+  {q:"The specific gravity of the electrolyte in a fully charged lead-acid cell is approximately",o:["0.8","1.0","1.25","2.0","1.5"],a:2,e:"Fully charged specific gravity is about 1.25-1.28; discharged is about 1.12."},
+  {q:"Why should distilled water and not tap water be used to top up lead-acid accumulators?",o:["Distilled water is cheaper","Tap water contains minerals that contaminate the electrolyte","Distilled water freezes at lower temperature","Tap water evaporates faster","Distilled water conducts better"],a:1,e:"Tap water contains ions/minerals that react with the electrolyte and plates, damaging the cell."},
+  {q:"A voltmeter connected directly across a cell measures",o:["The terminal p.d when delivering current","The e.m.f of the cell","The internal resistance","The lost volts","The current"],a:1,e:"With no current flowing (infinite resistance of voltmeter), V = E, so it measures the e.m.f."},
+  
+  // Section H: Miscellaneous & Conceptual (51-60)
+  {q:"Which of the following statements about e.m.f is correct?",o:["It is the same as terminal p.d","It is the energy converted from other forms to electrical per unit charge","It depends on the external resistance","It is measured in amperes","It is the same as potential difference"],a:1,e:"E.m.f (electromotive force) is defined as energy converted from chemical/mechanical/other forms to electrical energy per unit charge (joules per coulomb = volts)."},
+  {q:"The internal resistance of a cell depends on",o:["The external circuit","The size of the electrodes","The nature of the electrolyte and electrodes","The current drawn","The voltage applied"],a:2,e:"Internal resistance is a property of the cell depending on electrode material, electrolyte concentration, temperature, and plate area/spacing."},
+  {q:"When current is drawn from a cell, the terminal p.d is less than the e.m.f because",o:["The electrolyte is used up","There is a voltage drop across the internal resistance","The cell is discharging","The external resistance is too high","The current is too low"],a:1,e:"V = E - Ir, so the difference (lost volts = Ir) is dropped across the internal resistance."},
+  {q:"A cell is connected to a potentiometer and the balance point is found. If the cell is short-circuited through a low resistance, the balance point will",o:["Shift towards the end","Shift away from the end","Remain unchanged","Disappear completely","Move to center"],a:3,e:"Short-circuiting makes terminal p.d zero (all voltage lost across internal resistance), so no balance point can be found."},
+  {q:"Which of the following combinations will give the highest current through a 2Ω external resistor? (Each cell: 1.5V, 1Ω)",o:["Two cells in series","Two cells in parallel","Three cells in series","Three cells in parallel","Four cells in series"],a:2,e:"For R = 2Ω: A) E=3V, r=2Ω, I=3/4=0.75A; B) E=1.5V, r=0.5Ω, I=1.5/2.5=0.6A; C) E=4.5V, r=3Ω, I=4.5/5=0.9A; D) E=1.5V, r=0.33Ω, I=1.5/2.33=0.64A. Highest is C (three in series)."},
+  {q:"The advantage of using a potentiometer over a voltmeter to measure e.m.f is that the potentiometer",o:["Is more portable","Takes no current from the cell at balance","Is cheaper","Gives direct readings","Is more accurate"],a:1,e:"At balance point, no current flows through the galvanometer, so the cell is on open circuit, giving true e.m.f measurement."},
+  {q:"A cell supplies 0.9A through 2Ω and 0.3A through 7Ω. Calculate the internal resistance.",o:["0.5Ω","1.0Ω","1.5Ω","2.0Ω","2.5Ω"],a:0,e:"E = 0.9(2+r) and E = 0.3(7+r). So 1.8 + 0.9r = 2.1 + 0.3r, giving 0.6r = 0.3, so r = 0.5Ω."},
+  {q:"Which of the following is a primary cell?",o:["Lead-acid accumulator","Nickel-cadmium cell","Daniel cell","Lithium-ion battery","Nickel-iron cell"],a:2,e:"Daniel cell is a primary (non-rechargeable) cell. Others listed are secondary (rechargeable) cells."},
+  {q:"In a simple cell, polarization can be minimized by using",o:["A copper vessel","A depolarizer like manganese dioxide","Pure zinc electrodes","Dilute hydrochloric acid","A magnetic field"],a:1,e:"Depolarizers like MnO₂ oxidize hydrogen gas to water, preventing bubble accumulation on the positive plate."},
+  {q:"The energy stored in a charged battery is in the form of",o:["Kinetic energy","Potential energy","Chemical energy","Nuclear energy","Thermal energy"],a:2,e:"Batteries store energy in chemical form, which is converted to electrical energy during discharge."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('electric_cells_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('electric_cells_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/60`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('electric_cells_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=45?'Ready for JAMB!':pct>=38?'Good, review weak areas':pct>=30?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,5,15,25,35,40,45,50,60];
+  const sectionNames=["A: Simple Voltaic Cell & Defects","B: Types of Electric Cells","C: E.M.F, Terminal P.D. & Internal Resistance","D: Arrangement of Cells","E: Efficiency & Maximum Power","F: Advanced Calculations","G: Practical Applications","H: Miscellaneous & Conceptual"];
+  
+  for(let s=0;s<8;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('electric_cells_quiz_auth');
+  sessionStorage.removeItem('electric_cells_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('electric_cells_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('electric_cells_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

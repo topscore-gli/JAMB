@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Physics - Magnets & Magnetic Fields</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Physics</h1>
+      <p>Magnets & Magnetic Fields (Chapter 33)<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Magnets & Magnetic Fields</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 60:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration
+const CONFIG={TIME:3600,PASS:60}; // 60 minutes for 60 questions
+
+// Section mapping
+const SECTIONS={
+  0:"A: Natural & Artificial Magnets",
+  8:"B: Magnetic Fields & Field Patterns",
+  18:"C: Earth's Magnetic Field",
+  28:"D: Magnetic Flux & Flux Density",
+  38:"E: Force on Current-Carrying Conductors",
+  48:"F: Demagnetization, Methods & Applications"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 60 JAMB Physics Magnets & Magnetic Fields Questions
+const QUIZ_DATA=[
+  // Section A: Natural & Artificial Magnets (1-8)
+  {q:"Which of the following is a natural magnet?",o:["Steel bar","Soft iron","Magnetite","Cobalt","Nickel"],a:2,e:"Magnetite (lodestone) is the only naturally occurring magnet found in nature; others are artificial magnets made by humans."},
+  {q:"A bar magnet is divided into two pieces. Which statement is correct?",o:["The magnetic field of each piece becomes stronger","Two new magnets are created","The bar magnet is demagnetized","An electric field is created","The poles disappear"],a:1,e:"When a magnet is cut, each piece becomes a complete magnet with both North and South poles - magnetic poles always exist in pairs."},
+  {q:"Which material is most suitable for making a permanent magnet?",o:["Soft iron","Steel","Nickel","Cobalt","Aluminum"],a:1,e:"Steel has high retentivity and coercivity, making it hard to demagnetize - ideal for permanent magnets."},
+  {q:"Soft iron is preferred to steel for making electromagnets because it:",o:["Is more easily magnetized and demagnetized","Retains magnetism longer","Is cheaper","Is heavier","Is stronger"],a:0,e:"Soft iron has low retentivity and coercivity, allowing quick magnetization and demagnetization when current switches on/off."},
+  {q:"The only known natural magnet is:",o:["Iron ore","Steel","Magnetite","Hematite","Cobalt"],a:2,e:"Magnetite (Fe₃O₄), also called lodestone, is the only naturally magnetic mineral."},
+  {q:"Which property distinguishes soft iron from steel?",o:["Density","Retentivity","Color","Melting point","Hardness"],a:1,e:"Retentivity (ability to retain magnetism) differs significantly - soft iron has low retentivity, steel has high retentivity."},
+  {q:"Artificial magnets can be made by all the following methods EXCEPT:",o:["Stroking with a strong magnet","Heating while placed East-West","Using DC current in a solenoid","Induction from a nearby magnet","Hammering in North-South direction"],a:1,e:"Heating East-West demagnetizes; other methods are used to make magnets."},
+  {q:"To preserve a bar magnet, it should be stored:",o:["In a wet place","With like poles together","With keepers across its poles in dry place","Near a heater","In a magnetic field"],a:2,e:"Keepers (soft iron bars) provide a complete magnetic circuit, preventing loss of magnetism."},
+  
+  // Section B: Magnetic Fields & Field Patterns (9-18)
+  {q:"The direction of a magnetic field at any point is taken as:",o:["The direction of the force on a South pole","The direction a North pole would move","The direction of the force on an electron","Perpendicular to the field line","The direction of electron flow"],a:1,e:"By convention, magnetic field direction is the direction a free North pole would move (North to South externally)."},
+  {q:"Magnetic field lines around a straight current-carrying conductor are:",o:["Parallel to the conductor","Concentric circles","Radial lines","Elliptical","Straight lines"],a:1,e:"Field lines form concentric circles around the wire, with direction determined by the right-hand grip rule."},
+  {q:"Two bar magnets are placed with their North poles facing each other. The field pattern shows:",o:["Attraction between the poles","Repulsion with neutral point between them","Parallel lines connecting the poles","No field pattern","Converging lines"],a:1,e:"Like poles repel; field lines bend away from each other creating a neutral point where Earth's field cancels the magnets' field."},
+  {q:"The polarity of a solenoid can be determined using:",o:["Fleming's left-hand rule","Right-hand grip rule","Maxwell's corkscrew rule","Both B and C","Fleming's right-hand rule"],a:3,e:"Both right-hand grip rule (fingers follow current, thumb points North) and Maxwell's corkscrew rule (thread advances in North pole direction) work."},
+  {q:"In a solenoid, current flowing clockwise at one end indicates:",o:["North pole","South pole","Neutral point","Zero field","East pole"],a:1,e:"Clockwise current at an end creates South pole; anticlockwise creates North pole."},
+  {q:"Which rule gives the direction of force on a current-carrying conductor in a magnetic field?",o:["Right-hand grip rule","Fleming's left-hand rule","Fleming's right-hand rule","Maxwell's rule","Right-hand rule"],a:1,e:"Fleming's left-hand rule (First finger = Field, seCond finger = Current, thuMb = Motion/Force) gives force direction."},
+  {q:"The force on a current-carrying conductor in a magnetic field is zero when the angle between conductor and field is:",o:["45°","90°","0° or 180°","60°","30°"],a:2,e:"F = BILsinθ; when θ = 0° or 180°, sinθ = 0, so F = 0 (conductor parallel to field)."},
+  {q:"The force on a current-carrying conductor is greatest when the conductor is:",o:["At 45° to the field","Parallel to the field","At right angles to the field","At 60° to the field","At 30° to the field"],a:2,e:"Maximum force occurs at 90° because sin90° = 1 (maximum value)."},
+  {q:"Which of the following statements about magnetic field lines is FALSE?",o:["They never cross each other","They form continuous closed loops","They are crowded where field is weak","Tangent to line gives field direction","They emerge from North pole"],a:2,e:"Field lines are crowded where field is STRONG (near poles), not weak."},
+  {q:"The neutral point in a magnetic field is where:",o:["Field is maximum","Earth's field cancels the magnet's field","Current is zero","Two North poles meet","Field is minimum"],a:1,e:"Neutral point is where resultant field is zero due to cancellation between Earth's field and magnet's field."},
+  
+  // Section C: Earth's Magnetic Field (19-28)
+  {q:"The angle between the magnetic meridian and geographic meridian is called:",o:["Angle of dip","Angle of declination","Angle of inclination","Magnetic latitude","Angle of variation"],a:1,e:"Angle of declination (or variation) is the angle between true North and magnetic North."},
+  {q:"The angle which the Earth's magnetic field makes with the horizontal is called:",o:["Angle of contact","Angle of dip","Angle of declination","Magnetic meridian","Angle of elevation"],a:1,e:"Angle of dip (or inclination) is the angle between Earth's field and horizontal."},
+  {q:"At the magnetic equator, the angle of dip is:",o:["0°","45°","90°","180°","60°"],a:0,e:"At magnetic equator, field is horizontal, so dip angle = 0°."},
+  {q:"At the magnetic poles, the angle of dip is:",o:["0°","45°","90°","60°","30°"],a:2,e:"At magnetic poles, field is vertical, so dip angle = 90°."},
+  {q:"At the magnetic equator, which component of Earth's field is zero?",o:["Horizontal component","Vertical component","Total field","Both horizontal and vertical","North component"],a:1,e:"At equator: Bᵥ = Bsin0° = 0; Bₕ = Bcos0° = B (maximum)."},
+  {q:"At the magnetic poles, which component of Earth's field is zero?",o:["Horizontal component","Vertical component","Total field","Both components","East component"],a:0,e:"At poles: Bₕ = Bcos90° = 0; Bᵥ = Bsin90° = B (maximum)."},
+  {q:"If the angle of dip is 60°, the ratio of vertical to horizontal component is:",o:["√3","1/√3","√3/2","1/2","2"],a:0,e:"tanδ = Bᵥ/Bₕ; tan60° = √3, so Bᵥ/Bₕ = √3."},
+  {q:"The Earth's magnetic field lines run from:",o:["Geographic North to South","Magnetic South to North geographically","Geographic South to North","Magnetic North to South geographically","East to West"],a:1,e:"Magnetic North Pole is near geographic South, so field lines run from Southern hemisphere to Northern hemisphere."},
+  {q:"Which statement is CORRECT about Earth's magnetism?",o:["The angle of dip is the angle a freely suspended magnet makes with the vertical","The angle of declination is the angle between magnetic meridian and geographic meridian","Horizontal component is maximum at the poles","Vertical component is maximum at the equator","Dip angle is constant everywhere"],a:1,e:"Declination is angle between magnetic and geographic meridians."},
+  {q:"Variation of magnetic declination with position on Earth's surface is useful for:",o:["Determining latitude","Navigation corrections","Measuring temperature","Predicting weather","Measuring altitude"],a:1,e:"Navigators must correct compass readings for declination to find true direction."},
+  
+  // Section D: Magnetic Flux & Flux Density (29-38)
+  {q:"The SI unit of magnetic flux is:",o:["Tesla","Weber","Henry","Farad","Gauss"],a:1,e:"Magnetic flux (Φ) is measured in Weber (Wb); Tesla is unit of flux density."},
+  {q:"The SI unit of magnetic flux density is:",o:["Farad","Henry","Tesla","Weber","Gauss"],a:2,e:"Flux density B is measured in Tesla (T) or Wb/m²."},
+  {q:"Magnetic flux density is defined as:",o:["Total magnetic field passing through an area","Force per unit length on conductor carrying 1A current perpendicular to field","Total number of field lines","Product of flux and area","Magnetic field strength"],a:1,e:"B = F/IL (when conductor is perpendicular to field); this is the defining equation for Tesla."},
+  {q:"A coil of area 0.5 m² is placed perpendicular to a magnetic field of flux density 0.4 T. The magnetic flux through the coil is:",o:["0.2 Wb","0.8 Wb","0.1 Wb","2.0 Wb","0.4 Wb"],a:0,e:"Φ = BA = 0.4 × 0.5 = 0.2 Wb (perpendicular, so cos0° = 1)."},
+  {q:"A rectangular coil 20 cm × 15 cm is placed perpendicular to a uniform magnetic field of flux density 0.4 T. Calculate the flux through the coil.",o:["0.012 Wb","0.12 Wb","1.2 Wb","12 Wb","0.24 Wb"],a:0,e:"Area = 0.20 × 0.15 = 0.03 m²; Φ = 0.4 × 0.03 = 0.012 Wb."},
+  {q:"If the magnetic flux through a coil of 50 turns changes from 0.2 Wb to 0.8 Wb in 2 seconds, the average induced emf is:",o:["15 V","20 V","25 V","30 V","10 V"],a:0,e:"ε = -N(ΔΦ/Δt) = -50 × (0.8-0.2)/2 = -50 × 0.3 = -15 V (magnitude = 15 V)."},
+  {q:"A solenoid has 300 turns, circular cross-section of radius 0.40 m, placed perpendicular to a magnetic field of flux density 5.1 mT. The flux linkage is approximately:",o:["0.77 Wb-turns","7.7 Wb-turns","0.077 Wb-turns","77 Wb-turns","7.7 Wb"],a:0,e:"Area = π(0.4)² = 0.503 m²; Φ = 5.1×10⁻³ × 0.503 = 2.57×10⁻³ Wb; Linkage = 300 × 2.57×10⁻³ = 0.77 Wb-turns."},
+  {q:"The relationship between flux density (B), flux (Φ), and area (A) when field is perpendicular to surface is:",o:["B = ΦA","B = Φ/A","B = A/Φ","B = Φ²/A","B = ΦA²"],a:1,e:"From Φ = BA, we get B = Φ/A (flux per unit area)."},
+  {q:"A magnetic field of 2.0 T passes through a circular loop of radius 0.1 m at an angle of 60° to the normal. The flux through the loop is:",o:["0.0314 Wb","0.0628 Wb","0.314 Wb","3.14 Wb","0.0157 Wb"],a:0,e:"Area = π(0.1)² = 0.0314 m²; Φ = BAcosθ = 2.0 × 0.0314 × cos60° = 2.0 × 0.0314 × 0.5 = 0.0314 Wb."},
+  {q:"The flux density at a point in a magnetic field is 0.5 T. If a conductor of length 0.2 m carrying 3A current is placed perpendicular to the field, the force on the conductor is:",o:["0.3 N","0.6 N","3.0 N","30 N","0.15 N"],a:0,e:"F = BIL = 0.5 × 3 × 0.2 = 0.3 N."},
+  
+  // Section E: Force on Current-Carrying Conductors (39-48)
+  {q:"A straight conductor of length 0.5 m carries a current of 2 A. If placed in a uniform magnetic field of 0.4 T at 30° to the field, the force is:",o:["0.2 N","0.4 N","0.6 N","0.8 N","0.1 N"],a:0,e:"F = BILsinθ = 0.4 × 2 × 0.5 × sin30° = 0.4 × 2 × 0.5 × 0.5 = 0.2 N."},
+  {q:"A conductor of length 1m moves with velocity 50 m/s at 30° to a uniform magnetic field of flux density 1.5 T. The induced emf is:",o:["37.5 V","50.5 V","75.0 V","80.5 V","25 V"],a:0,e:"ε = BLvsinθ = 1.5 × 1 × 50 × sin30° = 1.5 × 50 × 0.5 = 37.5 V."},
+  {q:"A particle of charge 1.0 × 10⁻⁸ C enters a magnetic field at 3.0 × 10² m/s at right angles to the field. If the force is 1.8 × 10⁻⁸ N, the flux density is:",o:["6.0 × 10⁻¹ T","6.0 × 10⁻² T","6.0 × 10⁻³ T","6.0 × 10⁻⁴ T","6.0 × 10⁻⁵ T"],a:2,e:"F = Bqv; B = F/(qv) = (1.8×10⁻⁸)/(1.0×10⁻⁸ × 300) = 1.8/300 = 6.0×10⁻³ T."},
+  {q:"A 25 cm wire carrying 8.0 A current experiences 0.40 N force when perpendicular to a uniform field. The flux density is:",o:["0.2 T","0.4 T","2.0 T","4.0 T","0.1 T"],a:0,e:"B = F/(IL) = 0.40/(8.0 × 0.25) = 0.40/2.0 = 0.2 T."},
+  {q:"A conductor of length 1.4 m carrying 0.87 A is placed at 30° to a magnetic field of 80 mT. The force is approximately:",o:["0.049 N","0.097 N","0.49 N","0.97 N","0.024 N"],a:0,e:"F = BILsinθ = 0.080 × 0.87 × 1.4 × 0.5 = 0.04872 ≈ 0.049 N."},
+  {q:"The force on a current-carrying conductor is used in the working of a:",o:["Transformer","Electric motor","Generator","Induction coil","Dynamo"],a:1,e:"Electric motors use the force on current-carrying conductors in a magnetic field to produce rotation."},
+  {q:"If current direction is reversed while magnetic field remains constant, the force direction:",o:["Remains the same","Is reversed","Becomes zero","Is perpendicular to original","Doubles"],a:1,e:"F = BIL (vector cross product); reversing current reverses force direction."},
+  {q:"A wire carries current horizontally East. If Earth's magnetic field at that point is horizontal North, the force on the wire is:",o:["Horizontal","Vertical up or down","Zero","North-South","East-West"],a:1,e:"Using Fleming's left-hand rule: Field (N), Current (E), Force is vertical (up or down depending on field direction)."},
+  {q:"The maximum force on a conductor occurs when the angle between current and field is:",o:["0°","45°","90°","180°","60°"],a:2,e:"F = BILsinθ; maximum at 90° since sin90° = 1."},
+  {q:"A 0.3 m wire carrying 5 A is placed perpendicular to a field of 0.2 T. The force is:",o:["0.03 N","0.3 N","3.0 N","30 N","0.15 N"],a:1,e:"F = BIL = 0.2 × 5 × 0.3 = 0.3 N."},
+  
+  // Section F: Demagnetization, Methods & Applications (49-60)
+  {q:"Which method is NOT used for demagnetizing a magnet?",o:["Heating to red heat","Hammering while lying East-West","Using AC solenoid","Stroking with another magnet","Placing in East-West direction"],a:3,e:"Stroking with a magnet magnetizes; other methods demagnetize by disrupting domain alignment."},
+  {q:"To demagnetize a magnet, it should be heated while lying:",o:["North-South","East-West","Vertically","At 45° to North","At 30° to North"],a:1,e:"Heating while lying East-West (perpendicular to Earth's field) helps randomize magnetic domains."},
+  {q:"The best way to store bar magnets to preserve their strength is:",o:["In pairs with like poles together","With keepers across poles in dry place","Near electronic devices","In a strong electric field","In water"],a:1,e:"Keepers provide a closed magnetic circuit, preventing loss of magnetism."},
+  {q:"Electrical method of making magnets uses:",o:["Alternating current","Direct current","Both AC and DC","Static electricity","High voltage"],a:1,e:"DC current in a solenoid creates a steady field to magnetize materials; AC is used for demagnetizing."},
+  {q:"Magnetic surveys for mineral exploration detect:",o:["Oil deposits","Magnetic minerals by field variations","Water tables","Temperature changes","Gravity variations"],a:1,e:"Magnetic surveys measure local variations in Earth's field caused by magnetic mineral deposits."},
+  {q:"A compass needle points to magnetic North because:",o:["It is attracted by geographic North","Earth's magnetic South pole is near geographic North","It is repelled by geographic South","The needle is magnetized","It follows the wind"],a:1,e:"Compass North is attracted to magnetic South pole, which is located near geographic North."},
+  {q:"The angle of dip at a place is 45°. If total field is 0.4 T, the horizontal component is:",o:["0.2 T","0.283 T","0.4 T","0.566 T","0.141 T"],a:1,e:"Bₕ = Bcosδ = 0.4 × cos45° = 0.4 × 0.707 = 0.283 T."},
+  {q:"At a place where angle of dip is 60°, if horizontal component is 2.5 × 10⁻⁵ T, the total field is:",o:["5.0 × 10⁻⁵ T","4.33 × 10⁻⁵ T","2.89 × 10⁻⁵ T","7.5 × 10⁻⁵ T","2.5 × 10⁻⁵ T"],a:0,e:"B = Bₕ/cosδ = (2.5×10⁻⁵)/cos60° = (2.5×10⁻⁵)/0.5 = 5.0×10⁻⁵ T."},
+  {q:"Which application uses Earth's magnetic field?",o:["X-ray imaging","Navigation with compass","Ultrasound scanning","Microwave transmission","Radio communication"],a:1,e:"Compasses use Earth's field for navigation; other options use different physical principles."},
+  {q:"Two parallel wires carrying currents in the same direction will:",o:["Repel each other","Attract each other","Have no force between them","Cancel each other's field","Create a neutral point"],a:1,e:"Parallel currents in same direction create attracting magnetic fields; opposite directions repel."},
+  {q:"The magnetic field inside a long solenoid is:",o:["Zero","Uniform and strong","Weak and non-uniform","Same as outside","Variable"],a:1,e:"Solenoid produces a uniform, strong field inside similar to a bar magnet."},
+  {q:"A student plots the magnetic field around a bar magnet. At which point is the field strongest?",o:["Middle of the magnet","Near the poles","Equidistant from both poles","Far from the magnet","At the center"],a:1,e:"Field lines are most crowded (strongest field) near the poles of a magnet."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('magnets_magnetic_fields_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('magnets_magnetic_fields_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/60`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('magnets_magnetic_fields_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=45?'Ready for JAMB!':pct>=38?'Good, review weak areas':pct>=30?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,8,18,28,38,48,60];
+  const sectionNames=["A: Natural & Artificial Magnets","B: Magnetic Fields & Field Patterns","C: Earth's Magnetic Field","D: Magnetic Flux & Flux Density","E: Force on Current-Carrying Conductors","F: Demagnetization, Methods & Applications"];
+  
+  for(let s=0;s<6;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('magnets_magnetic_fields_quiz_auth');
+  sessionStorage.removeItem('magnets_magnetic_fields_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('magnets_magnetic_fields_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('magnets_magnetic_fields_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

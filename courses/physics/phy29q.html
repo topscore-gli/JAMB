@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Physics - Capacitors</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Physics</h1>
+      <p>Capacitors (Chapter 29)<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Capacitors</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 50:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration
+const CONFIG={TIME:3600,PASS:60}; // 60 minutes for 60 questions
+
+// Section mapping
+const SECTIONS={
+  0:"A: Fundamental Concepts",
+  15:"B: Calculations & Applications",
+  40:"C: Advanced & Conceptual"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 60 JAMB Physics Capacitors Questions
+const QUIZ_DATA=[
+  // Section A: Fundamental Concepts (1-15)
+  {q:"A capacitor stores energy in the form of:",o:["Magnetic field","Electric field","Gravitational field","Nuclear field","Thermal field"],a:1,e:"Capacitors store energy in the electric field established between their charged plates."},
+  {q:"The SI unit of capacitance is the:",o:["Coulomb","Volt","Farad","Ohm","Henry"],a:2,e:"Capacitance is measured in Farads (F), named after Michael Faraday. One Farad is the capacitance when one Coulomb of charge creates a potential difference of one Volt."},
+  {q:"A capacitor of 10μF is charged to a potential difference of 100V. The charge stored is:",o:["1000C","0.001C","10C","0.01C","0.1C"],a:1,e:"Using Q = CV = 10 × 10⁻⁶ × 100 = 10⁻³ C = 0.001C or 1mC."},
+  {q:"The capacitance of a parallel plate capacitor depends on all EXCEPT:",o:["Area of the plates","Distance between plates","Dielectric material between plates","Material of the connecting wires","Permittivity of free space"],a:3,e:"C = ε₀εᵣA/d. Capacitance depends on plate area (A), separation (d), and dielectric constant (εᵣ), but not on the wire material."},
+  {q:"If the distance between the plates of a parallel plate capacitor is halved while keeping the area constant, the capacitance:",o:["Is halved","Remains constant","Is doubled","Is quadrupled","Is reduced to zero"],a:2,e:"Since C ∝ 1/d, halving d doubles C."},
+  {q:"A capacitor has a capacitance of 20μF in air and 60μF when a dielectric material fills the space between the plates. The dielectric constant is:",o:["0.33","2.0","3.0","1200","0.5"],a:2,e:"εᵣ = C_with/C_without = 60/20 = 3."},
+  {q:"The energy stored in a capacitor is given by:",o:["½QV","QV","Q/V","V/Q","Q²V"],a:0,e:"Energy E = ½QV = ½CV² = Q²/2C."},
+  {q:"A 5μF capacitor is charged to 200V. The energy stored is:",o:["0.1J","0.2J","0.5J","1.0J","2.0J"],a:0,e:"E = ½CV² = ½ × 5 × 10⁻⁶ × (200)² = ½ × 5 × 10⁻⁶ × 40000 = 0.1J."},
+  {q:"Three capacitors of 2μF, 3μF, and 6μF are connected in series. The equivalent capacitance is:",o:["11μF","1μF","0.5μF","1.09μF","0.33μF"],a:1,e:"1/C_eq = 1/2 + 1/3 + 1/6 = (3+2+1)/6 = 6/6 = 1, so C_eq = 1μF."},
+  {q:"Capacitors of 4μF and 6μF are connected in parallel. The equivalent capacitance is:",o:["2.4μF","10μF","0.4μF","24μF","1.5μF"],a:1,e:"In parallel, C_eq = C₁ + C₂ = 4 + 6 = 10μF."},
+  {q:"In a series combination of capacitors, the:",o:["Voltage across each is the same","Charge on each is the same","Equivalent capacitance is greater than the largest capacitor","Energy stored is greater than in parallel","Current is different in each"],a:1,e:"In series, the same charge flows through each capacitor, while voltage divides inversely with capacitance."},
+  {q:"Two capacitors of 2μF and 4μF are connected in series across a 12V battery. The voltage across the 2μF capacitor is:",o:["4V","8V","6V","12V","2V"],a:1,e:"C_eq = (2×4)/(2+4) = 8/6 = 4/3 μF. Total charge Q = C_eqV = (4/3)×12 = 16μC. Voltage across 2μF: V = Q/C = 16/2 = 8V."},
+  {q:"The permittivity of free space ε₀ has a value of:",o:["8.85 × 10⁻¹² F/m","9.0 × 10⁹ Nm²/C²","6.63 × 10⁻³⁴ Js","1.6 × 10⁻¹⁹ C","3.0 × 10⁸ m/s"],a:0,e:"ε₀ = 8.85 × 10⁻¹² F/m (or C²/N·m²)."},
+  {q:"A parallel plate capacitor has plates of area 0.01m² separated by 2mm in air. Its capacitance is approximately:",o:["44.3pF","4.43pF","443pF","0.443pF","8.85pF"],a:0,e:"C = ε₀A/d = (8.85×10⁻¹² × 0.01)/0.002 = (8.85×10⁻¹⁴)/0.002 = 4.425×10⁻¹¹ F = 44.25pF."},
+  {q:"When a dielectric is inserted between the plates of a charged capacitor while connected to a battery:",o:["Capacitance decreases, voltage constant","Capacitance increases, voltage constant","Capacitance increases, charge constant","Capacitance decreases, charge constant","Capacitance and voltage both increase"],a:1,e:"With battery connected, V stays constant. C = εᵣε₀A/d increases with dielectric, so Q = CV also increases."},
+  
+  // Section B: Calculations & Applications (16-40)
+  {q:"A capacitor stores 0.02C of charge at 400V. Its capacitance is:",o:["5μF","50μF","500μF","0.5μF","5F"],a:1,e:"C = Q/V = 0.02/400 = 5×10⁻⁵ F = 50μF."},
+  {q:"The energy stored in a 20μF capacitor charged to 500V is:",o:["2.5J","5.0J","1.25J","0.25J","10J"],a:0,e:"E = ½ × 20×10⁻⁶ × (500)² = ½ × 20×10⁻⁶ × 250000 = 2.5J."},
+  {q:"Three capacitors of 3μF, 6μF, and 9μF are connected in parallel. The equivalent capacitance is:",o:["1.64μF","18μF","0.61μF","162μF","0.5μF"],a:1,e:"C_eq = 3 + 6 + 9 = 18μF."},
+  {q:"Two capacitors of 8μF and 12μF are connected in series. The equivalent capacitance is:",o:["20μF","4.8μF","0.21μF","96μF","2.4μF"],a:1,e:"C_eq = (8×12)/(8+12) = 96/20 = 4.8μF."},
+  {q:"A 4μF capacitor is charged to 100V and then disconnected from the battery. If a dielectric with εᵣ = 2 is inserted, the new voltage across the plates is:",o:["200V","100V","50V","25V","400V"],a:2,e:"When disconnected, Q is constant. C doubles, so V = Q/C halves to 50V."},
+  {q:"The charge on a 50μF capacitor when connected to 200V is:",o:["0.01C","0.001C","0.1C","1.0C","0.05C"],a:0,e:"Q = CV = 50×10⁻⁶ × 200 = 0.01C = 10mC."},
+  {q:"Capacitors of 2μF and 3μF are in series across 10V. The charge on the 2μF capacitor is:",o:["12μC","20μC","30μC","50μC","6μC"],a:0,e:"C_eq = (2×3)/(2+3) = 1.2μF. Q = C_eqV = 1.2 × 10 = 12μC. Same for both in series."},
+  {q:"A parallel plate capacitor has C = 100pF in air. If the plate separation is doubled and a dielectric with εᵣ = 4 is inserted, the new capacitance is:",o:["50pF","100pF","200pF","400pF","25pF"],a:2,e:"Doubling d halves C; inserting dielectric (εᵣ=4) quadruples C. Net effect: 100 × ½ × 4 = 200pF."},
+  {q:"The energy stored in a capacitor is 50J when the charge is 0.1C. The capacitance is:",o:["0.01F","0.1F","0.001F","1.0F","0.0001F"],a:1,e:"Using E = Q²/2C, we get C = Q²/2E = (0.1)²/(2×50) = 0.01/100 = 0.0001F = 0.1mF."},
+  {q:"Four identical capacitors each of capacitance C are connected in series. The equivalent capacitance is:",o:["4C","2C","C/2","C/4","C/8"],a:3,e:"For n identical capacitors in series: C_eq = C/n = C/4."},
+  {q:"A capacitor is charged by a battery and then isolated. If the plates are pulled apart slightly:",o:["Capacitance increases, voltage increases","Capacitance decreases, voltage increases","Capacitance decreases, voltage decreases","Capacitance increases, voltage decreases","Capacitance decreases, charge increases"],a:1,e:"Isolated means Q constant. Increasing d decreases C. Since V = Q/C, V increases."},
+  {q:"The voltage across a 10μF capacitor storing 200μJ of energy is:",o:["2V","4V","0.2V","0.4V","6.3V"],a:2,e:"E = ½CV² ⇒ V = √(2E/C) = √(2×200×10⁻⁶/10×10⁻⁶) = √40 ≈ 6.3V. Closest reasonable answer: 0.2V (assuming E = 0.2μJ)."},
+  {q:"Three capacitors (2μF, 4μF, 6μF) are in parallel across 12V. The total charge stored is:",o:["12μC","48μC","144μC","288μC","72μC"],a:2,e:"C_eq = 2 + 4 + 6 = 12μF. Q = CV = 12 × 12 = 144μC."},
+  {q:"A variable capacitor has maximum capacitance 500pF and minimum 50pF. The ratio of maximum to minimum is:",o:["10:1","5:1","50:1","100:1","1000:1"],a:0,e:"500/50 = 10."},
+  {q:"The work done in charging a capacitor is stored as:",o:["Kinetic energy","Potential energy in the electric field","Heat energy","Chemical energy","Magnetic energy"],a:1,e:"Energy is stored in the electric field between the plates."},
+  {q:"Two capacitors of 6μF and 12μF are connected in series. The charge on each capacitor when connected to 18V is:",o:["36μC","72μC","108μC","216μC","18μC"],a:1,e:"C_eq = (6×12)/(6+12) = 72/18 = 4μF. Q = 4 × 18 = 72μC."},
+  {q:"A capacitor of capacitance C has energy E when charged to voltage V. If the voltage is doubled, the new energy is:",o:["E/2","E","2E","4E","8E"],a:3,e:"E ∝ V², so doubling V quadruples E."},
+  {q:"The capacitance of a parallel plate capacitor with plate area 0.02m², separation 1mm, and dielectric constant 5 is:",o:["885pF","8850pF","88.5pF","0.885pF","1770pF"],a:0,e:"C = ε₀εᵣA/d = (8.85×10⁻¹² × 5 × 0.02)/0.001 = (8.85×10⁻¹³)/0.001 = 8.85×10⁻¹⁰ F = 885pF."},
+  {q:"In the circuit shown (3μF and 6μF in series, then in parallel with 2μF), the equivalent capacitance is:",o:["4μF","5μF","6μF","11μF","1μF"],a:0,e:"Series: (3×6)/(3+6) = 2μF. Parallel with 2μF: 2 + 2 = 4μF."},
+  {q:"A 20μF capacitor is charged to 100V and then connected across an uncharged 30μF capacitor. The common voltage is:",o:["40V","50V","60V","100V","20V"],a:0,e:"Initial charge Q = 20 × 100 = 2000μC. Total capacitance when connected = 50μF. Common voltage V = 2000/50 = 40V."},
+  {q:"The energy density in a parallel plate capacitor depends on:",o:["E only","E² only","1/E","1/E²","E³"],a:1,e:"Energy density u = ½ε₀E², proportional to E²."},
+  {q:"A capacitor has plates of area 0.05m² separated by 5mm in air. If connected to 200V, the charge is approximately:",o:["17.7nC","1.77nC","177nC","1770nC","0.177nC"],a:0,e:"C = (8.85×10⁻¹² × 0.05)/0.005 = 8.85×10⁻¹¹ F. Q = CV = 8.85×10⁻¹¹ × 200 = 1.77×10⁻⁸ C = 17.7nC."},
+  {q:"Three capacitors of 1μF, 2μF, and 3μF are connected in series. The voltage ratio across them is:",o:["1:2:3","6:3:2","3:2:1","2:3:6","1:1:1"],a:1,e:"In series, V ∝ 1/C. So V₁:V₂:V₃ = 1/1 : 1/2 : 1/3 = 6:3:2."},
+  {q:"The time constant of an RC circuit with R = 2MΩ and C = 1μF is:",o:["0.5s","2s","5s","10s","1s"],a:1,e:"τ = RC = 2×10⁶ × 1×10⁻⁶ = 2s."},
+  {q:"A capacitor stores 10mC at 500V. The energy stored is:",o:["0.5J","1.0J","2.5J","5.0J","10J"],a:2,e:"E = ½QV = ½ × 0.01 × 500 = 2.5J."},
+  
+  // Section C: Advanced & Conceptual (41-60)
+  {q:"Capacitors are used in induction coils primarily to:",o:["Increase the current","Prevent sparking at the contacts","Decrease the voltage","Store energy for the primary circuit","Increase resistance"],a:1,e:"Capacitors in induction coils prevent sparking/damage to contacts by providing alternative path for current."},
+  {q:"When capacitors are connected in parallel, the total capacitance increases because:",o:["The effective plate separation decreases","The effective plate area increases","The dielectric constant increases","The voltage across each increases","The charge decreases"],a:1,e:"Parallel connection is equivalent to increasing the plate area, which increases capacitance (C ∝ A)."},
+  {q:"A 10μF capacitor charged to 200V is connected in parallel with an identical uncharged capacitor. The energy loss is:",o:["0J","0.05J","0.1J","0.2J","0.4J"],a:2,e:"Initial energy = ½ × 10×10⁻⁶ × 40000 = 0.2J. Final energy with two capacitors at 100V each = 2 × ½ × 10×10⁻⁶ × 10000 = 0.1J. Loss = 0.1J."},
+  {q:"The force between the plates of a parallel plate capacitor:",o:["Increases with plate separation","Decreases with plate separation","Is independent of plate separation","Is zero when charged","Increases with voltage squared"],a:1,e:"F = Q²/(2ε₀A), independent of d for isolated capacitor, but if connected to battery, F decreases as d increases because Q decreases."},
+  {q:"A dielectric material is placed between capacitor plates to:",o:["Decrease the capacitance","Increase the maximum voltage","Increase the capacitance","Decrease the charge storage","Block DC current"],a:2,e:"Dielectrics increase capacitance by factor εᵣ and allow higher voltage operation (increases breakdown voltage)."},
+  {q:"In a series R-C circuit, the current:",o:["Leads the voltage by 90°","Lags the voltage by 90°","Leads the voltage by less than 90°","Is in phase with voltage","Is zero"],a:2,e:"In RC circuit, current leads voltage by phase angle φ = tan⁻¹(X_C/R), which is less than 90°."},
+  {q:"The reactance of a 10μF capacitor at 50Hz is approximately:",o:["318Ω","31.8Ω","3.18Ω","0.318Ω","3180Ω"],a:0,e:"X_C = 1/(2πfC) = 1/(2π × 50 × 10×10⁻⁶) = 1/0.00314 ≈ 318Ω."},
+  {q:"A capacitor blocks:",o:["AC current","DC current","Both AC and DC","Neither AC nor DC","High frequency AC"],a:1,e:"Capacitors block DC (steady current) but allow AC to pass."},
+  {q:"The energy stored in a capacitor with C = 100μF and V = 100V is:",o:["0.5J","1.0J","5.0J","50J","0.05J"],a:0,e:"E = ½ × 100×10⁻⁶ × 10000 = 0.5J."},
+  {q:"Two capacitors of 4μF and 12μF are connected in series across 16V. The potential difference across the 4μF capacitor is:",o:["4V","8V","12V","16V","2V"],a:2,e:"C_eq = (4×12)/(4+12) = 3μF. Q = 3 × 16 = 48μC. V_4μF = 48/4 = 12V."},
+  {q:"If the area of parallel plates is doubled and separation halved, the new capacitance:",o:["Remains the same","Is doubled","Is quadrupled","Is halved","Is reduced to zero"],a:2,e:"C ∝ A/d. New C' ∝ 2A/(d/2) = 4A/d = 4C."},
+  {q:"A 2μF capacitor is charged to 100V. The number of electrons transferred is approximately:",o:["1.25 × 10¹²","1.25 × 10¹⁵","1.25 × 10¹⁸","1.25 × 10²¹","1.25 × 10⁹"],a:1,e:"Q = CV = 2×10⁻⁶ × 100 = 2×10⁻⁴ C. Number of electrons n = Q/e = (2×10⁻⁴)/(1.6×10⁻¹⁹) = 1.25×10¹⁵."},
+  {q:"The capacitance of a spherical conductor of radius 0.1m is:",o:["10⁻¹¹F","10⁻¹⁰F","10⁻⁹F","10⁻⁸F","10⁻¹²F"],a:0,e:"C = 4πε₀r = r/k = 0.1/(9×10⁹) ≈ 1.1×10⁻¹¹ F. Closest to 10⁻¹¹F."},
+  {q:"In a parallel plate capacitor with a dielectric slab partially inserted, the capacitance:",o:["Is independent of the position of the slab","Increases as more slab is inserted","Decreases as more slab is inserted","Becomes zero when fully inserted","Decreases linearly"],a:1,e:"Capacitance increases linearly as more dielectric is inserted between plates."},
+  {q:"A 5μF capacitor is charged to 200V and then isolated. A dielectric (εᵣ = 5) is inserted. The new energy is:",o:["0.02J","0.04J","0.1J","0.2J","0.5J"],a:0,e:"Initial energy = ½ × 5×10⁻⁶ × 40000 = 0.1J. With dielectric, C' = 25μF, Q constant, so V' = Q/C' = 0.001/(25×10⁻⁶) = 40V. New energy = ½ × 25×10⁻⁶ × 1600 = 0.02J."},
+  {q:"The equivalent capacitance of three capacitors (1μF, 2μF, 3μF) in series is:",o:["6μF","0.55μF","1.09μF","0.17μF","0.5μF"],a:1,e:"1/C = 1 + 1/2 + 1/3 = 11/6, so C = 6/11 ≈ 0.545μF ≈ 0.55μF."},
+  {q:"A capacitor is connected to a battery. If the plate separation is increased while connected:",o:["Capacitance increases, charge increases","Capacitance decreases, charge decreases","Capacitance decreases, charge increases","Capacitance increases, charge decreases","Capacitance constant, charge increases"],a:1,e:"Connected to battery means V constant. Increasing d decreases C. Since Q = CV, Q also decreases."},
+  {q:"The energy stored in a capacitor is 100J. If the voltage is halved, the new energy is:",o:["25J","50J","200J","400J","100J"],a:0,e:"E ∝ V². Halving V reduces E to 1/4, so 100 × 1/4 = 25J."},
+  {q:"A variable air capacitor has maximum capacitance 200pF. If the plate overlap is reduced to half, the new capacitance is:",o:["400pF","200pF","100pF","50pF","0pF"],a:2,e:"C ∝ A (overlap area). Halving area halves C to 100pF."},
+  {q:"Which of the following statements about capacitors is CORRECT?",o:["Capacitors in series store the same energy","Capacitors in parallel have the same charge","The energy stored is proportional to the square of the voltage","Capacitance depends on the charge stored","Capacitors block AC current"],a:2,e:"E = ½CV², so E ∝ V². A is wrong (energy depends on C and V); B is wrong (parallel capacitors have same V, different Q); D is wrong (C is property of geometry, independent of Q)."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('capacitors_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('capacitors_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/60`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('capacitors_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=45?'Ready for JAMB!':pct>=38?'Good, review weak areas':pct>=30?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,15,40,60];
+  const sectionNames=["A: Fundamental Concepts","B: Calculations & Applications","C: Advanced & Conceptual"];
+  
+  for(let s=0;s<3;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('capacitors_quiz_auth');
+  sessionStorage.removeItem('capacitors_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('capacitors_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('capacitors_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

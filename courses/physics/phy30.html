@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Physics - Electric Cells Mastery Guide</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f;--line:#8ea2ff;--grid:rgba(255,255,255,.08)
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8;--line:#2b59ff;--grid:rgba(0,0,0,.08)
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .formula-box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .formula-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .formula-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px
+    }
+    .example-box .answer{
+      margin-top:8px;font-size:13px;color:var(--accent-secondary);font-weight:800
+    }
+
+    .diagram-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:12px;
+      margin:14px 0
+    }
+    .diagram-title{
+      font-size:13px;
+      font-weight:900;
+      color:var(--accent-tertiary);
+      margin-bottom:8px
+    }
+    .diagram-caption{
+      font-size:12px;
+      color:var(--text-secondary);
+      margin-top:8px
+    }
+    svg{
+      width:100%;
+      height:auto;
+      display:block
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:800px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .math{font-weight:900;color:var(--accent-secondary)}
+    .label{fill:var(--text-primary);font-size:11px;font-weight:700}
+    .axis{stroke:var(--text-primary);stroke-width:2}
+    .grid{stroke:var(--grid);stroke-width:1}
+    .line{stroke:var(--line);stroke-width:3;fill:none}
+    .obj{fill:rgba(29,185,84,.18);stroke:var(--accent);stroke-width:2}
+    .tick{stroke:var(--text-primary);stroke-width:2}
+    .mark{fill:var(--accent-secondary)}
+    .pathline{stroke:var(--accent-tertiary);stroke-width:3;fill:none}
+    .curve{stroke:var(--line);stroke-width:3;fill:none}
+    .hot{fill:rgba(255,107,107,.35);stroke:none}
+    .cool{fill:rgba(78,205,196,.30);stroke:none}
+    .darkfill{fill:rgba(0,0,0,.35)}
+    .lightfill{fill:rgba(255,255,255,.15)}
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">PHYSICS</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>🔋 Electric Cells</h1>
+        <p>JAMB Physics • simple voltaic cell • defects • primary and secondary cells • solar cells • series and parallel cells • internal resistance • efficiency</p>
+      </div>
+
+      <div class="section-card">
+        <h2>🎯 Learning Objective</h2>
+        <p>This chapter explains simple cells, their defects, different types of electric cells, maintenance of batteries, arrangement of cells, emf, terminal potential difference, lost volts, and cell efficiency.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li>A cell converts chemical energy into electrical energy</li>
+            <li>Polarization and local action are major simple cell defects</li>
+            <li>Series adds emf, parallel reduces internal resistance</li>
+            <li><span class="math">E = V + Ir</span> is one of the most important formulas here</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Big idea</strong>
+          <p>Electric cells supply current because chemical reactions create a potential difference between two electrodes.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Simple Voltaic Cell and Its Defects</h2>
+
+        <h3>What is a simple voltaic cell?</h3>
+        <p>A simple voltaic cell is an early electric cell that converts chemical energy to electrical energy through oxidation and reduction reactions.</p>
+
+        <h3>Components</h3>
+        <ul>
+          <li><strong>Zinc rod:</strong> negative electrode or anode</li>
+          <li><strong>Copper rod:</strong> positive electrode or cathode</li>
+          <li><strong>Dilute sulfuric acid:</strong> electrolyte</li>
+        </ul>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Simple voltaic cell</div>
+          <svg viewBox="0 0 340 220" aria-label="Simple voltaic cell diagram">
+            <rect x="80" y="60" width="180" height="120" rx="8" class="cool"/>
+            <line x1="130" y1="35" x2="130" y2="150" class="tick"/>
+            <line x1="210" y1="35" x2="210" y2="150" class="tick"/>
+            <line x1="130" y1="35" x2="70" y2="35" class="curve"/>
+            <line x1="210" y1="35" x2="270" y2="35" class="curve"/>
+            <text x="112" y="28" class="label">Zn</text>
+            <text x="194" y="28" class="label">Cu</text>
+            <text x="105" y="198" class="label">Dilute H₂SO₄</text>
+          </svg>
+          <div class="diagram-caption">Zinc dissolves into the electrolyte and electrons flow externally from zinc to copper.</div>
+        </div>
+
+        <h3>How it works</h3>
+        <ul>
+          <li><strong>Oxidation at zinc:</strong> <span class="math">Zn → Zn²⁺ + 2e⁻</span></li>
+          <li><strong>Reduction at copper:</strong> <span class="math">2H⁺ + 2e⁻ → H₂</span></li>
+        </ul>
+
+        <h3>Two major defects</h3>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Defect</th>
+              <th>Cause</th>
+              <th>Effect</th>
+              <th>Solution</th>
+            </tr>
+            <tr><td>Polarization</td><td>Hydrogen bubbles form on copper</td><td>Reduces emf and current</td><td>Use depolarizer like manganese dioxide</td></tr>
+            <tr><td>Local action</td><td>Impurities in zinc</td><td>Zinc wastes away even when unused</td><td>Amalgamate zinc with mercury</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="memory-tip">
+          <strong>🧠 Quick memory</strong>
+          <p>Polarization = gas, Local action = impurities.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Types of Electric Cells</h2>
+
+        <h3>A. Daniel cell</h3>
+        <ul>
+          <li>Zinc rod in zinc sulfate solution</li>
+          <li>Copper rod in copper sulfate solution</li>
+          <li>Porous pot separates the solutions</li>
+          <li>Emf = <span class="math">1.08 V</span></li>
+        </ul>
+        <p><strong>Advantage:</strong> no polarization.</p>
+
+        <h3>B. Leclanché cell</h3>
+        <ul>
+          <li>Zinc rod as anode</li>
+          <li>Carbon rod surrounded by <span class="math">MnO₂</span> and carbon as cathode system</li>
+          <li>Electrolyte is ammonium chloride</li>
+          <li>Emf = <span class="math">1.5 V</span></li>
+        </ul>
+        <p>The dry cell is the modern portable form used in torches, toys, and radios.</p>
+
+        <h3>C. Lead-acid accumulator</h3>
+        <ul>
+          <li>Negative plate: lead <span class="math">(Pb)</span></li>
+          <li>Positive plate: lead dioxide <span class="math">(PbO₂)</span></li>
+          <li>Electrolyte: dilute sulfuric acid</li>
+          <li>Emf = <span class="math">2.0 V</span> per cell</li>
+        </ul>
+
+        <div class="formula-box">
+          <div class="title">Discharging reaction</div>
+          <div class="line"><span class="math">Pb + PbO₂ + 2H₂SO₄ → 2PbSO₄ + 2H₂O</span></div>
+        </div>
+
+        <h3>D. Nickel-iron accumulator</h3>
+        <ul>
+          <li>Anode: iron</li>
+          <li>Cathode: nickel oxide</li>
+          <li>Electrolyte: potassium hydroxide</li>
+          <li>Emf = <span class="math">1.2 V</span></li>
+        </ul>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Feature</th>
+              <th>Lead-Acid</th>
+              <th>Nickel-Iron</th>
+            </tr>
+            <tr><td>Weight</td><td>Heavy</td><td>Lighter</td></tr>
+            <tr><td>Durability</td><td>Less durable</td><td>More rugged</td></tr>
+            <tr><td>Maintenance</td><td>Needs topping up</td><td>Minimal maintenance</td></tr>
+            <tr><td>Cost</td><td>Cheaper</td><td>More expensive</td></tr>
+            <tr><td>Efficiency</td><td>Higher</td><td>Lower</td></tr>
+            <tr><td>Emf</td><td>2.0 V</td><td>1.2 V</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <h3>E. Modern cells</h3>
+        <ul>
+          <li><strong>Lithium-ion:</strong> lightweight, rechargeable, high energy density</li>
+          <li><strong>Mercury-cadmium:</strong> stable voltage but toxic</li>
+          <li><strong>Solar cells:</strong> convert sunlight directly to electrical energy</li>
+        </ul>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Maintenance of Cells and Batteries</h2>
+
+        <h3>For lead-acid batteries</h3>
+        <ul>
+          <li>Keep terminals clean</li>
+          <li>Top up with distilled water only</li>
+          <li>Keep battery properly charged</li>
+          <li>Avoid overcharging</li>
+          <li>Store in a cool, dry place</li>
+        </ul>
+
+        <h3>For dry cells</h3>
+        <ul>
+          <li>Store in a cool, dry place</li>
+          <li>Remove from devices not used for a long time</li>
+          <li>Do not mix old and new batteries</li>
+        </ul>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Arrangement of Cells</h2>
+
+        <h3>Series arrangement</h3>
+        <p>Positive terminal of one cell is connected to the negative terminal of the next.</p>
+
+        <div class="formula-box">
+          <div class="title">Series formulas</div>
+          <div class="line"><span class="math">Etotal = E₁ + E₂ + E₃ + ...</span></div>
+          <div class="line"><span class="math">rtotal = r₁ + r₂ + r₃ + ...</span></div>
+        </div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Cells in series</div>
+          <svg viewBox="0 0 340 120" aria-label="Cells in series diagram">
+            <line x1="20" y1="60" x2="70" y2="60" class="curve"/>
+            <line x1="70" y1="35" x2="70" y2="85" class="tick"/>
+            <line x1="85" y1="25" x2="85" y2="95" class="tick"/>
+            <line x1="85" y1="60" x2="145" y2="60" class="curve"/>
+            <line x1="145" y1="35" x2="145" y2="85" class="tick"/>
+            <line x1="160" y1="25" x2="160" y2="95" class="tick"/>
+            <line x1="160" y1="60" x2="220" y2="60" class="curve"/>
+            <line x1="220" y1="35" x2="220" y2="85" class="tick"/>
+            <line x1="235" y1="25" x2="235" y2="95" class="tick"/>
+            <line x1="235" y1="60" x2="320" y2="60" class="curve"/>
+          </svg>
+          <div class="diagram-caption">Series arrangement increases total emf.</div>
+        </div>
+
+        <h3>Parallel arrangement</h3>
+        <p>All positive terminals are joined together, and all negative terminals are joined together.</p>
+
+        <div class="formula-box">
+          <div class="title">Parallel formulas for identical cells</div>
+          <div class="line"><span class="math">Etotal = E</span></div>
+          <div class="line"><span class="math">rtotal = r/n</span></div>
+        </div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Cells in parallel</div>
+          <svg viewBox="0 0 340 180" aria-label="Cells in parallel diagram">
+            <line x1="55" y1="20" x2="55" y2="160" class="curve"/>
+            <line x1="285" y1="20" x2="285" y2="160" class="curve"/>
+
+            <line x1="55" y1="45" x2="135" y2="45" class="curve"/>
+            <line x1="135" y1="25" x2="135" y2="65" class="tick"/>
+            <line x1="150" y1="15" x2="150" y2="75" class="tick"/>
+            <line x1="150" y1="45" x2="285" y2="45" class="curve"/>
+
+            <line x1="55" y1="90" x2="135" y2="90" class="curve"/>
+            <line x1="135" y1="70" x2="135" y2="110" class="tick"/>
+            <line x1="150" y1="60" x2="150" y2="120" class="tick"/>
+            <line x1="150" y1="90" x2="285" y2="90" class="curve"/>
+
+            <line x1="55" y1="135" x2="135" y2="135" class="curve"/>
+            <line x1="135" y1="115" x2="135" y2="155" class="tick"/>
+            <line x1="150" y1="105" x2="150" y2="165" class="tick"/>
+            <line x1="150" y1="135" x2="285" y2="135" class="curve"/>
+          </svg>
+          <div class="diagram-caption">Parallel arrangement keeps emf the same but reduces internal resistance.</div>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Quick memory</strong>
+          <p>Series adds voltage; parallel adds current capacity.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Efficiency of a Cell</h2>
+
+        <p>Efficiency compares useful electrical output to total energy supplied by the cell.</p>
+
+        <div class="formula-box">
+          <div class="title">Efficiency formulas</div>
+          <div class="line"><span class="math">η = (Output/Input) × 100%</span></div>
+          <div class="line"><span class="math">η = [R/(R + r)] × 100%</span></div>
+        </div>
+
+        <h3>Factors affecting efficiency</h3>
+        <ul>
+          <li>Internal resistance</li>
+          <li>Current drawn</li>
+          <li>Temperature</li>
+          <li>Age and condition of the cell</li>
+        </ul>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ Key Formulas for JAMB</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Formula</th>
+              <th>Meaning</th>
+            </tr>
+            <tr><td><span class="math">E = V + Ir</span></td><td>Emf equals terminal p.d. plus lost volts</td></tr>
+            <tr><td><span class="math">E = I(R + r)</span></td><td>Emf in terms of total circuit resistance</td></tr>
+            <tr><td><span class="math">V = IR</span></td><td>Terminal p.d. across external resistor</td></tr>
+            <tr><td><span class="math">Lost volts = Ir</span></td><td>Voltage drop inside the cell</td></tr>
+            <tr><td><span class="math">η = (Output/Input) × 100%</span></td><td>Efficiency</td></tr>
+            <tr><td><span class="math">Pmax = E²/4r</span></td><td>Maximum power delivered</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>7️⃣ Worked Examples</h2>
+
+        <div class="example-box">
+          <div class="title">Calculation 1: Current, Terminal P.D., and Lost Volts</div>
+          <p>A cell has emf 1.5 V and internal resistance 0.5 Ω. It is connected to a 2.5 Ω resistor. Find the current, terminal p.d., and lost volts.</p>
+          <p><span class="math">I = E/(R + r) = 1.5/(2.5 + 0.5) = 0.5 A</span></p>
+          <p><span class="math">V = IR = 0.5 × 2.5 = 1.25 V</span></p>
+          <p><span class="math">Lost volts = Ir = 0.5 × 0.5 = 0.25 V</span></p>
+          <div class="answer">Answer: 0.5 A, 1.25 V, 0.25 V</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 2: Finding Internal Resistance</div>
+          <p>A cell of emf 2.0 V gives terminal p.d. 1.6 V when current is 0.8 A. Find internal resistance.</p>
+          <p><span class="math">r = (E - V)/I = (2.0 - 1.6)/0.8 = 0.5 Ω</span></p>
+          <div class="answer">Answer: 0.5 Ω</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 3: Cells in Series</div>
+          <p>Three identical cells each have emf 1.5 V and internal resistance 0.2 Ω. They are connected in series to a 4.4 Ω resistor. Find total emf, total internal resistance, current, and terminal p.d.</p>
+          <p><span class="math">Etotal = 3 × 1.5 = 4.5 V</span></p>
+          <p><span class="math">rtotal = 3 × 0.2 = 0.6 Ω</span></p>
+          <p><span class="math">I = 4.5/(4.4 + 0.6) = 0.9 A</span></p>
+          <p><span class="math">V = IR = 0.9 × 4.4 = 3.96 V</span></p>
+          <div class="answer">Answer: 4.5 V, 0.6 Ω, 0.9 A, 3.96 V</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 4: Cells in Parallel</div>
+          <p>Four identical cells each have emf 2.0 V and internal resistance 0.4 Ω. They are connected in parallel to a 1.5 Ω resistor. Find total emf, total internal resistance, current, and current per cell.</p>
+          <p><span class="math">Etotal = 2.0 V</span></p>
+          <p><span class="math">rtotal = r/n = 0.4/4 = 0.1 Ω</span></p>
+          <p><span class="math">I = 2.0/(1.5 + 0.1) = 1.25 A</span></p>
+          <p><span class="math">I per cell = 1.25/4 = 0.3125 A</span></p>
+          <div class="answer">Answer: 2.0 V, 0.1 Ω, 1.25 A, 0.31 A</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 5: Mixed Series-Parallel Arrangement</div>
+          <p>Six identical cells of emf 1.5 V and internal resistance 0.3 Ω are arranged in two parallel groups of three cells in series. If connected to an external resistance of 2.1 Ω, find total emf, total internal resistance, and current.</p>
+          <p><span class="math">Emf per branch = 3 × 1.5 = 4.5 V</span></p>
+          <p><span class="math">Resistance per branch = 3 × 0.3 = 0.9 Ω</span></p>
+          <p>Two equal branches in parallel give <span class="math">rtotal = 0.9/2 = 0.45 Ω</span></p>
+          <p><span class="math">I = 4.5/(2.1 + 0.45) = 1.76 A</span></p>
+          <div class="answer">Answer: 4.5 V, 0.45 Ω, 1.76 A</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 6: Maximum Power Transfer</div>
+          <p>A cell has emf 3.0 V and internal resistance 0.5 Ω. Find the external resistance for maximum power transfer and the maximum power.</p>
+          <p>For maximum power, <span class="math">R = r = 0.5 Ω</span></p>
+          <p><span class="math">Pmax = E²/4r = 3.0²/(4 × 0.5) = 4.5 W</span></p>
+          <div class="answer">Answer: 0.5 Ω and 4.5 W</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 7: Efficiency</div>
+          <p>A battery has emf 12 V and internal resistance 0.4 Ω. It delivers current 2 A. Find total power, useful power, and efficiency.</p>
+          <p><span class="math">Ptotal = EI = 12 × 2 = 24 W</span></p>
+          <p><span class="math">R = E/I - r = 12/2 - 0.4 = 5.6 Ω</span></p>
+          <p><span class="math">Puseful = I²R = 2² × 5.6 = 22.4 W</span></p>
+          <p><span class="math">η = (22.4/24) × 100% = 93.3%</span></p>
+          <div class="answer">Answer: 24 W, 22.4 W, 93.3%</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 8: Choosing the Best Arrangement</div>
+          <p>Four identical cells each have emf 1.5 V and internal resistance 0.2 Ω. A bulb is rated 3.0 V, 0.3 A. Which arrangement is best?</p>
+          <p>Bulb resistance: <span class="math">R = V/I = 3.0/0.3 = 10 Ω</span></p>
+          <p>Best option is two cells in series, with two such branches in parallel.</p>
+          <p><span class="math">Etotal = 3.0 V</span> and <span class="math">rtotal = 0.2 Ω</span></p>
+          <p><span class="math">I = 3.0/(10 + 0.2) = 0.29 A</span></p>
+          <div class="answer">Answer: 2 cells in series with 2 such branches in parallel</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>8️⃣ Quick Memory Tips</h2>
+
+        <div class="jamb-alert">
+          <h4>High-score reminders</h4>
+          <ul>
+            <li><strong>Zinc-Copper-Acid</strong> for the simple cell</li>
+            <li><strong>Primary = use once</strong>, <strong>Secondary = rechargeable</strong></li>
+            <li><strong>Series = add voltage</strong></li>
+            <li><strong>Parallel = same emf, lower internal resistance</strong></li>
+            <li><span class="math">E = V + Ir</span> means emf equals useful voltage plus lost volts</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>⚠️ Common JAMB tricks</strong>
+          <p>Terminal p.d. drops as current increases because lost volts increase. Also, maximum power is transferred when external resistance equals internal resistance.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>9️⃣ Practice Questions for JAMB</h2>
+
+        <div class="example-box">
+          <div class="title">Polarization in a simple cell is caused by:</div>
+          <p>(a) Impurities in zinc<br>(b) Hydrogen bubbles on copper<br>(c) Low electrolyte level<br>(d) Broken circuit</p>
+          <div class="answer">Answer: (b) Hydrogen bubbles on copper</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">For identical cells connected in parallel, the total emf is:</div>
+          <p>(a) Zero<br>(b) Double one cell<br>(c) Equal to one cell<br>(d) Sum of all cells</p>
+          <div class="answer">Answer: (c) Equal to one cell</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Maximum power is delivered to the load when:</div>
+          <p>(a) <span class="math">R &gt; r</span><br>(b) <span class="math">R = r</span><br>(c) <span class="math">R &lt; r</span><br>(d) <span class="math">R = 0</span></p>
+          <div class="answer">Answer: (b) R = r</div>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🌟 Final line</strong>
+          <p>You now have a complete JAMB-style guide to Electric Cells. This chapter is important because it links chemical energy, circuit analysis, and real-life battery systems in a very testable way.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Before your quiz, revise simple cell defects, types of cells, series and parallel combinations, E = V + Ir, maximum power transfer, and efficiency.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+  </script>
+</body>
+</html>
