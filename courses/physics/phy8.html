@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Physics - Simple Machines Mastery Guide</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .formula-box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .formula-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .formula-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px
+    }
+    .example-box .answer{
+      margin-top:8px;font-size:13px;color:var(--accent-secondary);font-weight:800
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:1080px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .quiz-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .quiz-box .q{font-size:14px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px}
+    .quiz-box button{
+      width:100%;margin-top:10px;border:none;border-radius:12px;padding:12px 14px;font-weight:900;cursor:pointer;
+      background:var(--accent);color:#000;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out)
+    }
+    .quiz-answer{
+      margin-top:10px;font-size:13px;color:var(--text-secondary);display:none
+    }
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+    .math{
+      font-weight:900;color:var(--accent-secondary)
+    }
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">PHYSICS</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>🛠️ Simple Machines Guide</h1>
+        <p>JAMB Physics • clear teaching • machine types • MA • VR • efficiency • worked examples</p>
+      </div>
+
+      <div class="section-card">
+        <h2>📋 What is a Simple Machine?</h2>
+        <p>A <strong>simple machine</strong> is a basic device that makes work easier by changing the size, direction, or speed of a force.</p>
+        <p>It does <strong>not create energy</strong>. It only helps us use our effort more effectively.</p>
+
+        <div class="highlight-box">
+          <p><strong>Main idea:</strong> A machine does not reduce total work. It only makes the work easier to do.</p>
+        </div>
+
+        <div class="formula-box">
+          <div class="title">Basic work idea</div>
+          <div class="line"><span class="math">Work = Force × Distance</span></div>
+        </div>
+
+        <div class="quick-facts">
+          <ul>
+            <li>The force you apply is called the <strong>effort</strong></li>
+            <li>The heavy object moved is called the <strong>load</strong></li>
+            <li>Machines make work easier by trading force for distance</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Easy picture</strong>
+          <p>If you cannot lift something directly, a machine lets you use a smaller force over a longer distance.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Types of Simple Machines</h2>
+        <p>There are six main simple machines.</p>
+
+        <h3>1. Lever</h3>
+        <p>A lever is a rigid bar that turns about a fixed point called the <strong>fulcrum</strong>.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li><strong>First class lever:</strong> fulcrum in the middle, e.g. seesaw</li>
+            <li><strong>Second class lever:</strong> load in the middle, e.g. wheelbarrow</li>
+            <li><strong>Third class lever:</strong> effort in the middle, e.g. tweezers</li>
+          </ul>
+        </div>
+
+        <h3>2. Wheel and axle</h3>
+        <p>This is a large wheel fixed to a smaller axle. Turning the wheel helps turn the axle with less effort.</p>
+        <p>Example: doorknob, steering wheel.</p>
+
+        <h3>3. Pulley</h3>
+        <p>A pulley is a wheel with a rope or chain passing over it.</p>
+        <p>It may change the direction of force or multiply force.</p>
+
+        <h3>4. Inclined plane</h3>
+        <p>An inclined plane is a sloping surface used to raise loads with less effort.</p>
+        <p>Example: ramp.</p>
+
+        <h3>5. Wedge</h3>
+        <p>A wedge is like two inclined planes joined together. It is used for cutting or splitting.</p>
+        <p>Example: knife, axe.</p>
+
+        <h3>6. Screw</h3>
+        <p>A screw is an inclined plane wrapped around a cylinder.</p>
+        <p>It changes turning motion into forward motion.</p>
+        <p>Example: screw jack, bottle cap.</p>
+
+        <div class="jamb-alert">
+          <h4>Quick recognition trick</h4>
+          <ul>
+            <li>If it <strong>pivots</strong> → lever</li>
+            <li>If it uses a <strong>rope over a wheel</strong> → pulley</li>
+            <li>If it is a <strong>slope</strong> → inclined plane</li>
+            <li>If it <strong>cuts</strong> → wedge</li>
+            <li>If it <strong>twists</strong> → screw</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Mechanical Advantage (MA)</h2>
+        <p>Mechanical advantage tells us how much a machine multiplies force.</p>
+
+        <div class="formula-box">
+          <div class="title">Formula for MA</div>
+          <div class="line"><span class="math">MA = Load / Effort</span></div>
+        </div>
+
+        <p>It has <strong>no unit</strong>.</p>
+
+        <div class="example-box">
+          <div class="title">Meaning of MA</div>
+          <p>If a machine has MA = 4, it means the machine makes your effort 4 times more effective.</p>
+          <p>So an effort of 100 N can lift a load of 400 N.</p>
+        </div>
+
+        <h3>Lever formula</h3>
+        <div class="formula-box">
+          <div class="title">For a lever</div>
+          <div class="line"><span class="math">MA = Effort arm / Load arm</span></div>
+        </div>
+
+        <h3>Inclined plane formula</h3>
+        <div class="formula-box">
+          <div class="title">For an inclined plane</div>
+          <div class="line"><span class="math">MA = Load / Effort</span></div>
+        </div>
+
+        <div class="highlight-box">
+          <p>The bigger the MA, the easier the machine makes the work.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Velocity Ratio (VR)</h2>
+        <p>Velocity ratio tells us how far the effort moves compared to how far the load moves.</p>
+
+        <div class="formula-box">
+          <div class="title">Formula for VR</div>
+          <div class="line"><span class="math">VR = Distance moved by effort / Distance moved by load</span></div>
+        </div>
+
+        <p>It has <strong>no unit</strong>.</p>
+
+        <div class="example-box">
+          <div class="title">Meaning of VR</div>
+          <p>If VR = 5, the effort moves 5 times the distance moved by the load.</p>
+        </div>
+
+        <h3>Inclined plane</h3>
+        <div class="formula-box">
+          <div class="title">For inclined plane</div>
+          <div class="line"><span class="math">VR = Length of plane / Height</span></div>
+        </div>
+
+        <h3>Pulley</h3>
+        <div class="formula-box">
+          <div class="title">For pulley system</div>
+          <div class="line"><span class="math">VR = Number of supporting ropes</span></div>
+        </div>
+
+        <h3>Screw</h3>
+        <div class="formula-box">
+          <div class="title">For screw jack</div>
+          <div class="line"><span class="math">VR = 2πr / p</span></div>
+          <div class="line"><strong>r</strong> = radius of handle path</div>
+          <div class="line"><strong>p</strong> = pitch of screw</div>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Important difference</strong>
+          <p><strong>MA deals with forces.</strong> <strong>VR deals with distances.</strong></p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Efficiency of Machines</h2>
+        <p>Efficiency tells us how well a machine converts input work into useful output work.</p>
+
+        <div class="formula-box">
+          <div class="title">Efficiency formula</div>
+          <div class="line"><span class="math">Efficiency = (Useful work output / Work input) × 100%</span></div>
+        </div>
+
+        <p>Since work output and work input can be linked to MA and VR:</p>
+
+        <div class="formula-box">
+          <div class="title">Most common machine formula</div>
+          <div class="line"><span class="math">Efficiency = (MA / VR) × 100%</span></div>
+        </div>
+
+        <div class="quick-facts">
+          <ul>
+            <li>Efficiency is always less than 100% for real machines</li>
+            <li>This is because of friction and energy losses</li>
+            <li>For an ideal machine, efficiency = 100%</li>
+          </ul>
+        </div>
+
+        <div class="highlight-box">
+          <p>For a perfect machine: <strong>MA = VR</strong></p>
+          <p>For a real machine: <strong>MA &lt; VR</strong></p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Why Machines Are Not 100% Efficient</h2>
+        <p>Some energy is always wasted when using real machines.</p>
+
+        <ul>
+          <li>Friction between moving parts</li>
+          <li>Heat loss</li>
+          <li>Air resistance</li>
+          <li>Sound loss</li>
+          <li>Weight of the machine itself</li>
+        </ul>
+
+        <div class="jamb-alert">
+          <h4>Very common JAMB idea</h4>
+          <ul>
+            <li>Machines are less than 100% efficient because <strong>friction reduces the useful output</strong>.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ Summary Table</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Concept</th>
+              <th>Formula</th>
+              <th>Meaning</th>
+            </tr>
+            <tr>
+              <td>Mechanical Advantage</td>
+              <td>MA = Load / Effort</td>
+              <td>How much force is multiplied</td>
+            </tr>
+            <tr>
+              <td>Velocity Ratio</td>
+              <td>VR = Distance by effort / Distance by load</td>
+              <td>How far effort moves compared to load</td>
+            </tr>
+            <tr>
+              <td>Efficiency</td>
+              <td>Efficiency = (MA / VR) × 100%</td>
+              <td>How well the machine works</td>
+            </tr>
+            <tr>
+              <td>Inclined plane VR</td>
+              <td>VR = Length / Height</td>
+              <td>Machine geometry</td>
+            </tr>
+            <tr>
+              <td>Screw jack VR</td>
+              <td>VR = 2πr / p</td>
+              <td>Turning distance over pitch</td>
+            </tr>
+            <tr>
+              <td>Lever MA</td>
+              <td>MA = Effort arm / Load arm</td>
+              <td>Based on turning arms</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>7️⃣ 10 JAMB-Style Examples with Step-by-Step Solutions</h2>
+
+        <div class="example-box">
+          <div class="title">1. Which of the following is NOT a simple machine?</div>
+          <p>A. Lever  B. Pulley  C. Wedge  D. Generator</p>
+          <p><strong>Step 1:</strong> Recall the six simple machines: lever, pulley, wedge, screw, inclined plane, wheel and axle.</p>
+          <p><strong>Step 2:</strong> Generator is not a simple machine. It is a more complex machine.</p>
+          <div class="answer">Answer: D. Generator</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">2. An inclined plane of angle θ has a velocity ratio of</div>
+          <p>A. sin θ  B. 1/sin θ  C. cos θ  D. 1/cos θ  E. sin θ cos θ</p>
+          <p><strong>Step 1:</strong> VR = Length of plane / Height</p>
+          <p><strong>Step 2:</strong> In the triangle, sin θ = height / length</p>
+          <p><strong>Step 3:</strong> Therefore length / height = 1/sin θ</p>
+          <div class="answer">Answer: B. 1/sin θ</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">3. The efficiency of a machine is always less than 100% because the</div>
+          <p>A. Velocity ratio is always greater than the mechanical advantage  B. Work output is always greater than the work input  C. Effort applied is always greater than the load lifted  D. Load lifted is always greater than the effort applied</p>
+          <p><strong>Step 1:</strong> Efficiency = (MA / VR) × 100%</p>
+          <p><strong>Step 2:</strong> In real machines, friction causes MA to be less than VR</p>
+          <p><strong>Step 3:</strong> So VR is greater than MA</p>
+          <div class="answer">Answer: A. Velocity ratio is always greater than the mechanical advantage</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">4. A lever lifts a load of 400 N with an effort of 100 N. Calculate its mechanical advantage.</div>
+          <p>A. 0.25  B. 4  C. 2  D. 0.5</p>
+          <p><strong>Step 1:</strong> MA = Load / Effort</p>
+          <p><strong>Step 2:</strong> MA = 400 / 100 = 4</p>
+          <div class="answer">Answer: B. 4</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">5. A machine does 600 J of useful work when 800 J of work is supplied. What is its efficiency?</div>
+          <p>A. 75%  B. 133%  C. 60%  D. 80%</p>
+          <p><strong>Step 1:</strong> Efficiency = (Useful work output / Work input) × 100%</p>
+          <p><strong>Step 2:</strong> Efficiency = (600 / 800) × 100%</p>
+          <p><strong>Step 3:</strong> Efficiency = 75%</p>
+          <div class="answer">Answer: A. 75%</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">6. If the effort moves 5 m while the load moves 1 m in a machine, find the velocity ratio.</div>
+          <p>A. 5  B. 0.2  C. 1  D. 6</p>
+          <p><strong>Step 1:</strong> VR = Distance moved by effort / Distance moved by load</p>
+          <p><strong>Step 2:</strong> VR = 5 / 1 = 5</p>
+          <div class="answer">Answer: A. 5</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">7. A machine has a mechanical advantage of 3 and a velocity ratio of 6. Find its efficiency.</div>
+          <p>A. 50%  B. 200%  C. 18%  D. 100%</p>
+          <p><strong>Step 1:</strong> Efficiency = (MA / VR) × 100%</p>
+          <p><strong>Step 2:</strong> Efficiency = (3 / 6) × 100%</p>
+          <p><strong>Step 3:</strong> Efficiency = 50%</p>
+          <div class="answer">Answer: A. 50%</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">8. A screw jack, 25% efficient, has pitch 0.4 cm and handle radius 40 cm. Calculate VR, MA, and effort for a 1000 N load.</div>
+          <p>A. VR ≈ 628, MA ≈ 157, Effort ≈ 6.37 N  B. VR = 100, MA = 25, Effort = 40 N  C. VR = 200, MA = 50, Effort = 20 N  D. VR = 314, MA = 78.5, Effort = 12.74 N</p>
+          <p><strong>Step 1:</strong> VR = 2πr / p</p>
+          <p><strong>Step 2:</strong> VR = 2 × 3.14 × 40 / 0.4 ≈ 628</p>
+          <p><strong>Step 3:</strong> Efficiency = (MA / VR) × 100%</p>
+          <p><strong>Step 4:</strong> 25 = (MA / 628) × 100</p>
+          <p><strong>Step 5:</strong> MA = 0.25 × 628 ≈ 157</p>
+          <p><strong>Step 6:</strong> Effort = Load / MA = 1000 / 157 ≈ 6.37 N</p>
+          <div class="answer">Answer: A. VR ≈ 628, MA ≈ 157, Effort ≈ 6.37 N</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">9. A pulley system has VR = 4 and requires 800 N effort to lift 1600 N load. Calculate efficiency.</div>
+          <p>A. 50%  B. 200%  C. 25%  D. 100%</p>
+          <p><strong>Step 1:</strong> MA = Load / Effort = 1600 / 800 = 2</p>
+          <p><strong>Step 2:</strong> Efficiency = (MA / VR) × 100%</p>
+          <p><strong>Step 3:</strong> Efficiency = (2 / 4) × 100 = 50%</p>
+          <div class="answer">Answer: A. 50%</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">10. What type of simple machine is a seesaw?</div>
+          <p>A. Pulley  B. Inclined plane  C. Lever  D. Wedge</p>
+          <p><strong>Step 1:</strong> A seesaw turns about a pivot called fulcrum</p>
+          <p><strong>Step 2:</strong> That makes it a lever</p>
+          <p><strong>Step 3:</strong> More specifically, it is a first-class lever</p>
+          <div class="answer">Answer: C. Lever</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>8️⃣ Quick Revision Tips</h2>
+
+        <div class="jamb-alert">
+          <h4>How to score high in JAMB simple machines</h4>
+          <ul>
+            <li>Know the six simple machines very well</li>
+            <li>Memorise MA = Load / Effort</li>
+            <li>Memorise VR = Distance by effort / Distance by load</li>
+            <li>Memorise Efficiency = (MA / VR) × 100%</li>
+            <li>Remember that real machines are never 100% efficient</li>
+            <li>Practise pulley, inclined plane, and screw jack questions often</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🌟 Final line</strong>
+          <p>You now have the complete Simple Machines chapter with clear teaching, formulas, machine types, and JAMB-style worked examples. Revise one section each day and this topic will become very easy.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Practise 5 questions today using MA = Load/Effort, VR = Distance by effort/Distance by load, and Efficiency = MA/VR × 100%.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+
+    function showAns(id){
+      document.getElementById(id).style.display = 'block';
+    }
+  </script>
+</body>
+</html>

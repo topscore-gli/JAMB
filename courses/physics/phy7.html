@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Physics - Work, Energy and Power Mastery Guide</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .formula-box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .formula-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .formula-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px
+    }
+    .example-box .answer{
+      margin-top:8px;font-size:13px;color:var(--accent-secondary);font-weight:800
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:1080px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .quiz-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .quiz-box .q{font-size:14px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px}
+    .quiz-box button{
+      width:100%;margin-top:10px;border:none;border-radius:12px;padding:12px 14px;font-weight:900;cursor:pointer;
+      background:var(--accent);color:#000;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out)
+    }
+    .quiz-answer{
+      margin-top:10px;font-size:13px;color:var(--text-secondary);display:none
+    }
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+    .math{
+      font-weight:900;color:var(--accent-secondary)
+    }
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">PHYSICS</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>⚡ Work, Energy & Power Guide</h1>
+        <p>JAMB Physics • simple teaching • formulas • energy in society • solar energy • worked examples</p>
+      </div>
+
+      <div class="section-card">
+        <h2>📋 Quick Overview</h2>
+        <p>This topic is one of the most important in JAMB Physics because it connects motion, force, machines, electricity, dams, and even solar energy.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li><strong>Work</strong> tells us how much energy is transferred</li>
+            <li><strong>Energy</strong> is the ability to do work</li>
+            <li><strong>Power</strong> tells us how fast work is done</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Easy way to remember</strong>
+          <p>Work = amount, Energy = ability, Power = speed of doing it.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Definition of Work, Energy and Power</h2>
+
+        <h3>Work</h3>
+        <p>Work is done when a force moves an object in the direction of the force.</p>
+
+        <div class="formula-box">
+          <div class="title">Formula for work</div>
+          <div class="line"><span class="math">W = Fs cosθ</span></div>
+          <div class="line"><strong>F</strong> = force in newtons (N)</div>
+          <div class="line"><strong>s</strong> = displacement in metres (m)</div>
+          <div class="line"><strong>θ</strong> = angle between force and displacement</div>
+        </div>
+
+        <p>If force and movement are in the same direction, then θ = 0° and cos 0 = 1.</p>
+
+        <div class="formula-box">
+          <div class="title">Special simple case</div>
+          <div class="line"><span class="math">W = Fs</span></div>
+        </div>
+
+        <p>Unit of work is the <strong>joule (J)</strong>.</p>
+        <p><strong>1 J = 1 N m</strong></p>
+
+        <div class="example-box">
+          <div class="title">Simple example</div>
+          <p>If a force of 10 N pushes a box through 5 m, then:</p>
+          <p><span class="math">W = 10 × 5 = 50 J</span></p>
+        </div>
+
+        <h3>Energy</h3>
+        <p>Energy is the ability to do work.</p>
+        <p>Anything that can do work has energy.</p>
+        <p>Its unit is also the <strong>joule (J)</strong>.</p>
+
+        <h3>Power</h3>
+        <p>Power is the rate of doing work.</p>
+
+        <div class="formula-box">
+          <div class="title">Formula for power</div>
+          <div class="line"><span class="math">P = W/t</span></div>
+          <div class="line">or <span class="math">P = Fv</span></div>
+        </div>
+
+        <p>Unit of power is the <strong>watt (W)</strong>.</p>
+        <p><strong>1 W = 1 J/s</strong></p>
+
+        <div class="highlight-box">
+          <p><strong>Difference:</strong> Work is total amount done, power is how quickly it is done.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Forms of Energy</h2>
+        <p>Energy exists in many forms.</p>
+
+        <h3>Kinetic Energy</h3>
+        <p>This is energy due to motion.</p>
+
+        <div class="formula-box">
+          <div class="title">Kinetic energy formula</div>
+          <div class="line"><span class="math">KE = ½mv²</span></div>
+        </div>
+
+        <p>Example: a moving car, a running student, a rolling ball.</p>
+
+        <h3>Potential Energy</h3>
+        <p>This is stored energy due to position.</p>
+
+        <div class="formula-box">
+          <div class="title">Gravitational potential energy</div>
+          <div class="line"><span class="math">PE = mgh</span></div>
+        </div>
+
+        <p>Example: water stored in a dam, a book on a shelf, a raised stone.</p>
+
+        <h3>Mechanical Energy</h3>
+        <p>This is the sum of kinetic and potential energy.</p>
+
+        <div class="formula-box">
+          <div class="title">Mechanical energy</div>
+          <div class="line"><span class="math">Mechanical Energy = KE + PE</span></div>
+        </div>
+
+        <h3>Other forms</h3>
+        <ul>
+          <li>Heat or thermal energy</li>
+          <li>Light or radiant energy</li>
+          <li>Sound energy</li>
+          <li>Electrical energy</li>
+          <li>Chemical energy</li>
+          <li>Nuclear energy</li>
+        </ul>
+
+        <div class="memory-tip">
+          <strong>🧠 Important comparison</strong>
+          <p>Kinetic energy depends on <strong>speed</strong>, while potential energy depends on <strong>height or position</strong>.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Conservation of Energy</h2>
+        <p>The law of conservation of energy states that:</p>
+
+        <div class="highlight-box">
+          <p><strong>Energy cannot be created or destroyed. It can only be transformed from one form to another.</strong></p>
+        </div>
+
+        <p>This means the total energy in a closed system remains constant.</p>
+
+        <div class="example-box">
+          <div class="title">Example of a falling body</div>
+          <p>A ball at the top has gravitational potential energy.</p>
+          <p>As it falls, that potential energy changes to kinetic energy.</p>
+          <p>Just before reaching the ground, most of the energy is kinetic.</p>
+        </div>
+
+        <div class="formula-box">
+          <div class="title">Ignoring air resistance</div>
+          <div class="line"><span class="math">Initial PE = Final KE</span></div>
+          <div class="line"><span class="math">mgh = ½mv²</span></div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Qualitative Treatment of Energy Transformation</h2>
+        <p>This means explaining how one form of energy changes into another, even without calculation.</p>
+
+        <ul>
+          <li><strong>Potential → Kinetic:</strong> a falling object</li>
+          <li><strong>Chemical → Electrical:</strong> a battery in a torch</li>
+          <li><strong>Electrical → Heat:</strong> an electric iron</li>
+          <li><strong>Electrical → Light:</strong> a bulb</li>
+          <li><strong>Nuclear → Heat → Electrical:</strong> nuclear power station</li>
+          <li><strong>Potential → Kinetic → Mechanical → Electrical:</strong> hydroelectric dam</li>
+        </ul>
+
+        <div class="jamb-alert">
+          <h4>JAMB tip</h4>
+          <ul>
+            <li>If the question says “state the transformation,” list the energy changes in order.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Area Under Force-Distance Graph</h2>
+        <p>The area under a force-distance graph gives the <strong>work done</strong>.</p>
+
+        <div class="formula-box">
+          <div class="title">Key idea</div>
+          <div class="line"><span class="math">Work done = Area under F–s graph</span></div>
+        </div>
+
+        <p>If force is constant, the graph is a rectangle.</p>
+        <p>So:</p>
+
+        <div class="formula-box">
+          <div class="title">Constant force case</div>
+          <div class="line"><span class="math">Area = F × s = W</span></div>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Shortcut</strong>
+          <p>Whenever you see a force-displacement graph, think immediately: “Area = work done.”</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ Sources of Energy</h2>
+        <p>Energy comes from different sources.</p>
+
+        <h3>Renewable sources</h3>
+        <ul>
+          <li>Solar</li>
+          <li>Wind</li>
+          <li>Hydro</li>
+          <li>Biomass</li>
+          <li>Geothermal</li>
+        </ul>
+
+        <h3>Non-renewable sources</h3>
+        <ul>
+          <li>Coal</li>
+          <li>Crude oil</li>
+          <li>Natural gas</li>
+          <li>Uranium</li>
+        </ul>
+
+        <div class="highlight-box">
+          <p><strong>Renewable</strong> means it can be replaced naturally. <strong>Non-renewable</strong> means it can finish.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>7️⃣ Energy and Society</h2>
+
+        <h3>Uses of energy</h3>
+        <ul>
+          <li>Domestic use — cooking, lighting, cooling</li>
+          <li>Industrial use — machines, factories</li>
+          <li>Agricultural use — irrigation, tractors, processing</li>
+          <li>Transportation — cars, trains, airplanes</li>
+        </ul>
+
+        <h3>Energy and development</h3>
+        <p>Energy is important for national development.</p>
+        <p>Without energy, industries slow down, hospitals cannot function properly, and schools and homes suffer.</p>
+
+        <h3>Energy diversification</h3>
+        <p>This means using different energy sources instead of depending on only one.</p>
+        <p>For example, a country can combine oil, hydro, solar, and wind.</p>
+
+        <h3>Energy crisis</h3>
+        <p>This is a shortage of energy supply.</p>
+        <p>It may be caused by depletion, war, poor infrastructure, or too much demand.</p>
+      </div>
+
+      <div class="section-card">
+        <h2>8️⃣ Environmental Impact of Energy</h2>
+
+        <ul>
+          <li>Burning fossil fuels releases carbon dioxide</li>
+          <li>Carbon dioxide contributes to the greenhouse effect</li>
+          <li>This can cause global warming and climate change</li>
+          <li>Oil spills pollute land and water</li>
+          <li>Nuclear energy may cause radiation problems if badly handled</li>
+        </ul>
+
+        <div class="jamb-alert">
+          <h4>Important distinction</h4>
+          <ul>
+            <li><strong>Friendly sources:</strong> solar, wind, hydro</li>
+            <li><strong>More hazardous sources:</strong> fossil fuels, badly managed nuclear energy</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>9️⃣ Dams and Energy Production</h2>
+        <p>Dams are usually built across rivers where there is enough water and height difference.</p>
+
+        <div class="example-box">
+          <div class="title">How a hydroelectric dam works</div>
+          <p>Water stored high up has <strong>potential energy</strong>.</p>
+          <p>When released, it flows and gains <strong>kinetic energy</strong>.</p>
+          <p>The moving water turns a turbine, producing <strong>mechanical energy</strong>.</p>
+          <p>The generator then converts it to <strong>electrical energy</strong>.</p>
+        </div>
+
+        <div class="formula-box">
+          <div class="title">Main conversion</div>
+          <div class="line"><span class="math">Potential → Kinetic → Mechanical → Electrical</span></div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>🔟 Nuclear Energy</h2>
+        <p>Nuclear energy comes from the nucleus of atoms, usually through <strong>fission</strong>.</p>
+
+        <p>In a nuclear reactor:</p>
+        <ul>
+          <li>Uranium splits</li>
+          <li>Heat is produced</li>
+          <li>The heat produces steam</li>
+          <li>Steam turns turbine</li>
+          <li>Turbine drives generator</li>
+        </ul>
+
+        <div class="quick-facts">
+          <ul>
+            <li><strong>Advantage:</strong> produces large amount of energy</li>
+            <li><strong>Disadvantage:</strong> radioactive waste and accident risk</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣1️⃣ Solar Energy</h2>
+
+        <h3>Photoelectric effect</h3>
+        <p>This happens when light falls on a metal surface and ejects electrons.</p>
+        <p>But this only happens if the light has enough frequency.</p>
+
+        <div class="formula-box">
+          <div class="title">Photon energy</div>
+          <div class="line"><span class="math">E = hf</span></div>
+          <div class="line"><strong>h</strong> = Planck’s constant</div>
+          <div class="line"><strong>f</strong> = frequency</div>
+        </div>
+
+        <h3>Work function</h3>
+        <p>The work function is the minimum energy needed to remove an electron from a metal surface.</p>
+
+        <div class="formula-box">
+          <div class="title">Work function relation</div>
+          <div class="line"><span class="math">φ = hf₀</span></div>
+          <div class="line"><strong>f₀</strong> = threshold frequency</div>
+        </div>
+
+        <p>If the light frequency is below the threshold frequency, no electrons are emitted.</p>
+
+        <h3>Solar collector</h3>
+        <p>A solar collector absorbs sunlight and converts it to heat, for example in water heating.</p>
+
+        <h3>Solar panel</h3>
+        <p>Solar panels use photovoltaic cells to convert light directly into electrical energy.</p>
+
+        <div class="highlight-box">
+          <p><strong>Main conversion in solar panel:</strong> Light energy → Electrical energy</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣2️⃣ Formula Summary</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Concept</th>
+              <th>Formula</th>
+              <th>Meaning</th>
+            </tr>
+            <tr>
+              <td>Work</td>
+              <td>W = Fs cosθ</td>
+              <td>Force × displacement in direction of force</td>
+            </tr>
+            <tr>
+              <td>Work against gravity</td>
+              <td>W = mgh</td>
+              <td>Lifting a body vertically</td>
+            </tr>
+            <tr>
+              <td>Kinetic energy</td>
+              <td>KE = ½mv²</td>
+              <td>Energy due to motion</td>
+            </tr>
+            <tr>
+              <td>Potential energy</td>
+              <td>PE = mgh</td>
+              <td>Energy due to position</td>
+            </tr>
+            <tr>
+              <td>Power</td>
+              <td>P = W/t</td>
+              <td>Rate of doing work</td>
+            </tr>
+            <tr>
+              <td>Power in motion</td>
+              <td>P = Fv</td>
+              <td>Force × velocity</td>
+            </tr>
+            <tr>
+              <td>Photoelectric relation</td>
+              <td>E = hf</td>
+              <td>Energy of photon</td>
+            </tr>
+            <tr>
+              <td>Work function</td>
+              <td>φ = hf₀</td>
+              <td>Minimum energy to eject electron</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣3️⃣ 10 JAMB-Style Examples with Step-by-Step Solutions</h2>
+
+        <div class="example-box">
+          <div class="title">1. If the force and the velocity on a system are each reduced simultaneously by half, the power of the system is</div>
+          <p>A. doubled  B. reduced to a quarter  C. reduced by half  D. constant</p>
+          <p><strong>Step 1:</strong> Recall <span class="math">P = Fv</span></p>
+          <p><strong>Step 2:</strong> New force = F/2 and new velocity = v/2</p>
+          <p><strong>Step 3:</strong> New power = (F/2)(v/2) = Fv/4</p>
+          <p><strong>Step 4:</strong> So power becomes one-quarter</p>
+          <div class="answer">Answer: B. reduced to a quarter</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">2. A car of mass 800 kg attains a speed of 25 m/s in 20 s. The power developed in the engine is</div>
+          <p>A. 1.25 × 10⁴ W  B. 2.50 × 10⁴ W  C. 1.25 × 10⁶ W  D. 2.50 × 10⁶ W</p>
+          <p><strong>Step 1:</strong> Use rate of change of kinetic energy</p>
+          <p><strong>Step 2:</strong> KE = ½mv² = ½ × 800 × 25²</p>
+          <p><strong>Step 3:</strong> KE = 400 × 625 = 250,000 J</p>
+          <p><strong>Step 4:</strong> P = W/t = 250,000 / 20</p>
+          <p><strong>Step 5:</strong> P = 12,500 W = 1.25 × 10⁴ W</p>
+          <div class="answer">Answer: A. 1.25 × 10⁴ W</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">3. The work done by a force in moving an object over a distance of 4 m is 48 J. If the force is doubled, the work done over the same distance would be</div>
+          <p>A. 24 J  B. 48 J  C. 96 J  D. 192 J</p>
+          <p><strong>Step 1:</strong> W = Fs</p>
+          <p><strong>Step 2:</strong> If force doubles and distance remains the same, work also doubles</p>
+          <p><strong>Step 3:</strong> New work = 2 × 48 = 96 J</p>
+          <div class="answer">Answer: C. 96 J</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">4. A machine whose efficiency is 75% is used to lift a load of 1000 N. If the velocity ratio of the machine is 4, find the effort required.</div>
+          <p>A. 187.5 N  B. 333.3 N  C. 533.3 N  D. 1333.3 N</p>
+          <p><strong>Step 1:</strong> Efficiency = (MA/VR) × 100</p>
+          <p><strong>Step 2:</strong> 75 = (MA/4) × 100</p>
+          <p><strong>Step 3:</strong> MA = 3</p>
+          <p><strong>Step 4:</strong> MA = Load / Effort</p>
+          <p><strong>Step 5:</strong> Effort = 1000 / 3 = 333.3 N</p>
+          <div class="answer">Answer: B. 333.3 N</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">5. A body falls from a height of 20 m. What is its kinetic energy just before hitting the ground? (g = 10 m/s², mass = 2 kg, ignore air resistance)</div>
+          <p>A. 200 J  B. 400 J  C. 600 J  D. 800 J</p>
+          <p><strong>Step 1:</strong> By conservation of energy, PE = KE</p>
+          <p><strong>Step 2:</strong> PE = mgh = 2 × 10 × 20</p>
+          <p><strong>Step 3:</strong> PE = 400 J</p>
+          <p><strong>Step 4:</strong> Therefore KE = 400 J</p>
+          <div class="answer">Answer: B. 400 J</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">6. Which of the following is a renewable source of energy?</div>
+          <p>A. Coal  B. Crude oil  C. Wind  D. Nuclear</p>
+          <p><strong>Step 1:</strong> Renewable sources are naturally replenished</p>
+          <p><strong>Step 2:</strong> Wind is renewable</p>
+          <div class="answer">Answer: C. Wind</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">7. The environmental impact of burning fossil fuels includes</div>
+          <p>A. Reduction in global warming  B. Greenhouse effect  C. Energy diversification  D. Safe energy use</p>
+          <p><strong>Step 1:</strong> Burning fossil fuels releases carbon dioxide</p>
+          <p><strong>Step 2:</strong> Carbon dioxide causes greenhouse effect</p>
+          <div class="answer">Answer: B. Greenhouse effect</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">8. In a hydroelectric dam, the energy conversion is mainly</div>
+          <p>A. Kinetic to potential  B. Potential to kinetic to electrical  C. Chemical to electrical  D. Nuclear to heat</p>
+          <p><strong>Step 1:</strong> Water stored high up has potential energy</p>
+          <p><strong>Step 2:</strong> As it flows, it gains kinetic energy</p>
+          <p><strong>Step 3:</strong> Turbine and generator finally produce electrical energy</p>
+          <div class="answer">Answer: B. Potential to kinetic to electrical</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">9. The work function of a metal is 3.2 eV. What is the threshold frequency? (h = 4.14 × 10⁻¹⁵ eV s)</div>
+          <p>A. 7.7 × 10¹⁴ Hz  B. 5.5 × 10¹⁴ Hz  C. 9.9 × 10¹⁴ Hz  D. 4.4 × 10¹⁴ Hz</p>
+          <p><strong>Step 1:</strong> Use φ = hf₀</p>
+          <p><strong>Step 2:</strong> f₀ = φ/h = 3.2 / (4.14 × 10⁻¹⁵)</p>
+          <p><strong>Step 3:</strong> f₀ ≈ 7.7 × 10¹⁴ Hz</p>
+          <div class="answer">Answer: A. 7.7 × 10¹⁴ Hz</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">10. A solar panel uses the photoelectric effect to convert</div>
+          <p>A. Heat to electrical energy  B. Light to electrical energy  C. Kinetic to potential energy  D. Chemical to light energy</p>
+          <p><strong>Step 1:</strong> Solar panels use light from the sun</p>
+          <p><strong>Step 2:</strong> Photovoltaic cells convert light directly into electrical energy</p>
+          <div class="answer">Answer: B. Light to electrical energy</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣4️⃣ Quick Revision Tips</h2>
+
+        <div class="jamb-alert">
+          <h4>How to score high in JAMB</h4>
+          <ul>
+            <li>Memorise the main formulas: W = Fs, KE = ½mv², PE = mgh, P = W/t</li>
+            <li>Understand conservation of energy well</li>
+            <li>Know renewable and non-renewable sources</li>
+            <li>Remember the energy change in hydroelectric dams</li>
+            <li>Know photoelectric effect and work function</li>
+            <li>Practise calculations and theory together</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🌟 Final line</strong>
+          <p>You now have the complete Work, Energy and Power chapter, including energy in society, dams, nuclear energy, solar energy, and JAMB-style worked examples. Revise one section each day and this topic will become very easy.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Practise 5 questions today using W = Fs, KE = 1/2mv², PE = mgh, and P = W/t. Then revise hydroelectric and solar energy conversions.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+
+    function showAns(id){
+      document.getElementById(id).style.display = 'block';
+    }
+  </script>
+</body>
+</html>

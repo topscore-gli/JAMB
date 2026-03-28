@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Physics - Equilibrium of Forces Mastery Guide</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f;--line:#8ea2ff;--grid:rgba(255,255,255,.08)
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8;--line:#2b59ff;--grid:rgba(0,0,0,.08)
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .formula-box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .formula-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .formula-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px
+    }
+    .example-box .answer{
+      margin-top:8px;font-size:13px;color:var(--accent-secondary);font-weight:800
+    }
+
+    .diagram-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:12px;
+      margin:14px 0
+    }
+    .diagram-title{
+      font-size:13px;
+      font-weight:900;
+      color:var(--accent-tertiary);
+      margin-bottom:8px
+    }
+    .diagram-caption{
+      font-size:12px;
+      color:var(--text-secondary);
+      margin-top:8px
+    }
+    svg{
+      width:100%;
+      height:auto;
+      display:block
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:1220px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .math{font-weight:900;color:var(--accent-secondary)}
+    .label{fill:var(--text-primary);font-size:11px;font-weight:700}
+    .axis{stroke:var(--text-primary);stroke-width:2}
+    .grid{stroke:var(--grid);stroke-width:1}
+    .line{stroke:var(--line);stroke-width:3;fill:none}
+    .obj{fill:rgba(29,185,84,.18);stroke:var(--accent);stroke-width:2}
+    .tick{stroke:var(--text-primary);stroke-width:2}
+    .mark{fill:var(--accent-secondary)}
+    .pathline{stroke:var(--accent-tertiary);stroke-width:4;fill:none}
+    .curve{stroke:var(--line);stroke-width:3;fill:none}
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">PHYSICS</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>⚖️ Equilibrium of Forces</h1>
+        <p>JAMB Physics • equilibrium of particles • moments • rigid bodies • center of gravity • stability</p>
+      </div>
+
+      <div class="section-card">
+        <h2>🎯 Learning Objective</h2>
+        <p>This chapter teaches how forces balance, how moments keep bodies from rotating, and how center of gravity affects stability.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li>Equilibrium means no net force and no net turning effect</li>
+            <li>Lami’s theorem helps in 3-force equilibrium</li>
+            <li>Moments are key in beam and pivot questions</li>
+            <li>Low center of gravity improves stability</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Big idea</strong>
+          <p>For a body to stay balanced, it must not move sideways and it must not turn.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Equilibrium of Particles</h2>
+
+        <h3>What is equilibrium?</h3>
+        <p>An object is in equilibrium when the resultant force acting on it is zero.</p>
+
+        <ul>
+          <li><strong>Static equilibrium:</strong> object remains at rest</li>
+          <li><strong>Dynamic equilibrium:</strong> object moves with constant velocity</li>
+        </ul>
+
+        <div class="formula-box">
+          <div class="title">First condition of equilibrium</div>
+          <div class="line"><span class="math">∑F⃗ = 0</span></div>
+          <div class="line"><span class="math">∑F<sub>x</sub> = 0</span> and <span class="math">∑F<sub>y</sub> = 0</span></div>
+        </div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Forces balancing at a point</div>
+          <svg viewBox="0 0 340 180" aria-label="Equilibrium of forces diagram">
+            <circle cx="170" cy="90" r="6" class="mark"/>
+            <line x1="170" y1="90" x2="85" y2="40" class="curve"/>
+            <line x1="170" y1="90" x2="255" y2="40" class="curve"/>
+            <line x1="170" y1="90" x2="170" y2="155" class="curve"/>
+            <text x="66" y="38" class="label">T₁</text>
+            <text x="258" y="38" class="label">T₂</text>
+            <text x="176" y="160" class="label">W</text>
+          </svg>
+          <div class="diagram-caption">If the forces at a point balance, the particle remains in equilibrium.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Triangle and Polygon of Forces</h2>
+
+        <h3>Triangle Law</h3>
+        <p>If three forces acting at a point are in equilibrium, they can be represented in magnitude and direction by the three sides of a triangle taken in order.</p>
+
+        <h3>Polygon Law</h3>
+        <p>If more than three forces act at a point in equilibrium, they form a closed polygon when drawn head-to-tail.</p>
+
+        <div class="highlight-box">
+          <p>If the vector diagram closes completely, the forces are in equilibrium.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Lami’s Theorem</h2>
+        <p>If three forces act at a point and keep it in equilibrium, then each force is proportional to the sine of the angle between the other two forces.</p>
+
+        <div class="formula-box">
+          <div class="title">Lami’s theorem</div>
+          <div class="line"><span class="math">F₁/sinα = F₂/sinβ = F₃/sinγ</span></div>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 JAMB shortcut</strong>
+          <p>Use Lami’s theorem only when there are exactly <strong>three concurrent forces</strong> in equilibrium.</p>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 1: Lami’s Theorem</div>
+          <p>A weight of 100 N is suspended by two strings making angles of 30° and 60° with the horizontal. Find the tensions.</p>
+          <p><strong>Step 1:</strong> Angle opposite 100 N = <span class="math">180° - 30° - 60° = 90°</span></p>
+          <p><strong>Step 2:</strong> Angle opposite T₁ = <span class="math">120°</span>, angle opposite T₂ = <span class="math">150°</span></p>
+          <p><strong>Step 3:</strong> <span class="math">100/sin90° = T₁/sin120° = T₂/sin150°</span></p>
+          <p><strong>Step 4:</strong> <span class="math">T₁ = 100 × 0.866 = 86.6 N</span></p>
+          <p><strong>Step 5:</strong> <span class="math">T₂ = 100 × 0.5 = 50 N</span></p>
+          <div class="answer">Answers: T₁ = 86.6 N, T₂ = 50 N</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 2: Resolution of a Force</div>
+          <p>A 50 N force acts at 37° above the horizontal. Find its components.</p>
+          <p><strong>Step 1:</strong> Horizontal = <span class="math">50cos37° = 50 × 0.8 = 40 N</span></p>
+          <p><strong>Step 2:</strong> Vertical = <span class="math">50sin37° = 50 × 0.6 = 30 N</span></p>
+          <div class="answer">Answers: 40 N horizontally, 30 N vertically</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Principles of Moments</h2>
+
+        <h3>Moment of a force</h3>
+        <p>The moment of a force about a point is the turning effect of the force.</p>
+
+        <div class="formula-box">
+          <div class="title">Moment formula</div>
+          <div class="line"><span class="math">Moment = Force × Perpendicular distance</span></div>
+          <div class="line"><span class="math">τ = Fd</span></div>
+          <div class="line">Unit: <strong>Nm</strong></div>
+        </div>
+
+        <h3>Principle of moments</h3>
+        <p>For a body in equilibrium, the sum of clockwise moments equals the sum of anticlockwise moments about the same point.</p>
+
+        <div class="formula-box">
+          <div class="title">Principle of moments</div>
+          <div class="line"><span class="math">∑CW moments = ∑ACW moments</span></div>
+        </div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Moment about a pivot</div>
+          <svg viewBox="0 0 340 200" aria-label="Moment diagram">
+            <line x1="40" y1="110" x2="300" y2="110" class="curve"/>
+            <polygon points="160,110 180,110 170,130" fill="var(--accent-secondary)"/>
+            <line x1="90" y1="60" x2="90" y2="110" class="pathline"/>
+            <line x1="250" y1="60" x2="250" y2="110" class="pathline"/>
+            <text x="79" y="52" class="label">F₁</text>
+            <text x="238" y="52" class="label">F₂</text>
+            <text x="162" y="150" class="label">Pivot</text>
+          </svg>
+          <div class="diagram-caption">A force farther from the pivot produces a larger turning effect.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 3: Principle of Moments</div>
+          <p>A uniform meter rule of mass 0.5 kg is pivoted at the 40 cm mark. Where should a 2 N weight be placed to balance it? Take g = 10 m/s².</p>
+          <p><strong>Step 1:</strong> Weight of rule = <span class="math">0.5 × 10 = 5 N</span></p>
+          <p><strong>Step 2:</strong> Rule acts at 50 cm mark, distance from pivot = <span class="math">10 cm = 0.1 m</span></p>
+          <p><strong>Step 3:</strong> Clockwise moment = <span class="math">5 × 0.1 = 0.5 Nm</span></p>
+          <p><strong>Step 4:</strong> Let distance of 2 N from pivot = x</p>
+          <p><strong>Step 5:</strong> <span class="math">2x = 0.5</span> so <span class="math">x = 0.25 m = 25 cm</span></p>
+          <p><strong>Step 6:</strong> Position = <span class="math">40 - 25 = 15 cm mark</span></p>
+          <div class="answer">Answer: 15 cm mark</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Couple and Torque</h2>
+        <p>A couple is a pair of equal and opposite parallel forces acting along different lines.</p>
+
+        <div class="formula-box">
+          <div class="title">Torque of a couple</div>
+          <div class="line"><span class="math">τ = F × d</span></div>
+          <div class="line"><strong>d</strong> = perpendicular distance between the forces</div>
+        </div>
+
+        <div class="highlight-box">
+          <p>A couple produces rotation only. It does not produce translation.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ Conditions for Equilibrium of Rigid Bodies</h2>
+        <p>A rigid body is in equilibrium only if two conditions are satisfied.</p>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Condition</th>
+              <th>Expression</th>
+              <th>Meaning</th>
+            </tr>
+            <tr>
+              <td>1st Condition</td>
+              <td><span class="math">∑F<sub>x</sub> = 0</span> and <span class="math">∑F<sub>y</sub> = 0</span></td>
+              <td>No linear acceleration</td>
+            </tr>
+            <tr>
+              <td>2nd Condition</td>
+              <td><span class="math">∑τ = 0</span></td>
+              <td>No angular acceleration</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <h3>Resultant and Equilibrant</h3>
+        <ul>
+          <li><strong>Resultant:</strong> single force equivalent to all the forces combined</li>
+          <li><strong>Equilibrant:</strong> equal and opposite to the resultant</li>
+        </ul>
+
+        <div class="formula-box">
+          <div class="title">Resultant from components</div>
+          <div class="line"><span class="math">R = √(F<sub>x</sub>² + F<sub>y</sub>²)</span></div>
+          <div class="line"><span class="math">tanθ = F<sub>y</sub>/F<sub>x</sub></span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 4: Beam on Supports</div>
+          <p>A 6 m uniform beam weighing 200 N rests on supports at its ends. A 300 N weight is placed 2 m from the left end. Find the reactions.</p>
+          <p><strong>Step 1:</strong> <span class="math">R_A + R_B = 200 + 300 = 500 N</span></p>
+          <p><strong>Step 2:</strong> Take moments about A:</p>
+          <p><span class="math">(200 × 3) + (300 × 2) = R_B × 6</span></p>
+          <p><span class="math">600 + 600 = 6R_B</span></p>
+          <p><span class="math">R_B = 200 N</span></p>
+          <p><strong>Step 3:</strong> <span class="math">R_A = 500 - 200 = 300 N</span></p>
+          <div class="answer">Answers: R_A = 300 N, R_B = 200 N</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>7️⃣ Center of Gravity and Stability</h2>
+
+        <h3>Center of gravity</h3>
+        <p>The center of gravity is the point through which the entire weight of a body appears to act.</p>
+
+        <h3>Types of equilibrium</h3>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Type</th>
+              <th>Description</th>
+              <th>Example</th>
+              <th>Energy State</th>
+            </tr>
+            <tr>
+              <td>Stable</td>
+              <td>Returns to original position after slight displacement</td>
+              <td>Ball in a bowl</td>
+              <td>Minimum potential energy</td>
+            </tr>
+            <tr>
+              <td>Unstable</td>
+              <td>Moves farther away after displacement</td>
+              <td>Cone balanced on tip</td>
+              <td>Maximum potential energy</td>
+            </tr>
+            <tr>
+              <td>Neutral</td>
+              <td>Stays in new position after displacement</td>
+              <td>Ball on flat surface</td>
+              <td>Constant potential energy</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Stable, unstable and neutral equilibrium</div>
+          <svg viewBox="0 0 340 190" aria-label="Stability diagram">
+            <path d="M20 120 Q60 70 100 120" class="curve"/>
+            <circle cx="60" cy="100" r="10" class="obj"/>
+            <text x="34" y="145" class="label">Stable</text>
+
+            <path d="M130 120 Q170 80 210 120" class="curve"/>
+            <circle cx="170" cy="78" r="10" class="obj"/>
+            <text x="140" y="145" class="label">Unstable</text>
+
+            <line x1="240" y1="120" x2="320" y2="120" class="curve"/>
+            <circle cx="280" cy="110" r="10" class="obj"/>
+            <text x="258" y="145" class="label">Neutral</text>
+          </svg>
+          <div class="diagram-caption">Stable equilibrium has a low center of gravity and tends to return after displacement.</div>
+        </div>
+
+        <h3>Factors affecting stability</h3>
+        <ul>
+          <li>Larger base area → more stable</li>
+          <li>Lower center of gravity → more stable</li>
+          <li>Heavier base → often more stable</li>
+        </ul>
+      </div>
+
+      <div class="section-card">
+        <h2>8️⃣ Formula Summary</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Concept</th>
+              <th>Formula</th>
+              <th>Units</th>
+            </tr>
+            <tr><td>First condition</td><td><span class="math">∑F<sub>x</sub> = 0, ∑F<sub>y</sub> = 0</span></td><td>N</td></tr>
+            <tr><td>Lami’s theorem</td><td><span class="math">F₁/sinα = F₂/sinβ = F₃/sinγ</span></td><td>N</td></tr>
+            <tr><td>Moment</td><td><span class="math">τ = Fd</span></td><td>Nm</td></tr>
+            <tr><td>Principle of moments</td><td><span class="math">∑CW = ∑ACW</span></td><td>Nm</td></tr>
+            <tr><td>Couple torque</td><td><span class="math">τ = Fd</span></td><td>Nm</td></tr>
+            <tr><td>Resultant (general)</td><td><span class="math">R = √(F₁² + F₂² + 2F₁F₂cosθ)</span></td><td>N</td></tr>
+            <tr><td>Resultant (components)</td><td><span class="math">R = √(F<sub>x</sub>² + F<sub>y</sub>²)</span></td><td>N</td></tr>
+            <tr><td>Direction</td><td><span class="math">tanθ = F<sub>y</sub>/F<sub>x</sub></span></td><td>degrees</td></tr>
+            <tr><td>Equilibrant</td><td><span class="math">E = -R</span></td><td>N</td></tr>
+            <tr><td>Resolution</td><td><span class="math">F<sub>x</sub> = Fcosθ, F<sub>y</sub> = Fsinθ</span></td><td>N</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>9️⃣ Special Angles to Memorize</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Angle</th>
+              <th>sin</th>
+              <th>cos</th>
+              <th>tan</th>
+            </tr>
+            <tr><td>30°</td><td>0.5</td><td>0.866</td><td>0.577</td></tr>
+            <tr><td>37°</td><td>0.6</td><td>0.8</td><td>0.75</td></tr>
+            <tr><td>45°</td><td>0.707</td><td>0.707</td><td>1</td></tr>
+            <tr><td>53°</td><td>0.8</td><td>0.6</td><td>1.33</td></tr>
+            <tr><td>60°</td><td>0.866</td><td>0.5</td><td>1.732</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>🔟 JAMB Exam Tips</h2>
+
+        <div class="jamb-alert">
+          <h4>Common question types</h4>
+          <ul>
+            <li>Three-force equilibrium → use Lami’s theorem</li>
+            <li>Beam balancing → use principle of moments</li>
+            <li>Inclined planes → resolve weight into components</li>
+            <li>Pulleys → tension is the same in a light smooth string</li>
+          </ul>
+        </div>
+
+        <div class="quick-facts">
+          <ul>
+            <li>Draw a force diagram first</li>
+            <li>Identify weight, tension, normal reaction, friction</li>
+            <li>Check if Lami’s theorem is valid</li>
+            <li>If there is a pivot, take moments about it</li>
+            <li>For rigid bodies, check both force and moment conditions</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣1️⃣ Practice Questions</h2>
+
+        <div class="example-box">
+          <div class="title">Q1: Two forces 3 N and 4 N act at right angles. What is the magnitude of their equilibrant?</div>
+          <p><strong>Step 1:</strong> Resultant = <span class="math">√(3² + 4²) = 5 N</span></p>
+          <p><strong>Step 2:</strong> Equilibrant has same magnitude as resultant</p>
+          <div class="answer">Answer: 5 N</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Q2: A uniform rod of length 2 m and weight 50 N is pivoted at one end. What force is needed at the other end to keep it horizontal?</div>
+          <p><strong>Step 1:</strong> Weight acts at centre, 1 m from pivot</p>
+          <p><strong>Step 2:</strong> Moment of weight = <span class="math">50 × 1 = 50 Nm</span></p>
+          <p><strong>Step 3:</strong> Let required force = F at 2 m</p>
+          <p><strong>Step 4:</strong> <span class="math">F × 2 = 50</span>, so <span class="math">F = 25 N</span></p>
+          <div class="answer">Answer: 25 N</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Q3: Which of the following is NOT a condition for stable equilibrium?</div>
+          <p>A) Low center of gravity</p>
+          <p>B) Wide base</p>
+          <p>C) High center of gravity</p>
+          <p>D) Heavy base</p>
+          <div class="answer">Answer: C) High center of gravity</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>✅ Final Revision Note</h2>
+        <div class="memory-tip">
+          <strong>🌟 Final line</strong>
+          <p>You now have a complete JAMB-style guide to Equilibrium of Forces. This chapter connects strongly with vectors, gravitation, moments, and machines, so mastering it will help in many mechanics questions.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Before your quiz, revise equilibrium conditions, Lami’s theorem, moments, beam reaction questions, and stability factors.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+  </script>
+</body>
+</html>
