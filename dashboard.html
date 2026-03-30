@@ -7,6 +7,15 @@
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="./manifest.json">
+  <!-- App Icons -->
+  <link rel="apple-touch-icon" href="./img/logo.png">
+  <link rel="icon" type="image/png" href="./img/logo.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="TopScore">
+  <meta name="theme-color" content="#1e1e2f">
   <style>
     * {
       margin: 0;
@@ -562,6 +571,150 @@
       color: var(--text-muted);
     }
 
+    /* Install App Button Styles */
+    .install-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 12px;
+      background: var(--accent);
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 4px 4px 8px var(--shadow-in), -4px -4px 8px var(--shadow-out);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      margin: 0 16px 16px;
+    }
+
+    .install-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .install-btn:active {
+      transform: scale(0.98);
+      box-shadow: inset 3px 3px 6px rgba(0,0,0,0.2);
+    }
+
+    .install-btn.hidden {
+      display: none !important;
+    }
+
+    /* Install Prompt Banner */
+    .install-banner {
+      position: fixed;
+      bottom: 90px;
+      left: 16px;
+      right: 16px;
+      background: var(--surface);
+      border-radius: 16px;
+      padding: 16px;
+      display: none;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 6px 6px 12px var(--shadow-in), -6px -6px 12px var(--shadow-out);
+      z-index: 100;
+      animation: slideUp 0.3s ease;
+    }
+
+    .install-banner.active {
+      display: flex;
+    }
+
+    .install-banner-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .install-banner-content {
+      flex: 1;
+    }
+
+    .install-banner-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .install-banner-text {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .install-banner-buttons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .install-banner-btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .install-banner-btn.install {
+      background: var(--accent);
+      color: white;
+    }
+
+    .install-banner-btn.dismiss {
+      background: var(--background);
+      color: var(--text-muted);
+      box-shadow: 2px 2px 4px var(--shadow-in), -2px -2px 4px var(--shadow-out);
+    }
+
+    /* Search Popup Specific Styles */
+    .search-popup .popup-modal {
+      max-width: 340px;
+    }
+
+    .search-popup .popup-icon {
+      background: linear-gradient(135deg, var(--accent), #17a74a);
+    }
+
+    .search-popup-buttons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .search-popup-btn {
+      flex: 1;
+      padding: 12px 16px;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .search-popup-btn.ok {
+      background: var(--accent);
+      color: white;
+      box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out);
+    }
+
+    .search-popup-btn.ok:hover {
+      transform: translateY(-2px);
+    }
+
+    .search-popup-btn.ok:active {
+      transform: scale(0.98);
+    }
+
     @media (max-width: 420px) {
       body {
         padding: 0;
@@ -571,6 +724,12 @@
         max-width: 100%;
         height: 100vh;
         border-radius: 0;
+      }
+
+      .install-banner {
+        left: 16px;
+        right: 16px;
+        bottom: 100px;
       }
     }
   </style>
@@ -609,6 +768,32 @@
         </div>
       </div>
       <button class="popup-btn" onclick="handleShare()">📤 Share Now</button>
+    </div>
+  </div>
+
+  <!-- Search Popup (Shows when user searches) -->
+  <div class="popup-overlay search-popup" id="searchPopup">
+    <div class="popup-modal">
+      <button class="popup-close" onclick="closeSearchPopup()">❌</button>
+      <div class="popup-icon">📝</div>
+      <h3 class="popup-title">2026 JAMB Mock Exams</h3>
+      <p class="popup-text">Participate in 2026 likely JAMB questions MOCK Exams! Practice with real exam questions and get instant results to prepare better for your upcoming JAMB examination.</p>
+      <div class="search-popup-buttons">
+        <button class="search-popup-btn ok" onclick="goToMockExam()">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Install App Banner -->
+  <div class="install-banner" id="installBanner">
+    <div class="install-banner-icon">📱</div>
+    <div class="install-banner-content">
+      <div class="install-banner-title">Install TopScore App</div>
+      <div class="install-banner-text">Add to Home Screen for quick access</div>
+    </div>
+    <div class="install-banner-buttons">
+      <button class="install-banner-btn install" onclick="installApp()">Install</button>
+      <button class="install-banner-btn dismiss" onclick="dismissInstallBanner()">Later</button>
     </div>
   </div>
 
@@ -664,9 +849,15 @@
         </div>
       </section>
 
+      <!-- Install App Button -->
+      <button class="install-btn" id="installBtn" onclick="installApp()">
+        <span>📲</span>
+        <span>Install TopScore App</span>
+      </button>
+
       <div class="search-bar neumorphic-inset">
         <span aria-hidden="true">🔍</span>
-        <input type="text" placeholder="Search quizzes, topics, or classes..." />
+        <input type="text" id="searchInput" placeholder="Search quizzes, topics, or classes..." />
       </div>
 
       <section class="section">
@@ -825,7 +1016,15 @@
     // Popup Elements
     const subscribePopup = document.getElementById('subscribePopup');
     const sharePopup = document.getElementById('sharePopup');
+    const searchPopup = document.getElementById('searchPopup');
     const subscribeEmail = document.getElementById('subscribeEmail');
+    const searchInput = document.getElementById('searchInput');
+
+    // Install App Elements
+    const installBtn = document.getElementById('installBtn');
+    const installBanner = document.getElementById('installBanner');
+    let deferredPrompt = null;
+    let isAppInstalled = false;
 
     function setTheme(theme) {
       body.className = theme;
@@ -958,6 +1157,150 @@
       });
     }
 
+    // ==================== SEARCH POPUP FUNCTIONS ====================
+    
+    function showSearchPopup() {
+      searchPopup.classList.add('active');
+    }
+
+    function closeSearchPopup() {
+      searchPopup.classList.remove('active');
+    }
+
+    function goToMockExam() {
+      closeSearchPopup();
+      window.location.href = 'jambmain.html';
+    }
+
+    // Search input event listener
+    searchInput.addEventListener('focus', () => {
+      showSearchPopup();
+    });
+
+    // ==================== INSTALL APP FUNCTIONS ====================
+    
+    // Check if app is already installed
+    function checkIfAppInstalled() {
+      // Check display-mode: standalone
+      if (window.matchMedia('(display-mode: standalone)').matches) {
+        isAppInstalled = true;
+        hideInstallUI();
+        return true;
+      }
+      
+      // Check for iOS standalone mode
+      if (window.navigator.standalone === true) {
+        isAppInstalled = true;
+        hideInstallUI();
+        return true;
+      }
+      
+      // Check if user has previously installed
+      const appInstalled = localStorage.getItem('appInstalled');
+      if (appInstalled === 'true') {
+        isAppInstalled = true;
+        hideInstallUI();
+        return true;
+      }
+      
+      return false;
+    }
+
+    // Listen for the beforeinstallprompt event
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // Prevent the mini-infobar from appearing on mobile
+      e.preventDefault();
+      // Store the event for later use
+      deferredPrompt = e;
+      
+      // Only show install UI if not already installed
+      if (!checkIfAppInstalled()) {
+        showInstallUI();
+      }
+    });
+
+    function showInstallUI() {
+      // Show the install button in the main content
+      installBtn.classList.remove('hidden');
+      // Show the floating banner after a delay
+      setTimeout(() => {
+        const bannerDismissed = localStorage.getItem('installBannerDismissed');
+        if (!bannerDismissed && !isAppInstalled) {
+          installBanner.classList.add('active');
+        }
+      }, 3000);
+    }
+
+    function installApp() {
+      if (!deferredPrompt) {
+        // If no deferred prompt (already installed or not supported)
+        if (isIOS()) {
+          // Show iOS-specific instructions
+          alert('To install TopScore on iOS: Tap the Share button in Safari, then tap "Add to Home Screen"');
+        } else if (isAppInstalled) {
+          alert('TopScore is already installed on your device!');
+        } else {
+          alert('TopScore app installation is not available on this device or browser.');
+        }
+        return;
+      }
+
+      // Show the install prompt
+      deferredPrompt.prompt();
+
+      // Wait for the user to respond to the prompt
+      deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('User accepted the install prompt');
+          // Mark as installed
+          localStorage.setItem('appInstalled', 'true');
+          isAppInstalled = true;
+          // Hide install UI
+          hideInstallUI();
+        } else {
+          console.log('User dismissed the install prompt');
+        }
+        // Clear the deferred prompt
+        deferredPrompt = null;
+      });
+    }
+
+    function dismissInstallBanner() {
+      installBanner.classList.remove('active');
+      localStorage.setItem('installBannerDismissed', 'true');
+    }
+
+    function hideInstallUI() {
+      installBtn.classList.add('hidden');
+      installBanner.classList.remove('active');
+    }
+
+    function isIOS() {
+      return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    }
+
+    // Check if app is already installed when page loads
+    window.addEventListener('load', () => {
+      checkIfAppInstalled();
+    });
+
+    // Listen for appinstalled event
+    window.addEventListener('appinstalled', (evt) => {
+      console.log('TopScore app was installed');
+      localStorage.setItem('appInstalled', 'true');
+      isAppInstalled = true;
+      hideInstallUI();
+      deferredPrompt = null;
+    });
+
+    // Also listen for display-mode changes
+    window.matchMedia('(display-mode: standalone)').addEventListener('change', (e) => {
+      if (e.matches) {
+        isAppInstalled = true;
+        hideInstallUI();
+      }
+    });
+
     // ==================== POPUP INITIALIZATION ====================
     
     // Check if user has already subscribed
@@ -995,6 +1338,12 @@
     sharePopup.addEventListener('click', (e) => {
       if (e.target === sharePopup) {
         closeSharePopup();
+      }
+    });
+
+    searchPopup.addEventListener('click', (e) => {
+      if (e.target === searchPopup) {
+        closeSearchPopup();
       }
     });
   </script>
