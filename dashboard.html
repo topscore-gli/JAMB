@@ -969,6 +969,11 @@
         setTimeout(() => {
           showSubscribePopup();
         }, 1000);
+
+        // Show share popup 3 seconds after subscribe popup (4 seconds total after page load)
+        setTimeout(() => {
+          showSharePopup();
+        }, 4000);
       }
 
       // Show share popup every 5 minutes (300000 ms)
